@@ -16,3 +16,17 @@ main{height:100svh;min-height:0;padding:16px 20px;overflow:hidden}
 .paper.--right:after{background:linear-gradient(to right,#211a1738 0%,#382e211a 2%,#49372708 5%,transparent 9%)}
 .book-shell[data-single=true] .paper:after{background:linear-gradient(to right,#30261510,transparent 5%)}
 .paper.inside-cover:after{display:none}
+
+/* Covers are rigid boards; the blank endpaper is the rear board's inner face. */
+.paper.endpaper{background:#e4dfd0}
+.paper.--hard{border:1px solid #b5aa95}
+.paper.--hard:after{background:none}
+.book-shell[data-back-cover=true]:after{visibility:hidden}
+.book-shell[data-back-cover=true]:before{visibility:visible}
+.book-shell[data-single=true][data-back-cover=true]:after{visibility:visible}
+
+/* A closing cover must reveal the table, never the decorative page stack. */
+.reader[data-flip-state=user_fold] .book-shell[data-front-spread=true]:before,
+.reader[data-flip-state=flipping] .book-shell[data-front-spread=true]:before{visibility:hidden}
+.reader[data-flip-state=user_fold] .book-shell[data-rear-spread=true]:after,
+.reader[data-flip-state=flipping] .book-shell[data-rear-spread=true]:after{visibility:hidden}

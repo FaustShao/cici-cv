@@ -69,3 +69,7 @@ mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html port
 `portfolio.html` 使用 iframe 加载用户指定的 `https://online.flippingbook.com/view/718347183/`。远端刊物的内容、工具栏及访问权限由 FlippingBook 控制，不等于把本地 PDF 上传到该服务。底部下载按钮仍指向用户上传的 Gazette 原始 PDF。
 
 当前云环境代理拒绝访问 FlippingBook，不能确认嵌入成功，也不能检查其 frame-ancestors/X-Frame-Options 策略。应在部署后用普通浏览器验证；若平台禁止嵌入或浏览器网络无法加载，使用“打开原网页”或“本地翻书版本”。跨域限制下不能通过 iframe 的 load 事件判断刊物是否成功展示。
+
+### 封面与纸张
+
+使用 StPageFlip 的 `showCover` 原生首尾边界，取消封面前的空白占位页。封面及其内侧、封底及其内侧为硬纸板，内页为软纸；在最后一页 PDF 前增加无印刷内容的封底内侧，确保原始封底单独合拢，不新增 PDF 内容页。合盖时隐藏已空出一侧的装饰纸层。动态阴影由翻页库绘制并裁剪到下方纸张，静态书脊阴影仍附着于纸张表面。

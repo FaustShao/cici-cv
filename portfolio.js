@@ -7,7 +7,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let flip;
   let lastSize = '';
-  let offset = 1;
+  const leafToPdf = index => Math.min(index, count - 1);
   const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.jpg`);
   function build() {
     const single = matchMedia('(max-width: 700px)').matches;
@@ -15,19 +15,24 @@
     const pageWidth = Math.floor(Math.min(550, (reader.clientWidth - 24) / (single ? 1 : 2), availableHeight * 2 / 3));
     const key = `${single}:${pageWidth}`;
     if (key === lastSize) return;
-    const realPage = flip ? Math.max(0, flip.getCurrentPageIndex() - offset) : 0;
+    const realPage = flip ? Math.max(0, leafToPdf(flip.getCurrentPageIndex())) : 0;
     if (flip) flip.destroy();
     lastSize = key;
-    offset = single ? 0 : 1;
     shell.style.width = `${pageWidth * (single ? 1 : 2)}px`;
     shell.style.height = `${pageWidth * 1.5}px`;
     shell.dataset.single = String(single);
     const root = document.createElement('div'); root.id = 'book'; root.className = 'book';
     shell.prepend(root);
     const sheets = [];
-    if (!single) { const blank = document.createElement('div'); blank.className = 'paper inside-cover'; sheets.push(blank); }
     pages.forEach((src, i) => {
+      // A rear board needs an inside face so the final PDF page closes alone.
+      if (i === count - 1) {
+        const inside = document.createElement('div'); inside.className = 'paper endpaper';
+        inside.dataset.density = 'hard'; inside.setAttribute('aria-label', '封底内侧'); sheets.push(inside);
+      }
       const sheet = document.createElement('div'); sheet.className = 'paper';
+      if (i < 2 || i === count - 1) sheet.dataset.density = 'hard';
+      sheet.dataset.pdfPage = String(i + 1);
       const label = document.createElement('span'); label.className = 'page-placeholder'; label.textContent = `第 ${i + 1} 页 · 加载中`;
       const img = document.createElement('img'); img.alt = `Future Gazette 第 ${i + 1} 页`; img.draggable = false;
       // Image readiness never blocks the reader or any other page.
@@ -39,10 +44,10 @@
     });
     flip = new St.PageFlip(root, {
       width: pageWidth, height: pageWidth * 1.5, size: 'fixed',
-      autoSize: true, usePortrait: single, showCover: false,
-      drawShadow: true, maxShadowOpacity: .25, flippingTime: 900,
+      autoSize: true, usePortrait: single, showCover: true,
+      drawShadow: true, maxShadowOpacity: .48, flippingTime: 900,
       useMouseEvents: true, showPageCorners: false, disableFlipByClick: true,
-      mobileScrollSupport: true, swipeDistance: 35, startPage: realPage + offset
+      mobileScrollSupport: true, swipeDistance: 35, startPage: realPage === count - 1 ? count : realPage
     });
     flip.on('init', announce);
     flip.on('flip', announce);
@@ -52,12 +57,15 @@
   }
   function announce() {
     const index = flip.getCurrentPageIndex();
-    for (let i = Math.max(0, index - 2); i <= Math.min(count - 1 + offset, index + 4); i++) {
+    for (let i = Math.max(0, index - 2); i <= Math.min(count, index + 4); i++) {
       const img = flip.getPage(i).getElement().querySelector('img');
       if (img) img.loading = 'eager';
     }
-    shell.dataset.cover = String(offset === 1 && index === 0);
-    status.textContent = `第 ${Math.max(1, index + 1 - offset)} 页，共 ${count} 页`;
+    shell.dataset.cover = String(index === 0);
+    shell.dataset.frontSpread = String(index <= 1);
+    shell.dataset.rearSpread = String(index >= count - 2);
+    shell.dataset.backCover = String(index === count);
+    status.textContent = index === count - 1 ? '封底内侧' : `第 ${leafToPdf(index) + 1} 页，共 ${count} 页`;
   }
   book.remove();
   build();
@@ -68,11 +76,11 @@
     const index = flip.getCurrentPageIndex();
     if (!['ArrowRight','ArrowLeft','Home','End'].includes(event.key)) return;
     event.preventDefault();
-    if (event.key === 'Home') flip.turnToPage(offset);
-    else if (event.key === 'End') flip.turnToPage(count - 1 + offset);
-    else if (event.key === 'ArrowRight' && index < count - 1) {
+    if (event.key === 'Home') flip.turnToPage(0);
+    else if (event.key === 'End') flip.turnToPage(count);
+    else if (event.key === 'ArrowRight' && index < count) {
       if (reduced.matches) flip.turnToNextPage(); else flip.flipNext('bottom');
-    } else if (event.key === 'ArrowLeft' && index > offset) {
+    } else if (event.key === 'ArrowLeft' && index > 0) {
       if (reduced.matches) flip.turnToPrevPage(); else flip.flipPrev('bottom');
     }
   });
