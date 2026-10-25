@@ -71,7 +71,7 @@ window.RESUME = {
         "地方文化",
         "UX设计"
       ],
-      "url": ""
+      "url": "portfolio.html"
     },
     {
       "name": "TASA-ICoD 国际设计工作坊",

@@ -37,7 +37,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 连接 GitHub 仓库，生产分支选 `main`。不选框架，构建命令填写：
 
 ```sh
-mkdir -p public && cp index.html styles.css resume.js app.js public/ && cp -R assets public/
+mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html portfolio.css portfolio.js public/ && cp -R assets public/
 ```
 
 构建输出目录填 `public`，无需环境变量。部署成功后可绑定自定义域名。预览与生产地址均需按公开页面处理。
@@ -53,3 +53,9 @@ mkdir -p public && cp index.html styles.css resume.js app.js public/ && cp -R as
 ## 照片与动效
 
 `assets/portrait.png` 提取自原简历。桌面鼠标悬停时照片卡片轻微上浮、转正，照片微微放大。系统开启“减少动态效果”时关闭此动效，打印时恢复静态。
+
+## 作品集电子书
+
+`portfolio.html` 展示 Future Gazette 的全部 31 页，原始 PDF 位于 `assets/gazette/future-gazette.pdf`。页面图由原 PDF 转换，按需加载；不调用第三方阅读器服务。桌面端双页翻书，手机端单页，可用箭头、键盘方向键、页码、缩略图或触摸滑动翻页，支持放大及全屏（取决于浏览器）。开启“减少动态效果”时直接切换页面。
+
+原稿是图片型 PDF，阅读器提供页码和控件的可访问标签，但图片正文不能被搜索或直接供屏幕阅读器朗读。更换 PDF 时需要重新生成所有页面图片，并同步 `portfolio.js` 和 `portfolio.html` 中的总页数。

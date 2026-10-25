@@ -7,7 +7,7 @@ const el = (tag, className, text) => {
 };
 const set = (id, value) => { document.getElementById(id).textContent = value; };
 function safeUrl(value) {
-  try { const url = new URL(value); return ['https:', 'http:', 'mailto:', 'tel:'].includes(url.protocol) ? url.href : null; } catch { return null; }
+  try { if (!value) return null; const url = new URL(value, document.baseURI); return ['https:', 'http:', 'mailto:', 'tel:'].includes(url.protocol) ? url.href : null; } catch { return null; }
 }
 function link(label, value) {
   const url = safeUrl(value);

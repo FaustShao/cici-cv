@@ -15,3 +15,5 @@
 @media(max-width:460px){.portrait{height:196px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.profile-card,.portrait img{transition:none!important}.profile-card:hover{transform:rotate(3deg)}.profile-card:hover .portrait img{transform:none}}
 @media print{.portrait{height:180px}.profile-card,.profile-card:hover{transform:none;box-shadow:none}.portrait img,.profile-card:hover .portrait img{transform:none}.project-card{break-inside:auto}.project-card h3{break-after:avoid}.project-details li{break-inside:avoid}.personal{font-size:9px}}
+
+@media(max-width:760px){nav>a[href="portfolio.html"]{display:inline;font-size:11px}nav{gap:12px}}
