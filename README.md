@@ -60,7 +60,7 @@ mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html port
 
 使用 [StPageFlip](https://github.com/Nodlik/StPageFlip)（page-flip 2.0.7，MIT）。本地副本和许可证在 `assets/vendor/page-flip/`，发布包通过 npm 的 SHA-512 integrity 校验。无需外部 CDN、安装或构建。
 
-为避免拖拽时加载或解码书页导致停顿，阅读器会在31张图片解码后启用翻页；首次加载需下载约12MB图片。关闭书角自动预翻，保持翻页前后容器位置及尺寸一致。静态纸层、落地阴影和书脊不参与书页几何计算。
+阅读器立即初始化，当前页及相邻页优先加载，其他图片延后加载；单页失败不阻断整本书，可点击失败页重试。以可用窗口尺寸计算固定的纸张比例，窗口尺寸或方向改变后重新布局并保留阅读位置。关闭自动预翻；静态纸层、落地阴影和书脊不参与书页几何计算。
 
 原稿为图片型 PDF，图片正文不能搜索或直接供屏幕阅读器朗读；页面保留阅读器标签和隐藏的页码提示。更换 PDF 后需重新生成图片，并同步 `portfolio.js` 中页数。
 

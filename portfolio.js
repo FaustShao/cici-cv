@@ -1,69 +1,78 @@
-(async () => {
+(() => {
   const count = 31;
   const book = document.getElementById('book');
   const reader = document.getElementById('reader');
   const shell = document.querySelector('.book-shell');
   const status = document.getElementById('reader-message');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const sheets = [];
-  const images = [];
-  const blank = document.createElement('div');
-  blank.className = 'paper inside-cover';
-  sheets.push(blank);
-  for (let page = 1; page <= count; page++) {
-    const sheet = document.createElement('div');
-    sheet.className = 'paper';
-    const img = document.createElement('img');
-    img.alt = `Future Gazette 第 ${page} 页`;
-    img.draggable = false;
-    img.decoding = 'async';
-    img.src = `assets/gazette/page-${String(page).padStart(2, '0')}.jpg`;
-    sheet.append(img); sheets.push(sheet); images.push(img);
-  }
-  // Decode before enabling folds: a page must never load or decode mid-drag.
-  // The book's dimensions and surrounding layout stay fixed during every turn.
-  reader.setAttribute('aria-busy', 'true');
-  try { await Promise.all(images.map(img => img.decode())); }
-  catch {
-    status.classList.remove('sr-only');
-    status.textContent = '书页加载失败，请刷新重试，或下载源文件阅读。';
+  let flip;
+  let lastSize = '';
+  let offset = 1;
+  const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.jpg`);
+  function build() {
+    const single = matchMedia('(max-width: 700px)').matches;
+    const availableHeight = Math.max(150, reader.clientHeight - 36);
+    const pageWidth = Math.floor(Math.min(550, (reader.clientWidth - 24) / (single ? 1 : 2), availableHeight * 2 / 3));
+    const key = `${single}:${pageWidth}`;
+    if (key === lastSize) return;
+    const realPage = flip ? Math.max(0, flip.getCurrentPageIndex() - offset) : 0;
+    if (flip) flip.destroy();
+    lastSize = key;
+    offset = single ? 0 : 1;
+    shell.style.width = `${pageWidth * (single ? 1 : 2)}px`;
+    shell.style.height = `${pageWidth * 1.5}px`;
+    shell.dataset.single = String(single);
+    const root = document.createElement('div'); root.id = 'book'; root.className = 'book';
+    shell.prepend(root);
+    const sheets = [];
+    if (!single) { const blank = document.createElement('div'); blank.className = 'paper inside-cover'; sheets.push(blank); }
+    pages.forEach((src, i) => {
+      const sheet = document.createElement('div'); sheet.className = 'paper';
+      const label = document.createElement('span'); label.className = 'page-placeholder'; label.textContent = `第 ${i + 1} 页 · 加载中`;
+      const img = document.createElement('img'); img.alt = `Future Gazette 第 ${i + 1} 页`; img.draggable = false;
+      // Image readiness never blocks the reader or any other page.
+      img.addEventListener('load', () => { label.hidden = true; img.style.opacity = '1'; });
+      img.addEventListener('error', () => { label.textContent = `第 ${i + 1} 页暂未加载，点击重试`; sheet.classList.add('load-failed'); });
+      sheet.addEventListener('click', () => { if (sheet.classList.contains('load-failed')) { sheet.classList.remove('load-failed'); label.textContent = '正在重试…'; img.src = src; } });
+      img.decoding = 'async'; img.loading = i < realPage + 4 ? 'eager' : 'lazy'; img.src = src;
+      sheet.append(label, img); sheets.push(sheet);
+    });
+    flip = new St.PageFlip(root, {
+      width: pageWidth, height: pageWidth * 1.5, size: 'fixed',
+      autoSize: true, usePortrait: single, showCover: false,
+      drawShadow: true, maxShadowOpacity: .25, flippingTime: 900,
+      useMouseEvents: true, showPageCorners: false, disableFlipByClick: true,
+      mobileScrollSupport: true, swipeDistance: 35, startPage: realPage + offset
+    });
+    flip.on('init', announce);
+    flip.on('flip', announce);
+    flip.on('changeState', event => { reader.dataset.flipState = event.data; });
+    flip.loadFromHTML(sheets);
     reader.setAttribute('aria-busy', 'false');
-    return;
   }
-  book.append(...sheets);
-  const flip = new St.PageFlip(book, {
-    width: 400, height: 600, size: 'stretch', minWidth: 240, maxWidth: 900,
-    minHeight: 360, maxHeight: 1350, autoSize: true, usePortrait: true,
-    showCover: false, drawShadow: true, maxShadowOpacity: .28,
-    flippingTime: 950, useMouseEvents: true, showPageCorners: false,
-    disableFlipByClick: true, mobileScrollSupport: true, swipeDistance: 35,
-    startPage: 1
-  });
   function announce() {
     const index = flip.getCurrentPageIndex();
-    shell.dataset.cover = String(index <= 1);
-    status.textContent = `第 ${Math.max(1, index)} 页，共 ${count} 页`;
+    for (let i = Math.max(0, index - 2); i <= Math.min(count - 1 + offset, index + 4); i++) {
+      const img = flip.getPage(i).getElement().querySelector('img');
+      if (img) img.loading = 'eager';
+    }
+    shell.dataset.cover = String(offset === 1 && index === 0);
+    status.textContent = `第 ${Math.max(1, index + 1 - offset)} 页，共 ${count} 页`;
   }
-  flip.on('init', announce);
-  flip.on('flip', announce);
-  flip.on('changeOrientation', () => {
-    if (flip.getOrientation() === 'portrait' && flip.getCurrentPageIndex() === 0) flip.turnToPage(1);
-    announce();
-  });
-  flip.on('changeState', event => { reader.dataset.flipState = event.data; });
-  flip.loadFromHTML(sheets);
-  reader.setAttribute('aria-busy', 'false');
+  book.remove();
+  build();
+  let resizeTimer;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(build, 200); });
   document.addEventListener('keydown', event => {
     if (event.target.closest('a') || event.altKey || event.ctrlKey || event.metaKey) return;
     const index = flip.getCurrentPageIndex();
-    const single = flip.getOrientation() === 'portrait';
     if (!['ArrowRight','ArrowLeft','Home','End'].includes(event.key)) return;
     event.preventDefault();
-    if (event.key === 'Home') flip.turnToPage(1);
-    else if (event.key === 'End') flip.turnToPage(count);
-    else if (event.key === 'ArrowRight' && index < (single ? count : count - 1)) {
+    if (event.key === 'Home') flip.turnToPage(offset);
+    else if (event.key === 'End') flip.turnToPage(count - 1 + offset);
+    else if (event.key === 'ArrowRight' && index < count - 1) {
       if (reduced.matches) flip.turnToNextPage(); else flip.flipNext('bottom');
-    } else if (event.key === 'ArrowLeft' && index > 1) {
+    } else if (event.key === 'ArrowLeft' && index > offset) {
       if (reduced.matches) flip.turnToPrevPage(); else flip.flipPrev('bottom');
     }
   });
