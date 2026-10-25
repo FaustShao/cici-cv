@@ -54,12 +54,12 @@ mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html port
 
 `assets/portrait.png` 提取自原简历。桌面鼠标悬停时照片卡片轻微上浮、转正，照片微微放大。系统开启“减少动态效果”时关闭此动效，打印时恢复静态。
 
-## 作品集电子书
+## 作品集翻页书
 
-`portfolio.html` 展示 Future Gazette 的全部 31 页，原始 PDF 位于 `assets/gazette/future-gazette.pdf`。页面图由原 PDF 转换，按需加载；不调用第三方阅读器服务。桌面端双页翻书，手机端单页，可用箭头、键盘方向键、页码、缩略图或触摸滑动翻页，支持放大及全屏（取决于浏览器）。开启“减少动态效果”时直接切换页面。
+`portfolio.html` 只展示 Future Gazette 翻页书和一个源文件下载按钮。原始31页 PDF 位于 `assets/gazette/future-gazette.pdf`。桌面端可按住书页右上角或右下角向左拖动翻页，左侧书角可向右翻回；手机支持单页触摸翻页。键盘左右键翻页，Home/End 定位首尾。系统设置减少动态效果时，键盘直接切页。
 
-原稿是图片型 PDF，阅读器提供页码和控件的可访问标签，但图片正文不能被搜索或直接供屏幕阅读器朗读。更换 PDF 时需要重新生成所有页面图片，并同步 `portfolio.js` 和 `portfolio.html` 中的总页数。
+使用 [StPageFlip](https://github.com/Nodlik/StPageFlip)（page-flip 2.0.7，MIT）。本地副本和许可证在 `assets/vendor/page-flip/`，发布包通过 npm 的 SHA-512 integrity 校验。无需外部 CDN、安装或构建。
 
-### 实体书拖拽翻页
+为避免拖拽时加载或解码书页导致停顿，阅读器会在31张图片解码后启用翻页；首次加载需下载约12MB图片。关闭书角自动预翻，保持翻页前后容器位置及尺寸一致。静态纸层、落地阴影和书脊不参与书页几何计算。
 
-阅读器使用 [StPageFlip](https://github.com/Nodlik/StPageFlip)（page-flip 2.0.7，MIT）。本地副本及许可证保存在 `assets/vendor/page-flip/`，发布包通过 npm 提供的 SHA-512 integrity 校验。无需外部 CDN 或额外安装。鼠标按住书页右上角或右下角向左拖动可折起纸张，放开后翻页或回弹；左侧书角可向右翻回。触屏支持手势，保留箭头和键盘操作。页码跳转直接定位，不播放长距离动画。
+原稿为图片型 PDF，图片正文不能搜索或直接供屏幕阅读器朗读；页面保留阅读器标签和隐藏的页码提示。更换 PDF 后需重新生成图片，并同步 `portfolio.js` 中页数。
