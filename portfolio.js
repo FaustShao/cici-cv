@@ -3,95 +3,65 @@
   const $ = id => document.getElementById(id);
   const book = $('book');
   const reader = $('reader');
-  const mobile = matchMedia('(max-width: 700px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let current = 0;
-  let busy = false;
   let thumbsBuilt = false;
   const source = page => `assets/gazette/page-${String(page + 1).padStart(2, '0')}.jpg`;
-  const visible = () => mobile.matches ? [current] : current === 0 ? [-1, 0] : [current, current + 1];
-  function image(page) {
+  // An empty inside cover keeps the original cover on the right, while all
+  // publication sheets remain soft and can fold under the pointer.
+  const blank = document.createElement('div'); blank.className = 'paper inside-cover';
+  book.append(blank);
+  for (let page = 0; page < count; page++) {
+    const sheet = document.createElement('div'); sheet.className = 'paper';
     const img = document.createElement('img');
-    img.src = source(page);
-    img.alt = `Future Gazette 第 ${page + 1} 页`;
-    img.draggable = false;
-    img.addEventListener('error', () => { $('reader-message').textContent = '页面加载失败，请刷新重试，或下载原始 PDF 阅读。'; });
-    return img;
+    img.dataset.src = source(page); img.alt = `Future Gazette 第 ${page + 1} 页`; img.draggable = false;
+    img.addEventListener('error', () => { $('reader-message').textContent = '页面加载失败，请刷新重试，或下载 PDF 阅读。'; });
+    sheet.append(img); book.append(sheet);
   }
-  function sheet(page) {
-    const node = document.createElement('div');
-    node.className = 'page';
-    if (page < 0 || page >= count) node.classList.add('blank');
-    else node.append(image(page));
-    return node;
-  }
+  const flip = new St.PageFlip(book, {
+    width: 400, height: 600, size: 'stretch', minWidth: 260, maxWidth: 900,
+    minHeight: 390, maxHeight: 1350, autoSize: true, usePortrait: true,
+    showCover: false, drawShadow: true, maxShadowOpacity: .35,
+    flippingTime: 850, useMouseEvents: !reduced.matches, showPageCorners: !reduced.matches,
+    disableFlipByClick: true, mobileScrollSupport: true, swipeDistance: 35,
+    startPage: 1
+  });
   function render() {
-    book.replaceChildren(...visible().map(sheet));
-    const pages = visible().filter(p => p >= 0 && p < count);
-    $('page-number').value = current + 1;
-    $('page-status').textContent = current === 0 ? '封面 · 第 1 页' : `第 ${pages.map(p => p + 1).join('–')} 页`;
-    $('previous').disabled = current === 0;
-    $('next').disabled = current >= count - (mobile.matches ? 1 : 2);
-    $('progress').style.width = `${(pages.at(-1) + 1) / count * 100}%`;
-    document.querySelectorAll('.thumbnail').forEach((button, index) => {
-      if (pages.includes(index)) button.setAttribute('aria-current', 'page');
+    const index = flip.getCurrentPageIndex();
+    const single = flip.getOrientation() === 'portrait';
+    const indices = (single ? [index] : [index, index + 1]).filter(i => i > 0 && i <= count);
+    const start = indices[0] || 1;
+    const end = indices.at(-1) || 1;
+    $('page-number').value = start;
+    $('page-status').textContent = end === 1 ? '封面 · 第 1 页' : `第 ${start === end ? start : `${start}–${end}`} 页`;
+    $('previous').disabled = index <= 1;
+    $('next').disabled = end >= count;
+    $('progress').style.width = `${end / count * 100}%`;
+    document.querySelectorAll('.thumbnail').forEach((button, page) => {
+      if (indices.includes(page + 1)) button.setAttribute('aria-current', 'page');
       else button.removeAttribute('aria-current');
     });
-    // Preload only the following spread; avoid fetching the whole publication upfront.
-    for (let p = pages.at(-1) + 1; p <= Math.min(count - 1, pages.at(-1) + 2); p++) {
-      const img = new Image(); img.src = source(p);
+    // Load the current sheets and their neighbours for immediate corner dragging.
+    for (let i = Math.max(0, index - 2); i <= Math.min(count, index + 4); i++) {
+      const img = flip.getPage(i).getElement().querySelector('img');
+      if (img && !img.getAttribute('src')) img.src = img.dataset.src;
     }
   }
-  function normalize(page) {
-    page = Math.max(0, Math.min(count - 1, page));
-    return mobile.matches || page === 0 ? page : page % 2 ? page : page - 1;
-  }
-  async function navigate(page) {
-    if (busy) return;
-    const target = normalize(page);
-    if (target === current) return;
-    busy = true;
-    const oldPages = visible();
-    const forward = target > current;
-    const oldCurrent = current;
-    current = target;
-    const newPages = visible();
-    // Decode incoming images before starting the turn, to avoid a blank sheet.
-    try {
-      await Promise.all(newPages.filter(p => p >= 0 && p < count).map(p => { const img = new Image(); img.src = source(p); return img.decode(); }));
-    } catch {
-      current = oldCurrent;
-      $('reader-message').textContent = '页面加载失败，请再次翻页重试，或下载 PDF。';
-      busy = false;
-      render();
-      return;
-    }
-    $('reader-message').textContent = '';
-    try {
-      if (reduced.matches || reader.classList.contains('zoomed')) { render(); return; }
-      if (mobile.matches) {
-        await book.animate([{transform:'rotateY(0deg)',opacity:1},{transform:`rotateY(${forward ? -12 : 12}deg)`,opacity:0}],{duration:140,easing:'ease-in',fill:'none'}).finished;
-        render();
-        await book.animate([{transform:`rotateY(${forward ? 12 : -12}deg)`,opacity:0},{transform:'rotateY(0deg)',opacity:1}],{duration:180,easing:'ease-out'}).finished;
-      } else {
-        const overlay = document.createElement('div');
-        overlay.className = `flip-sheet ${forward ? 'forward' : 'backward'}`;
-        const front = document.createElement('div'); front.className = 'flip-face';
-        const back = document.createElement('div'); back.className = 'flip-face reverse';
-        const frontPage = oldPages[forward ? 1 : 0];
-        const backPage = newPages[forward ? 0 : 1];
-        if (frontPage >= 0 && frontPage < count) front.append(image(frontPage));
-        if (backPage >= 0 && backPage < count) back.append(image(backPage));
-        overlay.append(front, back);
-        book.replaceChildren(sheet(forward ? oldPages[0] : newPages[0]), sheet(forward ? newPages[1] : oldPages[1]), overlay);
-        await overlay.animate([{transform:'rotateY(0deg)'},{transform:`rotateY(${forward ? -180 : 180}deg)`}],{duration:650,easing:'cubic-bezier(.35,.05,.25,1)',fill:'forwards'}).finished;
-        render();
-      }
-    } finally { busy = false; current = normalize(current); render(); }
+  function navigate(page) {
+    const target = Math.max(0, Math.min(count - 1, page)) + 1;
+    flip.turnToPage(target); render();
   }
   function step(direction) {
-    navigate(current + (mobile.matches ? direction : direction > 0 && current === 0 ? 1 : direction * 2));
+    if (direction < 0 && $('previous').disabled || direction > 0 && $('next').disabled) return;
+    if (reduced.matches) {
+      if (direction > 0) flip.turnToNextPage(); else flip.turnToPrevPage();
+      render();
+    } else if (direction > 0) flip.flipNext('bottom'); else flip.flipPrev('bottom');
   }
+  flip.on('init', render);
+  flip.on('flip', render);
+  flip.on('changeOrientation', () => { if (flip.getOrientation() === 'portrait' && flip.getCurrentPageIndex() === 0) flip.turnToPage(1); render(); });
+  flip.on('changeState', event => { reader.dataset.flipState = event.data; });
+  flip.loadFromHTML(book.querySelectorAll('.paper'));
   $('previous').addEventListener('click', () => step(-1));
   $('next').addEventListener('click', () => step(1));
   $('page-form').addEventListener('submit', event => { event.preventDefault(); if ($('page-form').reportValidity()) navigate(Number($('page-number').value) - 1); });
@@ -103,15 +73,6 @@
     if (event.key === 'Home') navigate(0);
     if (event.key === 'End') navigate(count - 1);
   });
-  let start;
-  $('viewport').addEventListener('touchstart', event => { start = event.touches.length === 1 ? { x:event.touches[0].clientX, y:event.touches[0].clientY } : null; }, {passive:true});
-  $('viewport').addEventListener('touchend', event => {
-    if (!start || reader.classList.contains('zoomed')) return;
-    const dx = event.changedTouches[0].clientX - start.x;
-    const dy = event.changedTouches[0].clientY - start.y;
-    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
-    start = null;
-  }, {passive:true});
   $('thumbnails-toggle').addEventListener('click', () => {
     const show = $('thumbnails').hidden;
     if (!thumbsBuilt) {
@@ -127,13 +88,14 @@
     }
     $('thumbnails').hidden = !show;
     $('thumbnails-toggle').setAttribute('aria-expanded', String(show));
-    if (!busy) render();
+    render();
   });
   $('zoom').addEventListener('click', () => {
     const zoomed = reader.classList.toggle('zoomed');
     $('zoom').setAttribute('aria-pressed', String(zoomed));
     $('zoom').textContent = zoomed ? '− 缩小' : '＋ 放大';
     $('viewport').scrollTo(0,0);
+    setTimeout(() => flip.update(), 50);
   });
   if (!reader.requestFullscreen) $('fullscreen').hidden = true;
   $('fullscreen').addEventListener('click', async () => {
@@ -141,6 +103,5 @@
     catch { $('reader-message').textContent = '当前浏览器不支持全屏，请使用放大功能阅读。'; }
   });
   document.addEventListener('fullscreenchange', () => { $('fullscreen').textContent = document.fullscreenElement ? '⛶ 退出全屏' : '⛶ 全屏'; });
-  mobile.addEventListener('change', () => { if (!busy) { current = normalize(current); render(); } });
   render();
 })();

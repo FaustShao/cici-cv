@@ -59,3 +59,7 @@ mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html port
 `portfolio.html` 展示 Future Gazette 的全部 31 页，原始 PDF 位于 `assets/gazette/future-gazette.pdf`。页面图由原 PDF 转换，按需加载；不调用第三方阅读器服务。桌面端双页翻书，手机端单页，可用箭头、键盘方向键、页码、缩略图或触摸滑动翻页，支持放大及全屏（取决于浏览器）。开启“减少动态效果”时直接切换页面。
 
 原稿是图片型 PDF，阅读器提供页码和控件的可访问标签，但图片正文不能被搜索或直接供屏幕阅读器朗读。更换 PDF 时需要重新生成所有页面图片，并同步 `portfolio.js` 和 `portfolio.html` 中的总页数。
+
+### 实体书拖拽翻页
+
+阅读器使用 [StPageFlip](https://github.com/Nodlik/StPageFlip)（page-flip 2.0.7，MIT）。本地副本及许可证保存在 `assets/vendor/page-flip/`，发布包通过 npm 提供的 SHA-512 integrity 校验。无需外部 CDN 或额外安装。鼠标按住书页右上角或右下角向左拖动可折起纸张，放开后翻页或回弹；左侧书角可向右翻回。触屏支持手势，保留箭头和键盘操作。页码跳转直接定位，不播放长距离动画。
