@@ -40,7 +40,8 @@
       img.addEventListener('error', () => { label.textContent = `第 ${i + 1} 页暂未加载，点击重试`; sheet.classList.add('load-failed'); });
       sheet.addEventListener('click', () => { if (sheet.classList.contains('load-failed')) { sheet.classList.remove('load-failed'); label.textContent = '正在重试…'; img.src = src; } });
       img.decoding = 'async'; img.loading = i < realPage + 4 ? 'eager' : 'lazy'; img.src = src;
-      sheet.append(label, img); sheets.push(sheet);
+      const surface = document.createElement('div'); surface.className = 'paper-surface';
+      surface.append(label, img); sheet.append(surface); sheets.push(sheet);
     });
     flip = new St.PageFlip(root, {
       width: pageWidth, height: pageWidth * 1.5, size: 'fixed',
