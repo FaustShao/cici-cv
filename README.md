@@ -11,11 +11,21 @@ python3 -m http.server 8000 --bind 0.0.0.0
 
 在本机浏览器通过运行机器的地址与 8000 端口访问。停止服务使用 Ctrl+C。也可以直接打开 `index.html`。不需要 npm install。
 
+## 页面架构
+
+- `index.html`：首页，个人简介和内容入口。
+- `resume.html`：完整简历及打印 PDF。
+- `portfolio.html`：Future Gazette 翻页作品集。
+- `works.html`：其它项目，可展开研究与设计过程。
+- `site.js` / `site.css`：共享导航、当前页标记、主题和公共布局。
+
+个人资料与项目继续统一维护在 `resume.js`。
+
 ## 个性化
 
 - `resume.js`：姓名、简介、联系方式、经历、项目、技能及教育。项目 `url` 留空时不显示跳转链接。
 - `styles.css`：颜色、排版、移动端和打印样式。
-- `index.html`：页面结构；`app.js`：安全的文本渲染及交互。
+- `resume.html`：简历结构；`app.js`：简历渲染及打印交互。
 - 导出 PDF：点击按钮，在浏览器打印对话框选择“另存为 PDF”；建议 A4、关闭页眉页脚，按需要开启背景图形。内容增多会自动分页。
 
 不要将身份证号、家庭住址、密钥或不希望公开的联系方式写入页面。此模板没有后端、表单或访问鉴权。
@@ -37,7 +47,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 连接 GitHub 仓库，生产分支选 `main`。不选框架，构建命令填写：
 
 ```sh
-mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
+mkdir -p public && cp index.html resume.html works.html styles.css site.css site.js resume.js app.js portfolio.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
 ```
 
 构建输出目录填 `public`，无需环境变量。部署成功后可绑定自定义域名。预览与生产地址均需按公开页面处理。

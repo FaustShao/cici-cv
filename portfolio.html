@@ -6,9 +6,12 @@
 <link rel="preload" as="image" href="assets/gazette/page-01.webp" imagesrcset="assets/gazette/page-01-small.webp 640w, assets/gazette/page-01.webp 1067w" imagesizes="(max-width: 700px) calc(100vw - 64px), 550px" fetchpriority="high">
 <title>Future Gazette · 作品集</title>
 <link rel="stylesheet" href="portfolio.css?v=9">
+<link rel="stylesheet" href="site.css">
+<script src="site.js" defer></script>
 <script src="assets/vendor/page-flip/page-flip.browser.js" defer></script><script src="portfolio.js?v=9" defer></script>
 </head>
-<body>
+<body class="portfolio-page">
+<header class="topbar"><a class="wordmark" href="index.html">YUXIN WANG<span> / 王钰欣</span></a><nav aria-label="主导航"><a href="index.html">首页</a><a href="resume.html">简历</a><a href="portfolio.html">作品集</a><a href="works.html">其它作品</a><button id="theme" type="button" aria-label="切换主题">切换主题</button></nav></header>
 <main>
 <section id="reader" class="reader" aria-label="Future Gazette，可拖拽书角翻页，或使用键盘左右方向键" tabindex="0">
 <div class="book-shell" data-cover="true"><div id="book" class="book"></div></div>

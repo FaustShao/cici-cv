@@ -44,12 +44,6 @@ data.skills.forEach(group => {
 data.education.forEach(item => { const block = el('article', 'education'); block.append(el('p', 'period', item.period), el('h3', '', item.school), el('p', 'description', item.degree)); if (item.details) block.append(el('p', 'description', item.details)); document.getElementById('education').append(block); });
 const contact = data.contacts.find(item => item.url.startsWith('mailto:'));
 if (contact) { const href = safeUrl(contact.url); if (href) document.getElementById('contact-link').href = href; }
-const themeButton = document.getElementById('theme');
-function applyTheme(theme) { document.documentElement.dataset.theme = theme; themeButton.setAttribute('aria-pressed', String(theme === 'dark')); themeButton.textContent = theme === 'dark' ? '浅色模式' : '深色模式'; }
-let savedTheme;
-try { savedTheme = localStorage.getItem('resume-theme'); } catch { /* Storage may be disabled. */ }
-applyTheme(['light', 'dark'].includes(savedTheme) ? savedTheme : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-themeButton.addEventListener('click', () => { const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; applyTheme(theme); try { localStorage.setItem('resume-theme', theme); } catch { /* Theme still works without storage. */ } });
 document.getElementById('print').addEventListener('click', () => window.print());
 
 (data.awards || []).forEach(item => { const block = el('article', 'award'); block.append(el('p', 'period', item.period), el('h3', '', item.name), el('p', 'description', item.description)); document.getElementById('awards').append(block); });
