@@ -52,7 +52,7 @@ mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html port
 
 ## 照片与动效
 
-`assets/portrait.png` 提取自原简历。桌面鼠标悬停时照片卡片轻微上浮、转正，照片微微放大。系统开启“减少动态效果”时关闭此动效，打印时恢复静态。
+`assets/portrait.jpg` 为用户上传的首页原图。桌面鼠标悬停时照片卡片轻微上浮、转正，照片微微放大。系统开启“减少动态效果”时关闭此动效，打印时恢复静态。
 
 ## 作品集翻页书
 
