@@ -8,7 +8,7 @@
   let flip;
   let lastSize = '';
   const leafToPdf = index => Math.min(index, count - 1);
-  const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.jpg`);
+  const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.webp`);
   function build() {
     const single = matchMedia('(max-width: 700px)').matches;
     const availableHeight = Math.max(150, reader.clientHeight - 36);
@@ -39,7 +39,11 @@
       img.addEventListener('load', () => { label.hidden = true; img.style.opacity = '1'; });
       img.addEventListener('error', () => { label.textContent = `第 ${i + 1} 页暂未加载，点击重试`; sheet.classList.add('load-failed'); });
       sheet.addEventListener('click', () => { if (sheet.classList.contains('load-failed')) { sheet.classList.remove('load-failed'); label.textContent = '正在重试…'; img.src = src; } });
-      img.decoding = 'async'; img.loading = i < realPage + 4 ? 'eager' : 'lazy'; img.src = src;
+      img.decoding = 'async'; img.loading = Math.abs(i - realPage) < 2 ? 'eager' : 'lazy';
+      img.fetchPriority = i === realPage ? 'high' : 'low';
+      img.sizes = `${pageWidth}px`;
+      img.srcset = `${src.replace('.webp', '-small.webp')} 640w, ${src} 1067w`;
+      img.src = src;
       const surface = document.createElement('div'); surface.className = 'paper-surface';
       surface.append(label, img); sheet.append(surface); sheets.push(sheet);
     });
@@ -53,8 +57,32 @@
     flip.on('init', announce);
     flip.on('flip', announce);
     flip.on('changeState', event => { reader.dataset.flipState = event.data; });
+    installSideDrag(flip);
     flip.loadFromHTML(sheets);
     reader.setAttribute('aria-busy', 'false');
+  }
+  // Adapt the pinned library's pointer coordinates without changing its source.
+  // A grab in the middle band moves a vertical crease; corner grabs stay free.
+  function installSideDrag(instance) {
+    const start = instance.startUserTouch.bind(instance);
+    const move = instance.userMove.bind(instance);
+    const stop = instance.userStop.bind(instance);
+    let grab = null;
+    const mapped = point => grab ? { x: grab.edge + point.x - grab.x, y: grab.top + .1 } : point;
+    instance.startUserTouch = point => {
+      const rect = instance.getBoundsRect();
+      const fraction = (point.y - rect.top) / rect.height;
+      if (fraction > .28 && fraction < .72) {
+        const single = instance.getOrientation() === 'portrait';
+        const visibleLeft = rect.left + (single ? rect.pageWidth : 0);
+        const backwards = point.x < (single ? visibleLeft + rect.width / 5 : rect.left + rect.pageWidth);
+        grab = { x: point.x, top: rect.top, edge: backwards ? visibleLeft + .1 : rect.left + rect.width - .1 };
+        shell.dataset.dragMode = 'side';
+      } else { grab = null; shell.dataset.dragMode = 'corner'; }
+      start(mapped(point));
+    };
+    instance.userMove = (point, touch) => move(mapped(point), touch);
+    instance.userStop = (point, swipe) => { stop(mapped(point), swipe); grab = null; };
   }
   function announce() {
     const index = flip.getCurrentPageIndex();
