@@ -37,7 +37,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 连接 GitHub 仓库，生产分支选 `main`。不选框架，构建命令填写：
 
 ```sh
-mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html portfolio.css portfolio.js public/ && cp -R assets public/
+mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
 ```
 
 构建输出目录填 `public`，无需环境变量。部署成功后可绑定自定义域名。预览与生产地址均需按公开页面处理。
@@ -56,10 +56,16 @@ mkdir -p public && cp index.html styles.css resume.js app.js portfolio.html port
 
 ## 作品集翻页书
 
-`portfolio.html` 只展示 Future Gazette 翻页书和一个源文件下载按钮。原始31页 PDF 位于 `assets/gazette/future-gazette.pdf`。桌面端可按住书页右上角或右下角向左拖动翻页，左侧书角可向右翻回；手机支持单页触摸翻页。键盘左右键翻页，Home/End 定位首尾。系统设置减少动态效果时，键盘直接切页。
+`portfolio-local.html` 只展示 Future Gazette 翻页书和一个源文件下载按钮。原始31页 PDF 位于 `assets/gazette/future-gazette.pdf`。桌面端可按住书页右上角或右下角向左拖动翻页，左侧书角可向右翻回；手机支持单页触摸翻页。键盘左右键翻页，Home/End 定位首尾。系统设置减少动态效果时，键盘直接切页。
 
 使用 [StPageFlip](https://github.com/Nodlik/StPageFlip)（page-flip 2.0.7，MIT）。本地副本和许可证在 `assets/vendor/page-flip/`，发布包通过 npm 的 SHA-512 integrity 校验。无需外部 CDN、安装或构建。
 
 为避免拖拽时加载或解码书页导致停顿，阅读器会在31张图片解码后启用翻页；首次加载需下载约12MB图片。关闭书角自动预翻，保持翻页前后容器位置及尺寸一致。静态纸层、落地阴影和书脊不参与书页几何计算。
 
 原稿为图片型 PDF，图片正文不能搜索或直接供屏幕阅读器朗读；页面保留阅读器标签和隐藏的页码提示。更换 PDF 后需重新生成图片，并同步 `portfolio.js` 中页数。
+
+## FlippingBook 嵌入试验
+
+`portfolio.html` 使用 iframe 加载用户指定的 `https://online.flippingbook.com/view/718347183/`。远端刊物的内容、工具栏及访问权限由 FlippingBook 控制，不等于把本地 PDF 上传到该服务。底部下载按钮仍指向用户上传的 Gazette 原始 PDF。
+
+当前云环境代理拒绝访问 FlippingBook，不能确认嵌入成功，也不能检查其 frame-ancestors/X-Frame-Options 策略。应在部署后用普通浏览器验证；若平台禁止嵌入或浏览器网络无法加载，使用“打开原网页”或“本地翻书版本”。跨域限制下不能通过 iframe 的 load 事件判断刊物是否成功展示。
