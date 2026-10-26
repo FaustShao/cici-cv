@@ -2,7 +2,7 @@
   const root = document.querySelector('#project');
   const viewer = document.querySelector('#image-viewer');
   const names = {home:'HOME',research:'RESEARCH',diary:'DESIGN DIARY',teas:'TEAS',merch:'MERCH',service:'SERVICE SYSTEM',packaging:'Packaging',material:'Material',about:'About Us'};
-  const available = new Set(['home','research']);
+  const available = new Set(['home','research','teas']);
   const image = (folder, file, alt) => {
     const img = document.createElement('img');
     img.src = `assets/tideline/${folder}/${encodeURIComponent(file)}.png`;
@@ -33,7 +33,7 @@
     }
     const shell=document.createElement('div');shell.className='canvas-shell';
     const canvas=document.createElement('section');canvas.className='canvas';canvas.setAttribute('aria-label',names[current]);
-    const height=current==='home'?3538:18112;canvas.style.height=`${height}px`;
+    const height=current==='home'?3538:current==='teas'?2243:18112;canvas.style.height=`${height}px`;
     shell.append(canvas);root.append(shell);
     function layer(folder,file,x,y,w,h,alt,zoom=false) {
       const img=image(folder,file,alt);img.width=Math.round(w*2);img.height=Math.round(h*2);
@@ -42,15 +42,34 @@
       if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
       node.classList.add('layer');Object.assign(node.style,{left:`${x}px`,top:`${y}px`,width:`${w}px`,height:`${h}px`});canvas.append(node);return node;
     }
-    const folder=current==='home'?'HOME':'RESEARCH';
+    const folder=current==='research'?'RESEARCH':'HOME';
     if(current==='home') {
       layer(folder,'Background',0,0,1728,1296,'Findhorn coast and beach hut');
       layer(folder,'Intro',283,376,1158.5,41.5,'A tea that restores you like the land is being restored.');
-      const strip=document.createElement('div');strip.className='strip';strip.tabIndex=0;strip.setAttribute('role','region');strip.setAttribute('aria-label','Tea blends — scroll horizontally');strip.append(image(folder,'横向滚页','Heather Mist, Shore Greens, Coastal Citrus and Saltmarsh Harmony'));canvas.append(strip);
+      const strip=document.createElement('div');strip.className='strip';strip.tabIndex=0;strip.setAttribute('role','region');strip.setAttribute('aria-label','Six tea blends — scroll horizontally');strip.append(image(folder,'横向滚页','Heather Mist, Shore Greens, Coastal Citrus, Saltmarsh Harmony, Gorse Blossom and Pine Breeze'));canvas.append(strip);
+      strip.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();strip.scrollLeft+=event.key==='ArrowRight'?434:-434;}});
       layer(folder,'Line 6',47,1410,1633,3,'');layer(folder,'Line 7',38,1926,1633,3,'');
       layer(folder,'Group 19',38,2041,1633,683,'Packaging, Material and About Us');
       for(const [i,key] of ['packaging','material','about'].entries()){const a=document.createElement('a');a.className='feature-link';a.href=`#${key}`;a.setAttribute('aria-label',names[key]);a.style.left=`${38+i*558}px`;a.style.width='517px';canvas.append(a);}
       layer(folder,'Group 22',0,2868,1728,494,'Tideline Tea revives seaweed as a traditional coastal food. Newsletter sign-up shown in the design is not active.');
+    } else if(current==='teas') {
+      canvas.classList.add('teas-canvas');shell.classList.add('teas-shell');
+      const grid=document.createElement('div');grid.className='tea-grid';canvas.append(grid);
+      grid.append(image('TEAS','Intro','Teas — coastal-inspired seaweed and shoreline botanical blends.'));
+      const blends=['Heather Mist','Shore Greens','Coastal Citrus','Saltmarsh Harmony','Gorse Blossom','Pine Breeze'];
+      const notes=['Floral honey, soft mineral, gentle sweetness','Warm greens, mild umami, coastal sweetness','Citrus-bright, mineral crisp, salty spice','Light brine, green mineral, coastal herb','Coconut floral, bright freshness, coastal warmth','Resin-fresh, crisp herbal, mineral cool'];
+      for(let i=1;i<=6;i++) {
+        const card=document.createElement('button');card.type='button';card.className='tea-card';card.dataset.blend=String(i);
+        card.setAttribute('aria-label',`${blends[i-1]} — ${notes[i-1]}. Toggle tasting details.`);card.setAttribute('aria-pressed','false');
+        const front=image('TEAS',`${i}F`,'');front.className='tea-front';
+        const back=image('tea2/Tea card',String(i),'');back.className='tea-back';
+        card.append(front,back);
+        card.addEventListener('click',()=>card.setAttribute('aria-pressed',String(card.getAttribute('aria-pressed')!=='true')));
+        card.addEventListener('pointerleave',event=>{if(event.pointerType==='mouse')card.setAttribute('aria-pressed','false');});
+        card.addEventListener('keydown',event=>{if(event.key==='Escape')card.setAttribute('aria-pressed','false');});
+        grid.append(card);
+      }
+      grid.append(image('TEAS','Coming soon','More blends coming soon.'));
     } else {
       const blocks=[['History',265,194,1235,8252.5,'History of Findhorn and seaweed'],['Geology',290,8501,1185,787,'Geology'],['Frame 19',140,9334,1441,2361,'Geology research'],['Biology-1',271,11922,1185,787,'Biology'],['Biology',89.5,12885,1557,2402,'Biology research'],['Relationship-1',289,15423,1185,787,'Relationship'],['Relationship',99,16346,1567,1593,'Community relationships']];
       for(const [file,x,y,w,h,alt] of blocks)layer(folder,file,x,y,w,h,alt,true);
