@@ -7,6 +7,9 @@
 .research-external:focus-visible .external-hint{opacity:1;transform:none}
 @media(hover:hover){.research-external:hover{transform:translateY(-5px);box-shadow:0 12px 24px #0002}.research-external:hover .external-hint{opacity:1;transform:none}}
 .research-external:active{transform:translateY(0) scale(.985);box-shadow:0 3px 8px #0002}
+.plant-link .external-hint{left:0;right:0;bottom:0;padding:35px 24px 22px;border-radius:0;background:linear-gradient(transparent,#14271bf2);text-align:left}
+.plant-link .external-hint strong{display:block;font-size:34px;font-weight:500;line-height:1.2;margin-bottom:8px}
+.plant-link .external-hint small{display:block;font-size:17px;line-height:1.3}
 @media(hover:none){.external-hint{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.research-external,.external-hint{transition:none}.research-external:hover,.research-external:active{transform:none}}
 .bouncing-intro{position:absolute;left:283px;top:376px;width:1158.5px;height:41.5px;margin:0;padding:0;font-size:0;overflow:visible}

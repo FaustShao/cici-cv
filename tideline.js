@@ -101,9 +101,14 @@
       if(y>2000)img.loading='lazy';
       const node=external?document.createElement('a'):zoom?document.createElement('button'):img;
       if(external){
-        node.className='research-external';node.href=external.url;node.target='_blank';node.rel='noopener noreferrer';
-        node.setAttribute('aria-label',`Visit ${external.name} official website (opens in a new tab)`);
-        const hint=document.createElement('span');hint.className='external-hint';hint.textContent='访问官网 / Visit website ↗';hint.setAttribute('aria-hidden','true');
+        node.className=`research-external${external.plant?' plant-link':''}`;node.href=external.url;node.target='_blank';node.rel='noopener noreferrer';
+        node.setAttribute('aria-label',external.plant?`${external.name} — ${external.related?'甜菜相关介绍':'百度百科词条'} (opens in a new tab)`:`Visit ${external.name} official website (opens in a new tab)`);
+        const hint=document.createElement('span');hint.className='external-hint';hint.setAttribute('aria-hidden','true');
+        if(external.plant){
+          const name=document.createElement('strong');name.textContent=external.name;
+          const action=document.createElement('small');action.textContent=external.related?'百度百科 · 甜菜相关介绍 ↗':'查看百度百科 ↗';
+          hint.append(name,action);
+        }else hint.textContent='访问官网 / Visit website ↗';
         node.append(img,hint);
       } else if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
       node.classList.add('layer');Object.assign(node.style,{left:`${x}px`,top:`${y}px`,width:`${w}px`,height:`${h}px`});canvas.append(node);return node;
@@ -152,6 +157,17 @@
         'image 50':{name:'The Cornish Seaweed Company',url:'https://www.cornishseaweed.co.uk/'},
         'image 49':{name:'Hebridean Seaweed',url:'https://hebrideanseaweed.com/'}
       };
+      const plants=[
+        ['image 16','Heather','帚石南'],
+        ['image 17','Gorse','荆豆/5365339'],
+        ['image 15','Sea Beet','甜菜/183950',true],
+        ['image 14','Rock Samphire','海茴香/7830206'],
+        ['image 13','Sea Purslane','海马齿/8298641'],
+        ['Group 35','Scots Pine','欧洲赤松/7238416']
+      ];
+      for(const [file,name,entry,related=false] of plants){
+        websites[file]={name,plant:true,related,url:`https://baike.baidu.com/item/${entry.split('/').map(encodeURIComponent).join('/')}`};
+      }
       for(const [file,x,y,w,h,label] of blocks)layer(folder,file,x,y,w,h,label,!websites[file],websites[file]||null);
       layer(folder,'Created by Yuxin',1241,2820,209,31.5,'Created by Yuxin');
       const top=document.createElement('button');top.type='button';top.className='back-top';top.setAttribute('aria-label','Back to top');
