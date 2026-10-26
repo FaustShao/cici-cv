@@ -125,6 +125,7 @@
   function render() {
     observer?.disconnect();
     stopServiceTrail?.();stopServiceTrail=null;
+    root.querySelectorAll('video').forEach(video=>video.pause());
     const route = location.hash.slice(1) || 'home';
     const current = Object.hasOwn(names,route) ? route : 'home';
     root.replaceChildren();
@@ -238,7 +239,12 @@
       layer(folder,'union.19 1',253,192,1221,687,'Tideline tea packaging render',true);
       const credit=document.createElement('p');credit.className='packaging-credit';credit.textContent='Rendered by Haojie';canvas.append(credit);
     } else if(current==='material') {
-      layer(folder,'Rectangle 331',253,165,1222,692,'Seaweed material experimentation overview',true);
+      const video=document.createElement('video');video.className='layer material-video';
+      video.controls=true;video.playsInline=true;video.preload='metadata';
+      video.src='assets/tideline/Material/seaweed-material.mp4';video.poster=image(folder,'Rectangle 331','').src;
+      video.setAttribute('aria-label','Seaweed Packaging Material — experiment video');
+      Object.assign(video.style,{left:'253px',top:'165px',width:'1222px',height:'692px'});
+      const fallback=document.createElement('a');fallback.href=video.src;fallback.textContent='Open the material experiment video';video.append(fallback);canvas.append(video);
       layer(folder,'画板 1 2',253,895,1222,864,'Seaweed bioplastic experiment: ingredients, procedures and drying time',true);
       const gallery=document.createElement('div');gallery.className='strip material-strip';gallery.tabIndex=0;
       gallery.setAttribute('role','region');gallery.setAttribute('aria-label','Seaweed paper experiments — scroll or drag horizontally to see all six photographs');

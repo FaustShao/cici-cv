@@ -18,6 +18,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - `portfolio.html`：Future Gazette 翻页作品集。
 - `works.html`：其它项目，可展开研究与设计过程。
 - Material 页面已接入实验说明和六张材料照片，支持说明图点击放大、照片横条滚轮／拖动／触屏浏览。可从 HOME 的 Material 入口进入，或使用 `tideline.html#material`。
+- Material 顶部原封面位置替换为约 58 秒的海藻包装材料实验视频，保留原图为海报，使用原生播放／暂停、进度、音量及全屏控件，默认不自动播放。切换项目页面时停止播放，视频无重编码并优化了网页加载。
 - Packaging 页面已接入包装渲染图、四色包装展示和底部全幅图，支持纵向滚动及点击放大；入口为 HOME 的 Packaging 区域或 `tideline.html#packaging`。
 - Merch 页面展示八款周边、Intro 和 Coming soon，桌面三列、手机单列，卡片悬停时轻微上浮并显示阴影，无点击放大。从项目导航 MERCH 或 `tideline.html#merch` 进入。上传的 Food 与 Food Bag 为相同图片，仅展示一次。
 - Design Diary 页面按原稿顺序展示 Insight、Further research、Brainstorm 与 Proposal 内容；长页纵向滚动，7 张内容图可点击放大，三张网站截图在新标签页打开对应官网。六张植物图悬停显示英文名，点击在新标签页打开百度百科（Sea Beet 使用甜菜相关词条，已标注），触屏常显名称。外链有手形光标、悬停及按下反馈。页尾箭头返回顶部，入口为 DESIGN DIARY 或 `tideline.html#diary`。
