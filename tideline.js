@@ -2,7 +2,7 @@
   const root = document.querySelector('#project');
   const viewer = document.querySelector('#image-viewer');
   const names = {home:'HOME',research:'RESEARCH',diary:'DESIGN DIARY',teas:'TEAS',merch:'MERCH',service:'SERVICE SYSTEM',packaging:'Packaging',material:'Material',about:'About Us'};
-  const available = new Set(['home','research','teas']);
+  const available = new Set(['home','research','teas','material']);
   const image = (folder, file, alt) => {
     const img = document.createElement('img');
     img.src = `assets/tideline/${folder}/${encodeURIComponent(file)}.png`;
@@ -71,7 +71,7 @@
     }
     const shell=document.createElement('div');shell.className='canvas-shell';
     const canvas=document.createElement('section');canvas.className='canvas';canvas.setAttribute('aria-label',names[current]);
-    const height=current==='home'?3538:current==='teas'?2243:18112;canvas.style.height=`${height}px`;
+    const height=current==='home'?3538:current==='teas'?2243:current==='material'?2736:18112;canvas.style.height=`${height}px`;
     shell.append(canvas);root.append(shell);
     function layer(folder,file,x,y,w,h,alt,zoom=false) {
       const img=image(folder,file,alt);img.width=Math.round(w*2);img.height=Math.round(h*2);
@@ -80,7 +80,7 @@
       if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
       node.classList.add('layer');Object.assign(node.style,{left:`${x}px`,top:`${y}px`,width:`${w}px`,height:`${h}px`});canvas.append(node);return node;
     }
-    const folder=current==='research'?'RESEARCH':'HOME';
+    const folder=current==='research'?'RESEARCH':current==='material'?'Material':'HOME';
     if(current==='home') {
       layer(folder,'Background',0,0,1728,1296,'Findhorn coast and beach hut');
       layer(folder,'Intro',283,376,1158.5,41.5,'A tea that restores you like the land is being restored.');
@@ -91,6 +91,14 @@
       layer(folder,'Group 19',38,2041,1633,683,'Packaging, Material and About Us');
       for(const [i,key] of ['packaging','material','about'].entries()){const a=document.createElement('a');a.className='feature-link';a.href=`#${key}`;a.setAttribute('aria-label',names[key]);a.style.left=`${38+i*558}px`;a.style.width='517px';canvas.append(a);}
       layer(folder,'Group 22',0,2868,1728,494,'Tideline Tea revives seaweed as a traditional coastal food. Newsletter sign-up shown in the design is not active.');
+    } else if(current==='material') {
+      layer(folder,'Rectangle 331',253,165,1222,692,'Seaweed material experimentation overview',true);
+      layer(folder,'画板 1 2',253,895,1222,864,'Seaweed bioplastic experiment: ingredients, procedures and drying time',true);
+      const gallery=document.createElement('div');gallery.className='strip material-strip';gallery.tabIndex=0;
+      gallery.setAttribute('role','region');gallery.setAttribute('aria-label','Seaweed paper experiments — scroll or drag horizontally to see all six photographs');
+      gallery.append(image(folder,'Group 32','Six photographs of handmade seaweed paper: moulding, botanical patterns and coloured material samples'));
+      canvas.append(gallery);enableStripScrolling(gallery);
+      gallery.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();gallery.scrollLeft+=event.key==='ArrowRight'?434:-434;}});
     } else if(current==='teas') {
       canvas.classList.add('teas-canvas');shell.classList.add('teas-shell');
       const grid=document.createElement('div');grid.className='tea-grid';canvas.append(grid);
