@@ -2,7 +2,7 @@
   const root = document.querySelector('#project');
   const viewer = document.querySelector('#image-viewer');
   const names = {home:'HOME',research:'RESEARCH',diary:'DESIGN DIARY',teas:'TEAS',merch:'MERCH',service:'SERVICE SYSTEM',packaging:'Packaging',material:'Material',about:'About Us'};
-  const available = new Set(['home','research','teas','material','packaging']);
+  const available = new Set(['home','research','teas','material','packaging','merch']);
   const image = (folder, file, alt) => {
     const img = document.createElement('img');
     img.src = `assets/tideline/${folder}/${encodeURIComponent(file)}.png`;
@@ -71,7 +71,7 @@
     }
     const shell=document.createElement('div');shell.className='canvas-shell';
     const canvas=document.createElement('section');canvas.className='canvas';canvas.setAttribute('aria-label',names[current]);
-    const height=current==='home'?3538:current==='teas'?2243:current==='material'?2736:current==='packaging'?3130:18112;canvas.style.height=`${height}px`;
+    const height=current==='home'?3538:current==='teas'?2243:current==='merch'?2590:current==='material'?2736:current==='packaging'?3130:18112;canvas.style.height=`${height}px`;
     shell.append(canvas);root.append(shell);
     function layer(folder,file,x,y,w,h,alt,zoom=false) {
       const img=image(folder,file,alt);img.width=Math.round(w*2);img.height=Math.round(h*2);
@@ -80,7 +80,7 @@
       if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
       node.classList.add('layer');Object.assign(node.style,{left:`${x}px`,top:`${y}px`,width:`${w}px`,height:`${h}px`});canvas.append(node);return node;
     }
-    const folder=current==='research'?'RESEARCH':current==='material'?'Material':current==='packaging'?'Packaging':'HOME';
+    const folder=current==='research'?'RESEARCH':current==='material'?'Material':current==='packaging'?'Packaging':current==='merch'?'Merch':'HOME';
     if(current==='home') {
       layer(folder,'Background',0,0,1728,1296,'Findhorn coast and beach hut');
       layer(folder,'Intro',283,376,1158.5,41.5,'A tea that restores you like the land is being restored.');
@@ -104,6 +104,17 @@
       gallery.append(image(folder,'Group 32','Six photographs of handmade seaweed paper: moulding, botanical patterns and coloured material samples'));
       canvas.append(gallery);enableStripScrolling(gallery);
       gallery.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();gallery.scrollLeft+=event.key==='ArrowRight'?434:-434;}});
+    } else if(current==='merch') {
+      canvas.classList.add('teas-canvas');shell.classList.add('teas-shell');
+      const grid=document.createElement('div');grid.className='tea-grid merch-grid';canvas.append(grid);
+      grid.append(image(folder,'Intro','Merch — coastal-inspired seaweed objects and materials'));
+      const products=[['Paper','Seaweed Paper'],['Packaging','Seaweed Packaging'],['Plant','Plant Pot'],['Dye','Kelp-dyed Label'],['Food Bag','Food Bag'],['Envelope','Seaweed Envelope'],['Hand Bag','Hand Bag'],['Kitchen','Kitchen Set']];
+      for(const [file,label] of products){
+        const card=document.createElement('button');card.type='button';card.className='merch-card';card.setAttribute('aria-label',`Enlarge: ${label}`);
+        const img=image(folder,file,label);card.append(img);grid.append(card);
+        card.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=label;viewer.showModal();});
+      }
+      grid.append(image(folder,'Coming soon','More objects coming soon.'));
     } else if(current==='teas') {
       canvas.classList.add('teas-canvas');shell.classList.add('teas-shell');
       const grid=document.createElement('div');grid.className='tea-grid';canvas.append(grid);
@@ -129,7 +140,7 @@
       layer(folder,'Created by Haojie, Yuchen and Yuxin',1202,17422,455.5,31.5,'Created by Haojie, Yuchen and Yuxin');
       const button=document.createElement('button');button.type='button';button.className='back-top';button.setAttribute('aria-label','Back to top');Object.assign(button.style,{left:'1400px',top:'17814px',width:'81px',height:'92px'});button.append(image(folder,'Arrow 1',''));button.addEventListener('click',()=>window.scrollTo({top:0}));canvas.append(button);
     }
-    const nav=document.createElement('nav');nav.className='navigator';nav.setAttribute('aria-label','Project navigation');nav.append(image(folder,'Navigator','Tideline'));
+    const nav=document.createElement('nav');nav.className='navigator';nav.setAttribute('aria-label','Project navigation');nav.append(image(current==='merch'?'HOME':folder,'Navigator','Tideline'));
     const routes=[['home',51.51,15.38,5],['research',68.11,15.38,9],['diary',84.79,15.38,13],['teas',51.51,64.84,5],['merch',68.11,64.84,8],['service',84.79,64.84,15]];
     for(const [key,x,y,w] of routes){const a=document.createElement('a');a.href=`#${key}`;a.className='nav-link';a.setAttribute('aria-label',names[key]);a.textContent=names[key];Object.assign(a.style,{left:`${x}%`,top:`${y}%`,width:`${w}%`,height:'27%'});if(key===current)a.setAttribute('aria-current','page');nav.append(a);}canvas.append(nav);
     const resize=()=>{const scale=shell.clientWidth/1728;canvas.style.transform=`scale(${scale})`;shell.style.height=`${height*scale}px`;};

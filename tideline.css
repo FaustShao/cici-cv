@@ -12,6 +12,9 @@
 .tea-card img{position:absolute;inset:0;display:block;width:100%;height:100%;transition:opacity .2s ease}
 .tea-back{opacity:0}.tea-card[aria-pressed=true] .tea-back,.tea-card:focus-visible .tea-back{opacity:1}
 .tea-card:focus-visible{outline:3px solid #477359;outline-offset:5px}
+.merch-card{display:block;width:382px;height:539px;padding:0;border:0;background:transparent;cursor:zoom-in}
+.merch-card img{display:block;width:100%;height:100%}
+@media(max-width:640px){.merch-card{width:100%;height:auto;aspect-ratio:382/539}}
 @media(hover:hover) and (pointer:fine){.tea-card:hover .tea-back{opacity:1}}
 @media(max-width:640px){.teas-shell{height:auto!important}.teas-canvas{position:relative;width:100%;height:auto!important;transform:none!important}.teas-canvas .navigator{display:none}.tea-grid{position:relative;left:auto;top:auto;width:auto;margin:20px;grid-template-columns:minmax(0,1fr);gap:20px}.tea-grid>img,.tea-card{width:100%;height:auto;aspect-ratio:382/539}}
 @media(prefers-reduced-motion:reduce){.tea-card img{transition:none}}
