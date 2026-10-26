@@ -21,8 +21,8 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - Packaging 页面已接入包装渲染图、四色包装展示和底部全幅图，支持纵向滚动及点击放大；入口为 HOME 的 Packaging 区域或 `tideline.html#packaging`。
 - Merch 页面展示八款周边、Intro 和 Coming soon，桌面三列、手机单列，卡片悬停时轻微上浮并显示阴影，无点击放大。从项目导航 MERCH 或 `tideline.html#merch` 进入。上传的 Food 与 Food Bag 为相同图片，仅展示一次。
 - Design Diary 页面按原稿顺序展示 Insight、Further research、Brainstorm 与 Proposal 内容；长页纵向滚动，7 张内容图可点击放大，三张网站截图在新标签页打开对应官网。六张植物图悬停显示英文名，点击在新标签页打开百度百科（Sea Beet 使用甜菜相关词条，已标注），触屏常显名称。外链有手形光标、悬停及按下反馈。页尾箭头返回顶部，入口为 DESIGN DIARY 或 `tideline.html#diary`。
-- Service System 页面接入 Service Process、Space Layout 和三张服务／空间设计图，保持原图比例与原稿位置，支持纵向滚动、点击放大。入口为 SERVICE SYSTEM 或 `tideline.html#service`。
-- Service Process 图上悬停时，茶色发光小球沿用户标记的虚线路径从左下向右上弹跳，约 12 秒一趟，带渐隐拖尾；停留时循环，移开或切换页面停止，并遵循减少动态效果设置。
+- Service System 页面接入 Service Process、Space Layout 和三张服务／空间设计图，保持原图比例与原稿位置，支持纵向滚动，本页所有图片不提供点击放大。入口为 SERVICE SYSTEM 或 `tideline.html#service`。
+- Service Process 图上悬停时，主题红色小球沿用户标记的虚线路径从左下向右上弹跳，约 12 秒一趟，拖尾为逐渐变小、变淡的红色圆点，无光晕；停留时循环，移开或切换页面停止，并遵循减少动态效果设置。
 - `tideline.html`：Tideline 海藻茶项目，已接入 HOME、RESEARCH 和 TEAS。HOME 六款茶图保持原图比例，支持滚轮、鼠标拖动、触屏滑动和方向键横向浏览，到达边缘后滚轮继续纵向浏览页面；TEAS 六张卡片悬停显示 tea2 详情、移开恢复，手机点击切换；研究长图可点击放大，其余页面待补充。
 - `site.js` / `site.css`：共享导航、当前页标记、主题和公共布局。
 

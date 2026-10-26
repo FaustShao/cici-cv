@@ -24,16 +24,11 @@
       d+=` C ${b[0]+(c[0]-a[0])/6} ${b[1]+(c[1]-a[1])/6}, ${c[0]-(e[0]-b[0])/6} ${c[1]-(e[1]-b[1])/6}, ${c.join(' ')}`;
     }
     const path=svgNode('path',{d,fill:'none',stroke:'none'});svg.append(path);
-    const defs=svgNode('defs');
-    const gradient=svgNode('radialGradient',{id:'tea-orb-glow',cx:'35%',cy:'30%',r:'70%'});
-    for(const [offset,color] of [['0%','#fffbe0'],['40%','#e8d493'],['75%','#bfd995'],['100%','#719a68']])gradient.append(svgNode('stop',{offset,'stop-color':color}));
-    defs.append(gradient);svg.append(defs);
     const group=svgNode('g',{class:'service-trail-particles'});svg.append(group);
-    const shadow=svgNode('ellipse',{rx:9,ry:3,fill:'#577b53',opacity:'.22'});group.append(shadow);
-    const tail=Array.from({length:22},(_,i)=>{
-      const dot=svgNode('circle',{r:Math.max(.8,6.5-i*.25),fill:i%3===0?'#e8d493':'#bfd995',class:'service-trail-dot'});group.append(dot);return dot;
+    const tail=Array.from({length:14},(_,i)=>{
+      const dot=svgNode('circle',{r:5.5-i*.31,fill:'#ca151e',class:'service-trail-dot'});group.append(dot);return dot;
     });
-    const ball=svgNode('circle',{r:8,fill:'url(#tea-orb-glow)',class:'service-trail-ball'});group.append(ball);host.append(svg);
+    const ball=svgNode('circle',{r:8,fill:'#ca151e',class:'service-trail-ball'});group.append(ball);host.append(svg);
     const length=path.getTotalLength();
     const samples=Array.from({length:1201},(_,i)=>path.getPointAtLength(length*i/1200));
     const position=t=>{
@@ -50,9 +45,8 @@
       const elapsed=(now-start)%13000,progress=Math.min(1,elapsed/12000);
       group.style.opacity=String(elapsed>12000?1-(elapsed-12000)/1000:1);
       const head=position(progress);ball.setAttribute('cx',head.x);ball.setAttribute('cy',head.y);
-      shadow.setAttribute('cx',head.x);shadow.setAttribute('cy',head.ground+6);
       tail.forEach((dot,i)=>{
-        const t=progress-(i+1)*.0028;
+        const t=progress-(i+1)*.0048;
         dot.setAttribute('opacity',t<0?'0':String(.62*(1-i/tail.length)));
         if(t>=0){const p=position(t);dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y);}
       });
@@ -187,11 +181,14 @@
       layer(folder,'Group 22',0,2868,1728,494,'Tideline Tea revives seaweed as a traditional coastal food. Newsletter sign-up shown in the design is not active.');
     } else if(current==='service') {
       layer(folder,'Service Process',680,281,362.5,45.5,'Service Process');
-      const process=layer(folder,'未标题-1_画板 1 1',253,393,1222,1728,'Tideline service process and circular service system',true);
+      const processImage=layer(folder,'未标题-1_画板 1 1',253,393,1222,1728,'Tideline service process and circular service system');
+      const process=document.createElement('div');process.className='layer service-process';process.style.cssText=processImage.style.cssText;
+      process.tabIndex=0;process.setAttribute('role','group');process.setAttribute('aria-label','Service process diagram with animated route');
+      processImage.classList.remove('layer');processImage.removeAttribute('style');canvas.replaceChild(process,processImage);process.append(processImage);
       stopServiceTrail=attachServiceTrail(process);
       layer(folder,'Space Layout',716,2424,293.5,55.5,'Space Layout');
-      layer(folder,'1 1',253,2538,1222,864,'Tea house space layout, zoning and visitor routes',true);
-      layer(folder,'3 1',229,3402,1250,884,'Tea house spatial design and service experience',true);
+      layer(folder,'1 1',253,2538,1222,864,'Tea house space layout, zoning and visitor routes');
+      layer(folder,'3 1',229,3402,1250,884,'Tea house spatial design and service experience');
     } else if(current==='diary') {
       layer(folder,'Rectangle 334',0,12614,1728,347,'');
       const headings=[['Insight',253,165,147,53.5,'Insight'],['Further research',253,5058,383,45,'Further research'],['Brainstorm',253,7220,247.5,45,'Brainstorm'],['Further research-1',253,9393,383,45,'Further research']];
