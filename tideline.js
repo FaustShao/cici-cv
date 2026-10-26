@@ -2,7 +2,7 @@
   const root = document.querySelector('#project');
   const viewer = document.querySelector('#image-viewer');
   const names = {home:'HOME',research:'RESEARCH',diary:'DESIGN DIARY',teas:'TEAS',merch:'MERCH',service:'SERVICE SYSTEM',packaging:'Packaging',material:'Material',about:'About Us'};
-  const available = new Set(['home','research','teas','material','packaging','merch','diary']);
+  const available = new Set(['home','research','teas','material','packaging','merch','diary','service']);
   const image = (folder, file, alt) => {
     const img = document.createElement('img');
     img.src = `assets/tideline/${folder}/${encodeURIComponent(file)}.png`;
@@ -71,7 +71,7 @@
     }
     const shell=document.createElement('div');shell.className='canvas-shell';
     const canvas=document.createElement('section');canvas.className='canvas';canvas.setAttribute('aria-label',names[current]);
-    const height=current==='home'?3538:current==='teas'?2243:current==='merch'?2590:current==='material'?2736:current==='packaging'?3130:current==='diary'?12961:18112;canvas.style.height=`${height}px`;
+    const height=current==='home'?3538:current==='teas'?2243:current==='merch'?2590:current==='material'?2736:current==='packaging'?3130:current==='diary'?12961:current==='service'?4307:18112;canvas.style.height=`${height}px`;
     shell.append(canvas);root.append(shell);
     function layer(folder,file,x,y,w,h,alt,zoom=false) {
       const img=image(folder,file,alt);img.width=Math.round(w*2);img.height=Math.round(h*2);
@@ -80,7 +80,7 @@
       if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
       node.classList.add('layer');Object.assign(node.style,{left:`${x}px`,top:`${y}px`,width:`${w}px`,height:`${h}px`});canvas.append(node);return node;
     }
-    const folder=current==='research'?'RESEARCH':current==='material'?'Material':current==='packaging'?'Packaging':current==='merch'?'Merch':current==='diary'?'Diary':'HOME';
+    const folder=current==='research'?'RESEARCH':current==='material'?'Material':current==='packaging'?'Packaging':current==='merch'?'Merch':current==='diary'?'Diary':current==='service'?'Service':'HOME';
     if(current==='home') {
       layer(folder,'Background',0,0,1728,1296,'Findhorn coast and beach hut');
       layer(folder,'Intro',283,376,1158.5,41.5,'A tea that restores you like the land is being restored.');
@@ -91,6 +91,12 @@
       layer(folder,'Group 19',38,2041,1633,683,'Packaging, Material and About Us');
       for(const [i,key] of ['packaging','material','about'].entries()){const a=document.createElement('a');a.className='feature-link';a.href=`#${key}`;a.setAttribute('aria-label',names[key]);a.style.left=`${38+i*558}px`;a.style.width='517px';canvas.append(a);}
       layer(folder,'Group 22',0,2868,1728,494,'Tideline Tea revives seaweed as a traditional coastal food. Newsletter sign-up shown in the design is not active.');
+    } else if(current==='service') {
+      layer(folder,'Service Process',680,281,362.5,45.5,'Service Process');
+      layer(folder,'未标题-1_画板 1 1',253,393,1222,1728,'Tideline service process and circular service system',true);
+      layer(folder,'Space Layout',716,2424,293.5,55.5,'Space Layout');
+      layer(folder,'1 1',253,2538,1222,864,'Tea house space layout, zoning and visitor routes',true);
+      layer(folder,'3 1',229,3402,1250,884,'Tea house spatial design and service experience',true);
     } else if(current==='diary') {
       layer(folder,'Rectangle 334',0,12614,1728,347,'');
       const headings=[['Insight',253,165,147,53.5,'Insight'],['Further research',253,5058,383,45,'Further research'],['Brainstorm',253,7220,247.5,45,'Brainstorm'],['Further research-1',253,9393,383,45,'Further research']];
