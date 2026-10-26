@@ -121,8 +121,13 @@
       strip.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();strip.scrollLeft+=event.key==='ArrowRight'?434:-434;}});
       enableStripScrolling(strip);
       layer(folder,'Line 6',47,1410,1633,3,'');layer(folder,'Line 7',38,1926,1633,3,'');
-      layer(folder,'Group 19',38,2041,1633,683,'Packaging, Material and About Us');
-      for(const [i,key] of ['packaging','material','about'].entries()){const a=document.createElement('a');a.className='feature-link';a.href=`#${key}`;a.setAttribute('aria-label',names[key]);a.style.left=`${38+i*558}px`;a.style.width='517px';canvas.append(a);}
+      const featureSource=image(folder,'Group 19','').src;
+      for(const [i,key] of ['packaging','material','about'].entries()){
+        const a=document.createElement('a');a.className='feature-link';a.href=`#${key}`;a.setAttribute('aria-label',names[key]);a.style.left=`${38+i*558}px`;a.style.width='517px';
+        const art=document.createElement('span');art.className='feature-art';art.setAttribute('aria-hidden','true');
+        art.style.backgroundImage=`url("${featureSource}")`;art.style.backgroundPosition=`-${i*558}px 0`;
+        a.append(art);canvas.append(a);
+      }
       layer(folder,'Group 22',0,2868,1728,494,'Tideline Tea revives seaweed as a traditional coastal food. Newsletter sign-up shown in the design is not active.');
     } else if(current==='service') {
       layer(folder,'Service Process',680,281,362.5,45.5,'Service Process');
