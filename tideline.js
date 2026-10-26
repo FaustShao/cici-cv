@@ -96,11 +96,16 @@
     const canvas=document.createElement('section');canvas.className='canvas';canvas.setAttribute('aria-label',names[current]);
     const height=current==='home'?3538:current==='teas'?2243:current==='merch'?2590:current==='material'?2736:current==='packaging'?3130:current==='diary'?12961:current==='service'?4307:18112;canvas.style.height=`${height}px`;
     shell.append(canvas);root.append(shell);
-    function layer(folder,file,x,y,w,h,alt,zoom=false) {
+    function layer(folder,file,x,y,w,h,alt,zoom=false,external=null) {
       const img=image(folder,file,alt);img.width=Math.round(w*2);img.height=Math.round(h*2);
       if(y>2000)img.loading='lazy';
-      const node=zoom?document.createElement('button'):img;
-      if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
+      const node=external?document.createElement('a'):zoom?document.createElement('button'):img;
+      if(external){
+        node.className='research-external';node.href=external.url;node.target='_blank';node.rel='noopener noreferrer';
+        node.setAttribute('aria-label',`Visit ${external.name} official website (opens in a new tab)`);
+        const hint=document.createElement('span');hint.className='external-hint';hint.textContent='访问官网 / Visit website ↗';hint.setAttribute('aria-hidden','true');
+        node.append(img,hint);
+      } else if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
       node.classList.add('layer');Object.assign(node.style,{left:`${x}px`,top:`${y}px`,width:`${w}px`,height:`${h}px`});canvas.append(node);return node;
     }
     const folder=current==='research'?'RESEARCH':current==='material'?'Material':current==='packaging'?'Packaging':current==='merch'?'Merch':current==='diary'?'Diary':current==='service'?'Service':'HOME';
@@ -142,7 +147,12 @@
         ['image 13',253,12208,548,411,'Project process photograph 5'],
         ['Group 35',927,12208,548,411,'Project process photograph 6']
       ];
-      for(const [file,x,y,w,h,label] of blocks)layer(folder,file,x,y,w,h,label,true);
+      const websites={
+        'image 48':{name:'SHORE Seaweed',url:'https://shoreseaweed.com/'},
+        'image 50':{name:'The Cornish Seaweed Company',url:'https://www.cornishseaweed.co.uk/'},
+        'image 49':{name:'Hebridean Seaweed',url:'https://hebrideanseaweed.com/'}
+      };
+      for(const [file,x,y,w,h,label] of blocks)layer(folder,file,x,y,w,h,label,!websites[file],websites[file]||null);
       layer(folder,'Created by Yuxin',1241,2820,209,31.5,'Created by Yuxin');
       const top=document.createElement('button');top.type='button';top.className='back-top';top.setAttribute('aria-label','Back to top');
       Object.assign(top.style,{left:'1392px',top:'12696px',width:'81px',height:'92px'});top.append(image(folder,'Arrow 2',''));top.addEventListener('click',()=>window.scrollTo({top:0}));canvas.append(top);
