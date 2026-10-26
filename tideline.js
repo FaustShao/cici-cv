@@ -11,6 +11,29 @@
     return img;
   };
   let observer;
+  function createBouncingIntro(canvas) {
+    const sentence = 'A tea that restores you like the land is being restored.';
+    // Glyph bounds in the uploaded 2317 × 83 PNG preserve the original lettering exactly.
+    const glyphs = [[0,35],[82,105],[120,150],[168,198],[247,270],[286,315],[334,363],[381,404],[452,477],[495,525],[543,572],[589,611],[627,657],[677,702],[720,750],[768,797],[845,876],[893,923],[942,971],[1024,1031],[1053,1060],[1082,1110],[1126,1155],[1203,1226],[1243,1271],[1291,1321],[1372,1379],[1400,1429],[1449,1478],[1497,1526],[1579,1586],[1607,1636],[1686,1715],[1734,1764],[1784,1791],[1813,1841],[1860,1894],[1942,1967],[1985,2015],[2033,2062],[2079,2101],[2117,2147],[2167,2192],[2210,2240],[2259,2288],[2307,2317]];
+    const heading = document.createElement('h1');
+    heading.className = 'bouncing-intro';heading.setAttribute('aria-label',sentence);
+    const source = image('HOME','Intro','').src;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    glyphs.forEach((glyph,index) => {
+      const left = index === 0 ? 0 : (glyphs[index-1][1]+glyph[0])/2;
+      const right = index === glyphs.length-1 ? 2317 : (glyph[1]+glyphs[index+1][0])/2;
+      const hit = document.createElement('span');hit.className='intro-letter';hit.setAttribute('aria-hidden','true');
+      Object.assign(hit.style,{left:`${left/2}px`,width:`${(right-left)/2}px`});
+      const ink = document.createElement('span');ink.className='intro-letter-ink';
+      Object.assign(ink.style,{backgroundImage:`url("${source}")`,backgroundPosition:`-${left/2}px 0`});
+      hit.append(ink);heading.append(hit);
+      hit.addEventListener('pointerenter',event=>{
+        if(event.pointerType==='mouse' && !reduced.matches) ink.classList.add('is-bouncing');
+      });
+      ink.addEventListener('animationend',()=>ink.classList.remove('is-bouncing'));
+    });
+    canvas.append(heading);
+  }
   function enableStripScrolling(strip) {
     const scale = () => strip.getBoundingClientRect().width / strip.offsetWidth || 1;
     strip.querySelector('img').draggable = false;
@@ -83,7 +106,7 @@
     const folder=current==='research'?'RESEARCH':current==='material'?'Material':current==='packaging'?'Packaging':current==='merch'?'Merch':current==='diary'?'Diary':current==='service'?'Service':'HOME';
     if(current==='home') {
       layer(folder,'Background',0,0,1728,1296,'Findhorn coast and beach hut');
-      layer(folder,'Intro',283,376,1158.5,41.5,'A tea that restores you like the land is being restored.');
+      createBouncingIntro(canvas);
       const strip=document.createElement('div');strip.className='strip';strip.tabIndex=0;strip.setAttribute('role','region');strip.setAttribute('aria-label','Six tea blends — scroll horizontally');strip.append(image(folder,'横向滚页','Heather Mist, Shore Greens, Coastal Citrus, Saltmarsh Harmony, Gorse Blossom and Pine Breeze'));canvas.append(strip);
       strip.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();strip.scrollLeft+=event.key==='ArrowRight'?434:-434;}});
       enableStripScrolling(strip);
