@@ -11,6 +11,61 @@
     return img;
   };
   let observer;
+  let stopServiceTrail;
+  function attachServiceTrail(host) {
+    const ns='http://www.w3.org/2000/svg';
+    const svgNode=(tag,attrs={})=>{const n=document.createElementNS(ns,tag);for(const [key,value] of Object.entries(attrs))n.setAttribute(key,String(value));return n;};
+    const svg=svgNode('svg',{viewBox:'0 0 937 1326','aria-hidden':'true',class:'service-trail'});
+    // Trace the user's marked dashed-road route, in coordinates of their reference image.
+    const points=[[420,1313],[510,1250],[610,1200],[710,1135],[745,1105],[770,1090],[777,1065],[765,1053],[720,1022],[693,1007],[685,992],[697,984],[715,998],[800,1040],[847,1072],[882,1102],[902,1111],[904,1083],[897,1066],[882,1054],[886,1037],[945,1008],[996,977],[1064,940],[1094,914],[1101,894],[1092,880],[1051,849],[993,817],[932,787],[866,755],[802,735],[746,707],[686,675],[638,645],[620,621],[584,599],[550,572],[520,559],[482,544],[464,525],[476,500],[515,465],[570,422],[624,381],[650,362],[734,318],[810,282],[884,251],[953,212],[1020,177],[1093,136],[1122,122]].map(([x,y])=>[x-261,y-102]);
+    let d=`M ${points[0].join(' ')}`;
+    for(let i=0;i<points.length-1;i++){
+      const a=points[Math.max(0,i-1)],b=points[i],c=points[i+1],e=points[Math.min(points.length-1,i+2)];
+      d+=` C ${b[0]+(c[0]-a[0])/6} ${b[1]+(c[1]-a[1])/6}, ${c[0]-(e[0]-b[0])/6} ${c[1]-(e[1]-b[1])/6}, ${c.join(' ')}`;
+    }
+    const path=svgNode('path',{d,fill:'none',stroke:'none'});svg.append(path);
+    const defs=svgNode('defs');
+    const gradient=svgNode('radialGradient',{id:'tea-orb-glow',cx:'35%',cy:'30%',r:'70%'});
+    for(const [offset,color] of [['0%','#fffbe0'],['40%','#e8d493'],['75%','#bfd995'],['100%','#719a68']])gradient.append(svgNode('stop',{offset,'stop-color':color}));
+    defs.append(gradient);svg.append(defs);
+    const group=svgNode('g',{class:'service-trail-particles'});svg.append(group);
+    const shadow=svgNode('ellipse',{rx:9,ry:3,fill:'#577b53',opacity:'.22'});group.append(shadow);
+    const tail=Array.from({length:22},(_,i)=>{
+      const dot=svgNode('circle',{r:Math.max(.8,6.5-i*.25),fill:i%3===0?'#e8d493':'#bfd995',class:'service-trail-dot'});group.append(dot);return dot;
+    });
+    const ball=svgNode('circle',{r:8,fill:'url(#tea-orb-glow)',class:'service-trail-ball'});group.append(ball);host.append(svg);
+    const length=path.getTotalLength();
+    const samples=Array.from({length:1201},(_,i)=>path.getPointAtLength(length*i/1200));
+    const position=t=>{
+      const index=Math.min(1200,Math.max(0,t)*1200),i=Math.min(1199,Math.floor(index)),f=index-i;
+      const x=samples[i].x+(samples[i+1].x-samples[i].x)*f;
+      const ground=samples[i].y+(samples[i+1].y-samples[i].y)*f;
+      return {x,y:ground-Math.abs(Math.sin(t*Math.PI*28))*11,ground};
+    };
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+    let frame=0,start=0,hovered=false,focused=false;
+    const stop=()=>{cancelAnimationFrame(frame);frame=0;svg.classList.remove('is-running');};
+    const tick=now=>{
+      if(!host.isConnected||reduced.matches){stop();return;}
+      const elapsed=(now-start)%13000,progress=Math.min(1,elapsed/12000);
+      group.style.opacity=String(elapsed>12000?1-(elapsed-12000)/1000:1);
+      const head=position(progress);ball.setAttribute('cx',head.x);ball.setAttribute('cy',head.y);
+      shadow.setAttribute('cx',head.x);shadow.setAttribute('cy',head.ground+6);
+      tail.forEach((dot,i)=>{
+        const t=progress-(i+1)*.0028;
+        dot.setAttribute('opacity',t<0?'0':String(.62*(1-i/tail.length)));
+        if(t>=0){const p=position(t);dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y);}
+      });
+      frame=requestAnimationFrame(tick);
+    };
+    const sync=()=>{if((hovered||focused)&&!reduced.matches){if(!frame){start=performance.now();svg.classList.add('is-running');frame=requestAnimationFrame(tick);}}else stop();};
+    host.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse'){hovered=true;sync();}});
+    host.addEventListener('pointerleave',()=>{hovered=false;sync();});
+    host.addEventListener('focusin',()=>{focused=host.matches(':focus-visible');sync();});
+    host.addEventListener('focusout',()=>{focused=false;sync();});
+    reduced.addEventListener('change',sync);
+    return ()=>{stop();reduced.removeEventListener('change',sync);};
+  }
   function createBouncingIntro(canvas) {
     const sentence = 'A tea that restores you like the land is being restored.';
     // Glyph bounds in the uploaded 2317 × 83 PNG preserve the original lettering exactly.
@@ -74,6 +129,7 @@
   }
   function render() {
     observer?.disconnect();
+    stopServiceTrail?.();stopServiceTrail=null;
     const route = location.hash.slice(1) || 'home';
     const current = Object.hasOwn(names,route) ? route : 'home';
     root.replaceChildren();
@@ -131,7 +187,8 @@
       layer(folder,'Group 22',0,2868,1728,494,'Tideline Tea revives seaweed as a traditional coastal food. Newsletter sign-up shown in the design is not active.');
     } else if(current==='service') {
       layer(folder,'Service Process',680,281,362.5,45.5,'Service Process');
-      layer(folder,'未标题-1_画板 1 1',253,393,1222,1728,'Tideline service process and circular service system',true);
+      const process=layer(folder,'未标题-1_画板 1 1',253,393,1222,1728,'Tideline service process and circular service system',true);
+      stopServiceTrail=attachServiceTrail(process);
       layer(folder,'Space Layout',716,2424,293.5,55.5,'Space Layout');
       layer(folder,'1 1',253,2538,1222,864,'Tea house space layout, zoning and visitor routes',true);
       layer(folder,'3 1',229,3402,1250,884,'Tea house spatial design and service experience',true);
