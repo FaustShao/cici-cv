@@ -274,8 +274,10 @@
       }
       grid.append(image('TEAS','Coming soon','More blends coming soon.'));
     } else {
-      const blocks=[['History',265,194,1235,8252.5,'History of Findhorn and seaweed'],['Geology',290,8501,1185,787,'Geology'],['Frame 19',140,9334,1441,2361,'Geology research'],['Biology-1',271,11922,1185,787,'Biology'],['Biology',89.5,12885,1557,2402,'Biology research'],['Relationship-1',289,15423,1185,787,'Relationship'],['Relationship',99,16346,1567,521,'Community relationships']];
+      const blocks=[['History',265,194,1235,8252.5,'History of Findhorn and seaweed'],['Geology',290,8501,1185,787,'Geology'],['Frame 19',140,9334,1441,2361,'Geology research'],['Biology-1',271,11922,1185,787,'Biology'],['Biology',89.5,12885,1557,2402,'Biology research'],['Relationship-1',289,15423,1185,787,'Relationship'],['Relationship layout',99,16346,1567,1593,'Community relationships']];
       for(const [file,x,y,w,h,alt] of blocks)layer(folder,file,x,y,w,h,alt,true);
+      // Replace only the photograph inside the original composite; keep all surrounding text.
+      layer(folder,'Relationship',99,16949,1567,521,'Community relationship mapping photograph',true);
       layer(folder,'Rectangle 333',0,17765,1728,347,'');
       layer(folder,'Created by Haojie, Yuchen and Yuxin',1202,17422,455.5,31.5,'Created by Haojie, Yuchen and Yuxin');
       const button=document.createElement('button');button.type='button';button.className='back-top';button.setAttribute('aria-label','Back to top');Object.assign(button.style,{left:'1400px',top:'17814px',width:'81px',height:'92px'});button.append(image(folder,'Arrow 1',''));button.addEventListener('click',()=>window.scrollTo({top:0}));canvas.append(button);
