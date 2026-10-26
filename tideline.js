@@ -142,9 +142,8 @@
       grid.append(image(folder,'Intro','Merch — coastal-inspired seaweed objects and materials'));
       const products=[['Paper','Seaweed Paper'],['Packaging','Seaweed Packaging'],['Plant','Plant Pot'],['Dye','Kelp-dyed Label'],['Food Bag','Food Bag'],['Envelope','Seaweed Envelope'],['Hand Bag','Hand Bag'],['Kitchen','Kitchen Set']];
       for(const [file,label] of products){
-        const card=document.createElement('button');card.type='button';card.className='merch-card';card.setAttribute('aria-label',`Enlarge: ${label}`);
+        const card=document.createElement('article');card.className='merch-card';
         const img=image(folder,file,label);card.append(img);grid.append(card);
-        card.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=label;viewer.showModal();});
       }
       grid.append(image(folder,'Coming soon','More objects coming soon.'));
     } else if(current==='teas') {
