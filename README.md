@@ -18,6 +18,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - `portfolio.html`：Future Gazette 翻页作品集。
 - `works.html`：其它项目，可展开研究与设计过程。
 - Material 页面已接入实验说明和六张材料照片，支持说明图点击放大、照片横条滚轮／拖动／触屏浏览。可从 HOME 的 Material 入口进入，或使用 `tideline.html#material`。
+- Packaging 页面已接入包装渲染图、四色包装展示和底部全幅图，支持纵向滚动及点击放大；入口为 HOME 的 Packaging 区域或 `tideline.html#packaging`。
 - `tideline.html`：Tideline 海藻茶项目，已接入 HOME、RESEARCH 和 TEAS。HOME 六款茶图保持原图比例，支持滚轮、鼠标拖动、触屏滑动和方向键横向浏览，到达边缘后滚轮继续纵向浏览页面；TEAS 六张卡片悬停显示 tea2 详情、移开恢复，手机点击切换；研究长图可点击放大，其余页面待补充。
 - `site.js` / `site.css`：共享导航、当前页标记、主题和公共布局。
 

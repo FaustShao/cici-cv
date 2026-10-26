@@ -5,6 +5,7 @@
 .strip img{width:auto;height:457px;max-width:none;pointer-events:none}
 .material-strip{left:253px;top:1879px;width:1222px;height:534px}
 .material-strip img{height:510px}
+.packaging-credit{position:absolute;left:1451px;top:3063px;margin:0;font:32px/43px 'Arial Narrow',sans-serif;white-space:nowrap;pointer-events:none}
 .tea-grid{position:absolute;left:253px;top:165px;width:1222px;display:grid;grid-template-columns:repeat(3,382px);gap:38px}
 .tea-grid>img,.tea-card{display:block;width:382px;height:539px}
 .tea-card{position:relative;padding:0;border:0;background:#f4f7f3;cursor:pointer;-webkit-tap-highlight-color:transparent}
