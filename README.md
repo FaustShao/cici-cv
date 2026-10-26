@@ -17,7 +17,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - `resume.html`：完整简历及打印 PDF。
 - `portfolio.html`：Future Gazette 翻页作品集。
 - `works.html`：其它项目，可展开研究与设计过程。
-- `tideline.html`：Tideline 海藻茶项目，已接入 HOME、RESEARCH 和 TEAS。HOME 六款茶图可横向滚动；TEAS 六张卡片悬停显示 tea2 详情、移开恢复，手机点击切换；研究长图可点击放大，其余页面待补充。
+- `tideline.html`：Tideline 海藻茶项目，已接入 HOME、RESEARCH 和 TEAS。HOME 六款茶图保持原图比例，支持滚轮、鼠标拖动、触屏滑动和方向键横向浏览，到达边缘后滚轮继续纵向浏览页面；TEAS 六张卡片悬停显示 tea2 详情、移开恢复，手机点击切换；研究长图可点击放大，其余页面待补充。
 - `site.js` / `site.css`：共享导航、当前页标记、主题和公共布局。
 
 个人资料与项目继续统一维护在 `resume.js`。

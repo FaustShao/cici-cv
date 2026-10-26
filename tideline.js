@@ -11,6 +11,44 @@
     return img;
   };
   let observer;
+  function enableStripScrolling(strip) {
+    const scale = () => strip.getBoundingClientRect().width / strip.offsetWidth || 1;
+    strip.querySelector('img').draggable = false;
+    strip.addEventListener('wheel', event => {
+      if (event.ctrlKey) return;
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? strip.clientWidth : 1;
+      const delta = (Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY) * unit / scale();
+      const max = strip.scrollWidth - strip.clientWidth;
+      if ((delta > 0 && strip.scrollLeft < max - 1) || (delta < 0 && strip.scrollLeft > 1)) {
+        event.preventDefault();
+        strip.scrollLeft += delta;
+      }
+    }, {passive:false});
+    let drag = null;
+    strip.addEventListener('pointerdown', event => {
+      if (event.pointerType === 'touch' || event.button !== 0) return;
+      // Leave the native scrollbar available for direct use.
+      const bounds = strip.getBoundingClientRect();
+      if (event.clientY - bounds.top >= strip.clientHeight * scale()) return;
+      drag = {id:event.pointerId, x:event.clientX, left:strip.scrollLeft};
+      strip.setPointerCapture(event.pointerId);
+      strip.classList.add('is-dragging');
+      strip.focus({preventScroll:true});
+      event.preventDefault();
+    });
+    strip.addEventListener('pointermove', event => {
+      if (drag && event.pointerId === drag.id) strip.scrollLeft = drag.left - (event.clientX - drag.x) / scale();
+    });
+    const finish = event => {
+      if (!drag || event.pointerId !== drag.id) return;
+      drag = null;
+      strip.classList.remove('is-dragging');
+      if (strip.hasPointerCapture(event.pointerId)) strip.releasePointerCapture(event.pointerId);
+    };
+    strip.addEventListener('pointerup', finish);
+    strip.addEventListener('pointercancel', finish);
+    strip.addEventListener('lostpointercapture', finish);
+  }
   function render() {
     observer?.disconnect();
     const route = location.hash.slice(1) || 'home';
@@ -48,6 +86,7 @@
       layer(folder,'Intro',283,376,1158.5,41.5,'A tea that restores you like the land is being restored.');
       const strip=document.createElement('div');strip.className='strip';strip.tabIndex=0;strip.setAttribute('role','region');strip.setAttribute('aria-label','Six tea blends — scroll horizontally');strip.append(image(folder,'横向滚页','Heather Mist, Shore Greens, Coastal Citrus, Saltmarsh Harmony, Gorse Blossom and Pine Breeze'));canvas.append(strip);
       strip.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();strip.scrollLeft+=event.key==='ArrowRight'?434:-434;}});
+      enableStripScrolling(strip);
       layer(folder,'Line 6',47,1410,1633,3,'');layer(folder,'Line 7',38,1926,1633,3,'');
       layer(folder,'Group 19',38,2041,1633,683,'Packaging, Material and About Us');
       for(const [i,key] of ['packaging','material','about'].entries()){const a=document.createElement('a');a.className='feature-link';a.href=`#${key}`;a.setAttribute('aria-label',names[key]);a.style.left=`${38+i*558}px`;a.style.width='517px';canvas.append(a);}
