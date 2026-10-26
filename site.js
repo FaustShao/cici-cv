@@ -36,6 +36,11 @@
       project.details.forEach(text => list.append(el('li', text)));
       details.append(list); card.append(details);
     }
+    if (project.url && /^[-a-zA-Z0-9_/]+\.html$/.test(project.url)) {
+      const link = el('a', '打开项目 →');
+      link.href = project.url;
+      card.append(link);
+    }
     archive.append(card);
   });
 })();

@@ -17,6 +17,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - `resume.html`：完整简历及打印 PDF。
 - `portfolio.html`：Future Gazette 翻页作品集。
 - `works.html`：其它项目，可展开研究与设计过程。
+- `tideline.html`：Tideline 海藻茶项目，已接入 HOME 与 RESEARCH 素材；研究长图可点击放大，后续页面待补充。
 - `site.js` / `site.css`：共享导航、当前页标记、主题和公共布局。
 
 个人资料与项目继续统一维护在 `resume.js`。
@@ -47,7 +48,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 连接 GitHub 仓库，生产分支选 `main`。不选框架，构建命令填写：
 
 ```sh
-mkdir -p public && cp index.html resume.html works.html styles.css site.css site.js resume.js app.js portfolio.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
+mkdir -p public && cp index.html resume.html works.html tideline.html tideline.css tideline.js styles.css site.css site.js resume.js app.js portfolio.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
 ```
 
 构建输出目录填 `public`，无需环境变量。部署成功后可绑定自定义域名。预览与生产地址均需按公开页面处理。

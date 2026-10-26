@@ -22,7 +22,7 @@ jobs:
       - name: Assemble public files
         run: |
           mkdir public
-          cp index.html resume.html works.html styles.css site.css site.js resume.js app.js portfolio.html portfolio-local.html portfolio.css portfolio.js public/
+          cp index.html resume.html works.html tideline.html tideline.css tideline.js styles.css site.css site.js resume.js app.js portfolio.html portfolio-local.html portfolio.css portfolio.js public/
           cp -R assets public/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

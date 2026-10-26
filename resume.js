@@ -54,7 +54,7 @@ window.RESUME = {
         "服务设计",
         "可持续设计"
       ],
-      "url": ""
+      "url": "tideline.html"
     },
     {
       "name": "Forres Future Gazette 2050",
