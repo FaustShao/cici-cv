@@ -15,7 +15,8 @@ python3 -m http.server 8000 --bind 0.0.0.0
 
 - `index.html`：首页，个人简介和内容入口。
 - `resume.html`：完整简历及打印 PDF。
-- `portfolio.html`：Future Gazette 翻页作品集。
+- `portfolio.html`：作品集总览，Tideline 与 Future Gazette 同级展示。
+- `gazette.html`：Future Gazette 独立翻页阅读页。
 - `works.html`：其它项目，可展开研究与设计过程。
 - Material 页面已接入实验说明和六张材料照片，支持说明图点击放大、照片横条滚轮／拖动／触屏浏览。可从 HOME 的 Material 入口进入，或使用 `tideline.html#material`。
 - Material 顶部原封面位置替换为约 58 秒的海藻包装材料实验视频，保留原图为海报，使用原生播放／暂停、进度、音量及全屏控件，默认不自动播放。切换项目页面时停止播放，视频无重编码并优化了网页加载。
@@ -27,7 +28,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - `tideline.html`：Tideline 海藻茶项目，已接入 HOME、RESEARCH 和 TEAS。HOME 六款茶图保持原图比例，支持滚轮、鼠标拖动、触屏滑动和方向键横向浏览，到达边缘后滚轮继续纵向浏览页面；TEAS 六张卡片悬停显示 tea2 详情、移开恢复，手机点击切换；研究长图可点击放大，其余页面待补充。
 - `site.js` / `site.css`：共享导航、当前页标记、主题和公共布局。
 
-个人资料与项目继续统一维护在 `resume.js`。
+个人资料与项目继续统一维护在 `resume.js`；项目标记 `collection: "portfolio"` 时列入作品集，其余列入其它作品，两处不重复展示。
 
 ## 个性化
 
@@ -55,7 +56,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 连接 GitHub 仓库，生产分支选 `main`。不选框架，构建命令填写：
 
 ```sh
-mkdir -p public && cp index.html resume.html works.html tideline.html tideline.css tideline.js styles.css site.css site.js resume.js app.js portfolio.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
+mkdir -p public && cp index.html resume.html works.html tideline.html tideline.css tideline.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
 ```
 
 构建输出目录填 `public`，无需环境变量。部署成功后可绑定自定义域名。预览与生产地址均需按公开页面处理。
@@ -74,7 +75,7 @@ mkdir -p public && cp index.html resume.html works.html tideline.html tideline.c
 
 ## 作品集翻页书
 
-`portfolio.html` 只展示 Future Gazette 翻页书和一个源文件下载按钮。原始31页 PDF 位于 `assets/gazette/future-gazette.pdf`。桌面端可按住书页右上角或右下角向左拖动翻页，左侧书角可向右翻回；手机支持单页触摸翻页。键盘左右键翻页，Home/End 定位首尾。系统设置减少动态效果时，键盘直接切页。
+`gazette.html` 展示 Future Gazette 翻页书、返回作品集入口和源文件下载按钮。原始31页 PDF 位于 `assets/gazette/future-gazette.pdf`。桌面端可按住书页右上角或右下角向左拖动翻页，左侧书角可向右翻回；手机支持单页触摸翻页。键盘左右键翻页，Home/End 定位首尾。系统设置减少动态效果时，键盘直接切页。
 
 使用 [StPageFlip](https://github.com/Nodlik/StPageFlip)（page-flip 2.0.7，MIT）。本地副本和许可证在 `assets/vendor/page-flip/`，发布包通过 npm 的 SHA-512 integrity 校验。无需外部 CDN、安装或构建。
 
@@ -82,7 +83,7 @@ mkdir -p public && cp index.html resume.html works.html tideline.html tideline.c
 
 原稿为图片型 PDF，图片正文不能搜索或直接供屏幕阅读器朗读；页面保留阅读器标签和隐藏的页码提示。更换 PDF 后需重新生成图片，并同步 `portfolio.js` 中页数。
 
-`portfolio-local.html` 仅保留为旧地址跳转，统一使用 `portfolio.html`。页面不再嵌入外部网页。
+`portfolio-local.html` 仅保留为旧阅读器地址跳转，指向 `gazette.html`。`portfolio.html` 现在为作品集总览。页面不嵌入外部网页。
 
 ### 封面与纸张
 

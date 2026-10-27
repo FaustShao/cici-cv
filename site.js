@@ -2,7 +2,7 @@
 (() => {
   const page = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.topbar nav a').forEach(a => {
-    if (a.getAttribute('href') === page) a.setAttribute('aria-current', 'page');
+    if (a.getAttribute('href') === (page === 'gazette.html' ? 'portfolio.html' : page)) a.setAttribute('aria-current', 'page');
   });
   const button = document.getElementById('theme');
   function applyTheme(theme) {
@@ -21,15 +21,22 @@
   if (!data) return;
   document.querySelectorAll('[data-profile]').forEach(node => { node.textContent = data[node.dataset.profile] || ''; });
   const archive = document.getElementById('other-projects');
-  if (!archive) return;
+  const portfolio = document.getElementById('portfolio-projects');
+  const projects = portfolio || archive;
+  if (!projects) return;
   const el = (tag, text, className) => { const node = document.createElement(tag); node.textContent = text; if (className) node.className = className; return node; };
-  data.projects.filter(project => project.url !== 'portfolio.html').forEach(project => {
+  data.projects.filter(project => portfolio ? project.collection === 'portfolio' : project.collection !== 'portfolio').forEach(project => {
     const card = el('article', '', 'project-card');
+    if (portfolio && project.cover) {
+      const preview = el('a', '', 'project-preview');preview.href = project.url;preview.setAttribute('aria-label', `打开 ${project.name}`);
+      const cover = document.createElement('img');cover.src = project.cover;cover.alt = `${project.name} 项目封面`;cover.decoding = 'async';
+      preview.append(cover);card.append(preview);
+    }
     card.append(el('p', project.category, 'eyebrow'), el('h2', project.name), el('p', project.description, 'description'));
     const tags = el('div', '', 'tags');
     project.tags.forEach(tag => tags.append(el('span', tag)));
     card.append(tags);
-    if (project.details?.length) {
+    if (!portfolio && project.details?.length) {
       const details = el('details', '');
       details.append(el('summary', '研究与设计过程'));
       const list = el('ul', '', 'project-details');
@@ -41,6 +48,6 @@
       link.href = project.url;
       card.append(link);
     }
-    archive.append(card);
+    projects.append(card);
   });
 })();

@@ -54,7 +54,9 @@ window.RESUME = {
         "服务设计",
         "可持续设计"
       ],
-      "url": "tideline.html"
+      "url": "tideline.html",
+      "collection": "portfolio",
+      "cover": "assets/tideline/HOME/Background.png"
     },
     {
       "name": "Forres Future Gazette 2050",
@@ -71,7 +73,9 @@ window.RESUME = {
         "地方文化",
         "UX设计"
       ],
-      "url": "portfolio.html"
+      "url": "gazette.html",
+      "collection": "portfolio",
+      "cover": "assets/gazette/page-01-small.webp"
     },
     {
       "name": "TASA-ICoD 国际设计工作坊",
