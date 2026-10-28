@@ -1,6 +1,12 @@
 // Shared navigation, theme and data-backed overview pages.
 (() => {
   const page = location.pathname.split('/').pop() || 'index.html';
+  // Keep existing bookmarks, but use the island as the category entry.
+  const islandRoute = {'portfolio.html':'portfolio', 'works.html':'other'}[page];
+  if (islandRoute && window.top === window) {
+    location.replace(`index.html#${islandRoute}`);
+    return;
+  }
   document.querySelectorAll('.topbar nav a').forEach(a => {
     if (a.getAttribute('href') === (page === 'gazette.html' ? 'portfolio.html' : page)) a.setAttribute('aria-current', 'page');
   });

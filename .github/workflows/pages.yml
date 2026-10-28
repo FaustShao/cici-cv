@@ -22,6 +22,7 @@ jobs:
       - name: Assemble public files
         run: |
           mkdir public
+          cp island.css island-ui.js island-scene.js public/
           cp index.html resume.html works.html tideline.html tideline.css tideline.js dream-sentinel.html dream-sentinel.css dream-sentinel.js dream-sentinel-layers.js dream-sentinel-32.js dream-sentinel-32-layers.js dream-sentinel-33.js dream-sentinel-33-layers.js dream-sentinel-34.js dream-sentinel-34-layers.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/
           cp -R assets public/
       - uses: actions/configure-pages@v5
