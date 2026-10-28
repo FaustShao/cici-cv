@@ -16,10 +16,11 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - `index.html`：首页，个人简介和内容入口。
 - `resume.html`：完整简历及打印 PDF。
 - `portfolio.html`：作品集总览，Tideline、Future Gazette 与 DREAM SENTINEL 同级展示。
-- `dream-sentinel.html`：梦境哨兵项目连续画板，目前接入 3.1、3.2、3.3；原图比例、局部关联高亮、轻微视差、减少动态效果适配，支持横向拖动/触屏/方向键和三张画板同步阅读尺寸切换。
+- `dream-sentinel.html`：梦境哨兵项目连续画板，3.1—3.4 已全部接入；原图比例、局部关联高亮、轻微视差、减少动态效果适配，支持横向拖动/触屏/方向键和四张画板同步阅读尺寸切换。
 - `dream-sentinel-layers.js`：3.1 用户导出 PNG 与 Figma 实际渲染边界的映射；77 张素材分别保留，不重排原始文字。
 - `dream-sentinel-32-layers.js` / `dream-sentinel-32.js`：3.2 的63张可见导出图片、原有背景色层及传感器/思维导图/人体标注交互。ZIP 内两张透明1×1图不显示；`image 166` 地球背景已由用户补图，按原渲染边界恢复，保留PNG内置透明度，不重复降低透明度。原布局与文字保持不变。
-- `dream-sentinel-33-layers.js` / `dream-sentinel-33.js`：3.3 的52张可见导出图片，包含灵感拼贴、草图、运行机制及爆炸结构图。六组零件—说明—引线—连接点关联高亮，支持悬停、键盘和触屏切换；运行步骤依次强调，轻微拼贴视差，减少动态效果时静态显示。不添加跳转或放大弹窗。image 187/188 为透明1×1导出，跳过显示。上传整组草图中的最终方案线稿为橙红色，与 Figma 蓝色预览有差异，保留用户导出图，未擅自重绘或改色。
+- `dream-sentinel-33-layers.js` / `dream-sentinel-33.js`：3.3 的52张可见导出图片，包含灵感拼贴、草图、运行机制及爆炸结构图。六组零件—说明—引线—连接点关联高亮，支持悬停、键盘和触屏切换；运行步骤依次强调，轻微拼贴视差，减少动态效果时静态显示。不添加跳转或放大弹窗。image 187/188 为透明1×1导出，跳过显示。按用户要求，最终草图通过SVG选择性颜色滤镜恢复Figma预览的蓝青色效果；保留原PNG不改写，黑白文字、其他草图、薄荷色块和黄绿色轮廓不改色。
+- `dream-sentinel-34-layers.js` / `dream-sentinel-34.js`：四个ZIP的49张PNG全部对应Figma 3.4，原目录分别保留，含重复文件名，不互相覆盖。网页使用对应无损WebP（约42MB，比原PNG约83MB减少49.4%），逐张核验全部可见RGBA像素及透明度一致，保留原PNG作为回退，原PNG路径记录于`sourceFile`；浏览器延迟加载。五个界面悬停/触屏反馈、原位置BEFORE/AFTER概念响应动效、投影导航方向点，不产生跳转或弹窗，不伪造实时数据。两张极细箭头按2倍PNG导出的实际尺寸放置，避免取整导致拉伸。
 - `gazette.html`：Future Gazette 独立翻页阅读页。
 - `works.html`：其它项目，可展开研究与设计过程。
 - Material 页面已接入实验说明和六张材料照片，支持说明图点击放大、照片横条滚轮／拖动／触屏浏览。可从 HOME 的 Material 入口进入，或使用 `tideline.html#material`。
@@ -60,7 +61,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 连接 GitHub 仓库，生产分支选 `main`。不选框架，构建命令填写：
 
 ```sh
-mkdir -p public && cp index.html resume.html works.html tideline.html tideline.css tideline.js dream-sentinel.html dream-sentinel.css dream-sentinel.js dream-sentinel-layers.js dream-sentinel-32.js dream-sentinel-32-layers.js dream-sentinel-33.js dream-sentinel-33-layers.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
+mkdir -p public && cp index.html resume.html works.html tideline.html tideline.css tideline.js dream-sentinel.html dream-sentinel.css dream-sentinel.js dream-sentinel-layers.js dream-sentinel-32.js dream-sentinel-32-layers.js dream-sentinel-33.js dream-sentinel-33-layers.js dream-sentinel-34.js dream-sentinel-34-layers.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
 ```
 
 构建输出目录填 `public`，无需环境变量。部署成功后可绑定自定义域名。预览与生产地址均需按公开页面处理。

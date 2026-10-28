@@ -5,15 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="DREAM SENTINEL 梦境哨兵：面向未来灾害场景的智能颈部穿戴设备概念设计。">
   <title>梦境哨兵 · DREAM SENTINEL · Yuxin Wang</title>
-  <link rel="stylesheet" href="dream-sentinel.css?v=sentinel-33">
+  <link rel="stylesheet" href="dream-sentinel.css?v=sentinel-34">
   <script src="dream-sentinel-layers.js?v=sentinel-1" defer></script>
   <script src="dream-sentinel.js?v=sentinel-32" defer></script>
   <script src="dream-sentinel-32-layers.js?v=sentinel-32-globe" defer></script>
   <script src="dream-sentinel-32.js?v=sentinel-32" defer></script>
   <script src="dream-sentinel-33-layers.js?v=sentinel-33" defer></script>
-  <script src="dream-sentinel-33.js?v=sentinel-33" defer></script>
+  <script src="dream-sentinel-33.js?v=sentinel-34" defer></script>
+  <script src="dream-sentinel-34-layers.js?v=sentinel-34" defer></script>
+  <script src="dream-sentinel-34.js?v=sentinel-34" defer></script>
 </head>
 <body>
+  <svg class="render-filters" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Restore the warm final-sketch strokes to the Figma exclusion colors.
+           Neutral text, grayscale sketches, mint blocks and yellow outlines stay unchanged. -->
+      <filter id="sketch-exclusion" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+        <feColorMatrix in="SourceGraphic" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 -1 0 0 0" result="red-over-green"/>
+        <feColorMatrix in="SourceGraphic" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 -1 0 0" result="red-over-blue"/>
+        <feComposite in="red-over-green" in2="red-over-blue" operator="arithmetic" k1="1" result="warm-product"/>
+        <feComponentTransfer in="warm-product" result="warm-mask"><feFuncA type="linear" slope="1000" intercept="0"/></feComponentTransfer>
+        <feColorMatrix in="SourceGraphic" type="hueRotate" values="180" result="excluded"/>
+        <feComposite in="excluded" in2="warm-mask" operator="in" result="cool-strokes"/>
+        <feComposite in="SourceGraphic" in2="warm-mask" operator="out" result="unchanged"/>
+        <feComposite in="cool-strokes" in2="unchanged" operator="arithmetic" k2="1" k3="1"/>
+      </filter>
+    </defs>
+  </svg>
   <header class="project-bar">
     <a href="portfolio.html">← 返回作品集 / Portfolio</a>
     <span>DREAM SENTINEL / 梦境哨兵</span>
@@ -32,6 +50,10 @@
     <section class="board-viewport board-33-viewport" tabindex="0" aria-label="3.3 设计灵感、产品草图探索、设备运行机制与爆炸结构图，可横向滚动浏览" aria-describedby="reading-hint">
       <h2 class="sr-only">设计灵感、产品草图探索、设备运行机制与爆炸结构图</h2>
       <div class="board-stage"><div class="design-board" id="board-33"></div></div>
+    </section>
+    <section class="board-viewport board-34-viewport" tabindex="0" aria-label="3.4 投影交互与功能展示，可横向滚动浏览" aria-describedby="reading-hint">
+      <h2 class="sr-only">投影交互与功能展示、前后状态演示及五个界面</h2>
+      <div class="board-stage"><div class="design-board" id="board-34"></div></div>
     </section>
   </main>
   <noscript><p>请启用 JavaScript 查看完整设计。<a href="portfolio.html">返回作品集</a></p></noscript>

@@ -1,4 +1,6 @@
 :root{color-scheme:light;--mint:#00d6ac;--ink:#163f38}
+.render-filters{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
+#board-33 [data-node="34:302"]>img{filter:url(#sketch-exclusion)}
 *{box-sizing:border-box}
 body{margin:0;background:#f0f2f1;color:#18231f;font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif}
 .project-bar{min-height:56px;display:flex;gap:24px;align-items:center;justify-content:space-between;padding:12px 24px;background:#fff;border-bottom:1px solid #dce5e0;font-size:12px;letter-spacing:.03em}
@@ -27,7 +29,7 @@ body{margin:0;background:#f0f2f1;color:#18231f;font-family:Arial,"PingFang SC","
 .signal-hotspot:focus-visible{outline:4px solid #087e66;outline-offset:5px}
 .signal-dot{position:absolute;width:14px;height:14px;background:#00a982;border-radius:50%;opacity:0;pointer-events:none;z-index:3}
 .signal-dot.is-active{opacity:1;animation:signal-pulse 1.5s ease-out infinite}
-.board-32-viewport,.board-33-viewport{border-top:1px solid #dce9e2}
+.board-32-viewport,.board-33-viewport,.board-34-viewport{border-top:1px solid #dce9e2}
 #board-32 .signal-hotspot.is-related{background:rgba(0,214,172,.065);border-color:rgba(0,153,122,.55)}
 #board-32 .signal-hotspot.round{border-radius:50%;transform:none}
 #board-32 .mind-step{border-radius:50%}
@@ -44,6 +46,22 @@ body{margin:0;background:#f0f2f1;color:#18231f;font-family:Arial,"PingFang SC","
 #board-33.is-visible .mechanism-step{border-radius:12px;animation:mechanism-step 1s both;animation-delay:var(--step-delay)}
 .board-paused .mechanism-step,.board-paused .sketch-reveal{animation-play-state:paused!important}
 @keyframes mechanism-step{0%,100%{background:transparent;box-shadow:none}40%{background:rgba(0,214,172,.1);box-shadow:0 0 0 12px rgba(0,214,172,.1)}}
+#board-34 .signal-hotspot.is-related{background:rgba(0,214,172,.045);border-color:rgba(0,153,122,.6)}
+#board-34 .ui-card{transition:translate .25s,filter .25s}
+#board-34 .ui-card.is-active{translate:0 -6px;filter:drop-shadow(0 10px 14px rgba(18,91,72,.18))}
+#board-34 .demo-layer{transition:opacity .3s,filter .3s}
+#board-34.demo-before [data-node="34:774"],#board-34.demo-before [data-node="34:768"]{animation:danger-pulse 1.8s ease-out infinite}
+#board-34.demo-after [data-node="34:774"],#board-34.demo-after [data-node="34:768"]{animation:danger-pulse 3.6s ease-out infinite}
+#board-34.demo-after [data-node="34:769"]{animation:stimulus-pulse 3.6s ease-out infinite}
+#board-34.demo-after [data-node="34:759"]{animation:response-pulse 3.6s ease-out infinite}
+#board-34.demo-after [data-node="34:761"]{animation:response-pulse 3.6s ease-out infinite}
+.projection-dot{position:absolute;left:0;top:0;width:16px;height:16px;border-radius:50%;background:#00a982;pointer-events:none;opacity:0;offset-path:path('M 1540 600 Q 1515 570 1475 555 T 1385 526');offset-rotate:0deg;z-index:3}
+#board-34.projection-active .projection-dot{opacity:.8;animation:projection-flow 2.8s linear infinite}
+.board-paused .demo-layer,.board-paused .projection-dot{animation-play-state:paused!important}
+@keyframes projection-flow{0%{offset-distance:0%;opacity:0}15%,80%{opacity:.8}100%{offset-distance:100%;opacity:0}}
+@keyframes danger-pulse{0%,100%{opacity:.7}20%{opacity:1;filter:drop-shadow(0 0 7px rgba(190,58,43,.3))}45%,90%{opacity:.65}}
+@keyframes stimulus-pulse{0%,22%,100%{opacity:.55}35%,55%{opacity:1;filter:brightness(1.2)}}
+@keyframes response-pulse{0%,45%,100%{filter:none}65%,85%{filter:drop-shadow(0 0 12px rgba(0,170,130,.5))}}
 @keyframes mind-step{0%,100%{box-shadow:0 0 0 0 transparent}40%{box-shadow:0 0 0 14px rgba(0,153,122,.2)}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @keyframes intro-enter{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
