@@ -1,0 +1,17 @@
+{
+  "name": "cecilia-bruno-projects-preview",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5174",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "three": "0.183.2",
+    "gsap": "3.12.5",
+    "seedrandom": "3.0.5"
+  },
+  "devDependencies": {
+    "vite": "7.2.4"
+  }
+}

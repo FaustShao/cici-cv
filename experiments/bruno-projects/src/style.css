@@ -1,0 +1,374 @@
+@font-face {
+  font-family: Amatic SC;
+  src: url("/fonts/amatic.woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: Nunito;
+  src: url("/fonts/nunito.woff2");
+  font-weight: 200 1000;
+  font-display: swap;
+}
+@font-face {
+  font-family: Preview Chinese;
+  src: url("/fonts/island-sc.woff2");
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+3000-303F, U+3400-9FFF, U+FF00-FFEF;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  color: #ffeadf;
+  font-family: Nunito, "Preview Chinese", sans-serif;
+  background: #b9869b;
+}
+button,
+a {
+  font: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+  border: 1.5px solid #ffceca;
+  border-radius: 7px;
+  background: #28192b33;
+  padding: 8px 13px;
+  font-size: 12px;
+  font-weight: 700;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button:hover,
+a:hover {
+  color: white;
+  background: #ffceca22;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #ffcf5d;
+  outline-offset: 4px;
+}
+[hidden] {
+  display: none !important;
+}
+#world {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+#world[data-hover="true"] {
+  cursor: pointer;
+}
+#world:active {
+  cursor: grabbing;
+}
+header {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  z-index: 3;
+}
+header > a {
+  font-size: 12px;
+  background: #28192b33;
+  padding: 10px 13px;
+  border: 1px solid #ffceca55;
+  border-radius: 7px;
+}
+header > div {
+  display: flex;
+  gap: 9px;
+}
+.intro {
+  position: fixed;
+  left: 32px;
+  top: 90px;
+  pointer-events: none;
+  text-shadow: 0 2px 12px #47284940;
+}
+.intro > p:first-child {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  margin: 0 0 7px;
+}
+.intro h1 {
+  font-family:
+    Amatic SC,
+    cursive;
+  font-size: 58px;
+  line-height: 1.1;
+  margin: 0;
+  font-weight: 700;
+}
+.intro .subtitle {
+  font-size: 11px;
+  margin: 8px 0;
+}
+#loading {
+  position: fixed;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 22px;
+  background: #432c49b0;
+  border: 1px solid #ffceca60;
+  border-radius: 10px;
+  font-size: 13px;
+  max-width: 90vw;
+}
+#controls {
+  position: fixed;
+  bottom: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  z-index: 3;
+}
+#controls button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 24px;
+  background: #33203d66;
+}
+#controls > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 190px;
+  text-shadow: 0 1px 8px #33203d80;
+}
+#controls strong {
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+#project-name {
+  font-size: 14px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+#controls small {
+  font-size: 10px;
+  margin-top: 4px;
+}
+.keyboard-open {
+  position: fixed;
+  left: -1000px;
+  bottom: 150px;
+  z-index: 6;
+}
+.keyboard-open:focus-visible {
+  left: 50%;
+  transform: translateX(-50%);
+}
+footer {
+  position: fixed;
+  bottom: 20px;
+  left: 28px;
+  right: 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 10px;
+  text-shadow: 0 1px 6px #34203999;
+}
+footer a {
+  font-size: 9px;
+  opacity: 0.8;
+}
+#fallback {
+  position: fixed;
+  inset: 30% 15%;
+  background: #342039dd;
+  padding: 30px;
+  border-radius: 12px;
+  z-index: 5;
+}
+#fallback a {
+  display: inline-block;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ffceca;
+}
+dialog {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  background: #f9efdf;
+  color: #30263a;
+  overflow: hidden;
+}
+.reader-bar {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  gap: 20px;
+  border-bottom: 2px solid #b690a5;
+}
+.reader-bar h2 {
+  font-size: 12px;
+  margin: 0;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.reader-bar button,
+.reader-bar a {
+  background: none;
+  border: 0;
+  font-size: 11px;
+  color: inherit;
+  white-space: nowrap;
+}
+#frames {
+  height: calc(100% - 50px);
+}
+iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: white;
+}
+dialog::backdrop {
+  background: #332039a0;
+}
+@media (hover: hover) and (pointer: fine) {
+  body,
+  #world {
+    cursor:
+      url("/cursors/arrow.svg") 4 3,
+      auto;
+  }
+  button,
+  a,
+  #world[data-hover="true"] {
+    cursor:
+      url("/cursors/hand.svg") 12 4,
+      pointer;
+  }
+  #world:active {
+    cursor:
+      url("/cursors/grab.svg") 15 15,
+      grabbing;
+  }
+  #reader {
+    cursor: auto;
+  }
+  #reader button,
+  #reader a {
+    cursor: pointer;
+  }
+}
+@media (max-width: 700px) {
+  header {
+    inset: 16px 15px auto;
+    gap: 10px;
+  }
+  header > a {
+    font-size: 10px;
+    padding: 8px;
+  }
+  header > div {
+    gap: 5px;
+  }
+  header button {
+    font-size: 10px;
+    padding: 8px;
+  }
+  .intro {
+    top: 76px;
+    left: 20px;
+  }
+  .intro h1 {
+    font-size: 42px;
+  }
+  .intro > p:first-child {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+  .intro .subtitle {
+    font-size: 9px;
+  }
+  #controls {
+    bottom: 65px;
+    gap: 10px;
+  }
+  #controls > div {
+    min-width: 170px;
+  }
+  #controls button {
+    width: 36px;
+    height: 36px;
+  }
+  #project-name {
+    font-size: 12px;
+  }
+  #controls small {
+    font-size: 9px;
+  }
+  footer {
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+    font-size: 8px;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  footer a {
+    font-size: 8px;
+  }
+  .reader-bar {
+    padding: 0 10px;
+    gap: 10px;
+  }
+  .reader-bar h2 {
+    font-size: 9px;
+  }
+  .reader-bar button,
+  .reader-bar a {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

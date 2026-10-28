@@ -1,0 +1,96 @@
+{
+  "repository": "https://github.com/brunosimon/folio-2025",
+  "commit": "41046b57eeed8d156d9c3fd7fa259900baef7816",
+  "assets": [
+    {
+      "path": "areas/areas.glb",
+      "bytes": 3286220,
+      "sha256": "b756c3396f47ba5932bf24c0b0bc55e67d3e9823fb263920e0046c11940936ed"
+    },
+    {
+      "path": "benches/benches.glb",
+      "bytes": 14492,
+      "sha256": "671a77b5d39aeb8b66ae90b8d95641c3fa5668a311604552006aec128c09c2a3"
+    },
+    {
+      "path": "birchTrees/birchTreesReferences.glb",
+      "bytes": 21568,
+      "sha256": "e98b895ff2e9014151befb6086d9d1dffd4af951d64ab55195c020daaffe1708"
+    },
+    {
+      "path": "birchTrees/birchTreesVisual.glb",
+      "bytes": 4488,
+      "sha256": "d824fd7bdab448a96180020ded5912ecb675aa332b9bf7466aef2dd9dda8552a"
+    },
+    {
+      "path": "bushes/bushesReferences.glb",
+      "bytes": 25640,
+      "sha256": "c36cacc626182792725a8e5dc2442f99ba80d8f95a750a303862ca68229298d4"
+    },
+    {
+      "path": "cherryTrees/cherryTreesReferences.glb",
+      "bytes": 17016,
+      "sha256": "28445e5ea65389cbf6bf24ef3bf9b1b6171e1caf0c593de6ff91d318304ccb01"
+    },
+    {
+      "path": "cherryTrees/cherryTreesVisual.glb",
+      "bytes": 4548,
+      "sha256": "5b30b7ada13c16902a4e331b187a48ec09cdc28c93ba13d36292a4d56775c241"
+    },
+    {
+      "path": "fences/fences.glb",
+      "bytes": 8152,
+      "sha256": "77bd135453d7a4ef3d06e5f0b77e2b53bc6645631895de77a283b64adf8d0090"
+    },
+    {
+      "path": "floor/slabs.png",
+      "bytes": 45637,
+      "sha256": "c337e34268601da1f2a244cabeb00913341b45603b139fc8e2b716711f9d5ca6"
+    },
+    {
+      "path": "foliage/foliageSDF.png",
+      "bytes": 10950,
+      "sha256": "b73a07a219d1ecd284dedbea65d729b4fa68457947555f07fbdf6bfcc85f3fc3"
+    },
+    {
+      "path": "lanterns/lanterns.glb",
+      "bytes": 28960,
+      "sha256": "9534afb32c2807ef7e97ff433c854014b1f5ea8f4a47c2585461a0da52b14f85"
+    },
+    {
+      "path": "oakTrees/oakTreesReferences.glb",
+      "bytes": 19424,
+      "sha256": "620f9bdd3513be3f9eb0f845a361df5db553c70400e80f11b18803221bc9a11f"
+    },
+    {
+      "path": "oakTrees/oakTreesVisual.glb",
+      "bytes": 4516,
+      "sha256": "f81118b75a5a8dcc8164128c1c518bb4baffff442c8755c7842688c2d0e59e41"
+    },
+    {
+      "path": "palette.png",
+      "bytes": 362,
+      "sha256": "63780c518061ed026c91615f878741189b4c585651bc875a28577140daad22b9"
+    },
+    {
+      "path": "poleLights/poleLights.glb",
+      "bytes": 44044,
+      "sha256": "d9fd055fed52eee3e954ff2e543068971ecc904693192564665e34abeefa50e0"
+    },
+    {
+      "path": "scenery/scenery.glb",
+      "bytes": 266188,
+      "sha256": "eb4d41ff289cb98ad55f37e08ae7e3a1f86554d86961cd983ea2585fc3f73522"
+    },
+    {
+      "path": "terrain/terrain.glb",
+      "bytes": 730120,
+      "sha256": "68749a0bab995e4d9d8732b694205823d6245fdb4f8eea345900a0735968f19d"
+    },
+    {
+      "path": "terrain/terrain.png",
+      "bytes": 334262,
+      "sha256": "ba1e67981d31cceae305940246246a2eb50a6bda94dc58ca0875bbf2434573bc"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#b9869b" />
+    <title>Cecilia · 作品展示区试做</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <canvas
+      id="world"
+      aria-label="Bruno 原版作品展示装置，支持拖动观察、点击图片阅读"
+    ></canvas>
+    <header>
+      <a id="back-site" href="../index.html">← 返回现有网站</a>
+      <div>
+        <button id="theme" aria-pressed="false">夜间</button
+        ><button id="overview">场景全景</button
+        ><button id="quality" aria-pressed="false">高画质</button>
+      </div>
+    </header>
+    <section class="intro">
+      <p>CECILIA / VISUAL STUDY 01</p>
+      <h1>Selected work</h1>
+      <p class="subtitle">作品展示区 · 独立试做</p>
+    </section>
+    <p id="loading" role="status">正在加载原版模型与材质…</p>
+    <div id="controls">
+      <button id="previous" aria-label="上一件作品">←</button>
+      <div>
+        <strong id="selection">01 / 03</strong
+        ><span id="project-name">Tideline Seaweed Tea</span
+        ><small>点击场景中的预览图，完整阅读</small>
+      </div>
+      <button id="next" aria-label="下一件作品">→</button>
+    </div>
+    <button id="open-work" class="keyboard-open">打开当前作品 ↗</button>
+    <footer>
+      <span>拖动观察 · 滚轮缩放 · ← → 切换作品</span
+      ><a href="BRUNO-LICENSE.txt" target="_blank" rel="noopener"
+        >Scene & visual code: Bruno Simon · MIT</a
+      >
+    </footer>
+    <section id="fallback" hidden>
+      <h2>当前设备未能启动 3D 预览</h2>
+      <p id="error-message"></p>
+      <a href="../tideline.html">Tideline ↗</a
+      ><a href="../gazette.html">Future Gazette ↗</a
+      ><a href="../dream-sentinel.html">DREAM SENTINEL ↗</a>
+    </section>
+    <dialog id="reader" aria-labelledby="reader-title">
+      <div class="reader-bar">
+        <button id="close-reader">← 返回展示区</button>
+        <h2 id="reader-title"></h2>
+        <a id="reader-direct" target="_blank" rel="noopener">独立打开 ↗</a>
+      </div>
+      <div id="frames"></div>
+    </dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
