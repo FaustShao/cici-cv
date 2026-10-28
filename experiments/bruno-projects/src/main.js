@@ -34,6 +34,7 @@ import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 const $ = (id) => document.getElementById(id),
   reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 gsap.ticker.lagSmoothing(0);
+if (reduced) gsap.globalTimeline.timeScale(1000);
 const contentRoot = import.meta.env.DEV
   ? new URL("http://127.0.0.1:8000/")
   : new URL("../", location.href);
@@ -121,17 +122,17 @@ function select(index) {
   $("selection").textContent = String(selected + 1).padStart(2, "0") + " / 03";
   $("project-name").textContent = data[selected].title;
 }
-$("previous").onclick = () => select(selected - 1);
-$("next").onclick = () => select(selected + 1);
+$("previous").onclick = () => select((area?.navigation.index ?? selected) - 1);
+$("next").onclick = () => select((area?.navigation.index ?? selected) + 1);
 window.addEventListener("keydown", (e) => {
   if (reading) return;
   if (e.key === "ArrowLeft") {
     e.preventDefault();
-    select(selected - 1);
+    select((area?.navigation.index ?? selected) - 1);
   }
   if (e.key === "ArrowRight") {
     e.preventDefault();
-    select(selected + 1);
+    select((area?.navigation.index ?? selected) + 1);
   }
   if (e.key === "Enter" && e.target === document.body) readWork();
 });
@@ -331,18 +332,48 @@ try {
   // Same high-quality default-view ground bounds as upstream View.setOptimalArea:
   // max radius 30 * (1 - (-0.4)), phi .31PI, theta .25PI, vertical FOV 25.
   // Use the original 16:9 calibration consistently in this single-scene study.
-  const calibration=new T.PerspectiveCamera(25,16/9,.1,200);
-  calibration.position.setFromSphericalCoords(42,Math.PI*.31,Math.PI*.25);
-  calibration.lookAt(0,0,0);calibration.updateMatrixWorld();
-  const ground=new T.Plane(new T.Vector3(0,1,0),0),probe=new T.Raycaster();
-  const corners=[[1,-1],[-1,1],[-1,-1],[1,1]].map(([x,y])=>{probe.setFromCamera(new T.Vector2(x,y),calibration);return probe.ray.intersectPlane(ground,new T.Vector3());});
-  const baseCenter=corners.reduce((sum,p)=>sum.add(p),new T.Vector3()).multiplyScalar(.25);
-  const nativeProject=game.resources.areasModel.scene.children.find(c=>c.name==='projects');
-  nativeProject.updateWorldMatrix(true,true);
-  const interactive=nativeProject.getObjectByName('refInteractivePoint').getWorldPosition(new T.Vector3());interactive.y=0;
-  center.copy(baseCenter).add(interactive);game.view.optimalArea.position.copy(center);
-  game.view.optimalArea.radius=baseCenter.distanceTo(corners[3]);
-  for(const [key,y] of [['nearDistance',-1],['farDistance',1]]){probe.setFromCamera(new T.Vector2(0,y),calibration);game.view.optimalArea[key]=calibration.position.distanceTo(probe.ray.intersectPlane(ground,new T.Vector3()));}
+  const calibration = new T.PerspectiveCamera(25, 16 / 9, 0.1, 200);
+  calibration.position.setFromSphericalCoords(
+    42,
+    Math.PI * 0.31,
+    Math.PI * 0.25,
+  );
+  calibration.lookAt(0, 0, 0);
+  calibration.updateMatrixWorld();
+  const ground = new T.Plane(new T.Vector3(0, 1, 0), 0),
+    probe = new T.Raycaster();
+  const corners = [
+    [1, -1],
+    [-1, 1],
+    [-1, -1],
+    [1, 1],
+  ].map(([x, y]) => {
+    probe.setFromCamera(new T.Vector2(x, y), calibration);
+    return probe.ray.intersectPlane(ground, new T.Vector3());
+  });
+  const baseCenter = corners
+    .reduce((sum, p) => sum.add(p), new T.Vector3())
+    .multiplyScalar(0.25);
+  const nativeProject = game.resources.areasModel.scene.children.find(
+    (c) => c.name === "projects",
+  );
+  nativeProject.updateWorldMatrix(true, true);
+  const interactive = nativeProject
+    .getObjectByName("refInteractivePoint")
+    .getWorldPosition(new T.Vector3());
+  interactive.y = 0;
+  center.copy(baseCenter).add(interactive);
+  game.view.optimalArea.position.copy(center);
+  game.view.optimalArea.radius = baseCenter.distanceTo(corners[3]);
+  for (const [key, y] of [
+    ["nearDistance", -1],
+    ["farDistance", 1],
+  ]) {
+    probe.setFromCamera(new T.Vector2(0, y), calibration);
+    game.view.optimalArea[key] = calibration.position.distanceTo(
+      probe.ray.intersectPlane(ground, new T.Vector3()),
+    );
+  }
   game.noises = new Noises();
   game.wind = new Wind();
   game.terrain = new Terrain();
