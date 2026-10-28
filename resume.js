@@ -78,6 +78,15 @@ window.RESUME = {
       "cover": "assets/gazette/page-01-small.webp"
     },
     {
+      "name": "DREAM SENTINEL 梦境哨兵",
+      "category": "03 / 未来智能穿戴设备设计 · 2024.08 — 2024.10",
+      "description": "面向2050年灾害场景的智能颈部穿戴设备概念，探索危险感知、感官反馈、防护与投影引导。",
+      "tags": ["未来概念", "智能穿戴", "交互设计"],
+      "url": "dream-sentinel.html",
+      "collection": "portfolio",
+      "cover": "assets/dream-sentinel/3.1/DREAM SENTINEL.png"
+    },
+    {
       "name": "TASA-ICoD 国际设计工作坊",
       "category": "03 / 未来概念探索设计合作 · 2024.08 — 2024.09",
       "description": "清华青岛艺术与科学创新研究院 × 国际设计联合会（ICoD）；团队项目，担任中韩国际团队组长。",

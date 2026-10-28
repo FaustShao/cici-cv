@@ -15,7 +15,9 @@ python3 -m http.server 8000 --bind 0.0.0.0
 
 - `index.html`：首页，个人简介和内容入口。
 - `resume.html`：完整简历及打印 PDF。
-- `portfolio.html`：作品集总览，Tideline 与 Future Gazette 同级展示。
+- `portfolio.html`：作品集总览，Tideline、Future Gazette 与 DREAM SENTINEL 同级展示。
+- `dream-sentinel.html`：梦境哨兵项目连续画板，目前接入 3.1；原图比例、局部关联高亮、轻微视差、减少动态效果适配，支持横向拖动/触屏/方向键和阅读尺寸切换。
+- `dream-sentinel-layers.js`：3.1 用户导出 PNG 与 Figma 实际渲染边界的映射；77 张素材分别保留，不重排原始文字。
 - `gazette.html`：Future Gazette 独立翻页阅读页。
 - `works.html`：其它项目，可展开研究与设计过程。
 - Material 页面已接入实验说明和六张材料照片，支持说明图点击放大、照片横条滚轮／拖动／触屏浏览。可从 HOME 的 Material 入口进入，或使用 `tideline.html#material`。
@@ -56,7 +58,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 连接 GitHub 仓库，生产分支选 `main`。不选框架，构建命令填写：
 
 ```sh
-mkdir -p public && cp index.html resume.html works.html tideline.html tideline.css tideline.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
+mkdir -p public && cp index.html resume.html works.html tideline.html tideline.css tideline.js dream-sentinel.html dream-sentinel.css dream-sentinel.js dream-sentinel-layers.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
 ```
 
 构建输出目录填 `public`，无需环境变量。部署成功后可绑定自定义域名。预览与生产地址均需按公开页面处理。
