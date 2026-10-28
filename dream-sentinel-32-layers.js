@@ -1,6 +1,6 @@
 // Frame 34:417, 3488 × 1744; y coordinates are relative to its top (2008).
 // User-exported PNGs retain their rendered bounds and original stacking order.
-// image 166 (34:475) is missing from the supplied ZIP; no substitute is used.
+// image 166 (34:475) was supplied separately; its export includes 35% opacity.
 // T30 and 无标题13 1 have null render bounds and export to transparent 1 × 1 PNGs.
 window.DREAM_SENTINEL_32_LAYERS = [
   {
@@ -45,6 +45,15 @@ window.DREAM_SENTINEL_32_LAYERS = [
     "x": 0,
     "y": 0,
     "w": 1802,
+    "h": 1744,
+    "alt": ""
+  },
+  {
+    "id": "34:475",
+    "file": "image 166.png",
+    "x": 0,
+    "y": 0,
+    "w": 1870,
     "h": 1744,
     "alt": ""
   },

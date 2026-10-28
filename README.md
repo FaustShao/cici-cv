@@ -18,7 +18,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - `portfolio.html`：作品集总览，Tideline、Future Gazette 与 DREAM SENTINEL 同级展示。
 - `dream-sentinel.html`：梦境哨兵项目连续画板，目前接入 3.1、3.2；原图比例、局部关联高亮、轻微视差、减少动态效果适配，支持横向拖动/触屏/方向键和两张画板同步阅读尺寸切换。
 - `dream-sentinel-layers.js`：3.1 用户导出 PNG 与 Figma 实际渲染边界的映射；77 张素材分别保留，不重排原始文字。
-- `dream-sentinel-32-layers.js` / `dream-sentinel-32.js`：3.2 的62张可见导出图片、原有背景色层及传感器/思维导图/人体标注交互。ZIP 内两张透明1×1图不显示；缺少 `image 166` 地球背景，Figma下载返回403，待用户补图；不以其他图片代替。其余原布局与文字保持不变。
+- `dream-sentinel-32-layers.js` / `dream-sentinel-32.js`：3.2 的63张可见导出图片、原有背景色层及传感器/思维导图/人体标注交互。ZIP 内两张透明1×1图不显示；`image 166` 地球背景已由用户补图，按原渲染边界恢复，保留PNG内置透明度，不重复降低透明度。原布局与文字保持不变。
 - `gazette.html`：Future Gazette 独立翻页阅读页。
 - `works.html`：其它项目，可展开研究与设计过程。
 - Material 页面已接入实验说明和六张材料照片，支持说明图点击放大、照片横条滚轮／拖动／触屏浏览。可从 HOME 的 Material 入口进入，或使用 `tideline.html#material`。
