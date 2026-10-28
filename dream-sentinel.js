@@ -77,6 +77,7 @@
     document.body.classList.toggle('reading-mode',reading);
     viewport.classList.toggle('can-scroll',width>viewport.clientWidth);
     readingButton.setAttribute('aria-pressed',String(reading));readingButton.textContent=reading?'适应宽度':'放大阅读';
+    document.dispatchEvent(new CustomEvent('sentinel-reading-change'));
   }
   new ResizeObserver(resize).observe(viewport);resize();
   readingButton.addEventListener('click',()=>{
