@@ -1,97 +1,162 @@
 <!doctype html>
 <html lang="zh-CN" data-theme="light">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#9dd8eb">
-  <meta name="description" content="Cecilia 王钰欣的设计小岛。工业设计、交互设计、个人简历与精选作品。">
-  <title>Cecilia · 王钰欣 / YUXIN WANG</title>
-  <link rel="icon" href="assets/island-flower.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="island.css?v=island-1">
-  <script src="resume.js?v=island-1" defer></script>
-  <script src="island-ui.js?v=island-1" defer></script>
-  <script type="module" src="island-scene.js?v=island-1"></script>
-</head>
-<body>
-  <a class="skip-link" href="#island-nav">跳到内容导航</a>
-  <header class="island-header">
-    <a class="island-wordmark" href="index.html" aria-label="回到小岛首页"><span class="brand-flower" aria-hidden="true">✳</span> CECILIA'S ISLAND<span class="wordmark-note">DESIGN & A LITTLE PLAY</span></a>
-    <nav id="island-nav" aria-label="主导航">
-      <a href="resume.html" data-place="resume"><span>01</span> 个人简历</a>
-      <a href="portfolio.html" data-place="portfolio"><span>02</span> 作品集</a>
-      <a href="works.html" data-place="other"><span>03</span> 其他项目</a>
-      <a href="#contact" data-place="contact"><span>04</span> 联系方式</a>
-    </nav>
-    <button class="theme-switch" id="island-theme" aria-label="切换至夜晚" aria-pressed="false"><span class="theme-orb" aria-hidden="true"></span><span class="theme-caption">日间</span></button>
-  </header>
-  <main class="island-home">
-    <section class="home-intro" aria-labelledby="home-name">
-      <p class="intro-eyebrow"><span class="tiny-star" aria-hidden="true">✦</span> A SMALL WORLD OF DESIGN</p>
-      <p class="hello-name">Hello, I'm <em>Cecilia.</em></p>
-      <h1 id="home-name">王钰欣<span>YUXIN WANG</span></h1>
-      <p class="intro-role">工业设计 × 交互设计</p>
-      <p class="intro-copy">把想法变成可体验的事物。<br>欢迎来到我的设计小岛。</p>
-      <a class="resume-priority" href="resume.html" data-place="resume"><span>先从我的简历开始</span><span class="circle-arrow" aria-hidden="true">↗</span></a>
-      <p class="intro-footnote">探索、翻阅，找到你感兴趣的那一份。</p>
-    </section>
-    <section class="island-world" id="island-world" aria-label="四个地点的互动设计小岛">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#23b4df" />
+    <meta
+      name="description"
+      content="Cecilia 王钰欣的设计小岛。探索个人简历、三件精选作品与设计实践。"
+    />
+    <title>Cecilia · 王钰欣 / YUXIN WANG</title>
+    <link rel="icon" href="assets/island-flower.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="assets/fonts/fredoka.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="island.css?v=world-2" />
+    <script src="resume.js?v=world-2" defer></script>
+    <script src="island-ui.js?v=world-2" defer></script>
+    <script type="module" src="island-scene.js?v=world-2"></script>
+  </head>
+  <body data-place="home">
+    <a class="skip-link" href="#accessible-nav">使用文字导航</a>
+    <main id="island-world" aria-label="Cecilia 的互动设计小岛">
+      <h1 class="sr-only" id="home-name">Cecilia · 王钰欣 / YUXIN WANG</h1>
       <div id="scene-canvas" aria-hidden="true"></div>
-      <div class="scene-fallback" id="scene-fallback" aria-hidden="true"><div class="flat-island"><i class="flat-road"></i><i class="flat-house flat-cv">CV</i><i class="flat-house flat-gallery">ARCHIVE</i><i class="flat-house flat-lab">PLAY</i><i class="flat-house flat-post">POST</i><i class="flat-tree"></i><i class="flat-tree second"></i></div></div>
-      <div class="place-labels" id="place-labels">
-        <a class="place-label place-resume" data-place="resume" href="resume.html"><span class="place-index">01</span><span>个人简历<small>从这里认识我</small></span><span aria-hidden="true">↗</span></a>
-        <a class="place-label place-portfolio" data-place="portfolio" href="portfolio.html"><span class="place-index">02</span><span>作品集<small>3 份精选档案</small></span><span aria-hidden="true">↗</span></a>
-        <a class="place-label place-other" data-place="other" href="works.html"><span class="place-index">03</span><span>其他项目</span><span aria-hidden="true">↗</span></a>
-        <a class="place-label place-contact" data-place="contact" href="#contact"><span class="place-index">04</span><span>联系方式</span><span aria-hidden="true">↗</span></a>
-      </div>
-    </section>
-    <div class="world-caption"><span class="compass-mark" aria-hidden="true">N<br>↗</span><div><strong>小岛不大，好奇心很大。</strong><span>点击建筑或路牌，开始探索</span></div></div>
-    <div class="world-tools"><span id="scene-status" role="status">正在搭建小岛…</span><button id="reset-view" type="button" aria-label="恢复小岛初始视角"><span aria-hidden="true">⤾</span> 视角归位</button></div>
-    <footer class="island-footer"><span>© <span id="copyright-year">2026</span> CECILIA WANG</span><span class="footer-coordinate">PLANTS, BOOKS & LITTLE IDEAS</span><a href="mailto:wangyuxinqd2025@163.com">来聊聊 ↗</a></footer>
-    <noscript><div class="no-script"><p>小岛的交互需要 JavaScript，内容仍可直接阅读：</p><a href="resume.html">个人简历</a><a href="tideline.html">Tideline</a><a href="gazette.html">Future Gazette</a><a href="dream-sentinel.html">梦境哨兵</a><a href="mailto:wangyuxinqd2025@163.com">发邮件</a></div></noscript>
-  </main>
-
-  <dialog class="place-panel" id="place-panel" aria-labelledby="panel-title">
-    <div class="panel-topline"><a class="panel-home" href="index.html" id="panel-home">← 回到小岛</a><span id="panel-kicker">CECILIA'S COLLECTION</span><button class="icon-close" id="panel-close" aria-label="关闭分类面板">×</button></div>
-    <section class="panel-section" data-panel="resume" hidden>
-      <div class="resume-preview">
-        <div class="resume-paper"><span class="paper-clip" aria-hidden="true"></span><p class="small-caps">A LITTLE INTRODUCTION</p><h2>王钰欣<span>YUXIN WANG</span></h2><p class="paper-cecilia">Cecilia</p><div class="paper-rule"></div><p>工业设计 × 交互设计</p><div class="resume-lines" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="paper-stamp">CV<br>01</span></div>
-        <div class="resume-summary"><p class="small-caps">01 / THE STARTING POINT</p><h2 id="resume-title">先认识我，<br>再看看我的设计。</h2><p data-island-profile="summary"></p><div class="resume-facts"><span>工业设计背景</span><span>交互设计实践</span><span>用户研究与体验</span></div><button class="primary-action" id="read-resume">完整阅读简历 <span>↗</span></button><a class="quiet-link" href="resume.html" target="_blank" rel="noopener">独立页面 / 打印 PDF ↗</a></div>
-      </div>
-    </section>
-    <section class="panel-section" data-panel="portfolio" hidden>
-      <div class="archive-heading"><div><p class="small-caps">02 / SELECTED WORK</p><h2>打开我的作品档案。</h2></div><span class="archive-total">共 <b>03</b> 份档案</span></div>
-      <div class="archive-layout">
-        <div class="archive-display">
-          <div class="archive-fan" id="archive-fan" role="group" aria-label="可翻阅的作品档案，支持左右方向键与触屏滑动">
-            <button type="button" class="archive-file file-tideline" data-file="0" aria-label="选择 Tideline 档案" aria-pressed="true">
-              <span class="folder-tab">01 / ECOLOGY</span><span class="folder-face"><span class="file-topline">FIELD NOTES / FINDHORN <span>01</span></span><span class="tideline-title">Tide<br>line<span class="title-dot">.</span></span><svg class="seaweed-art" viewBox="0 0 200 220" aria-hidden="true"><path d="M100 216C92 154 132 115 102 20M102 173C58 174 30 142 32 112C73 117 94 135 102 173ZM106 139C148 132 170 99 163 70C125 79 108 102 106 139ZM108 96C70 91 55 62 64 38C91 48 104 67 108 96ZM105 58C126 40 128 17 116 4C101 19 99 40 105 58Z" fill="none" stroke="currentColor" stroke-width="3"/></svg><span class="specimen-photo"><img src="assets/tideline/HOME/Background.png" alt="" loading="lazy"></span><span class="specimen-label">海岸、植物与循环的故事</span><span class="file-bottomline">SEAWEED TEA SYSTEM <span>↗</span></span></span>
-            </button>
-            <button type="button" class="archive-file file-gazette" data-file="1" aria-label="选择 Future Gazette 档案" aria-pressed="false">
-              <span class="folder-tab">02 / CULTURE</span><span class="folder-face"><span class="file-topline">FORRES FUTURE GAZETTE <span>02</span></span><span class="gazette-year">2050</span><span class="gazette-phrase">THE FUTURE<br>IS LOCAL.</span><span class="newspaper-piece"><img src="assets/gazette/page-01-small.webp" alt="" loading="lazy"></span><span class="newspaper-fold" aria-hidden="true"></span><span class="file-bottomline">地方文化 × 数字体验 <span>↗</span></span></span>
-            </button>
-            <button type="button" class="archive-file file-sentinel" data-file="2" aria-label="选择 DREAM SENTINEL 档案" aria-pressed="false">
-              <span class="folder-tab">03 / FUTURES</span><span class="folder-face"><span class="file-topline">SPECULATIVE DESIGN <span>03</span></span><span class="sentinel-title">DREAM<br>SENTINEL</span><span class="device-window"><img src="assets/dream-sentinel/3.3/4.1.322%201.png" alt="" loading="lazy"><i class="device-point"></i><i class="device-point second"></i></span><span class="technical-caption">DANGER → SENSE → RESPOND</span><span class="file-bottomline">梦境哨兵 / 智能穿戴 <span>↗</span></span></span>
-            </button>
-          </div>
-          <div class="archive-controls"><button id="archive-prev" aria-label="上一份作品档案">←</button><p><b id="archive-position">01</b> / 03 <span>翻一翻，选一份。</span></p><button id="archive-next" aria-label="下一份作品档案">→</button></div>
-          <div class="archive-tabs" id="archive-tabs" aria-label="快速选择作品"><button data-select-file="0" aria-pressed="true">01 海藻茶</button><button data-select-file="1" aria-pressed="false">02 Gazette</button><button data-select-file="2" aria-pressed="false">03 梦境哨兵</button></div>
+      <div id="scene-fallback" class="scene-fallback">
+        <div class="fallback-island">
+          <h2>Cecilia<span>王钰欣 / YUXIN WANG</span></h2>
+          <p>欢迎来到我的设计小岛</p>
+          <nav aria-label="简洁小岛导航">
+            <a href="resume.html" data-place="resume">01 个人简历 ↗</a
+            ><a href="portfolio.html" data-place="portfolio">02 作品集 ↗</a
+            ><a href="works.html" data-place="other">03 其他项目 ↗</a
+            ><a href="#contact" data-place="contact">04 联系方式 ↗</a>
+          </nav>
         </div>
-        <div class="archive-details" aria-live="polite"><p class="small-caps" id="archive-category"></p><h3 id="archive-name"></h3><p id="archive-description"></p><div class="detail-tags" id="archive-tags"></div><button class="primary-action" id="read-project">展开作品，全屏阅读 <span>↗</span></button><a class="quiet-link" id="project-direct" target="_blank" rel="noopener">独立页面打开 ↗</a></div>
       </div>
+      <nav id="accessible-nav" class="accessible-nav" aria-label="小岛键盘导航">
+        <a href="resume.html" data-place="resume">个人简历</a
+        ><a href="portfolio.html" data-place="portfolio">作品集</a
+        ><a href="works.html" data-place="other">其他项目</a
+        ><a href="#contact" data-place="contact">联系方式</a>
+      </nav>
+      <div id="model-hotspots"></div>
+    </main>
+    <header class="world-hud">
+      <div class="world-identity" id="world-identity" aria-hidden="true">
+        <span class="brand-mark">✳</span
+        ><span>CECILIA'S<br />DESIGN ISLAND</span>
+      </div>
+      <button id="back-island" class="toy-button back-island" hidden>
+        ← 返回全岛</button
+      ><button
+        id="island-theme"
+        class="toy-button theme-switch"
+        aria-label="切换至夜晚"
+        aria-pressed="false"
+      >
+        <span class="theme-orb" aria-hidden="true"></span
+        ><span class="theme-caption">日间</span>
+      </button>
+    </header>
+    <section
+      class="station-heading"
+      id="station-heading"
+      aria-live="polite"
+      hidden
+    >
+      <p id="station-kicker"></p>
+      <h2 id="station-title"></h2>
+      <p id="station-description"></p>
     </section>
-    <section class="panel-section" data-panel="other" hidden>
-      <div class="archive-heading"><div><p class="small-caps">03 / SIDE PROJECTS</p><h2>一些探索，一些实验。</h2></div><span class="archive-total">THE PLAY ROOM</span></div>
-      <div class="side-projects" id="side-projects"></div>
-    </section>
-    <section class="panel-section contact-section" data-panel="contact" id="contact" hidden>
-      <div class="postcard-art" aria-hidden="true"><span class="postage">✳<small>CECILIA'S ISLAND</small></span><div class="postmark">HELLO<br>FROM MY ISLAND</div><span class="postcard-wave">〰〰〰</span><p>Let's make<br><em>something good.</em></p><span class="postcard-sign">Cecilia</span></div>
-      <div class="contact-details"><p class="small-caps">04 / SAY HELLO</p><h2>下一段对话，<br>从这里开始。</h2><a class="contact-row" href="mailto:wangyuxinqd2025@163.com"><span>EMAIL<small>打开邮件编辑器</small></span><strong>wangyuxinqd2025@163.com</strong><b>↗</b></a><a class="contact-row" href="tel:15066290491"><span>PHONE</span><strong>15066290491</strong><b>↗</b></a><button class="contact-row" id="copy-wechat" type="button"><span>WECHAT<small>点击复制微信号</small></span><strong>Cecilia_cici68</strong><b>⧉</b></button><p id="contact-feedback" class="contact-feedback" role="status"></p></div>
-    </section>
-    <h2 id="panel-title" class="sr-only">个人简历</h2>
-  </dialog>
-
-  <dialog class="project-reader" id="project-reader" aria-labelledby="reader-title">
-    <header class="reader-bar"><button id="reader-back">← 返回档案</button><h2 id="reader-title">作品阅读</h2><div><button id="browser-fullscreen" aria-label="进入浏览器全屏">⛶ 全屏</button><a id="reader-direct" target="_blank" rel="noopener">独立打开 ↗</a></div></header>
-    <div id="reader-frames"></div><p class="reader-loading" id="reader-loading" role="status">正在打开作品…</p>
-  </dialog>
-</body>
+    <div id="scene-tooltip" role="status" hidden></div>
+    <footer class="world-footer">
+      <span id="scene-status" role="status">正在搭建你的设计小岛…</span
+      ><button id="reset-view" class="reset-view" aria-label="恢复初始视角">
+        ⤾ 视角归位</button
+      ><span class="world-copyright"
+        >© <span id="copyright-year">2026</span> CECILIA</span
+      >
+    </footer>
+    <div
+      class="archive-controls station-controls"
+      id="archive-controls"
+      hidden
+      aria-label="作品展架控制"
+    >
+      <button id="archive-prev" class="toy-button" aria-label="上一件作品">
+        ◀
+      </button>
+      <div>
+        <span><b id="archive-position">01</b> / 03</span>
+        <p>拖动翻阅 · 点击封面完整阅读</p>
+      </div>
+      <button id="archive-next" class="toy-button" aria-label="下一件作品">
+        ▶
+      </button>
+    </div>
+    <div id="resume-controls" class="station-controls" hidden>
+      <button id="read-resume" class="toy-button paper-button">
+        翻开我的完整简历 ↗
+      </button>
+    </div>
+    <div id="contact-controls" class="station-controls contact-controls" hidden>
+      <a href="mailto:wangyuxinqd2025@163.com" class="toy-button">写邮件 ↗</a
+      ><a href="tel:15066290491" class="toy-button">打电话 ↗</a
+      ><button id="copy-wechat" class="toy-button">复制微信号 ⧉</button>
+    </div>
+    <p id="contact-feedback" class="contact-feedback" role="status"></p>
+    <aside
+      id="workshop-note"
+      class="workshop-note"
+      aria-labelledby="note-title"
+      hidden
+    >
+      <button id="close-note" aria-label="收起项目介绍">×</button>
+      <p class="note-kicker">FROM THE WORKBENCH</p>
+      <h3 id="note-title"></h3>
+      <p id="note-description"></p>
+      <ul id="note-details"></ul>
+    </aside>
+    <section
+      id="fallback-content"
+      class="fallback-content"
+      hidden
+      aria-label="简洁模式内容"
+    ></section>
+    <dialog
+      class="project-reader"
+      id="project-reader"
+      aria-labelledby="reader-title"
+    >
+      <header class="reader-bar">
+        <button id="reader-back">← 返回展架</button>
+        <h2 id="reader-title">作品阅读</h2>
+        <div>
+          <button id="browser-fullscreen" aria-label="进入浏览器全屏">
+            ⛶ 全屏</button
+          ><a id="reader-direct" target="_blank" rel="noopener">独立打开 ↗</a>
+        </div>
+      </header>
+      <div id="reader-frames"></div>
+      <p class="reader-loading" id="reader-loading" role="status">
+        正在打开作品… 可使用右上角独立打开。
+      </p>
+    </dialog>
+    <noscript
+      ><section class="no-script">
+        <h2>直接阅读</h2>
+        <a href="resume.html">个人简历</a
+        ><a href="tideline.html">Tideline 海藻茶</a
+        ><a href="gazette.html">Future Gazette</a
+        ><a href="dream-sentinel.html">梦境哨兵</a
+        ><a href="mailto:wangyuxinqd2025@163.com">联系邮箱</a>
+      </section></noscript
+    >
+  </body>
 </html>
