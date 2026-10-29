@@ -4,17 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#b9869b" />
-    <title>Cecilia · 作品展示区试做</title>
+    <title>王钰欣 · 作品集</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
     <canvas
       id="world"
-      aria-label="Bruno 原版作品展示装置，支持拖动观察、点击图片阅读"
+      aria-label="作品展架，支持拖动观察、点击图片阅读"
     ></canvas>
     <header>
-      <a id="back-site" href="../index.html">← 返回现有网站</a>
+      <a id="back-site" href="../index.html">← 返回首页</a>
       <div>
         <button id="theme" aria-pressed="false">夜间</button
         ><button id="overview">场景全景</button
@@ -22,26 +22,23 @@
       </div>
     </header>
     <section class="intro">
-      <p>CECILIA / VISUAL STUDY 01</p>
-      <h1>Selected work</h1>
-      <p class="subtitle">作品展示区 · 独立试做</p>
+      <p>王钰欣 / 作品集</p>
+      <h1>精选作品</h1>
+      <p class="subtitle">点击预览，翻阅完整项目</p>
     </section>
-    <p id="loading" role="status">正在加载原版模型与材质…</p>
+    <p id="loading" role="status">正在布置作品展架…</p>
     <div id="controls">
       <button id="previous" aria-label="上一件作品">←</button>
       <div>
         <strong id="selection">01 / 03</strong
         ><span id="project-name">Tideline Seaweed Tea</span
-        ><small>点击场景中的预览图，完整阅读</small>
+        ><small>点击预览，完整阅读</small>
       </div>
       <button id="next" aria-label="下一件作品">→</button>
     </div>
     <button id="open-work" class="keyboard-open">打开当前作品 ↗</button>
     <footer>
-      <span>拖动观察 · 滚轮缩放 · ← → 切换作品</span
-      ><a href="BRUNO-LICENSE.txt" target="_blank" rel="noopener"
-        >Scene & visual code: Bruno Simon · MIT</a
-      >
+      <span>拖动观察 · 滚轮缩放 · ← → 切换作品</span>
     </footer>
     <section id="fallback" hidden>
       <h2>当前设备未能启动 3D 预览</h2>

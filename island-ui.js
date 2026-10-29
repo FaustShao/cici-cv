@@ -90,6 +90,11 @@
   }
   function openPlace(place, historyMode = "push") {
     if (place !== "home" && !places[place]) return;
+    // The accepted exhibition is now the portfolio category, not a test link.
+    if (place === "portfolio") {
+      location.assign("bruno-preview/");
+      return;
+    }
     closeReader();
     currentPlace = place;
     state.place = place;

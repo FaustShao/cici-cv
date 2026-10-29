@@ -15,7 +15,7 @@ export class TextCanvas
     )
     {
         this.lines = []
-        this.font = `${fontWeight} ${fontSize * density}px "${fontFamily}"`
+        this.font = `${fontWeight} ${fontSize * density}px "${fontFamily}", "Cecilia Hand"`
         this.width = Math.ceil(width * density)
         this.height = Math.ceil(height * density)
         this.horizontalAlign = horizontalAlign

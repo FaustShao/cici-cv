@@ -10,7 +10,7 @@
 - 桌面使用 `assets/island/` 中的立体指针、悬停手势和抓取光标，无跟随延迟。触屏设备不显示自定义光标，原作品阅读区保留正常光标。键盘导航仅聚焦时出现，不持续遮挡场景。WebGL 不可用时提供可点击的简洁界面和相同阅读入口。
 - Fredoka、中文 Noto Sans SC 子集及立体字轮廓位于 `assets/fonts/`，OFL 许可证同目录保留。可用 `scripts/build-island-fonts.py` 从官方原字体重建，需开发依赖 `fonttools[woff]` 与 Brotli；线上不需要 Python 或外部字体服务。
 - 三个作品的原有页面与素材保持独立；点击模型按需加载，同次访问返回展架后保留阅读位置。外层阅读导航统一小岛字体，原项目画面不重新配色。读者可用「独立打开」访问原页面。
-- `portfolio.html` / `works.html` 的既有书签会引导至 `index.html#portfolio` / `index.html#other`；原有简历页面与打印能力保留。
+- 作品集分类已替换为获确认的原版模型展示区，入口 `/bruno-preview/`；首页作品集建筑、文字导航、旧 `index.html#portfolio` 和 `portfolio.html` 书签均可进入。此阶段不重做首页与其他分类。展示区中文使用 Long Cang 手写体，项目英文标题、学校和地点保留；模型来源和完整许可证保留在该目录。开发源码与说明见 `experiments/bruno-projects/`。
 - 部署工作流需复制全部 `island-*` 脚本及 `island.css`，并保留本地 Three.js 及许可证。
 
 无需构建的静态个人网站。简历支持响应式布局、深浅色切换和浏览器打印 PDF；小岛使用随站点打包的 Three.js，不依赖在线 CDN。简历内容依据用户提供的 PDF 整理，包含个人联系方式与照片。

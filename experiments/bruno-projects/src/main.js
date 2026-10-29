@@ -141,6 +141,10 @@ try {
   await Promise.all([
     document.fonts.load('700 40px "Amatic SC"'),
     document.fonts.load("700 18px Nunito"),
+    document.fonts.load(
+      '400 40px "Cecilia Hand"',
+      "精选作品设计研究服务角色地点合作档案",
+    ),
   ]);
   renderer = new T.WebGPURenderer({
     canvas: $("world"),
@@ -275,7 +279,7 @@ try {
   let loaded = 0,
     total = Object.keys(textures).length + Object.keys(models).length;
   const progress = () => {
-    $("loading").textContent = `正在加载原版模型与材质 ${++loaded} / ${total}`;
+    $("loading").textContent = `正在布置作品展架 ${++loaded} / ${total}`;
   };
   await Promise.all([
     ...Object.entries(textures).map(async ([key, path]) => {
@@ -456,6 +460,33 @@ try {
   const projectRoot = game.resources.areasModel.scene.children.find(
     (c) => c.name === "projects",
   );
+  // Replace only the original label atlas, preserving its mesh, UVs and lighting.
+  // The original role/at/with headings occupy the lower half of this atlas.
+  const labelsCanvas = document.createElement("canvas");
+  labelsCanvas.width = 2048;
+  labelsCanvas.height = 512;
+  const labelsContext = labelsCanvas.getContext("2d");
+  labelsContext.fillStyle = "#000";
+  labelsContext.fillRect(0, 0, 2048, 512);
+  labelsContext.fillStyle = "#fff";
+  labelsContext.textAlign = "center";
+  labelsContext.textBaseline = "middle";
+  for (const [label, x, y, size] of [
+    ["设计档案", 1024, 128, 190],
+    ["合作", 393, 384, 160],
+    ["角色", 1188, 384, 160],
+    ["地点", 1791, 384, 150],
+  ]) {
+    labelsContext.font = `400 ${size}px "Cecilia Hand"`;
+    labelsContext.fillText(label, x, y);
+  }
+  const labelsTexture = new T.CanvasTexture(labelsCanvas);
+  labelsTexture.colorSpace = T.SRGBColorSpace;
+  labelsTexture.flipY = false;
+  projectRoot.traverse((mesh) => {
+    if (mesh.isMesh && mesh.material.name === "projectsLabels")
+      mesh.material.map = labelsTexture;
+  });
   projectRoot.updateWorldMatrix(true, true);
   const roots = [...projectRoot.children],
     refs = new References();

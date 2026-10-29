@@ -30,7 +30,9 @@ const review = path.resolve(
     page.on("response", (r) => {
       if (r.status() >= 400) bad.push(r.url());
     });
-    await page.goto(new URL("bruno-preview/?webgl=1", root).href);
+    // The original portfolio URL now leads to the accepted exhibition.
+    await page.goto(new URL("portfolio.html?webgl=1", root).href);
+    await page.waitForURL("**/bruno-preview/?webgl=1");
     await page.waitForFunction(
       () => document.body.dataset.ready || document.body.dataset.failed,
       null,
@@ -43,6 +45,24 @@ const review = path.resolve(
     );
     await page.waitForFunction(() => preview.area.title.status === "visible");
     await page.waitForTimeout(1200);
+    assert.equal(await page.locator(".intro h1").innerText(), "精选作品");
+    assert.equal(await page.locator("footer a").count(), 0);
+    assert.equal(
+      await page.evaluate(() =>
+        document.fonts.check('400 40px "Cecilia Hand"', "精选作品"),
+      ),
+      true,
+    );
+    assert.deepEqual(
+      await page.evaluate(
+        () => preview.area.attributes.items.role.textCanvas.lines,
+      ),
+      ["设计研究", "服务设计"],
+    );
+    assert.deepEqual(
+      await page.evaluate(() => preview.area.url.textCanvas.lines),
+      ["点击查看完整项目"],
+    );
     await sharp(await page.screenshot())
       .webp({ quality: 90 })
       .toFile(path.join(review, "day.webp"));

@@ -1019,7 +1019,7 @@ export class ProjectsArea extends Area
 
                 gsap.to(this.url.inner.rotation, { x: Math.PI * 2 * rotationDirection, duration: 1, delay: 0, ease: 'back.out(2)', overwrite: true })
 
-                this.url.textCanvas.updateText(this.navigation.current.url.replace(/https?:\/\//, ''))
+                this.url.textCanvas.updateText('点击查看完整项目')
 
                 const ratio = this.url.textCanvas.getMeasure().width / this.texts.density
                 this.url.panel.scale.x = ratio + 0.2
