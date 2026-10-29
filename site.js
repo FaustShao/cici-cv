@@ -3,8 +3,8 @@
   const page = location.pathname.split('/').pop() || 'index.html';
   // Keep existing bookmarks, but use the island as the category entry.
   const islandRoute = {'portfolio.html':'portfolio', 'works.html':'other'}[page];
-  if (islandRoute && window.top === window) {
-    location.replace(`index.html#${islandRoute}`);
+  if (islandRoute && window.top === window && !new URLSearchParams(location.search).has('document')) {
+    location.replace(islandRoute === 'portfolio' ? 'bruno-preview/' : `bruno-preview/hub.html#${islandRoute}`);
     return;
   }
   document.querySelectorAll('.topbar nav a').forEach(a => {

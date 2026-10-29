@@ -38,7 +38,7 @@ if (reduced) gsap.globalTimeline.timeScale(1000);
 const contentRoot = import.meta.env.DEV
   ? new URL("http://127.0.0.1:8000/")
   : new URL("../", location.href);
-$("back-site").href = new URL("index.html", contentRoot);
+$("back-site").href = new URL("hub.html", location.href);
 let selected = 0,
   reading = false,
   low = false,
@@ -82,7 +82,7 @@ function readWork() {
           }
           if (file === "index.html") {
             event.preventDefault();
-            location.href = new URL("index.html", contentRoot).href;
+            location.href = new URL("hub.html", location.href).href;
           }
         });
       } catch {}
@@ -331,8 +331,11 @@ try {
     game.dayCycles.events.trigger("night", [night]);
     $("theme").textContent = night ? "日间" : "夜间";
     $("theme").setAttribute("aria-pressed", String(night));
+    try { localStorage.setItem("resume-theme", night ? "dark" : "light"); } catch {}
   }
-  applyPreset(false);
+  let rememberedNight = false;
+  try { rememberedNight = localStorage.getItem("resume-theme") === "dark"; } catch {}
+  applyPreset(rememberedNight);
   // Same high-quality default-view ground bounds as upstream View.setOptimalArea:
   // max radius 30 * (1 - (-0.4)), phi .31PI, theta .25PI, vertical FOV 25.
   // Use the original 16:9 calibration consistently in this single-scene study.

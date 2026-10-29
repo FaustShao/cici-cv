@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#b9869b" />
+    <meta
+      name="description"
+      content="Cecilia 王钰欣的设计世界：个人简历、作品集、其他项目与联系方式。"
+    />
+    <title>Cecilia · 王钰欣 / YUXIN WANG</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/hub.css" />
+  </head>
+  <body data-place="home">
+    <canvas
+      id="world"
+      aria-label="Cecilia 的设计世界，拖动观察，点击模型进入分类"
+    ></canvas>
+    <nav class="keyboard-nav" aria-label="分类导航">
+      <a href="#resume">01 个人简历</a><a href="./index.html">02 作品集</a
+      ><a href="#other">03 其他项目</a><a href="#contact">04 联系方式</a>
+    </nav>
+    <header>
+      <button id="back-home" hidden>← 返回首页</button>
+      <div>
+        <button id="theme" aria-pressed="false">夜间</button
+        ><button id="reset-view">视角归位</button
+        ><button id="quality" aria-pressed="false">高画质</button>
+      </div>
+    </header>
+    <p id="loading" role="status">正在布置设计世界…</p>
+    <footer>
+      <span id="scene-hint">拖动观察 · 滚轮缩放 · 点击装置进入</span
+      ><span>CECILIA</span>
+    </footer>
+    <section id="place-actions" aria-label="当前分类操作" hidden></section>
+    <p id="feedback" role="status"></p>
+    <section id="fallback" hidden>
+      <h2>暂时无法显示 3D 场景</h2>
+      <p id="error-message"></p>
+      <a href="../resume.html?document=1">个人简历 ↗</a
+      ><a href="./index.html">作品集 ↗</a
+      ><a href="../works.html?document=1">其他项目 ↗</a
+      ><a href="mailto:wangyuxinqd2025@163.com">发邮件 ↗</a>
+    </section>
+    <dialog id="reader" aria-labelledby="reader-title">
+      <div class="reader-bar">
+        <button id="close-reader">← 返回场景</button>
+        <h2 id="reader-title"></h2>
+        <a id="reader-direct" target="_blank" rel="noopener">独立打开 ↗</a>
+      </div>
+      <div id="frames"></div>
+    </dialog>
+    <script src="../resume.js"></script>
+    <script type="module" src="/src/hub.js"></script>
+    <noscript
+      ><style>
+        #fallback {
+          display: block !important;
+        }
+        #loading {
+          display: none;
+        }
+      </style></noscript
+    >
+  </body>
+</html>

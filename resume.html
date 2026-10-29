@@ -1,22 +1,121 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="个人简历与作品集">
-  <meta name="color-scheme" content="light dark">
-  <title>个人简历</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="resume.js?v=sentinel-1" defer></script>
-  <link rel="stylesheet" href="site.css?v=portfolio-collection-1"><script src="site.js?v=portfolio-collection-1" defer></script><script src="app.js" defer></script>
-</head>
-<body>
-  <header class="topbar"><a class="wordmark" href="index.html">YUXIN WANG<span> / 王钰欣</span></a><nav aria-label="主导航"><a href="index.html">首页</a><a href="resume.html">简历</a><a href="portfolio.html">作品集</a><a href="works.html">其它作品</a><button id="theme" type="button" aria-label="切换主题">切换主题</button><button id="print" class="print-button" type="button">导出 PDF ↗</button></nav></header>
-  <main>
-    <section class="hero" aria-labelledby="name"><div><p class="eyebrow">HELLO, I'M</p><h1 id="name"></h1><p id="role" class="role"></p><p id="summary" class="summary"></p><div id="contacts" class="contacts"></div><div id="personal" class="personal"></div></div><aside class="profile-card"><div class="portrait"><img id="portrait-photo" alt="" width="222" height="294"><span id="initial" hidden></span></div><div class="card-bottom"><span id="english-name"></span><span id="location"></span></div><p class="availability"><span></span><span id="availability"></span></p></aside></section>
-    <section class="intro-strip"><span>关于我 / ABOUT</span><p id="about"></p></section>
-    <div class="resume-grid"><div class="main-column"><section id="experience" class="section"><div class="section-heading"><h2>实习经历</h2><span>01 / EXPERIENCE</span></div><div id="experience-list"></div></section><section id="projects" class="section"><div class="section-heading"><h2>精选项目</h2><span>02 / SELECTED WORK</span></div><div id="project-list" class="projects"></div></section><section class="section"><div class="section-heading"><h2>竞赛奖项</h2><span>05 / AWARDS</span></div><div id="awards"></div></section></div><aside class="side-column"><section class="section"><div class="section-heading"><h2>专业技能</h2><span>03 / SKILLS</span></div><div id="skills"></div></section><section class="section"><div class="section-heading"><h2>教育背景</h2><span>04 / EDUCATION</span></div><div id="education"></div></section><section class="note"><span>LET'S CONNECT</span><h2>期待下一次，<br>一起创造好作品。</h2><a id="contact-link">联系我 ↗</a></section></aside></div>
-    <footer><span id="footer-name"></span><span>用心设计，持续成长。<span class="screen-only"> / 可打印为 PDF</span></span></footer>
-  </main><noscript>请启用 JavaScript 以查看简历内容。</noscript>
-</body>
+  <head>
+    <script>
+      if (
+        window.top === window &&
+        !new URLSearchParams(location.search).has("document")
+      )
+        location.replace("bruno-preview/hub.html#resume");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="个人简历与作品集" />
+    <meta name="color-scheme" content="light dark" />
+    <title>个人简历</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="resume.js?v=sentinel-1" defer></script>
+    <link rel="stylesheet" href="site.css?v=portfolio-collection-1" />
+    <script src="site.js?v=design-world-1" defer></script>
+    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="world-resume.css?v=world-1" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="wordmark" href="index.html">YUXIN WANG<span> / 王钰欣</span></a>
+      <nav aria-label="主导航">
+        <a href="index.html">首页</a><a href="resume.html">简历</a
+        ><a href="portfolio.html">作品集</a><a href="works.html">其它作品</a
+        ><button id="theme" type="button" aria-label="切换主题">切换主题</button
+        ><button id="print" class="print-button" type="button">
+          导出 PDF ↗
+        </button>
+      </nav>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="name">
+        <div>
+          <p class="eyebrow">个人简历</p>
+          <h1 id="name"></h1>
+          <p id="role" class="role"></p>
+          <p id="summary" class="summary"></p>
+          <div id="contacts" class="contacts"></div>
+          <div id="personal" class="personal"></div>
+        </div>
+        <aside class="profile-card">
+          <div class="portrait">
+            <img id="portrait-photo" alt="" width="222" height="294" /><span
+              id="initial"
+              hidden
+            ></span>
+          </div>
+          <div class="card-bottom">
+            <span id="english-name"></span><span id="location"></span>
+          </div>
+          <p class="availability">
+            <span></span><span id="availability"></span>
+          </p>
+        </aside>
+      </section>
+      <section class="intro-strip">
+        <span>关于我</span>
+        <p id="about"></p>
+      </section>
+      <div class="resume-grid">
+        <div class="main-column">
+          <section id="experience" class="section">
+            <div class="section-heading">
+              <h2>实习经历</h2>
+              <span>01</span>
+            </div>
+            <div id="experience-list"></div>
+          </section>
+          <section id="projects" class="section">
+            <div class="section-heading">
+              <h2>精选项目</h2>
+              <span>02</span>
+            </div>
+            <div id="project-list" class="projects"></div>
+          </section>
+          <section class="section">
+            <div class="section-heading">
+              <h2>竞赛奖项</h2>
+              <span>05</span>
+            </div>
+            <div id="awards"></div>
+          </section>
+        </div>
+        <aside class="side-column">
+          <section class="section">
+            <div class="section-heading">
+              <h2>专业技能</h2>
+              <span>03</span>
+            </div>
+            <div id="skills"></div>
+          </section>
+          <section class="section">
+            <div class="section-heading">
+              <h2>教育背景</h2>
+              <span>04</span>
+            </div>
+            <div id="education"></div>
+          </section>
+          <section class="note">
+            <span>保持联系</span>
+            <h2>期待下一次，<br />一起创造好作品。</h2>
+            <a id="contact-link">联系我 ↗</a>
+          </section>
+        </aside>
+      </div>
+      <footer>
+        <span id="footer-name"></span
+        ><span
+          >用心设计，持续成长。<span class="screen-only">
+            / 可打印为 PDF</span
+          ></span
+        >
+      </footer>
+    </main>
+    <noscript>请启用 JavaScript 以查看简历内容。</noscript>
+  </body>
 </html>

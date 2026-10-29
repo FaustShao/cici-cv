@@ -24,7 +24,7 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: experiments/bruno-projects/package-lock.json
-      - name: Build isolated portfolio study
+      - name: Build unified design world
         run: |
           npm ci --prefix experiments/bruno-projects --no-audit --no-fund
           npm run build --prefix experiments/bruno-projects
@@ -34,6 +34,7 @@ jobs:
           cp island.css island-ui.js island-scene.js island-models.js public/
           cp index.html resume.html works.html tideline.html tideline.css tideline.js dream-sentinel.html dream-sentinel.css dream-sentinel.js dream-sentinel-layers.js dream-sentinel-32.js dream-sentinel-32-layers.js dream-sentinel-33.js dream-sentinel-33-layers.js dream-sentinel-34.js dream-sentinel-34-layers.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/
           cp -R assets public/
+          cp world-resume.css public/
           cp -R bruno-preview public/bruno-preview
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
