@@ -28,6 +28,27 @@ export function createFixtures(world) {
   );
   const placements = [],
     reserved = [];
+  function footprint(root,center){
+    const points=[];
+    root.traverse(m=>{if(!m.isMesh||m.material?.isMeshBasicNodeMaterial)return;const a=m.geometry.attributes.position;
+      for(let i=0;i<a.count;i++){const p=new T.Vector3().fromBufferAttribute(a,i).applyMatrix4(m.matrixWorld);points.push([p.x-center.x,p.z-center.z]);}
+    });
+    points.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+    const unique=points.filter((p,i)=>!i||Math.abs(p[0]-points[i-1][0])+Math.abs(p[1]-points[i-1][1])>1e-6);
+    const cross=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
+    const lower=[],upper=[];
+    for(const p of unique){while(lower.length>1&&cross(lower.at(-2),lower.at(-1),p)<=0)lower.pop();lower.push(p);}
+    for(const p of unique.toReversed()){while(upper.length>1&&cross(upper.at(-2),upper.at(-1),p)<=0)upper.pop();upper.push(p);}
+    return lower.slice(0,-1).concat(upper.slice(0,-1));
+  }
+  function overlaps(a,b){
+    for(const polygon of [a,b])for(let i=0;i<polygon.length;i++){
+      const p=polygon[i],q=polygon[(i+1)%polygon.length],len=Math.hypot(q[0]-p[0],q[1]-p[1]);
+      const x=-(q[1]-p[1])/len,z=(q[0]-p[0])/len,pa=a.map(p=>p[0]*x+p[1]*z),pb=b.map(p=>p[0]*x+p[1]*z);
+      if(Math.max(...pa)+.06<Math.min(...pb)||Math.max(...pb)+.06<Math.min(...pa))return false;
+    }
+    return true;
+  }
   function box(parent, size, pos, material = "wood") {
     const mesh = new T.Mesh(new T.BoxGeometry(...size), materials[material]);
     mesh.position.set(...pos);
@@ -40,11 +61,15 @@ export function createFixtures(world) {
     root.scale.setScalar(scale);
     scene.add(root);
     root.updateWorldMatrix(true, true);
-    const bounds = new T.Box3().setFromObject(root),
+    const support = options.supportName ? root.getObjectByName(options.supportName) : root;
+    if(!support)throw new Error("可见支撑模型缺失："+options.supportName);
+    const precise=!!options.precise || !!options.supportName;
+    const bounds = new T.Box3().setFromObject(support,precise),
       dimensions = bounds.getSize(new T.Vector3()),
       center = bounds.getCenter(new T.Vector3());
     const width = options.width || dimensions.x,
       depth = options.depth || dimensions.z;
+    const hull=options.hull?footprint(support,center):null;
     let best,
       score = Infinity;
     const radius = options.radius ?? 18;
@@ -54,6 +79,7 @@ export function createFixtures(world) {
           pz = z + dz;
         if (
           reserved.some(r => {
+            if(hull&&r.hull)return overlaps(hull.map(p=>[p[0]+px,p[1]+pz]),r.hull);
             if (Math.abs(px-r.x) >= (width+r.width)/2+.4 || Math.abs(pz-r.z) >= (depth+r.depth)/2+.4) return false;
             if (!r.oriented) return true;
             const { angle, width: w, depth: d } = r.oriented;
@@ -67,7 +93,7 @@ export function createFixtures(world) {
         if (ground.maxWater > 5 || ground.maxRoad > (options.plaza ? 255 : 120)) continue;
         const s = dx * dx + dz * dz;
         if (s < score) {
-          best = { x: px, z: pz, width, depth, plaza: !!options.plaza, ...ground };
+          best = { x: px, z: pz, width, depth, plaza: !!options.plaza, precise, supportName:options.supportName||root.name, ...ground };
           score = s;
         }
       }
@@ -80,11 +106,20 @@ export function createFixtures(world) {
       ),
     );
     root.updateWorldMatrix(true, true);
-    best.groundedY = new T.Box3().setFromObject(root).min.y;
+    best.groundedY = new T.Box3().setFromObject(support,precise).min.y;
+    if(root.userData.footVertices){
+      const frame=root.getObjectByName(root.userData.footVertices.frame),a=frame.geometry.attributes.position;
+      best.contacts=root.userData.footVertices.groups.map(ids=>{
+        const points=ids.map(i=>new T.Vector3().fromBufferAttribute(a,i).applyMatrix4(frame.matrixWorld));
+        const x=points.reduce((n,p)=>n+p.x,0)/points.length,z=points.reduce((n,p)=>n+p.z,0)/points.length;
+        const y=Math.min(...points.map(p=>p.y)),floor=surface.sample(x,z).height;
+        return{x,y,z,floor,gap:y-floor};
+      });
+    }
     surface.clearGrass(best.x, best.z, width + 0.6, depth + 0.6);
     root.userData.parcel = best;
     placements.push({ name: root.name, ...best });
-    if (options.reserve !== false) reserved.push({ ...best, oriented:options.oriented });
+    if (options.reserve !== false) reserved.push({ ...best, oriented:options.oriented,hull:hull?.map(p=>[p[0]+best.x,p[1]+best.z]) });
     return root;
   }
   function print(
@@ -361,17 +396,23 @@ export function createFixtures(world) {
     const source = original.getObjectByName("landing");
     const devices = [], animated = [];
     const definitions = [
-      ["gamepadPhysicalDynamic001", "gamepad", 43.5, 39.4, .9],
-      ["phonePhysicalDynamic001", "joystick", 39.5, 38.5, .78],
-      ["gizmoPhysicalDynamic", "gizmo", 36.5, 40.3, .75],
+      ["gamepadPhysicalDynamic001", "gamepad", 37.9, 40.8, .55],
+      ["phonePhysicalDynamic001", "joystick", 39, 39.5, .78],
+      ["gizmoPhysicalDynamic", "gizmo", 36, 40.3, .75],
     ];
-    for (const [sourceName, kind, x, z, scale] of definitions) {
+    for (const [sourceName, kind, x, z, scale] of [...definitions].sort((a,b)=>(a[1]==="gamepad")-(b[1]==="gamepad"))) {
       const native = source.getObjectByName(sourceName);
       if (!native) throw new Error("入口设备模型缺失：" + sourceName);
       const root = native.clone(true);
       root.position.set(0, 0, 0);
       root.name = "entrance-device-" + kind;
-      parcel(root, x, z, scale, { plaza: true, radius: 1.5 });
+      if(kind==="gamepad") {
+        root.rotation.reorder("YXZ");
+        const yaw=root.rotation.y;
+        root.rotation.set(0,yaw,0,"YXZ");
+      }
+      parcel(root, x, z, scale, { plaza: true, radius:0,hull:true,
+        supportName:kind==="gamepad"?"body002":undefined, precise:kind==="gamepad" });
       root.userData.kind = kind;
       devices.push(root);
       const movers = [];
@@ -397,7 +438,7 @@ export function createFixtures(world) {
       for (const d of animated) {
         const age = time - d.pulse;
         const pulse = age >= 0 && age < 1 ? Math.sin(age * Math.PI * 3) * Math.exp(-age * 4) : 0;
-        d.root.rotation.z = d.base.z + pulse * .055;
+        d.root.rotation.z = d.base.z + (d.root.userData.kind==="gamepad"?0:pulse*.055);
         for (const m of d.movers) {
           m.mesh.position.copy(m.position);
           m.mesh.rotation.copy(m.rotation);
@@ -407,7 +448,45 @@ export function createFixtures(world) {
         }
       }
     }
+    devices.sort((a,b)=>definitions.findIndex(d=>d[1]===a.userData.kind)-definitions.findIndex(d=>d[1]===b.userData.kind));
     return { roots: devices, hit, hover, update };
+  }
+  function pixelPointer() {
+    const root=new T.Group();root.name="frame-pixel-finger";
+    const pattern=["000110000","000110000","000110000","000110000","000111110","000111111","111111111","111111111","011111111","001111110","001111110"];
+    const active=new Set(),outline=new Set(),cell=.045;
+    pattern.forEach((row,y)=>[...row].forEach((v,x)=>{if(v==="1")active.add(`${x},${y}`);}));
+    for(const key of active){const[x,y]=key.split(",").map(Number);for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)outline.add(`${x+dx},${y+dy}`);}
+    for(const[points,mat,z,depth]of[[outline,materials.edge,0,.07],[active,materials.cream,.04,.08]]) {
+      const mesh=new T.InstancedMesh(new T.BoxGeometry(cell*.97,cell*.97,depth),mat,points.size),matrix=new T.Matrix4();
+      [...points].forEach((key,i)=>{const[x,y]=key.split(",").map(Number);mesh.setMatrixAt(i,matrix.makeTranslation((x-4)*cell,(5-y)*cell,z));});
+      mesh.instanceMatrix.needsUpdate=true;mesh.castShadow=true;root.add(mesh);
+    }
+    root.userData.attachedTo="physicalFixed009";
+    return root;
+  }
+  function levelKiosk(root,frame,face){
+    root.updateWorldMatrix(true,true);
+    const a=frame.geometry.attributes.position;
+    const points=Array.from({length:a.count},(_,i)=>new T.Vector3().fromBufferAttribute(a,i).applyMatrix4(frame.matrixWorld));
+    const pos=face.geometry.attributes.position;
+    const axis=new T.Vector3().fromBufferAttribute(pos,0).sub(new T.Vector3().fromBufferAttribute(pos,1)).transformDirection(face.matrixWorld);
+    axis.y=0;axis.normalize();
+    const low=Math.min(...points.map(p=>p.y)),projection=points.map(p=>p.dot(axis)),middle=(Math.min(...projection)+Math.max(...projection))/2;
+    const groups=[[],[]];
+    points.forEach((p,i)=>{if(p.y<low+.55)groups[projection[i]<middle?0:1].push(i);});
+    if(groups.some(ids=>!ids.length))throw new Error("无法识别地图牌的两只支脚");
+    const feet=groups.map(ids=>{
+      const min=Math.min(...ids.map(i=>points[i].y));return ids.filter(i=>points[i].y<min+.015);
+    });
+    const centers=feet.map(ids=>ids.reduce((p,i)=>p.add(points[i]),new T.Vector3()).multiplyScalar(1/ids.length));
+    const line=centers[1].clone().sub(centers[0]),flat=line.clone();flat.y=0;
+    if(Math.abs(line.y)>.00001){
+      const q=new T.Quaternion().setFromUnitVectors(line.normalize(),flat.normalize()),pivot=centers[0].clone().add(centers[1]).multiplyScalar(.5);
+      const m=new T.Matrix4().makeTranslation(pivot.x,pivot.y,pivot.z).multiply(new T.Matrix4().makeRotationFromQuaternion(q)).multiply(new T.Matrix4().makeTranslation(-pivot.x,-pivot.y,-pivot.z));
+      root.applyMatrix4(m);root.updateWorldMatrix(true,true);
+    }
+    root.userData.footVertices={frame:frame.name,groups:feet};
   }
   return {
     parcel,
@@ -423,5 +502,7 @@ export function createFixtures(world) {
     nativeCrates,
     welcomeSign,
     reserveExisting,
+    pixelPointer,
+    levelKiosk,
   };
 }

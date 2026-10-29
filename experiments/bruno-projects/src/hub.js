@@ -345,19 +345,7 @@ try {
     )
       child.removeFromParent();
   const kioskFace = landing.getObjectByName("physicalFixed003");
-  const sourceMap = await world.textures.loadAsync(world.asset("ui/cecilia-map.png"));
-  const mapCanvas=document.createElement("canvas");
-  mapCanvas.width=1200;mapCanvas.height=780;
-  const mapCtx=mapCanvas.getContext("2d");
-  mapCtx.drawImage(sourceMap.image,0,0,1200,780);
-  const hand=["000110000","000110000","000110000","000110000","000111110","000111111","111111111","111111111","011111111","001111110","001111110"];
-  for(const [fill,pad] of [["#68404e",4],["#fff2cf",0]]) {
-    mapCtx.fillStyle=fill;
-    hand.forEach((row,y)=>[...row].forEach((v,x)=>{if(v==="1")mapCtx.fillRect(967+x*12-pad,500+y*12-pad,12+pad*2,12+pad*2);}));
-  }
-  mapCtx.fillStyle="#fff2cf";mapCtx.fillRect(725,666,420,76);
-  mapCtx.fillStyle="#68404e";mapCtx.font='400 52px "World Xiaolai"';mapCtx.fillText("点击查看地图",750,721);
-  const kioskTexture = new T.CanvasTexture(mapCanvas);
+  const kioskTexture = await world.textures.loadAsync(world.asset("ui/cecilia-map.png"));
   kioskTexture.flipY = false;
   kioskTexture.colorSpace = T.SRGBColorSpace;
   if (kioskFace) {
@@ -386,8 +374,20 @@ try {
   for(const name of ["physicalFixed003","physicalFixed009"]) {
     const child=landing.getObjectByName(name); if(child)kioskRoot.attach(child);
   }
-  const kioskCenter=new T.Box3().setFromObject(kioskRoot).getCenter(new T.Vector3());
-  fixtures.parcel(kioskRoot,kioskCenter.x,kioskCenter.z,1.3,{plaza:true,radius:3});
+  const kioskCenter=new T.Box3().setFromObject(kioskRoot,true).getCenter(new T.Vector3());
+  fixtures.levelKiosk(kioskRoot,kioskRoot.getObjectByName("physicalFixed009"),kioskFace);
+  fixtures.parcel(kioskRoot,kioskCenter.x,kioskCenter.z,2,{plaza:true,radius:3,precise:true,supportName:"physicalFixed009"});
+  const pixelHand=fixtures.pixelPointer();
+  if(kioskFace){
+    const g=kioskFace.geometry,p=g.attributes.position;
+    const p0=new T.Vector3().fromBufferAttribute(p,0),p1=new T.Vector3().fromBufferAttribute(p,1),p2=new T.Vector3().fromBufferAttribute(p,2);
+    const u=p0.clone().sub(p1),v=p2.clone().sub(p0);
+    const n=new T.Vector3().fromBufferAttribute(g.attributes.normal,0).normalize();
+    pixelHand.position.copy(p1).addScaledVector(u,.98).addScaledVector(v,.78).addScaledVector(n,.08);
+    pixelHand.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(u.clone().normalize(),v.clone().normalize().negate(),n));
+    kioskFace.add(pixelHand);kioskFace.updateWorldMatrix(true,true);
+    kioskRoot.getObjectByName("physicalFixed009").attach(pixelHand);
+  }
   devices = fixtures.gameDevices(original, kind => {
     if(kind === "gamepad") identity.toggleLight();
     if(kind === "joystick") mapFlashAt=effectTime;
@@ -533,7 +533,7 @@ try {
       hits.sort((a, b) => a.distance - b.distance);
       devices.hover(hits[0]?.root);
       if (hits[0]) return hits[0].root;
-      if (kioskFace && ray.intersectObject(kioskFace, false).length) return "map";
+      if (kioskFace && (ray.intersectObject(kioskFace, false).length || ray.intersectObject(pixelHand,true).length)) return "map";
     }
     const hits = pickables.flatMap((p) =>
       ray
@@ -696,6 +696,7 @@ try {
     devices,
     kioskFace,
     kioskRoot,
+    pixelHand,
     crates,
     welcome,
     mapBrightness,
