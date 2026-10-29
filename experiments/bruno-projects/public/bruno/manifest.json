@@ -38,6 +38,11 @@
       "sha256": "5b30b7ada13c16902a4e331b187a48ec09cdc28c93ba13d36292a4d56775c241"
     },
     {
+      "path": "explosiveCrates/explosiveCrates.glb",
+      "bytes": 27720,
+      "sha256": "78dfbb0f9eaa785a43a3ccb17bb3076d19fda121888c14df43a464d29e2e9b8d"
+    },
+    {
       "path": "fences/fences.glb",
       "bytes": 8152,
       "sha256": "77bd135453d7a4ef3d06e5f0b77e2b53bc6645631895de77a283b64adf8d0090"
@@ -76,6 +81,11 @@
       "path": "poleLights/poleLights.glb",
       "bytes": 44044,
       "sha256": "d9fd055fed52eee3e954ff2e543068971ecc904693192564665e34abeefa50e0"
+    },
+    {
+      "path": "respawns/respawnsReferences.glb",
+      "bytes": 2848,
+      "sha256": "167d8a4b93745dfdf30c89a87d61d841d64129419e1c2a3c4d1220ed8afe6ef5"
     },
     {
       "path": "scenery/scenery.glb",

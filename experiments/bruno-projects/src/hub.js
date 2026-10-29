@@ -1,5 +1,5 @@
 import { T, createWorld } from "./create-world.js";
-import { texture } from "three/tsl";
+import { texture, uniform } from "three/tsl";
 import { createFixtures } from "./scene-fixtures.js";
 import { createWorldMap } from "./world-map.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
@@ -225,9 +225,11 @@ function go(next, historyMode = "push") {
   }
   $("scene-hint").textContent =
     place === "home"
-      ? "试试点击游戏设备 · 拖动观察 · 点击左下角查看地图"
+      ? "左键旋转 · 中键平移 · 滚轮缩放 · 点击设备试试亮灯"
       : `${labels[place]} · 拖动观察 · 点击模型${place === "contact" ? "写邮件" : "完整阅读"} · Esc 返回首页`;
   if (world && targetLook) {
+    world.camera.fov = place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : 40);
+    world.camera.updateProjectionMatrix();
     const station = stations.get(place);
     targetLook.copy(station ? station.focus : landingView.focus);
     targetDistance = station ? station.distance : landingView.distance;
@@ -268,6 +270,7 @@ try {
   );
   await document.fonts.load('400 24px Xiaolai', "个人简历作品集其他项目联系方式信件地图");
   await document.fonts.load('400 24px "World Xiaolai"', "想去哪里个人简历作品集其他项目联系方式信件地图");
+  await document.fonts.load('700 36px "Amatic SC"', "Welcome to Cecilia’s world.");
   world = await createWorld($("world"), (n, total) => {
     $("loading").textContent = `正在布置设计世界 ${n} / ${total}`;
   });
@@ -300,7 +303,11 @@ try {
   const original = game.resources.areasModel.scene;
   const fixtures = createFixtures(world);
   identity = fixtures.nameModel();
-  devices = fixtures.gameDevices(original);
+  fixtures.reserveExisting(scene.getObjectByName("benchPhysicalDynamic001"));
+  const crates = fixtures.nativeCrates();
+  const welcome = fixtures.welcomeSign();
+  let effectTime=0, mapFlashAt=-100;
+  const mapBrightness=uniform(1);
   const career = original.getObjectByName("career").clone(true);
   career.getObjectByName("refYear")?.removeFromParent();
   career.traverse((m) => {
@@ -328,7 +335,6 @@ try {
   });
   clean(lab);
   scene.add(lab);
-  const social = fixtures.contactCorner(original);
   // Native landing props enrich the home without the original author's name.
   const landing = original.getObjectByName("landing").clone(true);
   for (const child of [...landing.children])
@@ -339,11 +345,23 @@ try {
     )
       child.removeFromParent();
   const kioskFace = landing.getObjectByName("physicalFixed003");
-  const kioskTexture = await world.textures.loadAsync(world.asset("ui/cecilia-map.png"));
+  const sourceMap = await world.textures.loadAsync(world.asset("ui/cecilia-map.png"));
+  const mapCanvas=document.createElement("canvas");
+  mapCanvas.width=1200;mapCanvas.height=780;
+  const mapCtx=mapCanvas.getContext("2d");
+  mapCtx.drawImage(sourceMap.image,0,0,1200,780);
+  const hand=["000110000","000110000","000110000","000110000","000111110","000111111","111111111","111111111","011111111","001111110","001111110"];
+  for(const [fill,pad] of [["#68404e",4],["#fff2cf",0]]) {
+    mapCtx.fillStyle=fill;
+    hand.forEach((row,y)=>[...row].forEach((v,x)=>{if(v==="1")mapCtx.fillRect(967+x*12-pad,500+y*12-pad,12+pad*2,12+pad*2);}));
+  }
+  mapCtx.fillStyle="#fff2cf";mapCtx.fillRect(725,666,420,76);
+  mapCtx.fillStyle="#68404e";mapCtx.font='400 52px "World Xiaolai"';mapCtx.fillText("点击查看地图",750,721);
+  const kioskTexture = new T.CanvasTexture(mapCanvas);
   kioskTexture.flipY = false;
   kioskTexture.colorSpace = T.SRGBColorSpace;
   if (kioskFace) {
-    kioskFace.material = new T.MeshBasicNodeMaterial({ colorNode: texture(kioskTexture).rgb, side:T.DoubleSide });
+    kioskFace.material = new T.MeshBasicNodeMaterial({ colorNode: texture(kioskTexture).rgb.mul(mapBrightness), side:T.DoubleSide });
     kioskFace.material.userData.prevent = true;
     kioskFace.geometry = kioskFace.geometry.clone();
     const positions = kioskFace.geometry.attributes.position, uv = kioskFace.geometry.attributes.uv;
@@ -361,6 +379,20 @@ try {
   }
   clean(landing);
   scene.add(landing);
+  const kioskRoot=new T.Group();
+  kioskRoot.name="enlarged-native-map-kiosk";
+  scene.add(kioskRoot);
+  landing.updateWorldMatrix(true,true);
+  for(const name of ["physicalFixed003","physicalFixed009"]) {
+    const child=landing.getObjectByName(name); if(child)kioskRoot.attach(child);
+  }
+  const kioskCenter=new T.Box3().setFromObject(kioskRoot).getCenter(new T.Vector3());
+  fixtures.parcel(kioskRoot,kioskCenter.x,kioskCenter.z,1.3,{plaza:true,radius:3});
+  devices = fixtures.gameDevices(original, kind => {
+    if(kind === "gamepad") identity.toggleLight();
+    if(kind === "joystick") mapFlashAt=effectTime;
+  });
+  const social = fixtures.contactCorner(original);
   function station(key, root, title, distance) {
     const box = new T.Box3().setFromObject(root),
       focus = box.getCenter(new T.Vector3());
@@ -381,7 +413,9 @@ try {
   station("contact", social, "联系方式", 12);
   const landingBounds = new T.Box3().setFromObject(identity);
   for (const root of devices.roots) landingBounds.union(new T.Box3().setFromObject(root));
-  const landingCenter = landingBounds.getCenter(new T.Vector3());
+  // Match the upstream landing's focus behind the letters, adapted to our
+  // longer bilingual name. Do not let unrelated station bounds move this pose.
+  const landingCenter = new T.Vector3(identity.userData.parcel.x-.5,.9,identity.userData.parcel.z-3.7);
   const landingPoints = [];
   for (const root of [identity, ...devices.roots]) root.traverse(mesh => {
     if (!mesh.isMesh) return;
@@ -393,13 +427,13 @@ try {
   });
   function fitLanding() {
     const aspect = innerWidth / innerHeight,
-      fov = innerWidth < 700 ? 58 : 40;
+      fov = innerWidth < 700 ? 40 : 25;
     const vertical = Math.tan(T.MathUtils.degToRad(fov / 2));
     const yaw = Math.PI * .25, pitch = Math.PI * .27;
     const forward = new T.Vector3().setFromSpherical(new T.Spherical(1, pitch, yaw));
     const right = new T.Vector3().crossVectors(new T.Vector3(0, 1, 0), forward).normalize();
     const up = new T.Vector3().crossVectors(forward, right).normalize();
-    let distance = 17;
+    let distance = 31; // Same 25° lens; fit our longer bilingual sculpture.
     for (const point of landingPoints) {
       const v = point.clone().sub(landingCenter), near = v.dot(forward);
       distance = Math.max(distance, near + Math.abs(v.dot(right)) / (vertical * aspect * .85), near + Math.abs(v.dot(up)) / (vertical * .8));
@@ -482,7 +516,7 @@ try {
     $("quality").textContent = low ? "低画质" : "高画质";
     $("quality").setAttribute("aria-pressed", String(low));
   };
-  $("reset-view").onclick = () => go(place, "none");
+  $("reset-view").onclick = () => go("home", "replace");
   $("overview-world").onclick = () => {
     targetLook.set(35, 2, 25);
     targetDistance = innerWidth < 700 ? 78 : 60;
@@ -513,16 +547,19 @@ try {
   let start,
     last,
     pressed,
+    mouseButton=0,
     pinched = false,
     pinch = 0;
   $("world").addEventListener("pointerdown", (e) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 && e.button !== 1) return;
+    e.preventDefault();
+    mouseButton=e.button;
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     e.target.setPointerCapture(e.pointerId);
     if (pointers.size === 1) {
       start = last = { x: e.clientX, y: e.clientY };
       drag = pinched = false;
-      pressed = pick(e.clientX, e.clientY);
+      pressed = e.button===0 ? pick(e.clientX, e.clientY) : null;
     } else {
       const [a, b] = [...pointers.values()];
       pinch = Math.hypot(a.x - b.x, a.y - b.y);
@@ -541,15 +578,20 @@ try {
     }
     if (pointers.size && last) {
       if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > 5) drag = true;
-      targetYaw -= (e.clientX - last.x) * 0.004;
-      targetPitch = T.MathUtils.clamp(
-        targetPitch - (e.clientY - last.y) * 0.003,
-        0.22,
-        1.3,
-      );
+      if(mouseButton===1) {
+        const step=2*targetDistance*Math.tan(T.MathUtils.degToRad(camera.fov/2))/innerHeight;
+        const right=new T.Vector3(Math.cos(targetYaw),0,-Math.sin(targetYaw));
+        const forward=new T.Vector3(Math.sin(targetYaw),0,Math.cos(targetYaw));
+        targetLook.addScaledVector(right,-(e.clientX-last.x)*step);
+        targetLook.addScaledVector(forward,-(e.clientY-last.y)*step/Math.max(.35,Math.cos(targetPitch)));
+      } else {
+        targetYaw -= (e.clientX - last.x) * 0.004;
+        targetPitch = T.MathUtils.clamp(targetPitch-(e.clientY-last.y)*0.003,0.22,1.3);
+      }
       last = { x: e.clientX, y: e.clientY };
     } else $("world").dataset.hover = String(!!pick(e.clientX, e.clientY));
   });
+  $("world").addEventListener("auxclick",e=>{if(e.button===1)e.preventDefault();});
   $("world").addEventListener("pointerup", (e) => {
     pointers.delete(e.pointerId);
     if (pointers.size) return;
@@ -580,7 +622,7 @@ try {
   );
   function resize() {
     camera.aspect = innerWidth / innerHeight;
-    camera.fov = innerWidth < 700 ? 58 : 40;
+    camera.fov = place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : 40);
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
     game.viewport.width = innerWidth;
@@ -599,6 +641,13 @@ try {
   yaw = targetYaw;
   pitch = targetPitch;
   const clock = new T.Timer();
+  function updateEffects(dt) {
+    effectTime+=dt;
+    devices.update(effectTime,reduced);
+    const age=effectTime-mapFlashAt;
+    mapBrightness.value=age>=0&&age<.7 ? 1+2*Math.sin(Math.PI*age/.7) : 1;
+    kioskRoot.userData.flashActive=age>=0&&age<.7;
+  }
   let lastFrame = 0;
   renderer.setAnimationLoop((time) => {
     if (reading || navigationMap.dialog.open || document.hidden || time - lastFrame < 33) return;
@@ -610,7 +659,7 @@ try {
       game.ticker.delta = game.ticker.deltaScaled = reduced ? 0 : dt;
       game.ticker.elapsedScaled += game.ticker.deltaScaled;
       game.ticker.elapsedScaledUniform.value = game.ticker.elapsedScaled;
-      devices.update(time / 1000, reduced);
+      updateEffects(dt);
       currentLook.lerp(targetLook, blend);
       currentDistance = T.MathUtils.lerp(
         currentDistance,
@@ -633,6 +682,7 @@ try {
       game.view.focusPoint.position.copy(currentLook);
       game.ticker.events.trigger("tick");
       pipeline.render();
+      world.renderCount=(world.renderCount||0)+1;
       document.body.dataset.ready = "true";
       $("loading").hidden = true;
     } catch (error) {
@@ -645,10 +695,16 @@ try {
     stations,
     devices,
     kioskFace,
+    kioskRoot,
+    crates,
+    welcome,
+    mapBrightness,
     navigationMap,
     identity,
     placements: fixtures.placements,
-    landingView,
+    get landingView(){return landingView;},
+    updateEffects,
+    viewState:()=>({look:currentLook.toArray(),target:targetLook.toArray(),yaw,pitch,distance:currentDistance,fov:camera.fov}),
     go,
     openCurrent,
     selectOther,

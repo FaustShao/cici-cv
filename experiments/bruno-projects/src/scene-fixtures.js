@@ -1,5 +1,5 @@
 import { T } from "./create-world.js";
-import { color, texture } from "three/tsl";
+import { color, texture, uniform } from "three/tsl";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
 // Palette-matched physical fixtures. Text is printed on surfaces, not extruded
@@ -91,27 +91,34 @@ export function createFixtures(world) {
     text,
     width,
     height,
-    { bg = "#a75d48", ink = "#ffead0", size = 85 } = {},
+    { bg = "#a75d48", ink = "#ffead0", size = 85, font = "World Xiaolai", fit = false } = {},
   ) {
     const canvas = document.createElement("canvas");
     canvas.width = 1024;
     canvas.height = Math.round((1024 * height) / width);
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#e8b984";
-    ctx.lineWidth = 7;
-    ctx.strokeRect(24, 20, canvas.width - 48, canvas.height - 40);
+    if (bg) {
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "#e8b984";
+      ctx.lineWidth = 7;
+      ctx.strokeRect(24, 20, canvas.width - 48, canvas.height - 40);
+    }
     ctx.fillStyle = ink;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `400 ${size}px "World Xiaolai", sans-serif`;
-    ctx.fillText(text, 512, canvas.height / 2, 880);
+    ctx.font = `400 ${size}px "${font}", sans-serif`;
+    if(fit){
+      ctx.textBaseline="alphabetic";
+      const m=ctx.measureText(text),scale=Math.min(880/m.width,(canvas.height-14)/(m.actualBoundingBoxAscent+m.actualBoundingBoxDescent));
+      ctx.translate(512,canvas.height/2);ctx.scale(scale,scale);
+      ctx.fillText(text,0,(m.actualBoundingBoxAscent-m.actualBoundingBoxDescent)/2);
+    } else ctx.fillText(text, 512, canvas.height / 2, 880);
     const tex = new T.CanvasTexture(canvas);
     tex.colorSpace = T.SRGBColorSpace;
     return new T.Mesh(
       new T.PlaneGeometry(width, height),
-      material({ colorNode: texture(tex).rgb, hasWater: false }),
+      material({ colorNode: texture(tex).rgb, alphaNode:bg?undefined:texture(tex).a, transparent:!bg, hasWater: false }),
     );
   }
   function sign(text, x, z, width = 3.4) {
@@ -280,7 +287,9 @@ export function createFixtures(world) {
     }
     const block = new T.BoxGeometry(cell * .96, cell * .96, .27);
     // Actual individual cubes: pale front (+Z), purple sides and backs.
-    const sides = [materials.purple, materials.purple, materials.purple, materials.purple, materials.cream, materials.purple];
+    const frontPower = uniform(1);
+    const front = material({colorNode:color(colors.cream).mul(frontPower),hasWater:false});
+    const sides = [materials.purple, materials.purple, materials.purple, materials.purple, front, materials.purple];
     const mesh = new T.InstancedMesh(block, sides, pixels.length);
     mesh.name = "voxel-name-blocks";
     mesh.castShadow = mesh.receiveShadow = true;
@@ -291,19 +300,57 @@ export function createFixtures(world) {
     root.rotation.y = Math.PI / 7.2;
     mesh.computeBoundingBox();
     const bounds=mesh.boundingBox;
-    parcel(root, 43, 40.5, 1, { plaza: true, radius: 1, prepared: true,
+    parcel(root, 43, 42.5, 1, { plaza: true, radius: 1, prepared: true,
       oriented:{angle:root.rotation.y,width:bounds.max.x-bounds.min.x,depth:.27} });
     root.userData.text = "王钰欣 / CECILIA";
     root.userData.blockCount = pixels.length;
+    root.userData.lightOn = false;
+    root.toggleLight = () => {
+      root.userData.lightOn = !root.userData.lightOn;
+      frontPower.value = root.userData.lightOn ? 2.6 : 1;
+    };
     return root;
   }
-  function gameDevices(original) {
+  function nativeCrates() {
+    const root = new T.Group();
+    root.name = "native-landing-three-crates";
+    for (const name of ["explosiveCrates001","explosiveCrates023","explosiveCrates002"]) {
+      const box = game.resources.explosiveCratesModel.scene.getObjectByName(name);
+      if (!box) throw new Error("原版入口箱子缺失：" + name);
+      root.add(box.clone(true));
+    }
+    const center = new T.Box3().setFromObject(root).getCenter(new T.Vector3());
+    parcel(root,center.x,center.z,1,{plaza:true,radius:0});
+    return root;
+  }
+  function reserveExisting(root) {
+    if (!root) return;
+    const bounds = new T.Box3().setFromObject(root), center = bounds.getCenter(new T.Vector3()), size = bounds.getSize(new T.Vector3());
+    reserved.push({x:center.x,z:center.z,width:size.x,depth:size.z});
+  }
+  function welcomeSign() {
+    const native = scene.getObjectByName("fencePhysicalDynamic005");
+    if (!native) throw new Error("原版欢迎木牌缺失");
+    const root = native.clone(true);
+    native.removeFromParent();
+    root.name = "welcome-to-cecilias-world";
+    const font="Amatic SC";
+    for (const [text,y] of [["Welcome to",.065],["Cecilia’s world.",-.33]]) {
+      const label=print(text,1.98,.28,{bg:null,size:110,font,fit:true});
+      label.position.set(0,y,.22);
+      root.add(label);
+    }
+    parcel(root,39.955,32.219,1.65,{plaza:true,radius:1});
+    root.userData.text="Welcome to Cecilia’s world.";
+    return root;
+  }
+  function gameDevices(original, activate) {
     const source = original.getObjectByName("landing");
     const devices = [], animated = [];
     const definitions = [
-      ["gamepadPhysicalDynamic001", "gamepad", 45, 43.5, 1.12],
-      ["phonePhysicalDynamic001", "joystick", 49.7, 42.8, 1],
-      ["gizmoPhysicalDynamic", "gizmo", 39.2, 46, .85],
+      ["gamepadPhysicalDynamic001", "gamepad", 43.5, 39.4, .9],
+      ["phonePhysicalDynamic001", "joystick", 39.5, 38.5, .78],
+      ["gizmoPhysicalDynamic", "gizmo", 36.5, 40.3, .75],
     ];
     for (const [sourceName, kind, x, z, scale] of definitions) {
       const native = source.getObjectByName(sourceName);
@@ -328,6 +375,7 @@ export function createFixtures(world) {
       if (item) {
         item.pulse = now;
         root.userData.interactions = (root.userData.interactions || 0) + 1;
+        activate?.(root.userData.kind);
       }
     }
     function hover(root) { animated.forEach(d => d.active = d.root === root); }
@@ -359,5 +407,8 @@ export function createFixtures(world) {
     contactCorner,
     nameModel,
     gameDevices,
+    nativeCrates,
+    welcomeSign,
+    reserveExisting,
   };
 }

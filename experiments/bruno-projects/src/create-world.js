@@ -124,6 +124,8 @@ export async function createWorld(canvas, progress) {
   gltf.setDRACOLoader(draco);
   const models = {
     areasModel: "areas/areas.glb",
+    explosiveCratesModel: "explosiveCrates/explosiveCrates.glb",
+    respawnsReferencesModel: "respawns/respawnsReferences.glb",
     terrainModel: "terrain/terrain.glb",
     sceneryModel: "scenery/scenery.glb",
     bushesReferences: "bushes/bushesReferences.glb",
@@ -348,6 +350,45 @@ export async function createWorld(canvas, progress) {
     game.materials.updateObject(root);
     return root;
   }
+  const groundedLights = [];
+  const supportRay = new T.Raycaster();
+  function settleLight(root) {
+    root.updateWorldMatrix(true, true);
+    const bounds = new T.Box3().setFromObject(root), center = bounds.getCenter(new T.Vector3());
+    const feet=[];
+    root.traverse(mesh=>{
+      if(!mesh.isMesh) return;
+      const positions=mesh.geometry.attributes.position;
+      for(let i=0;i<positions.count;i++) {
+        const p=new T.Vector3().fromBufferAttribute(positions,i).applyMatrix4(mesh.matrixWorld);
+        if(p.y<bounds.min.y+.04)feet.push(p);
+      }
+    });
+    if(feet.length){ center.x=feet.reduce((n,p)=>n+p.x,0)/feet.length;center.z=feet.reduce((n,p)=>n+p.z,0)/feet.length; }
+    let ground = surface.check(center.x, center.z, .3, .3);
+    let supportY = ground.height;
+    // A lantern on a bridge belongs on its actual deck, not in the water below.
+    const bridges = scene.children.filter(o => /^bridgePhysical/.test(o.name));
+    bridges.forEach(o=>o.updateWorldMatrix(true,true));
+    supportRay.set(new T.Vector3(center.x, bounds.min.y + 4, center.z), new T.Vector3(0,-1,0));
+    const deck = supportRay.intersectObjects(bridges, true).find(h => h.point.y > supportY && h.point.y < bounds.min.y + 1.5);
+    if (deck) supportY = deck.point.y;
+    if(!deck && ground.maxWater>5){
+      let best;
+      for(let dx=-6;dx<=6;dx+=.25)for(let dz=-6;dz<=6;dz+=.25){
+        const candidate=surface.check(center.x+dx,center.z+dz,.8,.8);
+        if(candidate.maxWater<=5 && (!best||dx*dx+dz*dz<best.score))best={dx,dz,score:dx*dx+dz*dz,...candidate};
+      }
+      if(!best)throw new Error("灯具附近未找到落地支撑："+root.name);
+      root.position.x+=best.dx;root.position.z+=best.dz;center.x+=best.dx;center.z+=best.dz;
+      ground=best;supportY=best.height;
+    }
+    const before = bounds.min.y;
+    root.position.y += supportY + .008 - bounds.min.y;
+    root.updateWorldMatrix(true,true);
+    const bottom = new T.Box3().setFromObject(root).min.y;
+    groundedLights.push({name:root.name,x:center.x,z:center.z,before,bottom,supportY,gap:bottom-supportY,water:surface.sample(center.x,center.z).water,support:deck?"bridge":"terrain"});
+  }
   for (const key of [
     "sceneryModel",
     "benchesModel",
@@ -369,6 +410,7 @@ export async function createWorld(canvas, progress) {
         )
           continue;
         scene.add(clean(child));
+        if (key === "lanternsModel" || key === "poleLightsModel") settleLight(child);
       }
   const renderPass = pass(scene, camera),
     renderColor = renderPass.getTextureNode("output"),
@@ -406,5 +448,6 @@ export async function createWorld(canvas, progress) {
     chinese: new Font(chinese),
     textures,
     surface,
+    groundedLights,
   };
 }
