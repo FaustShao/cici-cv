@@ -45,6 +45,12 @@ the original fonts inside the resume or portfolio projects.
 Active Chinese handwriting: Xiaolai Regular v3.126, lxgw/kose-font.
 https://github.com/lxgw/kose-font/releases/tag/v3.126
 Subset of the author's original font, without redrawing or restyling glyphs.
+world-xiaolai.woff2 extends only the outer-world UI subset with the new map
+labels. The original project/resume font assets are not replaced.
+
+cecilia-map.svg is locally authored navigation artwork; cecilia-map.png is
+its raster export for the native 3D kiosk. Map destination icons are local
+flat illustrations of the portfolio's book, display, lab and postal props.
 
 Tideline, Gazette and DREAM SENTINEL preview images are screenshots
 of the existing portfolio pages supplied for Cecilia Wang's website.

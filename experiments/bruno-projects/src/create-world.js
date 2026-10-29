@@ -357,6 +357,11 @@ export async function createWorld(canvas, progress) {
   ])
     for (const child of [...game.resources[key].scene.children])
       if (key === "sceneryModel" || near(child)) {
+        // Keep the native entrance lamp, but out of the new name's silhouette.
+        if (key === "poleLightsModel" && child.name === "poleLight001") {
+          child.position.x = 35.5;
+          child.position.z = 38.5;
+        }
         if (
           key === "sceneryModel" &&
           /^basaltRocks/.test(child.name) &&

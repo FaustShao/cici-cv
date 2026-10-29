@@ -499,6 +499,7 @@ try {
       hits.sort((a, b) => a.distance - b.distance);
       devices.hover(hits[0]?.root);
       if (hits[0]) return hits[0].root;
+      if (kioskFace && ray.intersectObject(kioskFace, false).length) return "map";
     }
     const hits = pickables.flatMap((p) =>
       ray
@@ -553,7 +554,8 @@ try {
     pointers.delete(e.pointerId);
     if (pointers.size) return;
     if (!drag && !pinched && pressed) {
-      if (pressed.isObject3D) devices.hit(pressed);
+      if (pressed === "map") navigationMap.open();
+      else if (pressed.isObject3D) devices.hit(pressed);
       else if (place === pressed) openCurrent();
       else go(pressed);
     }
@@ -642,6 +644,7 @@ try {
     world,
     stations,
     devices,
+    kioskFace,
     navigationMap,
     identity,
     placements: fixtures.placements,

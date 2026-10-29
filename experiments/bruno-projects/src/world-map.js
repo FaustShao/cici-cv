@@ -26,7 +26,7 @@ export function createWorldMap(go) {
   function open() {
     content.querySelectorAll("button").forEach(b => b.setAttribute("aria-current", String(document.body.dataset.place === b.dataset.destination)));
     const you = dialog.querySelector(".map-you");
-    you.innerHTML = '<span>◆</span>姓名入口' + (document.body.dataset.place === "home" ? ' · 你在这里' : '');
+    you.innerHTML = '<span>◆</span><b>姓名入口' + (document.body.dataset.place === "home" ? ' · 你在这里' : '') + '</b>';
     dialog.showModal();
   }
   function close() { if (dialog.open) dialog.close(); }

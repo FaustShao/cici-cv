@@ -99,6 +99,7 @@ const review = path.resolve(
     assert.ok(await page.evaluate(() => designWorld.identity.userData.blockCount > 500));
     assert.ok(await page.evaluate(() => designWorld.identity.getObjectByName("voxel-name-blocks").isInstancedMesh));
     assert.ok(await page.evaluate(() => designWorld.placements.every(p => p.maxWater <= 5 && (p.plaza || p.maxRoad <= 120))));
+    assert.ok(await page.evaluate(() => designWorld.placements.every(p => Math.abs(p.groundedY-p.height-.015)<.001)), "Fixtures' actual geometry bottoms sit on the checked ground");
     assert.ok(await page.evaluate(() => [...designWorld.stations.values()].every(s => s.label.name.startsWith("wood-sign-"))));
     await shot("home");
     assert.equal(await page.evaluate(() => designWorld.devices.roots.length), 3);
@@ -125,6 +126,18 @@ const review = path.resolve(
       d.update(10); const before=root.rotation.z; d.hit(root); d.update(10.1);
       const moved=Math.abs(root.rotation.z-before)>0.001; d.update(12); return moved;
     }));
+    const kioskPoint = await page.evaluate(() => {
+      const { kioskFace: m, world, pick } = designWorld;
+      m.geometry.computeBoundingBox();
+      const p=m.geometry.boundingBox.getCenter(m.position.clone().set(0,0,0));
+      m.localToWorld(p).project(world.camera);
+      const x=(p.x+1)*innerWidth/2,y=(1-p.y)*innerHeight/2;
+      return {x,y,hit:pick(x,y)};
+    });
+    assert.equal(kioskPoint.hit,"map");
+    await page.mouse.click(kioskPoint.x,kioskPoint.y);
+    assert.ok(await page.locator("#world-map").evaluate(e=>e.open));
+    await page.locator("#close-map").click();
     await page.locator("#map-trigger").click();
     assert.equal(await page.locator(".map-location").count(), 4);
     const mapBox = await page.locator("#world-map").boundingBox();
@@ -268,6 +281,8 @@ const review = path.resolve(
       .webp({ quality: 90 })
       .toFile(path.join(review, "home-mobile.webp"));
     await phone.locator("#map-trigger").click();
+    const mobileMapBox = await phone.locator("#world-map").boundingBox();
+    assert.ok(mobileMapBox.height < 550, "Mobile map wraps its content without a blank full-screen panel");
     await sharp(await phone.screenshot()).webp({quality:90}).toFile(path.join(review,"navigation-map-mobile.webp"));
     for(const key of ["resume","portfolio","other","contact"]) {
       const box = await phone.locator(`[data-destination="${key}"]`).boundingBox();

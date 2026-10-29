@@ -80,6 +80,7 @@ export function createFixtures(world) {
       ),
     );
     root.updateWorldMatrix(true, true);
+    best.groundedY = new T.Box3().setFromObject(root).min.y;
     surface.clearGrass(best.x, best.z, width + 0.6, depth + 0.6);
     root.userData.parcel = best;
     placements.push({ name: root.name, ...best });
@@ -302,7 +303,7 @@ export function createFixtures(world) {
     const definitions = [
       ["gamepadPhysicalDynamic001", "gamepad", 45, 43.5, 1.12],
       ["phonePhysicalDynamic001", "joystick", 49.7, 42.8, 1],
-      ["gizmoPhysicalDynamic", "gizmo", 39.5, 44.2, .85],
+      ["gizmoPhysicalDynamic", "gizmo", 39.2, 46, .85],
     ];
     for (const [sourceName, kind, x, z, scale] of definitions) {
       const native = source.getObjectByName(sourceName);
