@@ -166,6 +166,73 @@ export async function createWorld(canvas, progress) {
       done();
     }),
   ]);
+  // CPU copy of the same terrain mask sampled by the floor shader. Blue is
+  // water/depth, red is the paved route, green is grass. Placement checks use
+  // the entire fixture footprint, not just a guessed center height.
+  const terrainCanvas = document.createElement("canvas");
+  const terrainImage = game.resources.terrainTexture.image;
+  terrainCanvas.width = terrainImage.width;
+  terrainCanvas.height = terrainImage.height;
+  const terrainContext = terrainCanvas.getContext("2d", {
+    willReadFrequently: true,
+  });
+  terrainContext.drawImage(terrainImage, 0, 0);
+  const terrainPixels = terrainContext.getImageData(
+    0,
+    0,
+    terrainCanvas.width,
+    terrainCanvas.height,
+  );
+  function sample(x, z) {
+    const ix = T.MathUtils.clamp(
+      Math.floor((x / 192 + 0.5) * terrainCanvas.width),
+      0,
+      terrainCanvas.width - 1,
+    );
+    const iz = T.MathUtils.clamp(
+      Math.floor((z / 192 + 0.5) * terrainCanvas.height),
+      0,
+      terrainCanvas.height - 1,
+    );
+    const i = (iz * terrainCanvas.width + ix) * 4;
+    return {
+      road: terrainPixels.data[i],
+      grass: terrainPixels.data[i + 1],
+      water: terrainPixels.data[i + 2],
+      height: (-1.5 * terrainPixels.data[i + 2]) / 255,
+    };
+  }
+  const surface = {
+    sample,
+    check(x, z, width, depth) {
+      let maxWater = 0,
+        maxRoad = 0,
+        height = -Infinity;
+      for (let i = 0; i <= 8; i++)
+        for (let j = 0; j <= 8; j++) {
+          const s = sample(
+            x + width * (i / 8 - 0.5),
+            z + depth * (j / 8 - 0.5),
+          );
+          maxWater = Math.max(maxWater, s.water);
+          maxRoad = Math.max(maxRoad, s.road);
+          height = Math.max(height, s.height);
+        }
+      return { maxWater, maxRoad, height };
+    },
+    clearGrass(x, z, width, depth) {
+      for (let iz = 0; iz < terrainCanvas.height; iz++)
+        for (let ix = 0; ix < terrainCanvas.width; ix++) {
+          const px = (ix / terrainCanvas.width - 0.5) * 192,
+            pz = (iz / terrainCanvas.height - 0.5) * 192;
+          if (Math.abs(px - x) <= width / 2 && Math.abs(pz - z) <= depth / 2)
+            terrainPixels.data[(iz * terrainCanvas.width + ix) * 4 + 1] = 0;
+        }
+      terrainContext.putImageData(terrainPixels, 0, 0);
+      game.resources.terrainTexture.image = terrainCanvas;
+      game.resources.terrainTexture.needsUpdate = true;
+    },
+  };
   const presets = {
     day: {
       lightColor: "#ffd2c2",
@@ -229,6 +296,9 @@ export async function createWorld(canvas, progress) {
       [35, 13, 4],
       [14, 18, 3],
       [48, 25, 7],
+      [26, 24, 9],
+      [47, 29, 7],
+      [45, 49, 12],
     ];
     const refs = game.resources[type + "TreesReferencesModel"].scene.children
       .filter(near)
@@ -248,7 +318,15 @@ export async function createWorld(canvas, progress) {
       );
   }
   game.resources.bushesReferences.scene.children =
-    game.resources.bushesReferences.scene.children.filter(near);
+    game.resources.bushesReferences.scene.children.filter(near).filter((b) =>
+      [
+        [26, 24, 6],
+        [47, 29, 5],
+        [45, 49, 12],
+      ].every(
+        ([x, z, r]) => Math.hypot(b.position.x - x, b.position.z - z) > r,
+      ),
+    );
   game.world.bushes = new Bushes();
   function clean(root) {
     const remove = [];
@@ -259,6 +337,9 @@ export async function createWorld(canvas, progress) {
       )
         remove.push(m);
       if (m.isMesh) {
+        // Native palette conversions do not retain the GLTF material name.
+        // Do not convert the already-node material a second time to white.
+        if (m.material?.isNodeMaterial) m.material.userData.prevent = true;
         m.castShadow = true;
         m.receiveShadow = true;
       }
@@ -275,7 +356,15 @@ export async function createWorld(canvas, progress) {
     "poleLightsModel",
   ])
     for (const child of [...game.resources[key].scene.children])
-      if (key === "sceneryModel" || near(child)) scene.add(clean(child));
+      if (key === "sceneryModel" || near(child)) {
+        if (
+          key === "sceneryModel" &&
+          /^basaltRocks/.test(child.name) &&
+          Math.hypot(child.position.x - 26, child.position.z - 24) < 9
+        )
+          continue;
+        scene.add(clean(child));
+      }
   const renderPass = pass(scene, camera),
     renderColor = renderPass.getTextureNode("output"),
     glow = bloom(renderColor);
@@ -294,8 +383,8 @@ export async function createWorld(canvas, progress) {
   }
   const ttf = new TTFLoader();
   const [english, chinese] = await Promise.all([
-    ttf.loadAsync(asset("fonts/amatic-bold.ttf")),
-    ttf.loadAsync(asset("fonts/xiaolai-outline.ttf")),
+    ttf.loadAsync(asset("fonts/scene-latin.ttf")),
+    ttf.loadAsync(asset("fonts/scene-sans.ttf")),
   ]);
   return {
     game,
@@ -311,5 +400,6 @@ export async function createWorld(canvas, progress) {
     english: new Font(english),
     chinese: new Font(chinese),
     textures,
+    surface,
   };
 }

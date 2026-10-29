@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "Scene Sans";
+  src: url("/fonts/island-sc.woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+body {
+  font-family: Nunito, "Scene Sans", sans-serif;
+}
 header {
   pointer-events: none;
 }
@@ -67,6 +76,9 @@ header > div {
   display: none;
 }
 .details-sheet {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
   height: 100%;
   overflow-y: auto;
   padding: clamp(24px, 5vw, 72px);
@@ -78,13 +90,15 @@ header > div {
   margin: 0 auto 36px;
 }
 .details-sheet h3 {
-  font-size: 26px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 600;
 }
 .details-sheet p,
 .details-sheet li {
-  font-family: Nunito, Xiaolai, sans-serif;
-  font-size: 17px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  font-size: 13px;
   line-height: 1.9;
 }
 .details-sheet li {

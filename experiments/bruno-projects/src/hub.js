@@ -1,6 +1,6 @@
 import { T, createWorld } from "./create-world.js";
-import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
-import { color, texture } from "three/tsl";
+import { texture } from "three/tsl";
+import { createFixtures } from "./scene-fixtures.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 import "../../../resume.js";
 
@@ -24,6 +24,9 @@ let world,
   drag = false;
 let targetLook,
   currentLook,
+  entrance,
+  identity,
+  landingView,
   targetDistance = 55,
   currentDistance = 55;
 let yaw = 0.5,
@@ -177,10 +180,9 @@ function go(next, historyMode = "push") {
   place = state.place = next;
   document.body.dataset.place = place;
   document.title =
-    place === "home"
-      ? "Cecilia · 王钰欣 / YUXIN WANG"
-      : `${labels[place]} · 王钰欣`;
+    place === "home" ? "王钰欣 / CECILIA" : `${labels[place]} · 王钰欣`;
   $("back-home").hidden = place === "home";
+  $("overview-world").hidden = place !== "home";
   $("feedback").textContent = "";
   $("place-actions").replaceChildren();
   $("place-actions").hidden = place === "home";
@@ -220,14 +222,14 @@ function go(next, historyMode = "push") {
   }
   $("scene-hint").textContent =
     place === "home"
-      ? "拖动观察 · 滚轮缩放 · 点击装置进入"
+      ? "点击入口地图选择地点 · 拖动观察 · 滚轮缩放"
       : `${labels[place]} · 拖动观察 · 点击模型${place === "contact" ? "写邮件" : "完整阅读"} · Esc 返回首页`;
   if (world && targetLook) {
     const station = stations.get(place);
-    targetLook.copy(station ? station.focus : new T.Vector3(35, 2, 35));
-    targetDistance = station ? station.distance : innerWidth < 700 ? 78 : 60;
-    targetYaw = 0.5;
-    targetPitch = station ? 0.95 : 0.95;
+    targetLook.copy(station ? station.focus : landingView.focus);
+    targetDistance = station ? station.distance : landingView.distance;
+    targetYaw = station ? 0.35 : landingView.yaw;
+    targetPitch = station ? 1 : landingView.pitch;
     if (reduced) {
       currentLook.copy(targetLook);
       currentDistance = targetDistance;
@@ -258,7 +260,7 @@ window.addEventListener("keydown", (e) => {
 });
 try {
   await document.fonts.load(
-    "400 24px Xiaolai",
+    '600 24px "Scene Sans"',
     "王钰欣个人简历其他项目联系方式",
   );
   world = await createWorld($("world"), (n, total) => {
@@ -276,35 +278,6 @@ try {
     chinese,
   } = world;
   const pt = (x, y, z) => center.clone().add(new T.Vector3(x, y, z));
-  const letterMaterial = new MeshDefaultMaterial({
-    colorNode: color("#ffe6ce"),
-    hasWater: false,
-  });
-  function words(text, size, maxWidth = 20) {
-    const group = new T.Group();
-    const geometry = new TextGeometry(text, {
-      font: /[\u3400-\u9fff]/.test(text) ? chinese : english,
-      size,
-      depth: size * 0.14,
-      curveSegments: 4,
-      bevelEnabled: true,
-      bevelThickness: 0.025,
-      bevelSize: 0.012,
-      bevelSegments: 1,
-    });
-    geometry.computeBoundingBox();
-    geometry.translate(
-      -(geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2,
-      0,
-      0,
-    );
-    const mesh = new T.Mesh(geometry, letterMaterial);
-    mesh.castShadow = true;
-    const width = geometry.boundingBox.max.x - geometry.boundingBox.min.x;
-    if (width > maxWidth) mesh.scale.setScalar(maxWidth / width);
-    group.add(mesh);
-    return group;
-  }
   function fit(root, x, z, scale = 1) {
     clean(root);
     root.scale.setScalar(scale);
@@ -320,6 +293,9 @@ try {
     return root;
   }
   const original = game.resources.areasModel.scene;
+  const fixtures = createFixtures(world);
+  entrance = fixtures.entranceMap(original);
+  identity = fixtures.nameModel();
   const career = original.getObjectByName("career").clone(true);
   career.getObjectByName("refYear")?.removeFromParent();
   career.traverse((m) => {
@@ -327,14 +303,7 @@ try {
   });
   clean(career);
   scene.add(career);
-  const resumeBook = original.getObjectByName("projects").clone(true);
-  for (const child of [...resumeBook.children])
-    if (!/^(cube024|mainTablePhysicalDynamic)$/.test(child.name))
-      child.removeFromParent();
-  // Bring the reading table to the front approach: resume is the primary entry,
-  // while the original career timeline remains part of the landscape behind it.
-  fit(resumeBook, -5, 24, 1.4);
-  career.attach(resumeBook);
+  const resumeCorner = fixtures.resumeCorner(original);
   const project = original.getObjectByName("projects").clone(true);
   for (const child of [...project.children])
     if (
@@ -354,59 +323,65 @@ try {
   });
   clean(lab);
   scene.add(lab);
-  const social = new T.Group();
-  const originalMail = original
-    .getObjectByName("social")
-    .getObjectByName("mailPhysicalDynamic");
-  const mail = originalMail.clone(true);
-  mail.position.set(0, 0, 0);
-  social.add(mail);
-  fit(social, 14, 15, 1.5);
+  const social = fixtures.contactCorner(original);
   // Native landing props enrich the home without the original author's name.
   const landing = original.getObjectByName("landing").clone(true);
   for (const child of [...landing.children])
-    if (/Letters|physicalFixed\.003|refBonfireInteractive/.test(child.name))
+    if (
+      /Letters|physicalFixed00[39]|phonePhysical|refBonfireInteractive/.test(
+        child.name,
+      )
+    )
       child.removeFromParent();
   landing.traverse((m) => {
     if (m.material?.name === "stylizedMap") m.visible = false;
   });
   clean(landing);
   scene.add(landing);
-  const identity = new T.Group();
-  const name = words("王钰欣", 2.2, 12),
-    englishName = words("CECILIA / YUXIN WANG", 1.1, 17);
-  name.position.y = 1.5;
-  identity.add(name, englishName);
-  identity.position.set(43, 0.4, 43);
-  identity.rotation.y = 0.5;
-  scene.add(identity);
   function station(key, root, title, distance) {
     const box = new T.Box3().setFromObject(root),
       focus = box.getCenter(new T.Vector3());
-    const label = words(title, key === "resume" ? 0.7 : 0.55, 9);
-    label.position.copy(focus);
-    label.position.y = box.max.y + 0.7;
-    label.rotation.y = 0.5;
-    scene.add(label);
+    const size = box.getSize(new T.Vector3());
+    const label = fixtures.sign(
+      title,
+      focus.x - size.x * 0.5 - 1.2,
+      focus.z + 1.2,
+    );
     const focusWithLabel = focus.clone();
     focusWithLabel.y += 1;
     stations.set(key, { root, label, focus: focusWithLabel, distance });
     pickables.push({ root, key }, { root: label, key });
   }
-  station("resume", career, "01 个人简历", 20);
-  station("portfolio", project, "02 作品集", 20);
-  station("other", lab, "03 其他项目", 16);
-  station("contact", social, "04 联系方式", 14);
-  const bookBox = new T.Box3().setFromObject(resumeBook);
-  stations
-    .get("resume")
-    .focus.copy(bookBox.getCenter(new T.Vector3()))
-    .add(new T.Vector3(0, 1, 0));
-  stations
-    .get("resume")
-    .label.position.copy(stations.get("resume").focus)
-    .add(new T.Vector3(0, 2, -1));
-  stations.get("resume").distance = 15;
+  station("resume", resumeCorner, "个人简历", 14);
+  station("portfolio", project, "作品集", 20);
+  station("other", lab, "其他项目", 16);
+  station("contact", social, "联系方式", 12);
+  const landingBounds = new T.Box3()
+    .setFromObject(entrance.root)
+    .union(new T.Box3().setFromObject(identity));
+  const landingCenter = landingBounds.getCenter(new T.Vector3()),
+    landingSize = landingBounds.getSize(new T.Vector3());
+  function fitLanding() {
+    const aspect = innerWidth / innerHeight,
+      fov = innerWidth < 700 ? 58 : 40;
+    const vertical = Math.tan(T.MathUtils.degToRad(fov / 2));
+    const yaw = .35, pitch = 1.05;
+    const forward = new T.Vector3().setFromSpherical(new T.Spherical(1, pitch, yaw));
+    const right = new T.Vector3().crossVectors(new T.Vector3(0, 1, 0), forward).normalize();
+    const up = new T.Vector3().crossVectors(forward, right).normalize();
+    let distance = 17;
+    for (const x of [landingBounds.min.x, landingBounds.max.x]) for (const y of [landingBounds.min.y, landingBounds.max.y]) for (const z of [landingBounds.min.z, landingBounds.max.z]) {
+      const v = new T.Vector3(x, y, z).sub(landingCenter), near = v.dot(forward);
+      distance = Math.max(distance, near + Math.abs(v.dot(right)) / (vertical * aspect * .85), near + Math.abs(v.dot(up)) / (vertical * .8));
+    }
+    return {
+      focus: landingCenter.clone(),
+      distance,
+      yaw,
+      pitch,
+    };
+  }
+  landingView = fitLanding();
   const screen = project.getObjectByName("refImages");
   if (screen) {
     const tex = await world.textures.loadAsync(
@@ -478,11 +453,32 @@ try {
     $("quality").setAttribute("aria-pressed", String(low));
   };
   $("reset-view").onclick = () => go(place, "none");
+  $("overview-world").onclick = () => {
+    targetLook.set(35, 2, 25);
+    targetDistance = innerWidth < 700 ? 78 : 60;
+    targetPitch = 0.85;
+    targetYaw = 0.5;
+  };
   const ray = new T.Raycaster(),
     pointer = new T.Vector2();
   function pick(x, y) {
     pointer.set((x / innerWidth) * 2 - 1, (-y / innerHeight) * 2 + 1);
     ray.setFromCamera(pointer, camera);
+    if (place === "home") {
+      const mapHit = ray.intersectObject(entrance.face, false)[0];
+      if (mapHit?.uv) {
+        const key = entrance.hit(mapHit.uv);
+        if (world.mapHover !== key) {
+          entrance.paint(key);
+          world.mapHover = key;
+        }
+        return key;
+      }
+    }
+    if (world.mapHover) {
+      entrance.paint();
+      world.mapHover = null;
+    }
     const hits = pickables.flatMap((p) =>
       ray
         .intersectObject(p.root, true)
@@ -565,10 +561,15 @@ try {
     renderer.setSize(innerWidth, innerHeight);
     game.viewport.width = innerWidth;
     game.viewport.height = innerHeight;
+    landingView = fitLanding();
   }
   window.addEventListener("resize", resize);
   resize();
   go(location.hash.slice(1) || "home", "replace");
+  currentLook.copy(targetLook);
+  currentDistance = targetDistance;
+  yaw = targetYaw;
+  pitch = targetPitch;
   const clock = new T.Timer();
   let lastFrame = 0;
   renderer.setAnimationLoop((time) => {
@@ -610,7 +611,18 @@ try {
       fail(error);
     }
   });
-  window.designWorld = { world, stations, go, openCurrent, selectOther, pick };
+  window.designWorld = {
+    world,
+    stations,
+    entrance,
+    identity,
+    placements: fixtures.placements,
+    landingView,
+    go,
+    openCurrent,
+    selectOther,
+    pick,
+  };
 } catch (error) {
   fail(error);
 }

@@ -1,18 +1,11 @@
-@font-face{font-family:Xiaolai;src:url("bruno-preview/fonts/xiaolai-sc.woff2");font-weight:400;font-display:swap}
-@font-face{font-family:Nunito;src:url("bruno-preview/fonts/nunito.woff2");font-weight:200 1000;font-display:swap}
-@font-face{font-family:Amatic SC;src:url("bruno-preview/fonts/amatic.woff2");font-weight:700;font-display:swap}
 :root{--bg:#f9efdf;--surface:#fff8ec;--text:#493143;--muted:#705464;--line:#d7b3a6;--accent:#a45167;--tag:#edc9b8;--note:#ecd4c6}
 :root[data-theme=dark]{--bg:#292039;--surface:#382741;--text:#ffe6ce;--muted:#d7b3bd;--line:#775270;--accent:#efb1ba;--tag:#60415f;--note:#493147}
-body{font-family:Nunito,Xiaolai,sans-serif;font-synthesis:none}
 .topbar{max-width:1120px;border-bottom:1px solid var(--line);padding:18px 40px}
-.topbar a,.topbar button{font-family:Nunito,Xiaolai,sans-serif;font-size:13px}
-.topbar .wordmark{font-family:"Amatic SC",Xiaolai,cursive;font-size:22px;letter-spacing:1px}
-.hero{gap:60px;padding:54px 0 42px}h1{font-size:48px;font-weight:400;letter-spacing:3px}h2,h3{font-weight:400}
-.section-heading h2{font-weight:400;font-size:23px}.section-heading{border-bottom:2px solid var(--line)}
+.hero{gap:60px;padding:54px 0 42px}
+.section-heading{border-bottom:2px solid var(--line)}
 .profile-card{border-radius:5px;box-shadow:8px 9px 0 #7b477423;transform:rotate(2deg)}
 .project-card{border-radius:9px;border-color:var(--line);box-shadow:3px 4px 0 #7b477412}
 .tags span{border-radius:5px}.experience-item:before,.availability>span:first-child{background:var(--accent)}
-.description,li,.intro-strip p{font-size:14px}.period{font-family:Nunito,sans-serif}
-.note{border-radius:8px;border:1px solid var(--line)}.note h2{font-weight:400}
-@media(max-width:700px){.topbar{padding:16px 22px;gap:12px}.topbar nav{gap:12px;flex-wrap:wrap;justify-content:flex-end}.hero{gap:24px}h1{font-size:38px}}
+.note{border-radius:8px;border:1px solid var(--line)}
+@media(max-width:700px){.topbar{padding:16px 22px;gap:12px}.topbar nav{gap:12px;flex-wrap:wrap;justify-content:flex-end}.hero{gap:24px}}
 @media print{:root,:root[data-theme=dark]{--bg:#fff;--surface:#fff;--text:#222;--muted:#444;--line:#bbb;--accent:#333;--tag:#f3f3f3;--note:#fff}.profile-card,.project-card{box-shadow:none;transform:none}.topbar{display:none!important}}
