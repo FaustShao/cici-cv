@@ -6,7 +6,7 @@
 }
 @font-face {
   font-family: "World Xiaolai";
-  src: url("/fonts/world-xiaolai.woff2");
+  src: url("/fonts/world-xiaolai.woff2?v=entry-controls");
   font-weight: 400;
   font-display: swap;
 }

@@ -16,6 +16,7 @@ const review = path.resolve(__dirname,"../experiments/bruno-projects/public/revi
     await page.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
     assert.equal(await page.locator("body").getAttribute("data-failed"),null);
     assert.equal(await page.evaluate(()=>WORLD_STATE.place),"home");
+    assert.ok(await page.evaluate(()=>Math.abs(designWorld.crates.userData.stackSupportGap-.005)<.001));
     assert.ok(await page.evaluate(()=>designWorld.placements.every(p=>Math.abs(p.groundedY-p.height-.015)<.001)));
     async function shot(name){await sharp(await page.screenshot()).webp({quality:90}).toFile(path.join(review,name+".webp"));}
     await shot("home");

@@ -9,6 +9,8 @@
 - `resume-station.webp` / `resume-reading.webp`：三维简历阅读桌与实际简历正文。
 - `other-station.webp` / `contact-station.webp`：实验室项目入口与联系方式。
 - `navigation-map.webp` / `navigation-map-mobile.webp`：桌面、手机实际展开的导航地图。
+- `entry-name-lit.webp` / `entry-map-flash.webp`：点击手柄后的姓名常亮、点击开关后的地图板单次闪亮。
+- `entry-reset.webp`：平移、旋转及进入分类后归位的镜头；自动断言其参数与首次 Landing 完全一致。
 
 本轮 `home*` 展示像素积木姓名和原生游戏设备的入口近景；`navigation-map*` 展示实际打开的居中插画地图，导航和木牌使用小赖字体。简历正文保留原系统字体，作品内部不改。
 

@@ -319,8 +319,21 @@ export function createFixtures(world) {
       if (!box) throw new Error("原版入口箱子缺失：" + name);
       root.add(box.clone(true));
     }
+    clean(root);
+    root.updateWorldMatrix(true,true);
+    const lower=root.children.filter(c=>c.name!=="explosiveCrates002");
+    for(const box of lower){
+      const bounds=new T.Box3().setFromObject(box),center=bounds.getCenter(new T.Vector3());
+      box.position.y+=surface.sample(center.x,center.z).height+.015-bounds.min.y;
+      box.updateWorldMatrix(true,true);
+    }
+    const upper=root.getObjectByName("explosiveCrates002");
+    const supportY=Math.max(...lower.map(box=>new T.Box3().setFromObject(box).max.y));
+    upper.position.y+=supportY+.005-new T.Box3().setFromObject(upper).min.y;
+    upper.updateWorldMatrix(true,true);
     const center = new T.Box3().setFromObject(root).getCenter(new T.Vector3());
     parcel(root,center.x,center.z,1,{plaza:true,radius:0});
+    root.userData.stackSupportGap=new T.Box3().setFromObject(upper).min.y-Math.max(...lower.map(box=>new T.Box3().setFromObject(box).max.y));
     return root;
   }
   function reserveExisting(root) {

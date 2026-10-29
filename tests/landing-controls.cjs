@@ -12,6 +12,7 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
     assert.equal(initial.fov,25);assert.equal(initial.yaw,Math.PI*.25);assert.equal(initial.pitch,Math.PI*.27);
     assert.ok(await page.evaluate(()=>designWorld.world.groundedLights.length>10&&designWorld.world.groundedLights.every(l=>Math.abs(l.gap-.008)<.001&&(l.support==="bridge"||l.water<=5))));
     assert.equal(await page.evaluate(()=>designWorld.crates.children.length),3);
+    assert.ok(await page.evaluate(()=>Math.abs(designWorld.crates.userData.stackSupportGap-.005)<.001));
     assert.equal(await page.evaluate(()=>designWorld.welcome.userData.text),"Welcome to Cecilia’s world.");
     assert.ok(await page.evaluate(()=>{
       const n=designWorld.identity.userData.parcel,a=designWorld.identity.rotation.y,s=Math.sin(a),c=Math.cos(a);
