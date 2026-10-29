@@ -1,168 +1,19 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
-  <head>
-    <link rel="canonical" href="bruno-preview/hub.html">
-    <meta http-equiv="refresh" content="0;url=bruno-preview/hub.html">
-    <script>
-      const destination = location.hash === "#portfolio" ? "bruno-preview/index.html" : "bruno-preview/hub.html";
-      location.replace(destination + location.search + (location.hash === "#portfolio" ? "" : location.hash));
-    </script>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#23b4df" />
-    <meta
-      name="description"
-      content="Cecilia 王钰欣的设计世界。探索个人简历、三件精选作品与设计实践。"
-    />
-    <title>Cecilia · 王钰欣 / YUXIN WANG</title>
-    <link rel="icon" href="assets/island-flower.svg" type="image/svg+xml" />
-    <link
-      rel="preload"
-      href="assets/fonts/fredoka.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link rel="stylesheet" href="island.css?v=world-2" />
-    <script src="resume.js?v=world-2" defer></script>
-    <script src="island-ui.js?v=portfolio-exhibition-1" defer></script>
-    <script type="module" src="island-scene.js?v=world-2"></script>
-  </head>
-  <body data-place="home">
-    <a class="skip-link" href="#accessible-nav">使用文字导航</a>
-    <main id="island-world" aria-label="Cecilia 的互动设计小岛">
-      <h1 class="sr-only" id="home-name">Cecilia · 王钰欣 / YUXIN WANG</h1>
-      <div id="scene-canvas" aria-hidden="true"></div>
-      <div id="scene-fallback" class="scene-fallback">
-        <div class="fallback-island">
-          <h2>Cecilia<span>王钰欣 / YUXIN WANG</span></h2>
-          <p>欢迎来到我的设计小岛</p>
-          <nav aria-label="简洁小岛导航">
-            <a href="resume.html" data-place="resume">01 个人简历 ↗</a
-            ><a href="portfolio.html" data-place="portfolio">02 作品集 ↗</a
-            ><a href="works.html" data-place="other">03 其他项目 ↗</a
-            ><a href="#contact" data-place="contact">04 联系方式 ↗</a>
-          </nav>
-        </div>
-      </div>
-      <nav id="accessible-nav" class="accessible-nav" aria-label="小岛键盘导航">
-        <a href="resume.html" data-place="resume">个人简历</a
-        ><a href="portfolio.html" data-place="portfolio">作品集</a
-        ><a href="works.html" data-place="other">其他项目</a
-        ><a href="#contact" data-place="contact">联系方式</a>
-      </nav>
-      <div id="model-hotspots"></div>
-    </main>
-    <header class="world-hud">
-      <div class="world-identity" id="world-identity" aria-hidden="true">
-        <span class="brand-mark">✳</span
-        ><span>CECILIA'S<br />DESIGN ISLAND</span>
-      </div>
-      <button id="back-island" class="toy-button back-island" hidden>
-        ← 返回全岛</button
-      ><button
-        id="island-theme"
-        class="toy-button theme-switch"
-        aria-label="切换至夜晚"
-        aria-pressed="false"
-      >
-        <span class="theme-orb" aria-hidden="true"></span
-        ><span class="theme-caption">日间</span>
-      </button>
-    </header>
-    <section
-      class="station-heading"
-      id="station-heading"
-      aria-live="polite"
-      hidden
-    >
-      <p id="station-kicker"></p>
-      <h2 id="station-title"></h2>
-      <p id="station-description"></p>
-    </section>
-    <div id="scene-tooltip" role="status" hidden></div>
-    <footer class="world-footer">
-      <span id="scene-status" role="status">正在搭建你的设计小岛…</span
-      ><button id="reset-view" class="reset-view" aria-label="恢复初始视角">
-        ⤾ 视角归位</button
-      ><span class="world-copyright"
-        >© <span id="copyright-year">2026</span> CECILIA</span
-      >
-    </footer>
-    <div
-      class="archive-controls station-controls"
-      id="archive-controls"
-      hidden
-      aria-label="作品展架控制"
-    >
-      <button id="archive-prev" class="toy-button" aria-label="上一件作品">
-        ◀
-      </button>
-      <div>
-        <span><b id="archive-position">01</b> / 03</span>
-        <p>拖动翻阅 · 点击封面完整阅读</p>
-      </div>
-      <button id="archive-next" class="toy-button" aria-label="下一件作品">
-        ▶
-      </button>
-    </div>
-    <div id="resume-controls" class="station-controls" hidden>
-      <button id="read-resume" class="toy-button paper-button">
-        翻开我的完整简历 ↗
-      </button>
-    </div>
-    <div id="contact-controls" class="station-controls contact-controls" hidden>
-      <a href="mailto:wangyuxinqd2025@163.com" class="toy-button">写邮件 ↗</a
-      ><a href="tel:15066290491" class="toy-button">打电话 ↗</a
-      ><button id="copy-wechat" class="toy-button">复制微信号 ⧉</button>
-    </div>
-    <p id="contact-feedback" class="contact-feedback" role="status"></p>
-    <aside
-      id="workshop-note"
-      class="workshop-note"
-      aria-labelledby="note-title"
-      hidden
-    >
-      <button id="close-note" aria-label="收起项目介绍">×</button>
-      <p class="note-kicker">FROM THE WORKBENCH</p>
-      <h3 id="note-title"></h3>
-      <p id="note-description"></p>
-      <ul id="note-details"></ul>
-    </aside>
-    <section
-      id="fallback-content"
-      class="fallback-content"
-      hidden
-      aria-label="简洁模式内容"
-    ></section>
-    <dialog
-      class="project-reader"
-      id="project-reader"
-      aria-labelledby="reader-title"
-    >
-      <header class="reader-bar">
-        <button id="reader-back">← 返回展架</button>
-        <h2 id="reader-title">作品阅读</h2>
-        <div>
-          <button id="browser-fullscreen" aria-label="进入浏览器全屏">
-            ⛶ 全屏</button
-          ><a id="reader-direct" target="_blank" rel="noopener">独立打开 ↗</a>
-        </div>
-      </header>
-      <div id="reader-frames"></div>
-      <p class="reader-loading" id="reader-loading" role="status">
-        正在打开作品… 可使用右上角独立打开。
-      </p>
-    </dialog>
-    <noscript
-      ><section class="no-script">
-        <h2>直接阅读</h2>
-        <a href="resume.html">个人简历</a
-        ><a href="tideline.html">Tideline 海藻茶</a
-        ><a href="gazette.html">Future Gazette</a
-        ><a href="dream-sentinel.html">梦境哨兵</a
-        ><a href="mailto:wangyuxinqd2025@163.com">联系邮箱</a>
-      </section></noscript
-    >
-  </body>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cecilia · 王钰欣 / YUXIN WANG</title>
+  <meta name="description" content="Cecilia 王钰欣的设计世界：个人简历、作品集、其他项目与联系方式。">
+  <link rel="canonical" href="bruno-preview/hub.html">
+  <meta http-equiv="refresh" content="0;url=bruno-preview/hub.html">
+  <script>
+    const portfolio = location.hash === "#portfolio";
+    location.replace((portfolio ? "bruno-preview/index.html" : "bruno-preview/hub.html") + location.search + (portfolio ? "" : location.hash));
+  </script>
+</head>
+<body>
+  <h1>王钰欣 / YUXIN WANG · Cecilia</h1>
+  <p>正在进入我的设计世界。<a href="bruno-preview/hub.html">点击进入 →</a></p>
+  <nav aria-label="分类导航"><a href="bruno-preview/hub.html#resume">个人简历</a> · <a href="portfolio.html">作品集</a> · <a href="bruno-preview/hub.html#other">其他项目</a> · <a href="bruno-preview/hub.html#contact">联系方式</a></nav>
+</body>
 </html>

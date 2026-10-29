@@ -2,6 +2,7 @@ import { T, createWorld } from "./create-world.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { color, texture } from "three/tsl";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
+import "../../../resume.js";
 
 const $ = (id) => document.getElementById(id),
   profile = window.RESUME;
@@ -203,9 +204,19 @@ function go(next, historyMode = "push") {
     selectOther(otherIndex);
   }
   if (place === "contact") {
-    link("写邮件 ↗", "mailto:wangyuxinqd2025@163.com");
-    link("打电话 ↗", "tel:15066290491");
-    action("复制微信号", copyWechat);
+    const entries = [
+      [
+        link("写邮件 ↗", "mailto:wangyuxinqd2025@163.com"),
+        "wangyuxinqd2025@163.com",
+      ],
+      [link("打电话 ↗", "tel:15066290491"), "15066290491"],
+      [action("复制微信号", copyWechat), "Cecilia_cici68"],
+    ];
+    for (const [element, value] of entries) {
+      const detail = document.createElement("small");
+      detail.textContent = value;
+      element.append(detail);
+    }
   }
   $("scene-hint").textContent =
     place === "home"
@@ -320,7 +331,9 @@ try {
   for (const child of [...resumeBook.children])
     if (!/^(cube024|mainTablePhysicalDynamic)$/.test(child.name))
       child.removeFromParent();
-  fit(resumeBook, -9, -1, 1.4);
+  // Bring the reading table to the front approach: resume is the primary entry,
+  // while the original career timeline remains part of the landscape behind it.
+  fit(resumeBook, -5, 24, 1.4);
   career.attach(resumeBook);
   const project = original.getObjectByName("projects").clone(true);
   for (const child of [...project.children])

@@ -17,7 +17,7 @@ function link(label, value) {
 }
 document.title = `${data.name} · 个人简历`;
 document.querySelector('meta[name="description"]').content = `${data.name}｜${data.role}`;
-for (const [id, value] of Object.entries({ name: data.name, role: data.role, summary: data.summary, about: data.about, initial: data.name.slice(-2), 'english-name': data.englishName, location: data.location, availability: data.availability, 'footer-name': `${data.name} / PERSONAL RESUME` })) set(id, value);
+for (const [id, value] of Object.entries({ name: data.name, role: data.role, summary: data.summary, about: data.about, initial: data.name.slice(-2), 'english-name': data.englishName, location: data.location, availability: data.availability, 'footer-name': `${data.name} / 个人简历` })) set(id, value);
 const photo = document.getElementById('portrait-photo');
 photo.src = data.photo;
 photo.alt = `${data.name}的照片`;

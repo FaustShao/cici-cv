@@ -1,6 +1,6 @@
 # Cecilia · 作品集展示区
 
-独立试做已获确认，现接入主站作品集分类；只替换该分类，不替换站点首页和原项目正文。
+独立试做已获确认，作品集展架保留；现以 `hub.html` 将首页、简历阅读站、其他项目和联系方式统一至相同原模型与视觉模块。原项目正文保持不动。
 
 ## 本地
 
@@ -20,7 +20,7 @@
 - 项目预览为现有页面的浏览器截图，仅替换原展示屏内容；点击实际图片打开同站点原页面，返回保留场景与作品选择。
 - 支持拖动观察、滚轮／触屏双指缩放、原模型箭头／外部按钮／方向键切换、键盘阅读入口、日夜及高低画质。
 - 阅读器打开或页面隐藏时不渲染 3D；减少动态效果设置下关闭环境动画。
-- 正式发布入口 `/bruno-preview/`，`portfolio.html` 为兼容跳转。首页 `openIslandPlace("portfolio")`（模型、键盘导航和旧 `#portfolio` 入口共用）指向该页；其余分类行为不变。三件原作品内部页面和素材不修改。
+- 首页入口 `/bruno-preview/hub.html`，主站 index.html 为兼容入口；作品集保持 `/bruno-preview/`，portfolio.html 为兼容跳转。hub 的 hash 路由为 resume / other / contact；简历正文与打印在 `resume.html?document=1`，原作品页面和素材不修改。
 
 ## 资产重建
 
@@ -30,4 +30,5 @@
 
 原作品静态服务运行后，在站点根目录执行 `node tests/bruno-preview.cjs`。开发测试依赖 Playwright 和 Chromium，不进入线上运行依赖。
 入口回归执行 `node tests/portfolio-routing.cjs`。
+全站回归执行 `node tests/design-world.cjs`，包括实际模型点击、简历、两件其他项目、联系方式、手机与真实渲染截图。
 动画回归执行 `node tests/bruno-animation.cjs`：直接跨越四次铁砧敲击边界，验证静音对象已初始化、渲染继续运行、作品切换和阅读返回正常。覆盖显式 WebGL 和默认自动选择渲染器，避免低帧率测试机尚未到达敲击时刻而漏报。

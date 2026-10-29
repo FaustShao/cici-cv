@@ -9,7 +9,8 @@ header > div {
 }
 .keyboard-nav {
   position: fixed;
-  top: -200px;
+  top: 20px;
+  transform: translateY(calc(-100% - 40px));
   left: 20px;
   z-index: 10;
   display: flex;
@@ -19,7 +20,7 @@ header > div {
   border-radius: 8px;
 }
 .keyboard-nav:focus-within {
-  top: 20px;
+  transform: none;
 }
 .keyboard-nav a {
   padding: 8px;
@@ -46,6 +47,12 @@ header > div {
 }
 #place-actions a {
   padding: 8px;
+}
+#place-actions small {
+  display: block;
+  margin-top: 4px;
+  font-family: Nunito, sans-serif;
+  font-size: 11px;
 }
 #feedback {
   position: fixed;

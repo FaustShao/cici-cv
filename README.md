@@ -1,6 +1,18 @@
-# cici-cv · Cecilia 的设计小岛
+# cici-cv · Cecilia 的设计世界
 
-## 小岛首页
+## 当前统一入口
+
+`index.html` 进入 `/bruno-preview/hub.html`：全屏可拖动的开放场景，四类入口为个人简历、作品集、其他项目、联系方式；没有驾驶系统或重复顶部分类栏。中文使用小赖字体，模型、色板、光照及后期来自已确认的 Bruno 官方 MIT 工程。来源、版权和固定提交见 `experiments/bruno-projects/ASSET_SOURCE.md`，完整许可证随资源发布。
+
+- `hub.html` / `src/hub.js`：姓名、阅读桌、实验室与联络模型及分类交互；简历入口优先，点击模型可以完整阅读。
+- `src/create-world.js`：复用原视觉模块和模型，开放地面、昼夜、植被、光影、触屏与性能选项；不启动物理、车辆或后台。
+- `/bruno-preview/`：保留已确认的作品展架，三件作品同级直接阅读。原项目内部画面和素材不重新设计。
+- `resume.html?document=1`、`world-resume.css`：同风格的简历阅读与打印页，资料来自 `resume.js`；`resume.html`、`works.html` 和旧书签跳至对应三维入口。
+- QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。真实截图在 `experiments/bruno-projects/public/review/`。
+
+## 历史小岛实现（已不作为入口）
+
+以下保留旧版说明以便追溯，当前入口以上述统一场景为准；旧 `island-*` 文件不再被首页加载。
 
 `index.html` 是全屏 3D 小岛，不再采用左右分栏、顶部分类导航或常驻悬浮标签。四处地点依次为个人简历、作品集、其他项目、联系方式，名称直接融入实体模型。姓名「王钰欣 / YUXIN WANG」和 Cecilia 位于海岸立体招牌。拖动旋转、滚轮／双指缩放；点击建筑进入对应模型近景，Esc 返回全岛，R 恢复视角。桌面与手机使用不同的横向／纵向场景布局，建筑本身不压缩变形。
 
@@ -19,10 +31,12 @@
 
 ```sh
 cd /workspace/cici-cv
+npm ci --prefix experiments/bruno-projects
+npm run build --prefix experiments/bruno-projects
 python3 -m http.server 8000 --bind 0.0.0.0
 ```
 
-在本机浏览器通过运行机器的地址与 8000 端口访问。停止服务使用 Ctrl+C。小岛使用 ES 模块，需通过 HTTP 服务访问，不能以 `file://` 直接打开。不需要 npm install。开发环境装有 Playwright 与 Chromium 时，可执行 `node tests/island.cjs` 进行模型点击和响应式回归测试。
+在本机浏览器通过运行机器的地址与 8000 端口访问。停止服务使用 Ctrl+C。三维入口需要上述构建步骤；原作品内容仍为静态页面。使用 HTTP 服务访问，不能以 `file://` 直接打开。开发环境装有 Playwright 与 Chromium 时可运行上述 QA 脚本。
 
 ## 页面架构
 

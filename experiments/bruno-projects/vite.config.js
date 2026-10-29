@@ -7,5 +7,5 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: { input: { portfolio: "index.html", hub: "hub.html" } },
   },
-  server: { host: "0.0.0.0", port: 5174 },
+  server: { host: "0.0.0.0", port: 5174, fs: { allow: ["../.."] } },
 });
