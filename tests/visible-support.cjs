@@ -13,12 +13,15 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
       const w=designWorld,body=w.devices.roots[0].getObjectByName("body002"),frame=w.kioskRoot.getObjectByName("physicalFixed009");
       function bounds(mesh){const a=mesh.geometry.attributes.position,points=[];for(let i=0;i<a.count;i++)points.push(mesh.position.clone().fromBufferAttribute(a,i).applyMatrix4(mesh.matrixWorld));
         return{minY:Math.min(...points.map(p=>p.y)),maxY:Math.max(...points.map(p=>p.y)),minX:Math.min(...points.map(p=>p.x)),maxX:Math.max(...points.map(p=>p.x))};}
+      function findTexture(n,depth=0){if(!n||depth>8||typeof n!=="object")return null;if(n.isTexture)return n;if(n.value?.isTexture)return n.value;for(const key of ["node","aNode","bNode","colorNode"]){const t=findTexture(n[key],depth+1);if(t)return t;}return null;}
+      const texture=findTexture(w.kioskFace.material.colorNode);
       return{frame:bounds(frame),body:bounds(body),contacts:w.kioskRoot.userData.parcel.contacts,gamepad:w.devices.roots[0].userData.parcel,
-        scale:w.kioskRoot.scale.x,bodyScale:w.devices.roots[0].scale.x,handParent:w.pixelHand.parent.name,handMeshes:w.pixelHand.children.map(m=>m.isInstancedMesh),texture:w.kioskFace.material.colorNode.node?.value?.image?.src,
+        scale:w.kioskRoot.scale.x,bodyScale:w.devices.roots[0].scale.x,handParent:w.pixelHand.parent.name,handMeshes:w.pixelHand.children.map(m=>m.isInstancedMesh),textureType:texture?.image?.tagName,textureURL:texture?.image?.src,
         imageElements:document.querySelectorAll("canvas").length};
     });
     assert.equal(result.scale,2);assert.equal(result.bodyScale,.55);
     assert.equal(result.handParent,"physicalFixed009");assert.deepEqual(result.handMeshes,[true,true]);
+    assert.equal(result.textureType,"IMG");assert.ok(result.textureURL.endsWith("/ui/cecilia-map.png"),"Board uses the original unannotated map, not the old text/hand canvas");
     assert.equal(result.contacts.length,2);
     for(const c of result.contacts)assert.ok(Math.abs(c.gap-.015)<.025,"Both visible kiosk feet touch the ground");
     assert.ok(Math.abs(result.frame.minY-.015)<.025);

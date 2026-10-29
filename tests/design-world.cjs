@@ -123,8 +123,10 @@ const review = path.resolve(
     assert.equal(await page.evaluate(() => designWorld.devices.roots[0].userData.interactions), 1);
     assert.ok(await page.evaluate(() => {
       const d = designWorld.devices, root = d.roots[0];
-      d.update(10); const before=root.rotation.z; d.hit(root); d.update(10.1);
-      const moved=Math.abs(root.rotation.z-before)>0.001; d.update(12); return moved;
+      const button=root.getObjectByName("qosdjqosjd");
+      d.update(10); const before=button.position.y,rotation=root.rotation.z; d.hit(root); d.update(10.1);
+      const moved=Math.abs(button.position.y-before)>0.001&&root.rotation.z===rotation;
+      d.update(12); return moved;
     }));
     const kioskPoint = await page.evaluate(() => {
       const { kioskFace: m, world, pick } = designWorld;
