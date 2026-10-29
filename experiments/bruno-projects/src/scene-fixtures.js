@@ -200,7 +200,7 @@ export function createFixtures(world) {
       }
     }
   }
-  function resumeCorner(original) {
+  function resumeCorner(original,previewTexture) {
     const root = new T.Group();
     root.name = "resume-reading-corner";
     const desk = original.getObjectByName("projects").clone(true);
@@ -243,7 +243,37 @@ export function createFixtures(world) {
       );
       pen.rotation.z = (i - 1) * 0.14;
     }
-    parcel(root, 26, 24);
+    if(previewTexture){
+      const stand=new T.Group();stand.name="resume-preview-board";
+      // The native table mesh also includes raised props. Sample the actual
+      // surface beneath both support posts, not its highest bounding-box point.
+      const supportRay=new T.Raycaster();let support,score=Infinity;
+      for(let dz=-1.5;dz<=1.5;dz+=.1)for(let dx=-1.5;dx<=1.5;dx+=.1){
+        const x=-.45+dx,z=-.1+dz,heights=[];
+        for(const offset of [-.58,.58]){
+          const foot=new T.Vector3(offset,0,0).applyAxisAngle(new T.Vector3(0,1,0),.25).add(new T.Vector3(x,deskBox.max.y+1,z));
+          supportRay.set(foot,new T.Vector3(0,-1,0));
+          const hit=supportRay.intersectObject(desk,true)[0];
+          if(hit&&hit.point.y>deskBox.max.y*.5)heights.push(hit.point.y);
+        }
+        if(heights.length===2&&Math.abs(heights[0]-heights[1])<.025&&dx*dx+dz*dz<score){
+          support={x,z,heights};score=dx*dx+dz*dz;
+        }
+      }
+      if(!support)throw new Error("简历预览板未找到两脚均可支撑的桌面");
+      const supportHeights=support.heights,tabletop=Math.max(...supportHeights);
+      stand.position.set(support.x,tabletop,support.z);
+      stand.userData.supportY=tabletop;
+      stand.userData.supportGaps=supportHeights.map(y=>tabletop-y);
+      stand.rotation.y=.25;
+      for(const x of [-.58,.58])box(stand,[.10,.85,.12],[x,.425,0],"edge");
+      box(stand,[2.05,2.88,.12],[0,1.75,0],"wood");
+      const page=new T.Mesh(new T.PlaneGeometry(1.87,2.645),material({colorNode:texture(previewTexture).rgb,hasWater:false}));
+      page.name="actual-resume-first-page";page.position.set(0,1.75,.068);stand.add(page);
+      stand.userData.document="resume.html?document=1";stand.userData.preview="ui/resume-preview.webp";
+      root.add(stand);
+    }
+    parcel(root, 26, 24,1,{precise:true});
     return root;
   }
   function contactCorner(original) {
@@ -279,8 +309,8 @@ export function createFixtures(world) {
     box(phone, [0.45, 0.08, 0.78], [0, 0, 0], "edge");
     box(phone, [0.36, 0.02, 0.56], [0, 0.052, -0.03], "teal");
     box(phone, [0.07, 0.025, 0.035], [0, 0.055, 0.3], "cream");
-    root.rotation.y = 0.2;
-    parcel(root, 47, 29);
+    root.rotation.y = .35;
+    parcel(root, 54,43.5,1.25,{plaza:true,radius:3,precise:true});
     return root;
   }
   function nameModel() {
@@ -388,7 +418,8 @@ export function createFixtures(world) {
       label.position.set(0,y,.22);
       root.add(label);
     }
-    parcel(root,39.955,32.219,1.65,{plaza:true,radius:1});
+    root.rotation.set(0,.28,0);
+    parcel(root,48.6,32.3,1.65,{plaza:true,radius:0,precise:true});
     root.userData.text="Welcome to Cecilia’s world.";
     return root;
   }
@@ -396,8 +427,8 @@ export function createFixtures(world) {
     const source = original.getObjectByName("landing");
     const devices = [], animated = [];
     const definitions = [
-      ["gamepadPhysicalDynamic001", "gamepad", 37.9, 40.8, .55],
-      ["phonePhysicalDynamic001", "joystick", 39, 39.5, .78],
+      ["gamepadPhysicalDynamic001", "gamepad", 37.9, 40.8, .62],
+      ["phonePhysicalDynamic001", "joystick", 39, 39.5, .68],
       ["gizmoPhysicalDynamic", "gizmo", 36, 40.3, .75],
     ];
     for (const [sourceName, kind, x, z, scale] of [...definitions].sort((a,b)=>(a[1]==="gamepad")-(b[1]==="gamepad"))) {
@@ -412,7 +443,7 @@ export function createFixtures(world) {
         root.rotation.set(0,yaw,0,"YXZ");
       }
       parcel(root, x, z, scale, { plaza: true, radius:0,hull:true,
-        supportName:kind==="gamepad"?"body002":undefined, precise:kind==="gamepad" });
+        supportName:kind==="gamepad"?"body002":kind==="joystick"?"phonePhysicalDynamic":undefined, precise:kind!=="gizmo" });
       root.userData.kind = kind;
       devices.push(root);
       const movers = [];
@@ -451,13 +482,14 @@ export function createFixtures(world) {
     devices.sort((a,b)=>definitions.findIndex(d=>d[1]===a.userData.kind)-definitions.findIndex(d=>d[1]===b.userData.kind));
     return { roots: devices, hit, hover, update };
   }
-  function pixelPointer() {
+  function pixelPointer(lightPower) {
     const root=new T.Group();root.name="frame-pixel-finger";
     const pattern=["000110000","000110000","000110000","000110000","000111110","000111111","111111111","111111111","011111111","001111110","001111110"];
     const active=new Set(),outline=new Set(),cell=.045;
     pattern.forEach((row,y)=>[...row].forEach((v,x)=>{if(v==="1")active.add(`${x},${y}`);}));
     for(const key of active){const[x,y]=key.split(",").map(Number);for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)outline.add(`${x+dx},${y+dy}`);}
-    for(const[points,mat,z,depth]of[[outline,materials.edge,0,.07],[active,materials.cream,.04,.08]]) {
+    const front=lightPower?material({colorNode:color(colors.cream).mul(lightPower),hasWater:false}):materials.cream;
+    for(const[points,mat,z,depth]of[[outline,materials.edge,0,.07],[active,front,.04,.08]]) {
       const mesh=new T.InstancedMesh(new T.BoxGeometry(cell*.97,cell*.97,depth),mat,points.size),matrix=new T.Matrix4();
       [...points].forEach((key,i)=>{const[x,y]=key.split(",").map(Number);mesh.setMatrixAt(i,matrix.makeTranslation((x-4)*cell,(5-y)*cell,z));});
       mesh.instanceMatrix.needsUpdate=true;mesh.castShadow=true;root.add(mesh);

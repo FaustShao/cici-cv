@@ -398,6 +398,8 @@ export async function createWorld(canvas, progress) {
   ])
     for (const child of [...game.resources[key].scene.children])
       if (key === "sceneryModel" || near(child)) {
+        // Figma 45:1110 explicitly removes this one intersecting kiosk lantern.
+        if(key==="lanternsModel"&&child.name==="lantern015")continue;
         // Keep the native entrance lamp, but out of the new name's silhouette.
         if (key === "poleLightsModel" && child.name === "poleLight001") {
           child.position.x = 35.5;

@@ -19,7 +19,7 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
         scale:w.kioskRoot.scale.x,bodyScale:w.devices.roots[0].scale.x,handParent:w.pixelHand.parent.name,handMeshes:w.pixelHand.children.map(m=>m.isInstancedMesh),textureType:texture?.image?.tagName,textureURL:texture?.image?.src,
         imageElements:document.querySelectorAll("canvas").length};
     });
-    assert.equal(result.scale,2);assert.equal(result.bodyScale,.55);
+    assert.equal(result.scale,2);assert.equal(result.bodyScale,.62);
     assert.equal(result.handParent,"physicalFixed009");assert.deepEqual(result.handMeshes,[true,true]);
     assert.equal(result.textureType,"IMG");assert.ok(result.textureURL.endsWith("/ui/cecilia-map.png"),"Board uses the original unannotated map, not the old text/hand canvas");
     assert.equal(result.contacts.length,2);

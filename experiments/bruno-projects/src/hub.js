@@ -228,13 +228,13 @@ function go(next, historyMode = "push") {
       ? "左键旋转 · 中键平移 · 滚轮缩放 · 点击设备试试亮灯"
       : `${labels[place]} · 拖动观察 · 点击模型${place === "contact" ? "写邮件" : "完整阅读"} · Esc 返回首页`;
   if (world && targetLook) {
-    world.camera.fov = place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : 40);
+    world.camera.fov = place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
     world.camera.updateProjectionMatrix();
     const station = stations.get(place);
     targetLook.copy(station ? station.focus : landingView.focus);
     targetDistance = station ? station.distance : landingView.distance;
-    targetYaw = station ? 0.35 : landingView.yaw;
-    targetPitch = station ? 1 : landingView.pitch;
+    targetYaw = station ? station.yaw : landingView.yaw;
+    targetPitch = station ? station.pitch : landingView.pitch;
     if (reduced) {
       currentLook.copy(targetLook);
       currentDistance = targetDistance;
@@ -305,7 +305,6 @@ try {
   identity = fixtures.nameModel();
   fixtures.reserveExisting(scene.getObjectByName("benchPhysicalDynamic001"));
   const crates = fixtures.nativeCrates();
-  const welcome = fixtures.welcomeSign();
   let effectTime=0, mapFlashAt=-100;
   const mapBrightness=uniform(1);
   const career = original.getObjectByName("career").clone(true);
@@ -315,7 +314,10 @@ try {
   });
   clean(career);
   scene.add(career);
-  const resumeCorner = fixtures.resumeCorner(original);
+  const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp"));
+  resumeTexture.colorSpace=T.SRGBColorSpace;
+  const resumeCorner = fixtures.resumeCorner(original,resumeTexture);
+  const resumePreview=resumeCorner.getObjectByName("resume-preview-board");
   const project = original.getObjectByName("projects").clone(true);
   for (const child of [...project.children])
     if (
@@ -374,10 +376,10 @@ try {
   for(const name of ["physicalFixed003","physicalFixed009"]) {
     const child=landing.getObjectByName(name); if(child)kioskRoot.attach(child);
   }
-  const kioskCenter=new T.Box3().setFromObject(kioskRoot,true).getCenter(new T.Vector3());
   fixtures.levelKiosk(kioskRoot,kioskRoot.getObjectByName("physicalFixed009"),kioskFace);
-  fixtures.parcel(kioskRoot,kioskCenter.x,kioskCenter.z,2,{plaza:true,radius:3,precise:true,supportName:"physicalFixed009"});
-  const pixelHand=fixtures.pixelPointer();
+  fixtures.parcel(kioskRoot,42,31.5,2,{plaza:true,radius:1,precise:true,supportName:"physicalFixed009"});
+  const welcome = fixtures.welcomeSign();
+  const pixelHand=fixtures.pixelPointer(mapBrightness);
   if(kioskFace){
     const g=kioskFace.geometry,p=g.attributes.position;
     const p0=new T.Vector3().fromBufferAttribute(p,0),p1=new T.Vector3().fromBufferAttribute(p,1),p2=new T.Vector3().fromBufferAttribute(p,2);
@@ -404,18 +406,23 @@ try {
     );
     const focusWithLabel = focus.clone();
     focusWithLabel.y += 1;
-    stations.set(key, { root, label, focus: focusWithLabel, distance });
+    stations.set(key, { root, label, focus: focusWithLabel, distance, yaw:.55,pitch:1.05,fov:36 });
     pickables.push({ root, key }, { root: label, key });
   }
   station("resume", resumeCorner, "个人简历", 14);
   station("portfolio", project, "作品集", 20);
   station("other", lab, "其他项目", 16);
   station("contact", social, "联系方式", 12);
+  Object.assign(stations.get("resume"),{focus:new T.Vector3(25.4,1.8,24.3),distance:15,yaw:.5,pitch:.99});
+  Object.assign(stations.get("other"),{distance:16,yaw:.55,pitch:1.18});
+  Object.assign(stations.get("contact"),{distance:12.5,yaw:.35,pitch:1.1,fov:34});
+  // Include the freestanding wood sign, rather than centering only the mailbox.
+  stations.get("contact").focus.add(new T.Vector3(-1.3,-.6,0));
   const landingBounds = new T.Box3().setFromObject(identity);
   for (const root of devices.roots) landingBounds.union(new T.Box3().setFromObject(root));
   // Match the upstream landing's focus behind the letters, adapted to our
   // longer bilingual name. Do not let unrelated station bounds move this pose.
-  const landingCenter = new T.Vector3(identity.userData.parcel.x-.5,.9,identity.userData.parcel.z-3.7);
+  const landingCenter = new T.Vector3(identity.userData.parcel.x-.7,1.8,identity.userData.parcel.z-3.3);
   const landingPoints = [];
   for (const root of [identity, ...devices.roots]) root.traverse(mesh => {
     if (!mesh.isMesh) return;
@@ -429,11 +436,11 @@ try {
     const aspect = innerWidth / innerHeight,
       fov = innerWidth < 700 ? 40 : 25;
     const vertical = Math.tan(T.MathUtils.degToRad(fov / 2));
-    const yaw = Math.PI * .25, pitch = Math.PI * .27;
+    const yaw = .55, pitch = 1.02;
     const forward = new T.Vector3().setFromSpherical(new T.Spherical(1, pitch, yaw));
     const right = new T.Vector3().crossVectors(new T.Vector3(0, 1, 0), forward).normalize();
     const up = new T.Vector3().crossVectors(forward, right).normalize();
-    let distance = 31; // Same 25° lens; fit our longer bilingual sculpture.
+    let distance = 30; // Frontal entry composition, fitted to the bilingual sculpture.
     for (const point of landingPoints) {
       const v = point.clone().sub(landingCenter), near = v.dot(forward);
       distance = Math.max(distance, near + Math.abs(v.dot(right)) / (vertical * aspect * .85), near + Math.abs(v.dot(up)) / (vertical * .8));
@@ -528,6 +535,7 @@ try {
   function pick(x, y) {
     pointer.set((x / innerWidth) * 2 - 1, (-y / innerHeight) * 2 + 1);
     ray.setFromCamera(pointer, camera);
+    if(place === "resume" && resumePreview && ray.intersectObject(resumePreview,true).length)return "resume-preview";
     if (place === "home") {
       const hits = devices.roots.flatMap(root => ray.intersectObject(root, true).map(hit => ({ ...hit, root })));
       hits.sort((a, b) => a.distance - b.distance);
@@ -597,6 +605,7 @@ try {
     if (pointers.size) return;
     if (!drag && !pinched && pressed) {
       if (pressed === "map") navigationMap.open();
+      else if(pressed === "resume-preview")openCurrent();
       else if (pressed.isObject3D) devices.hit(pressed);
       else if (place === pressed) openCurrent();
       else go(pressed);
@@ -622,7 +631,7 @@ try {
   );
   function resize() {
     camera.aspect = innerWidth / innerHeight;
-    camera.fov = place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : 40);
+    camera.fov = place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
     game.viewport.width = innerWidth;

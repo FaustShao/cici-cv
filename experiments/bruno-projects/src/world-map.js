@@ -12,7 +12,7 @@ export function createWorldMap(go) {
     { key: "resume", title: "个人简历", x: 37, y: 42, color: "#ae6d69" },
     { key: "portfolio", title: "作品集", x: 49.5, y: 18, color: "#867398" },
     { key: "other", title: "其他项目", x: 16.6, y: 30.8, color: "#b28a50" },
-    { key: "contact", title: "联系方式", x: 84.2, y: 44.9, color: "#698f83" },
+    { key: "contact", title: "联系方式", x: 89.2, y: 79.5, color: "#698f83" },
   ];
   for (const site of sites) {
     const button = document.createElement("button");
