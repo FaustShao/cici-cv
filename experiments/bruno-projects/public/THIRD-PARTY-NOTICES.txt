@@ -33,8 +33,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Draco and Basis Universal decoding runtime
 Apache 2.0. Notices: draco/LICENSE.txt and basis/LICENSE.txt.
 
-Amatic SC, Long Cang, Nunito and Noto Sans SC font subsets
+Amatic SC, Xiaolai, Long Cang (archived), Nunito and Noto Sans SC font subsets
 SIL Open Font License 1.1. Full notices in fonts/.
+
+Active Chinese handwriting: Xiaolai Regular v3.126, lxgw/kose-font.
+https://github.com/lxgw/kose-font/releases/tag/v3.126
+Subset of the author's original font, without redrawing or restyling glyphs.
 
 Tideline, Gazette and DREAM SENTINEL preview images are screenshots
 of the existing portfolio pages supplied for Cecilia Wang's website.

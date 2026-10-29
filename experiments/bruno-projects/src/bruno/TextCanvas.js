@@ -15,7 +15,10 @@ export class TextCanvas
     )
     {
         this.lines = []
-        this.font = `${fontWeight} ${fontSize * density}px "${fontFamily}", "Cecilia Hand"`
+        this.font = `${fontWeight} ${fontSize * density}px "${fontFamily}", Xiaolai`
+        // Keep the original English title style; Chinese uses regular, smaller
+        // handwriting rather than synthesizing a heavy bold weight.
+        this.chineseFont = `400 ${fontSize * density * 0.9}px Xiaolai`
         this.width = Math.ceil(width * density)
         this.height = Math.ceil(height * density)
         this.horizontalAlign = horizontalAlign
@@ -70,6 +73,7 @@ export class TextCanvas
         
         for(const line of this.lines)
         {
+            this.context.font = /[\u3400-\u9fff]/.test(line) ? this.chineseFont : this.font
             const measure = this.context.measureText(line)
 
             if(measure.width > output.width)
@@ -92,6 +96,7 @@ export class TextCanvas
         let i = 0
         for(const line of this.lines)
         {
+            this.context.font = /[\u3400-\u9fff]/.test(line) ? this.chineseFont : this.font
             // const y = this.height / (this.lines.length + 1) * (i + 1)
             const y = this.height / 2 + (i - (this.lines.length - 1) / 2) * this.lineHeight
 

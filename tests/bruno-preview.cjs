@@ -45,11 +45,11 @@ const review = path.resolve(
     );
     await page.waitForFunction(() => preview.area.title.status === "visible");
     await page.waitForTimeout(1200);
-    assert.equal(await page.locator(".intro h1").innerText(), "精选作品");
+    assert.equal(await page.locator(".intro").count(), 0);
     assert.equal(await page.locator("footer a").count(), 0);
     assert.equal(
       await page.evaluate(() =>
-        document.fonts.check('400 40px "Cecilia Hand"', "精选作品"),
+        document.fonts.check("400 40px Xiaolai", "设计研究角色地点合作"),
       ),
       true,
     );
@@ -62,6 +62,20 @@ const review = path.resolve(
     assert.deepEqual(
       await page.evaluate(() => preview.area.url.textCanvas.lines),
       ["点击查看完整项目"],
+    );
+    assert.match(
+      await page.evaluate(() => preview.area.url.textCanvas.chineseFont),
+      /^400 30\.6.*px Xiaolai$/,
+    );
+    assert.ok(
+      await page.evaluate(() => {
+        const a = preview.area;
+        return (
+          a.url.panel.scale.x -
+            a.url.textCanvas.getMeasure().width / a.texts.density >=
+          0.89
+        );
+      }),
     );
     await sharp(await page.screenshot())
       .webp({ quality: 90 })

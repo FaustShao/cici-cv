@@ -142,7 +142,7 @@ try {
     document.fonts.load('700 40px "Amatic SC"'),
     document.fonts.load("700 18px Nunito"),
     document.fonts.load(
-      '400 40px "Cecilia Hand"',
+      '400 40px Xiaolai',
       "精选作品设计研究服务角色地点合作档案",
     ),
   ]);
@@ -472,12 +472,12 @@ try {
   labelsContext.textAlign = "center";
   labelsContext.textBaseline = "middle";
   for (const [label, x, y, size] of [
-    ["设计档案", 1024, 128, 190],
-    ["合作", 393, 384, 160],
-    ["角色", 1188, 384, 160],
-    ["地点", 1791, 384, 150],
+    ["设计档案", 1024, 128, 150],
+    ["合作", 393, 384, 210],
+    ["角色", 1188, 384, 210],
+    ["地点", 1791, 384, 185],
   ]) {
-    labelsContext.font = `400 ${size}px "Cecilia Hand"`;
+    labelsContext.font = `400 ${size}px Xiaolai`;
     labelsContext.fillText(label, x, y);
   }
   const labelsTexture = new T.CanvasTexture(labelsCanvas);

@@ -942,7 +942,7 @@ export class ProjectsArea extends Area
         this.url.textCanvas = new TextCanvas(
             this.texts.fontFamily,
             this.texts.fontWeight,
-            this.texts.fontSizeMultiplier * 0.23,
+            this.texts.fontSizeMultiplier * 0.17,
             4,
             0.2,
             this.texts.density,
@@ -1022,7 +1022,7 @@ export class ProjectsArea extends Area
                 this.url.textCanvas.updateText('点击查看完整项目')
 
                 const ratio = this.url.textCanvas.getMeasure().width / this.texts.density
-                this.url.panel.scale.x = ratio + 0.2
+                this.url.panel.scale.x = Math.max(2.4, ratio + 0.9)
 
             } })
         }

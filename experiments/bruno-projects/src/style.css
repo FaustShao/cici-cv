@@ -11,9 +11,9 @@
   font-display: swap;
 }
 @font-face {
-  font-family: Cecilia Hand;
-  src: url("/fonts/longcang-sc.woff2");
-  font-weight: 400 800;
+  font-family: Xiaolai;
+  src: url("/fonts/xiaolai-sc.woff2");
+  font-weight: 400;
   font-display: swap;
 }
 @font-face {
@@ -35,7 +35,9 @@ body {
 }
 body {
   color: #ffeadf;
-  font-family: Nunito, "Cecilia Hand", "Preview Chinese", cursive;
+  font-family: Nunito, Xiaolai, "Preview Chinese", cursive;
+  font-size: 14px;
+  font-synthesis: none;
   background: #b9869b;
 }
 button,
@@ -50,7 +52,7 @@ button {
   border-radius: 7px;
   background: #28192b33;
   padding: 8px 13px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
 }
 a {
@@ -97,7 +99,7 @@ header {
   z-index: 3;
 }
 header > a {
-  font-size: 16px;
+  font-size: 14px;
   background: #28192b33;
   padding: 10px 13px;
   border: 1px solid #ffceca55;
@@ -106,32 +108,6 @@ header > a {
 header > div {
   display: flex;
   gap: 9px;
-}
-.intro {
-  position: fixed;
-  left: 32px;
-  top: 90px;
-  pointer-events: none;
-  text-shadow: 0 2px 12px #47284940;
-}
-.intro > p:first-child {
-  font-size: 15px;
-  letter-spacing: 2px;
-  font-weight: 800;
-  margin: 0 0 7px;
-}
-.intro h1 {
-  font-family:
-    "Cecilia Hand",
-    cursive;
-  font-size: 58px;
-  line-height: 1.1;
-  margin: 0;
-  font-weight: 700;
-}
-.intro .subtitle {
-  font-size: 15px;
-  margin: 8px 0;
 }
 #loading {
   position: fixed;
@@ -175,13 +151,13 @@ header > div {
   letter-spacing: 2px;
 }
 #project-name {
-  font-family: "Amatic SC", "Cecilia Hand", cursive;
+  font-family: "Amatic SC", Xiaolai, cursive;
   font-size: 22px;
   font-weight: 800;
   margin-top: 4px;
 }
 #controls small {
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 4px;
   white-space: nowrap;
 }
@@ -203,7 +179,7 @@ footer {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  font-size: 14px;
+  font-size: 12px;
   text-shadow: 0 1px 6px #34203999;
 }
 footer a {
@@ -248,7 +224,7 @@ dialog {
   border-bottom: 2px solid #b690a5;
 }
 .reader-bar h2 {
-  font-family: "Amatic SC", "Cecilia Hand", cursive;
+  font-family: "Amatic SC", Xiaolai, cursive;
   font-size: 22px;
   margin: 0;
   font-weight: 700;
@@ -309,29 +285,15 @@ dialog::backdrop {
     gap: 10px;
   }
   header > a {
-    font-size: 14px;
+    font-size: 12px;
     padding: 8px;
   }
   header > div {
     gap: 5px;
   }
   header button {
-    font-size: 14px;
+    font-size: 12px;
     padding: 8px;
-  }
-  .intro {
-    top: 76px;
-    left: 20px;
-  }
-  .intro h1 {
-    font-size: 42px;
-  }
-  .intro > p:first-child {
-    font-size: 13px;
-    letter-spacing: 1px;
-  }
-  .intro .subtitle {
-    font-size: 13px;
   }
   #controls {
     bottom: 65px;
@@ -348,13 +310,13 @@ dialog::backdrop {
     font-size: 20px;
   }
   #controls small {
-    font-size: 13px;
+    font-size: 12px;
   }
   footer {
     left: 18px;
     right: 18px;
     bottom: 18px;
-    font-size: 12px;
+    font-size: 11px;
     flex-wrap: wrap;
     gap: 7px;
   }
