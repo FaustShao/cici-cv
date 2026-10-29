@@ -85,20 +85,9 @@ const review = path.resolve(
       await page.waitForTimeout(500);
     }
     async function clickMap(key, target = page) {
-      await target.waitForFunction((key) => {
-        const p = designWorld.entrance.point(key).project(designWorld.world.camera);
-        const x = (p.x + 1) * innerWidth / 2, y = (1 - p.y) * innerHeight / 2;
-        return x > 0 && x < innerWidth && y > 0 && y < innerHeight && designWorld.pick(x, y) === key;
-      }, key, { timeout: 15000 });
-      const point = await target.evaluate((key) => {
-        const p = designWorld.entrance.point(key).project(designWorld.world.camera);
-        const x = (p.x + 1) * innerWidth / 2, y = (1 - p.y) * innerHeight / 2;
-        return { x, y, hit: designWorld.pick(x, y), visible: x > 0 && x < innerWidth && y > 0 && y < innerHeight };
-      }, key);
-      assert.ok(point.visible, "Map destination in viewport: " + key);
-      assert.equal(point.hit, key);
-      if (target === page) await target.mouse.click(point.x, point.y);
-      else await target.touchscreen.tap(point.x, point.y);
+      await target.locator("#map-trigger").click();
+      assert.ok(await target.locator("#world-map").evaluate(e => e.open));
+      await target.locator(`[data-destination="${key}"]`).click();
       if (key === "portfolio") {
         await target.waitForURL("**/bruno-preview/index.html*");
         return;
@@ -107,9 +96,45 @@ const review = path.resolve(
       assert.equal(await target.evaluate(() => WORLD_STATE.place), key);
     }
     assert.equal(await page.evaluate(() => designWorld.identity.userData.text), "王钰欣 / CECILIA");
-    assert.ok(await page.evaluate(() => designWorld.placements.every(p => p.maxWater <= 5 && p.maxRoad <= 120)));
+    assert.ok(await page.evaluate(() => designWorld.identity.userData.blockCount > 500));
+    assert.ok(await page.evaluate(() => designWorld.identity.getObjectByName("voxel-name-blocks").isInstancedMesh));
+    assert.ok(await page.evaluate(() => designWorld.placements.every(p => p.maxWater <= 5 && (p.plaza || p.maxRoad <= 120))));
     assert.ok(await page.evaluate(() => [...designWorld.stations.values()].every(s => s.label.name.startsWith("wood-sign-"))));
     await shot("home");
+    assert.equal(await page.evaluate(() => designWorld.devices.roots.length), 3);
+    const devicePoint = await page.evaluate(() => {
+      const root = designWorld.devices.roots[0], {world, pick} = designWorld;
+      const points = [];
+      root.traverse(m => {
+        if (!m.isMesh) return;
+        m.geometry.computeBoundingBox();
+        const p = m.geometry.boundingBox.getCenter(m.position.clone().set(0,0,0));
+        m.localToWorld(p).project(world.camera);
+        points.push({ x:(p.x+1)*innerWidth/2, y:(1-p.y)*innerHeight/2 });
+      });
+      return points.find(p => p.x > 0 && p.x < innerWidth && p.y > 70 && p.y < innerHeight-100 && pick(p.x,p.y) === root);
+    });
+    assert.ok(devicePoint, "Native gamepad is prominent and clickable at entry");
+    const initialURL = page.url();
+    await page.mouse.click(devicePoint.x, devicePoint.y);
+    assert.equal(await page.evaluate(() => WORLD_STATE.place), "home");
+    assert.equal(page.url(), initialURL);
+    assert.equal(await page.evaluate(() => designWorld.devices.roots[0].userData.interactions), 1);
+    assert.ok(await page.evaluate(() => {
+      const d = designWorld.devices, root = d.roots[0];
+      d.update(10); const before=root.rotation.z; d.hit(root); d.update(10.1);
+      const moved=Math.abs(root.rotation.z-before)>0.001; d.update(12); return moved;
+    }));
+    await page.locator("#map-trigger").click();
+    assert.equal(await page.locator(".map-location").count(), 4);
+    const mapBox = await page.locator("#world-map").boundingBox();
+    assert.ok(Math.abs(mapBox.x - (1440-mapBox.width)/2) < 2, "Map is centered horizontally");
+    assert.ok(Math.abs(mapBox.y - (900-mapBox.height)/2) < 2, "Map is centered vertically");
+    assert.match(await page.locator(".map-location").first().evaluate(e => getComputedStyle(e).fontFamily), /Xiaolai/);
+    await shot("navigation-map");
+    await page.keyboard.press("Escape");
+    assert.equal(await page.locator("#world-map").evaluate(e => e.open), false);
+    assert.equal(await page.evaluate(() => WORLD_STATE.place), "home");
     await page.locator("#theme").click();
     await shot("home-night");
     await page.locator("#theme").click();
@@ -242,6 +267,13 @@ const review = path.resolve(
     await sharp(await phone.screenshot())
       .webp({ quality: 90 })
       .toFile(path.join(review, "home-mobile.webp"));
+    await phone.locator("#map-trigger").click();
+    await sharp(await phone.screenshot()).webp({quality:90}).toFile(path.join(review,"navigation-map-mobile.webp"));
+    for(const key of ["resume","portfolio","other","contact"]) {
+      const box = await phone.locator(`[data-destination="${key}"]`).boundingBox();
+      assert.ok(box.x >= 0 && box.x+box.width <= 390 && box.height >= 44, "Mobile map destination fits: "+key);
+    }
+    await phone.locator("#close-map").click();
     const cdp = await phone.context().newCDPSession(phone);
     await cdp.send("Input.dispatchTouchEvent", {
       type: "touchStart",

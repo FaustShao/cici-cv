@@ -38,6 +38,18 @@
     </footer>
     <section id="place-actions" aria-label="当前分类操作" hidden></section>
     <p id="feedback" role="status"></p>
+    <button id="map-trigger" aria-haspopup="dialog" aria-controls="world-map" aria-label="打开导航地图">
+      <img src="/ui/cecilia-map.svg" alt="" /><span>点击查看地图 <span aria-hidden="true">↗</span></span>
+    </button>
+    <dialog id="world-map" aria-labelledby="map-title">
+      <div class="map-bar"><div><p>CECILIA’S WORLD</p><h2 id="map-title">想去哪里？</h2></div><button id="close-map" aria-label="关闭地图">×</button></div>
+      <div class="map-sheet">
+        <img src="/ui/cecilia-map.svg" alt="有道路、河流和树林的导航地图" />
+        <div id="map-locations"></div>
+        <div class="map-you"><span>◆</span>姓名入口 · 你在这里</div>
+      </div>
+      <p class="map-caption">点一个地点，去看看吧。 <span>M 打开／收起 · Esc 关闭</span></p>
+    </dialog>
     <section id="fallback" hidden>
       <h2>暂时无法显示 3D 场景</h2>
       <p id="error-message"></p>

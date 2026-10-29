@@ -1,6 +1,5 @@
 import { T } from "./create-world.js";
 import { color, texture } from "three/tsl";
-import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
 // Palette-matched physical fixtures. Text is printed on surfaces, not extruded
@@ -37,7 +36,7 @@ export function createFixtures(world) {
     return mesh;
   }
   function parcel(root, x, z, scale = 1, options = {}) {
-    clean(root);
+    if (!options.prepared) clean(root);
     root.scale.setScalar(scale);
     scene.add(root);
     root.updateWorldMatrix(true, true);
@@ -48,23 +47,27 @@ export function createFixtures(world) {
       depth = options.depth || dimensions.z;
     let best,
       score = Infinity;
-    for (let dz = -18; dz <= 18; dz += 0.5)
-      for (let dx = -18; dx <= 18; dx += 0.5) {
+    const radius = options.radius ?? 18;
+    for (let dz = -radius; dz <= radius; dz += 0.5)
+      for (let dx = -radius; dx <= radius; dx += 0.5) {
         const px = x + dx,
           pz = z + dz;
         if (
-          reserved.some(
-            (r) =>
-              Math.abs(px - r.x) < (width + r.width) / 2 + 0.4 &&
-              Math.abs(pz - r.z) < (depth + r.depth) / 2 + 0.4,
-          )
+          reserved.some(r => {
+            if (Math.abs(px-r.x) >= (width+r.width)/2+.4 || Math.abs(pz-r.z) >= (depth+r.depth)/2+.4) return false;
+            if (!r.oriented) return true;
+            const { angle, width: w, depth: d } = r.oriented;
+            const c=Math.cos(angle),s=Math.sin(angle),dx=px-r.x,dz=pz-r.z;
+            return Math.abs(dx*c-dz*s) < w/2+Math.abs(c)*width/2+Math.abs(s)*depth/2+.3 &&
+              Math.abs(dx*s+dz*c) < d/2+Math.abs(s)*width/2+Math.abs(c)*depth/2+.3;
+          })
         )
           continue;
         const ground = surface.check(px, pz, width, depth);
-        if (ground.maxWater > 5 || ground.maxRoad > 120) continue;
+        if (ground.maxWater > 5 || ground.maxRoad > (options.plaza ? 255 : 120)) continue;
         const s = dx * dx + dz * dz;
         if (s < score) {
-          best = { x: px, z: pz, width, depth, ...ground };
+          best = { x: px, z: pz, width, depth, plaza: !!options.plaza, ...ground };
           score = s;
         }
       }
@@ -80,7 +83,7 @@ export function createFixtures(world) {
     surface.clearGrass(best.x, best.z, width + 0.6, depth + 0.6);
     root.userData.parcel = best;
     placements.push({ name: root.name, ...best });
-    if (options.reserve !== false) reserved.push(best);
+    if (options.reserve !== false) reserved.push({ ...best, oriented:options.oriented });
     return root;
   }
   function print(
@@ -101,7 +104,7 @@ export function createFixtures(world) {
     ctx.fillStyle = ink;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `600 ${size}px "Scene Sans", sans-serif`;
+    ctx.font = `400 ${size}px "World Xiaolai", sans-serif`;
     ctx.fillText(text, 512, canvas.height / 2, 880);
     const tex = new T.CanvasTexture(canvas);
     tex.colorSpace = T.SRGBColorSpace;
@@ -240,225 +243,109 @@ export function createFixtures(world) {
   function nameModel() {
     const root = new T.Group();
     root.name = "single-line-owner-name";
+    const pixels = [], cell = 0.066;
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 28;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
     let offset = 0;
-    for (const [text, font] of [
-      ["王钰欣", world.chinese],
-      [" / CECILIA", world.english],
-    ]) {
-      const g = new TextGeometry(text, {
-        font,
-        size: 1,
-        depth: 0.12,
-        curveSegments: 6,
-        bevelEnabled: true,
-        bevelThickness: 0.016,
-        bevelSize: 0.012,
-        bevelSegments: 1,
-      });
-      g.computeBoundingBox();
-      const b = g.boundingBox,
-        height = b.max.y - b.min.y;
-      const scale = 1.1 / height;
-      g.translate(-b.min.x, -b.min.y, 0);
-      const m = new T.Mesh(g, materials.cream);
-      m.scale.setScalar(scale);
-      m.position.set(offset, 0.22, 0.08);
-      m.castShadow = true;
-      root.add(m);
-      offset += (b.max.x - b.min.x) * scale + 0.18;
+    for (const char of "王钰欣") {
+      ctx.clearRect(0, 0, 28, 28);
+      ctx.fillStyle = "white";
+      ctx.font = '900 24px "Scene Sans"';
+      ctx.textBaseline = "top";
+      ctx.fillText(char, 1, 0);
+      const data = ctx.getImageData(0, 0, 28, 28).data;
+      for (let y = 0; y < 26; y++) for (let x = 0; x < 26; x++)
+        if (data[(y * 28 + x) * 4 + 3] > 100) pixels.push([offset + x, 25 - y]);
+      offset += 28;
     }
-    for (const m of root.children) m.position.x -= offset / 2;
-    box(root, [offset + 0.5, 0.2, 0.7], [0, 0.1, 0], "edge");
-    root.rotation.y = 0.12;
-    parcel(root, 45, 53);
+    const alphabet = {
+      C: ["01111","11000","11000","11000","11000","11000","01111"],
+      E: ["11111","11000","11000","11110","11000","11000","11111"],
+      I: ["111","010","010","010","010","010","111"],
+      L: ["11000","11000","11000","11000","11000","11000","11111"],
+      A: ["01110","11011","11011","11111","11011","11011","11011"],
+      "/": ["0001","0001","0010","0010","0100","1000","1000"],
+    };
+    offset += 3;
+    for (const char of "/ CECILIA") {
+      if (char === " ") { offset += 7; continue; }
+      const glyph = alphabet[char];
+      glyph.forEach((row, y) => [...row].forEach((on, x) => {
+        if (on === "1") for (let dx = 0; dx < 3; dx++) for (let dy = 0; dy < 3; dy++)
+          pixels.push([offset + x * 3 + dx, (6 - y) * 3 + dy + 2]);
+      }));
+      offset += glyph[0].length * 3 + 4;
+    }
+    const block = new T.BoxGeometry(cell * .96, cell * .96, .27);
+    // Actual individual cubes: pale front (+Z), purple sides and backs.
+    const sides = [materials.purple, materials.purple, materials.purple, materials.purple, materials.cream, materials.purple];
+    const mesh = new T.InstancedMesh(block, sides, pixels.length);
+    mesh.name = "voxel-name-blocks";
+    mesh.castShadow = mesh.receiveShadow = true;
+    const matrix = new T.Matrix4();
+    pixels.forEach(([x, y], i) => mesh.setMatrixAt(i, matrix.makeTranslation((x - offset / 2) * cell, (y + .5) * cell, 0)));
+    mesh.instanceMatrix.needsUpdate = true;
+    root.add(mesh);
+    root.rotation.y = Math.PI / 7.2;
+    mesh.computeBoundingBox();
+    const bounds=mesh.boundingBox;
+    parcel(root, 43, 40.5, 1, { plaza: true, radius: 1, prepared: true,
+      oriented:{angle:root.rotation.y,width:bounds.max.x-bounds.min.x,depth:.27} });
     root.userData.text = "王钰欣 / CECILIA";
+    root.userData.blockCount = pixels.length;
     return root;
   }
-  function entranceMap(original) {
-    const root = original.getObjectByName("landing").clone(true);
-    root.name = "clickable-entrance-map";
-    for (const child of [...root.children])
-      if (!/^physicalFixed00[39]$/.test(child.name)) child.removeFromParent();
-    parcel(root, 45, 48, 1.2);
-    const face = root.getObjectByName("physicalFixed003");
-    if (!face) throw new Error("入口地图牌面缺失");
-    // The native kiosk uses a small square paper insert. Widen that insert
-    // within its timber frame so four destinations are readable at entry.
-    face.geometry = face.geometry.clone();
-    const positions = face.geometry.attributes.position,
-      uvs = face.geometry.attributes.uv;
-    const points = Array.from({ length: positions.count }, (_, i) =>
-      new T.Vector3().fromBufferAttribute(positions, i),
-    );
-    const middle = points
-      .reduce((a, p) => a.add(p), new T.Vector3())
-      .multiplyScalar(1 / points.length);
-    const u = points[0].clone().sub(points[1]),
-      v = points[2].clone().sub(points[0]);
-    const normal = new T.Vector3().fromBufferAttribute(
-      face.geometry.attributes.normal,
-      0,
-    );
-    for (let i = 0; i < positions.count; i++) {
-      const p = middle
-        .clone()
-        .addScaledVector(u, (uvs.getX(i) - 0.5) * 2)
-        .addScaledVector(v, uvs.getY(i) - 0.5)
-        .addScaledVector(normal, 0.04);
-      positions.setXYZ(i, p.x, p.y, p.z);
-    }
-    positions.needsUpdate = true;
-    face.geometry.computeBoundingBox();
-    face.geometry.computeBoundingSphere();
-    const canvas = document.createElement("canvas");
-    canvas.width = 1600;
-    canvas.height = 1000;
-    const ctx = canvas.getContext("2d"),
-      tex = new T.CanvasTexture(canvas);
-    tex.flipY = false;
-    tex.colorSpace = T.SRGBColorSpace;
-    face.material = new T.MeshBasicNodeMaterial({
-      colorNode: texture(tex).rgb,
-      side: T.DoubleSide,
-    });
-    face.material.userData.prevent = true;
-    face.receiveShadow = false;
-    const targets = [
-      { key: "resume", title: "个人简历", x: 0.27, y: 0.33, color: "#b56067" },
-      { key: "portfolio", title: "作品集", x: 0.73, y: 0.33, color: "#797099" },
-      { key: "other", title: "其他项目", x: 0.27, y: 0.72, color: "#b78550" },
-      { key: "contact", title: "联系方式", x: 0.73, y: 0.72, color: "#668f83" },
+  function gameDevices(original) {
+    const source = original.getObjectByName("landing");
+    const devices = [], animated = [];
+    const definitions = [
+      ["gamepadPhysicalDynamic001", "gamepad", 45, 43.5, 1.12],
+      ["phonePhysicalDynamic001", "joystick", 49.7, 42.8, 1],
+      ["gizmoPhysicalDynamic", "gizmo", 39.5, 44.2, .85],
     ];
-    function paint(hovered) {
-      ctx.setTransform(canvas.width / 1200, 0, 0, canvas.height / 1200, 0, 0);
-      ctx.fillStyle = "#f8e5bd";
-      ctx.fillRect(0, 0, 1200, 1200);
-      ctx.strokeStyle = "#a75d48";
-      ctx.lineWidth = 18;
-      ctx.strokeRect(32, 32, 1136, 1136);
-      ctx.fillStyle = "#58354d";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.font = '600 70px "Scene Sans", sans-serif';
-      ctx.fillText("从这里出发", 600, 114);
-      ctx.strokeStyle = "#b5a074";
-      ctx.lineWidth = 17;
-      ctx.setLineDash([23, 18]);
-      ctx.beginPath();
-      ctx.moveTo(325, 400);
-      ctx.lineTo(875, 400);
-      ctx.lineTo(875, 864);
-      ctx.lineTo(325, 864);
-      ctx.lineTo(325, 400);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      targets.forEach((t, i) => {
-        const x = t.x * 1200,
-          y = t.y * 1200,
-          active = hovered === t.key,
-          lift = active ? -14 : 0;
-        ctx.fillStyle = "#ad8f6b";
-        ctx.fillRect(x - 220, y - 132, 440, 295);
-        ctx.fillStyle = active ? "#fff7e2" : "#f3d9a8";
-        ctx.fillRect(x - 220, y - 144 + lift, 440, 295);
-        ctx.strokeStyle = t.color;
-        ctx.lineWidth = active ? 13 : 6;
-        ctx.strokeRect(x - 220, y - 144 + lift, 440, 295);
-        ctx.fillStyle = t.color;
-        ctx.font = "800 44px Nunito, sans-serif";
-        ctx.fillText("0" + (i + 1), x - 166, y - 100 + lift);
-        ctx.strokeStyle = t.color;
-        ctx.lineWidth = 9;
-        ctx.save();
-        ctx.translate(x, y - 40 + lift);
-        if (t.key === "resume") {
-          ctx.beginPath();
-          ctx.moveTo(0, -35);
-          ctx.lineTo(-82, -55);
-          ctx.lineTo(-82, 35);
-          ctx.lineTo(0, 55);
-          ctx.lineTo(82, 35);
-          ctx.lineTo(82, -55);
-          ctx.closePath();
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(0, -35);
-          ctx.lineTo(0, 55);
-          ctx.stroke();
-        } else if (t.key === "portfolio") {
-          ctx.strokeRect(-65, -43, 145, 90);
-          ctx.strokeRect(-83, -59, 145, 90);
-          ctx.beginPath();
-          ctx.moveTo(-58, 13);
-          ctx.lineTo(-12, -17);
-          ctx.lineTo(39, 10);
-          ctx.stroke();
-        } else if (t.key === "other") {
-          ctx.beginPath();
-          ctx.roundRect(-90, -45, 180, 90, 27);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(-57, 0);
-          ctx.lineTo(-23, 0);
-          ctx.moveTo(-40, -17);
-          ctx.lineTo(-40, 17);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(40, -10, 8, 0, Math.PI * 2);
-          ctx.arc(60, 13, 8, 0, Math.PI * 2);
-          ctx.fill();
-        } else {
-          ctx.strokeRect(-85, -50, 170, 100);
-          ctx.beginPath();
-          ctx.moveTo(-85, -50);
-          ctx.lineTo(0, 15);
-          ctx.lineTo(85, -50);
-          ctx.stroke();
+    for (const [sourceName, kind, x, z, scale] of definitions) {
+      const native = source.getObjectByName(sourceName);
+      if (!native) throw new Error("入口设备模型缺失：" + sourceName);
+      const root = native.clone(true);
+      root.position.set(0, 0, 0);
+      root.name = "entrance-device-" + kind;
+      parcel(root, x, z, scale, { plaza: true, radius: 1.5 });
+      root.userData.kind = kind;
+      devices.push(root);
+      const movers = [];
+      root.traverse(m => {
+        if (m.isMesh && ((kind === "joystick" && m.name === "phonePhysicalDynamic002") || /qosdjqosjd/.test(m.name))) {
+          movers.push({ mesh: m, position: m.position.clone(), rotation: m.rotation.clone() });
         }
-        ctx.restore();
-        ctx.font = '600 88px "Scene Sans", sans-serif';
-        ctx.fillText(t.title, x, y + 90 + lift);
       });
-      ctx.fillStyle = "#795a49";
-      ctx.font = '500 40px "Scene Sans", sans-serif';
-      ctx.fillText("点击一个地点，即可进入", 600, 1092);
-      tex.needsUpdate = true;
+      animated.push({ root, movers, base: root.rotation.clone(), pulse: -10, active: false });
     }
-    paint();
-    function hit(uv) {
-      return targets.reduce((best, t) =>
-        Math.hypot(t.x - uv.x, t.y - uv.y) <
-        Math.hypot(best.x - uv.x, best.y - uv.y)
-          ? t
-          : best,
-      ).key;
+    let now = 0;
+    function hit(root) {
+      const item = animated.find(d => d.root === root);
+      if (item) {
+        item.pulse = now;
+        root.userData.interactions = (root.userData.interactions || 0) + 1;
+      }
     }
-    function point(key) {
-      const target = targets.find((t) => t.key === key),
-        g = face.geometry,
-        uvs = g.attributes.uv,
-        pos = g.attributes.position;
-      const ids =
-        g.index?.array || Array.from({ length: pos.count }, (_, i) => i);
-      const p = new T.Vector3(target.x, target.y, 0);
-      for (let i = 0; i < ids.length; i += 3) {
-        const tri = [ids[i], ids[i + 1], ids[i + 2]],
-          uv = tri.map((n) => new T.Vector3(uvs.getX(n), uvs.getY(n), 0));
-        const b = T.Triangle.getBarycoord(p, ...uv, new T.Vector3());
-        if (b && Math.min(b.x, b.y, b.z) >= -0.0001) {
-          const v = new T.Vector3();
-          tri.forEach((n, k) =>
-            v.addScaledVector(
-              new T.Vector3().fromBufferAttribute(pos, n),
-              [b.x, b.y, b.z][k],
-            ),
-          );
-          return face.localToWorld(v);
+    function hover(root) { animated.forEach(d => d.active = d.root === root); }
+    function update(time, reduced = false) {
+      now = time;
+      for (const d of animated) {
+        const age = time - d.pulse;
+        const pulse = age >= 0 && age < 1 ? Math.sin(age * Math.PI * 3) * Math.exp(-age * 4) : 0;
+        d.root.rotation.z = d.base.z + pulse * .055;
+        for (const m of d.movers) {
+          m.mesh.position.copy(m.position);
+          m.mesh.rotation.copy(m.rotation);
+          if (d.root.userData.kind === "joystick") m.mesh.rotation.z += pulse * .16;
+          else m.mesh.position.y -= Math.abs(pulse) * .12;
+          if (d.active && !reduced) m.mesh.rotation.x += Math.sin(time * 3) * .025;
         }
       }
-      return face.getWorldPosition(new T.Vector3());
     }
-    return { root, face, targets, paint, hit, point };
+    return { roots: devices, hit, hover, update };
   }
   return {
     parcel,
@@ -470,6 +357,6 @@ export function createFixtures(world) {
     resumeCorner,
     contactCorner,
     nameModel,
-    entranceMap,
+    gameDevices,
   };
 }

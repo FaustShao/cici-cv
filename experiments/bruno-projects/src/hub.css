@@ -4,8 +4,14 @@
   font-weight: 100 900;
   font-display: swap;
 }
+@font-face {
+  font-family: "World Xiaolai";
+  src: url("/fonts/world-xiaolai.woff2");
+  font-weight: 400;
+  font-display: swap;
+}
 body {
-  font-family: Nunito, "Scene Sans", sans-serif;
+  font-family: Nunito, "World Xiaolai", sans-serif;
 }
 header {
   pointer-events: none;
@@ -104,7 +110,89 @@ header > div {
 .details-sheet li {
   margin: 12px 0;
 }
+#map-trigger {
+  position: fixed;
+  left: 28px;
+  bottom: 66px;
+  width: 160px;
+  padding: 6px 6px 9px;
+  border: 2px solid #ffe5bd;
+  background: #51374bee;
+  box-shadow: 4px 6px 0 #34213a55;
+  transform: rotate(-4deg);
+  z-index: 4;
+  transition: transform .2s, box-shadow .2s;
+  font-family: "World Xiaolai", sans-serif;
+  font-weight: 400;
+}
+#map-trigger:hover { transform: rotate(0deg) translateY(-5px); box-shadow: 4px 11px 0 #34213a55; }
+#map-trigger img { width: 100%; height: 76px; object-fit: cover; display: block; border-radius: 3px; }
+#map-trigger > span { display: block; margin-top: 8px; font-size: 16px; }
+#world-map {
+  margin: auto;
+  height: auto;
+  width: min(1060px, calc(100vw - 60px));
+  max-height: calc(100dvh - 56px);
+  padding: 22px 26px 14px;
+  border: 3px solid #eed8ac;
+  border-radius: 15px;
+  background: #f5e9c8;
+  color: #5a4651;
+  box-shadow: 0 22px 100px #251c4677, inset 0 0 0 5px #e8d4ad;
+  overflow-y: auto;
+  font-family: "World Xiaolai", sans-serif;
+}
+#world-map::backdrop { background: #2821398c; backdrop-filter: blur(7px); }
+.map-bar { display:flex; align-items:center; justify-content:space-between; margin:0 4px 18px; }
+.map-bar p { font: 800 11px Nunito, sans-serif; letter-spacing:3px; margin: 0 0 4px; color:#9a7e70; }
+.map-bar h2 { margin:0; font-size:30px; font-weight:400; }
+#close-map { border-color:#bd9d85; color:#765563; font:400 28px/1 Nunito,sans-serif; padding:7px 12px; background:transparent; }
+.map-sheet { position:relative; width:100%; aspect-ratio:1200/780; border-radius:9px; overflow:hidden; }
+.map-sheet > img { display:block; width:100%; height:100%; }
+#map-locations { position:absolute; inset:0; }
+.map-location {
+  position:absolute;
+  transform:translate(-50%,-74%);
+  display:flex;
+  align-items:center;
+  flex-direction:column;
+  border:0;
+  background:none;
+  padding:6px 12px;
+  min-width:96px;
+  color:#57404b;
+  transition:transform .2s;
+  font-family:"World Xiaolai",sans-serif;
+  font-weight:400;
+}
+.map-location svg { width:70px; height:72px; overflow:visible; filter:drop-shadow(2px 4px 0 #56512d30); }
+.map-location span { padding:5px 12px; border:2px solid var(--pin); border-radius:20px; background:#fff3d6; font-size:21px; white-space:nowrap; }
+.map-location:hover,.map-location:focus-visible { transform:translate(-50%,-74%) translateY(-7px); color:#57404b; background:none; }
+.map-location:hover span,.map-location[aria-current="true"] span { background:var(--pin); color:#fff3d6; }
+.map-you { position:absolute; left:75.5%; top:79.5%; transform:translate(-50%,-50%); font-size:16px; white-space:nowrap; color:#8b5657; text-align:center; }
+.map-you span { display:block; font-size:28px; filter:drop-shadow(0 3px 0 #fff3d6); }
+.map-caption { margin:12px 3px 2px; font-size:17px; display:flex; justify-content:space-between; gap:12px; }
+.map-caption > span { color:#9b8476; font-size:13px; }
+@media(prefers-reduced-motion:no-preference) {
+  #world-map[open] { animation:unfold-map .28s ease-out; }
+  @keyframes unfold-map { from { opacity:0; transform:translateY(12px) scale(.96); } to { opacity:1; transform:none; } }
+}
 @media (max-width: 700px) {
+  #map-trigger { width:114px; left:18px; bottom:72px; }
+  #map-trigger img { height:55px; }
+  #map-trigger > span { font-size:13px; }
+  #world-map { width:calc(100vw - 24px); max-height:calc(100dvh - 28px); padding:17px 10px 12px; }
+  .map-bar { margin-bottom:12px; }
+  .map-bar h2 { font-size:24px; }
+  .map-sheet { aspect-ratio: 4/3; }
+  .map-sheet > img { object-fit:fill; }
+  .map-location { min-width:64px; padding:3px; transform:translate(-50%,-60%); }
+  .map-location:hover,.map-location:focus-visible { transform:translate(-50%,-60%) translateY(-4px); }
+  .map-location svg { width:41px; height:42px; }
+  .map-location span { font-size:16px; padding:4px 7px; }
+  .map-caption { font-size:15px; }
+  .map-caption > span { display:none; }
+  .map-you { font-size:12px; }
   #place-actions {
     gap: 5px;
     flex-wrap: wrap;

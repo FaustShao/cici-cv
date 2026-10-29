@@ -1,6 +1,7 @@
 import { T, createWorld } from "./create-world.js";
 import { texture } from "three/tsl";
 import { createFixtures } from "./scene-fixtures.js";
+import { createWorldMap } from "./world-map.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 import "../../../resume.js";
 
@@ -24,7 +25,7 @@ let world,
   drag = false;
 let targetLook,
   currentLook,
-  entrance,
+  devices,
   identity,
   landingView,
   targetDistance = 55,
@@ -35,6 +36,7 @@ let yaw = 0.5,
   targetPitch = 0.85,
   pointers = new Map();
 const state = (window.WORLD_STATE = { place, reading: false, otherIndex: 0 });
+const navigationMap = createWorldMap(go);
 const labels = {
   home: "首页",
   resume: "个人简历",
@@ -171,6 +173,7 @@ function selectOther(index) {
     ($("other-position").textContent = `${otherIndex + 1} / ${notes.length}`);
 }
 function go(next, historyMode = "push") {
+  navigationMap.close();
   if (next === "portfolio") {
     location.href = portfolioURL;
     return;
@@ -222,7 +225,7 @@ function go(next, historyMode = "push") {
   }
   $("scene-hint").textContent =
     place === "home"
-      ? "点击入口地图选择地点 · 拖动观察 · 滚轮缩放"
+      ? "试试点击游戏设备 · 拖动观察 · 点击左下角查看地图"
       : `${labels[place]} · 拖动观察 · 点击模型${place === "contact" ? "写邮件" : "完整阅读"} · Esc 返回首页`;
   if (world && targetLook) {
     const station = stations.get(place);
@@ -250,7 +253,7 @@ window.addEventListener("popstate", () =>
   go(location.hash.slice(1) || "home", "none"),
 );
 window.addEventListener("keydown", (e) => {
-  if (reading) return;
+  if (reading || navigationMap.dialog.open) return;
   if (e.key === "Escape") go("home");
   if (e.key === "Enter" && e.target === document.body) openCurrent();
   if (place === "other" && ["ArrowLeft", "ArrowRight"].includes(e.key)) {
@@ -260,9 +263,11 @@ window.addEventListener("keydown", (e) => {
 });
 try {
   await document.fonts.load(
-    '600 24px "Scene Sans"',
+    '900 24px "Scene Sans"',
     "王钰欣个人简历其他项目联系方式",
   );
+  await document.fonts.load('400 24px Xiaolai', "个人简历作品集其他项目联系方式信件地图");
+  await document.fonts.load('400 24px "World Xiaolai"', "想去哪里个人简历作品集其他项目联系方式信件地图");
   world = await createWorld($("world"), (n, total) => {
     $("loading").textContent = `正在布置设计世界 ${n} / ${total}`;
   });
@@ -294,8 +299,8 @@ try {
   }
   const original = game.resources.areasModel.scene;
   const fixtures = createFixtures(world);
-  entrance = fixtures.entranceMap(original);
   identity = fixtures.nameModel();
+  devices = fixtures.gameDevices(original);
   const career = original.getObjectByName("career").clone(true);
   career.getObjectByName("refYear")?.removeFromParent();
   career.traverse((m) => {
@@ -328,14 +333,32 @@ try {
   const landing = original.getObjectByName("landing").clone(true);
   for (const child of [...landing.children])
     if (
-      /Letters|physicalFixed00[39]|phonePhysical|refBonfireInteractive/.test(
+      /Letters|gamepadPhysical|gizmoPhysical|phonePhysical|refBonfireInteractive/.test(
         child.name,
       )
     )
       child.removeFromParent();
-  landing.traverse((m) => {
-    if (m.material?.name === "stylizedMap") m.visible = false;
-  });
+  const kioskFace = landing.getObjectByName("physicalFixed003");
+  const kioskTexture = await world.textures.loadAsync(world.asset("ui/cecilia-map.png"));
+  kioskTexture.flipY = false;
+  kioskTexture.colorSpace = T.SRGBColorSpace;
+  if (kioskFace) {
+    kioskFace.material = new T.MeshBasicNodeMaterial({ colorNode: texture(kioskTexture).rgb, side:T.DoubleSide });
+    kioskFace.material.userData.prevent = true;
+    kioskFace.geometry = kioskFace.geometry.clone();
+    const positions = kioskFace.geometry.attributes.position, uv = kioskFace.geometry.attributes.uv;
+    const points = Array.from({length:positions.count}, (_,i) => new T.Vector3().fromBufferAttribute(positions,i));
+    const middle = points.reduce((a,p) => a.add(p),new T.Vector3()).multiplyScalar(1/points.length);
+    const u = points[0].clone().sub(points[1]), v = points[2].clone().sub(points[0]);
+    const normal = new T.Vector3().fromBufferAttribute(kioskFace.geometry.attributes.normal,0);
+    for(let i=0;i<positions.count;i++) {
+      const p=middle.clone().addScaledVector(u,(uv.getX(i)-.5)*2).addScaledVector(v,uv.getY(i)-.5).addScaledVector(normal,.04);
+      positions.setXYZ(i,p.x,p.y,p.z);
+    }
+    positions.needsUpdate=true;
+    kioskFace.geometry.computeBoundingBox();
+    kioskFace.geometry.computeBoundingSphere();
+  }
   clean(landing);
   scene.add(landing);
   function station(key, root, title, distance) {
@@ -356,22 +379,29 @@ try {
   station("portfolio", project, "作品集", 20);
   station("other", lab, "其他项目", 16);
   station("contact", social, "联系方式", 12);
-  const landingBounds = new T.Box3()
-    .setFromObject(entrance.root)
-    .union(new T.Box3().setFromObject(identity));
-  const landingCenter = landingBounds.getCenter(new T.Vector3()),
-    landingSize = landingBounds.getSize(new T.Vector3());
+  const landingBounds = new T.Box3().setFromObject(identity);
+  for (const root of devices.roots) landingBounds.union(new T.Box3().setFromObject(root));
+  const landingCenter = landingBounds.getCenter(new T.Vector3());
+  const landingPoints = [];
+  for (const root of [identity, ...devices.roots]) root.traverse(mesh => {
+    if (!mesh.isMesh) return;
+    if (mesh.isInstancedMesh) mesh.computeBoundingBox();
+    else mesh.geometry.computeBoundingBox();
+    const bounds = mesh.isInstancedMesh ? mesh.boundingBox : mesh.geometry.boundingBox;
+    for(const x of [bounds.min.x,bounds.max.x]) for(const y of [bounds.min.y,bounds.max.y]) for(const z of [bounds.min.z,bounds.max.z])
+      landingPoints.push(new T.Vector3(x,y,z).applyMatrix4(mesh.matrixWorld));
+  });
   function fitLanding() {
     const aspect = innerWidth / innerHeight,
       fov = innerWidth < 700 ? 58 : 40;
     const vertical = Math.tan(T.MathUtils.degToRad(fov / 2));
-    const yaw = .35, pitch = 1.05;
+    const yaw = Math.PI * .25, pitch = Math.PI * .27;
     const forward = new T.Vector3().setFromSpherical(new T.Spherical(1, pitch, yaw));
     const right = new T.Vector3().crossVectors(new T.Vector3(0, 1, 0), forward).normalize();
     const up = new T.Vector3().crossVectors(forward, right).normalize();
     let distance = 17;
-    for (const x of [landingBounds.min.x, landingBounds.max.x]) for (const y of [landingBounds.min.y, landingBounds.max.y]) for (const z of [landingBounds.min.z, landingBounds.max.z]) {
-      const v = new T.Vector3(x, y, z).sub(landingCenter), near = v.dot(forward);
+    for (const point of landingPoints) {
+      const v = point.clone().sub(landingCenter), near = v.dot(forward);
       distance = Math.max(distance, near + Math.abs(v.dot(right)) / (vertical * aspect * .85), near + Math.abs(v.dot(up)) / (vertical * .8));
     }
     return {
@@ -465,19 +495,10 @@ try {
     pointer.set((x / innerWidth) * 2 - 1, (-y / innerHeight) * 2 + 1);
     ray.setFromCamera(pointer, camera);
     if (place === "home") {
-      const mapHit = ray.intersectObject(entrance.face, false)[0];
-      if (mapHit?.uv) {
-        const key = entrance.hit(mapHit.uv);
-        if (world.mapHover !== key) {
-          entrance.paint(key);
-          world.mapHover = key;
-        }
-        return key;
-      }
-    }
-    if (world.mapHover) {
-      entrance.paint();
-      world.mapHover = null;
+      const hits = devices.roots.flatMap(root => ray.intersectObject(root, true).map(hit => ({ ...hit, root })));
+      hits.sort((a, b) => a.distance - b.distance);
+      devices.hover(hits[0]?.root);
+      if (hits[0]) return hits[0].root;
     }
     const hits = pickables.flatMap((p) =>
       ray
@@ -532,7 +553,8 @@ try {
     pointers.delete(e.pointerId);
     if (pointers.size) return;
     if (!drag && !pinched && pressed) {
-      if (place === pressed) openCurrent();
+      if (pressed.isObject3D) devices.hit(pressed);
+      else if (place === pressed) openCurrent();
       else go(pressed);
     }
     start = last = pressed = null;
@@ -562,6 +584,10 @@ try {
     game.viewport.width = innerWidth;
     game.viewport.height = innerHeight;
     landingView = fitLanding();
+    if (place === "home" && targetLook) {
+      targetLook.copy(landingView.focus);
+      targetDistance = landingView.distance;
+    }
   }
   window.addEventListener("resize", resize);
   resize();
@@ -573,7 +599,7 @@ try {
   const clock = new T.Timer();
   let lastFrame = 0;
   renderer.setAnimationLoop((time) => {
-    if (reading || document.hidden || time - lastFrame < 33) return;
+    if (reading || navigationMap.dialog.open || document.hidden || time - lastFrame < 33) return;
     try {
       lastFrame = time;
       clock.update();
@@ -582,6 +608,7 @@ try {
       game.ticker.delta = game.ticker.deltaScaled = reduced ? 0 : dt;
       game.ticker.elapsedScaled += game.ticker.deltaScaled;
       game.ticker.elapsedScaledUniform.value = game.ticker.elapsedScaled;
+      devices.update(time / 1000, reduced);
       currentLook.lerp(targetLook, blend);
       currentDistance = T.MathUtils.lerp(
         currentDistance,
@@ -614,7 +641,8 @@ try {
   window.designWorld = {
     world,
     stations,
-    entrance,
+    devices,
+    navigationMap,
     identity,
     placements: fixtures.placements,
     landingView,
