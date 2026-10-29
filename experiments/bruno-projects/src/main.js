@@ -525,6 +525,9 @@ try {
     references: refs,
     state: ProjectsArea.STATE_OPEN,
     blackBoard: { active: false },
+    // Original update() plays this on every strike. Full spatial audio depends
+    // on the game's physics setup; this visual-only adapter remains silent.
+    sounds: { anvil: silent },
   });
   for (const method of [
     "setCinematic",
@@ -764,6 +767,7 @@ try {
       console.error(error);
       $("loading").hidden = true;
       $("fallback").hidden = false;
+      $("fallback-title").textContent = "场景运行暂时中断";
       $("error-message").textContent = "渲染中断：" + error.message;
       document.body.dataset.failed = "true";
     }

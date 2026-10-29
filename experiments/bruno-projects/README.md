@@ -30,3 +30,4 @@
 
 原作品静态服务运行后，在站点根目录执行 `node tests/bruno-preview.cjs`。开发测试依赖 Playwright 和 Chromium，不进入线上运行依赖。
 入口回归执行 `node tests/portfolio-routing.cjs`。
+动画回归执行 `node tests/bruno-animation.cjs`：直接跨越四次铁砧敲击边界，验证静音对象已初始化、渲染继续运行、作品切换和阅读返回正常。覆盖显式 WebGL 和默认自动选择渲染器，避免低帧率测试机尚未到达敲击时刻而漏报。

@@ -27,6 +27,9 @@ const review = path.resolve(
       errors = [],
       bad = [];
     page.on("pageerror", (e) => errors.push(e.message));
+    page.on("console", (message) => {
+      if (message.type() === "error") errors.push(message.text());
+    });
     page.on("response", (r) => {
       if (r.status() >= 400) bad.push(r.url());
     });
@@ -163,6 +166,7 @@ const review = path.resolve(
     await page.locator("#overview").click();
     assert.deepEqual(errors, []);
     assert.deepEqual(bad, []);
+    assert.equal(await page.locator("body").getAttribute("data-failed"), null);
     await page.close();
     const phone = await browser.newPage({
       viewport: { width: 390, height: 844 },
@@ -211,6 +215,10 @@ const review = path.resolve(
       timeout: 60000,
     });
     assert.equal(await failed.locator("#fallback a").count(), 3);
+    assert.equal(
+      await failed.locator("#fallback-title").innerText(),
+      "暂时无法显示 3D 场景",
+    );
     console.log(
       "PASS: original arrow, keyboard, quality, reading pause, 390px touch/pinch, asset failure fallback, no page errors or 404.",
     );
