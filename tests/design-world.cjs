@@ -84,11 +84,36 @@ const review = path.resolve(
       await page.mouse.click(point.x, point.y);
       await page.waitForTimeout(500);
     }
+    async function clickMap(key, target = page) {
+      await target.waitForFunction((key) => {
+        const p = designWorld.entrance.point(key).project(designWorld.world.camera);
+        const x = (p.x + 1) * innerWidth / 2, y = (1 - p.y) * innerHeight / 2;
+        return x > 0 && x < innerWidth && y > 0 && y < innerHeight && designWorld.pick(x, y) === key;
+      }, key, { timeout: 15000 });
+      const point = await target.evaluate((key) => {
+        const p = designWorld.entrance.point(key).project(designWorld.world.camera);
+        const x = (p.x + 1) * innerWidth / 2, y = (1 - p.y) * innerHeight / 2;
+        return { x, y, hit: designWorld.pick(x, y), visible: x > 0 && x < innerWidth && y > 0 && y < innerHeight };
+      }, key);
+      assert.ok(point.visible, "Map destination in viewport: " + key);
+      assert.equal(point.hit, key);
+      if (target === page) await target.mouse.click(point.x, point.y);
+      else await target.touchscreen.tap(point.x, point.y);
+      if (key === "portfolio") {
+        await target.waitForURL("**/bruno-preview/index.html*");
+        return;
+      }
+      await target.waitForTimeout(500);
+      assert.equal(await target.evaluate(() => WORLD_STATE.place), key);
+    }
+    assert.equal(await page.evaluate(() => designWorld.identity.userData.text), "王钰欣 / CECILIA");
+    assert.ok(await page.evaluate(() => designWorld.placements.every(p => p.maxWater <= 5 && p.maxRoad <= 120)));
+    assert.ok(await page.evaluate(() => [...designWorld.stations.values()].every(s => s.label.name.startsWith("wood-sign-"))));
     await shot("home");
     await page.locator("#theme").click();
     await shot("home-night");
     await page.locator("#theme").click();
-    await clickStation("resume");
+    await clickMap("resume");
     assert.equal(await page.evaluate(() => WORLD_STATE.place), "resume");
     await shot("resume-station");
     await clickStation("resume");
@@ -98,9 +123,11 @@ const review = path.resolve(
     assert.equal(await frame.locator("#name").innerText(), "王钰欣");
     assert.equal(await frame.locator("#print").count(), 1);
     assert.equal(await frame.locator("#education .education").count(), 2);
+    assert.doesNotMatch(await frame.locator("body").evaluate(e => getComputedStyle(e).fontFamily), /Xiaolai|Nunito|Scene Sans|Amatic/i);
     await shot("resume-reading");
     await page.locator("#close-reader").click();
-    await page.evaluate(() => openWorldPlace("other"));
+    await page.evaluate(() => openWorldPlace("home"));
+    await clickMap("other");
     await shot("other-station");
     assert.equal(await page.locator("#other-position").innerText(), "1 / 2");
     await clickStation("other");
@@ -114,7 +141,8 @@ const review = path.resolve(
       /Cardinal/,
     );
     await page.locator("#close-reader").click();
-    await page.evaluate(() => openWorldPlace("contact"));
+    await page.evaluate(() => openWorldPlace("home"));
+    await clickMap("contact");
     await shot("contact-station");
     assert.equal(
       await page
@@ -136,6 +164,7 @@ const review = path.resolve(
     );
     await page.locator("#back-home").click();
     assert.equal(await page.evaluate(() => WORLD_STATE.place), "home");
+    await clickMap("portfolio");
     assert.equal(await page.locator("body").getAttribute("data-failed"), null);
     assert.deepEqual(errors, []);
     assert.deepEqual(bad, []);
@@ -234,7 +263,8 @@ const review = path.resolve(
     });
     assert.equal(await phone.locator("#reader").evaluate((e) => e.open), false);
     assert.equal(await phone.evaluate(() => WORLD_STATE.place), "home");
-    await phone.evaluate(() => openWorldPlace("resume"));
+    await phone.evaluate(() => openWorldPlace("home"));
+    await clickMap("resume", phone);
     await phone.getByRole("button", { name: "阅读完整简历 ↗" }).click();
     await phone.frameLocator("iframe").locator("#name").waitFor();
     await phone.locator("#close-reader").click();

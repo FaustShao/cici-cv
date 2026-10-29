@@ -203,7 +203,7 @@ export function createFixtures(world) {
   function contactCorner(original) {
     const root = new T.Group();
     root.name = "roadside-post-corner";
-    // Upright post box, an envelope tray and the original phone prop. The road
+    // Upright post box, an envelope tray and a small phone. The road
     // remains empty: the entire fixture is registered to a dry grass parcel.
     box(root, [0.2, 1.2, 0.2], [-0.65, 0.6, 0], "edge");
     box(root, [0.75, 0.12, 0.7], [-0.65, 0.06, 0], "wood");
@@ -279,7 +279,7 @@ export function createFixtures(world) {
     root.name = "clickable-entrance-map";
     for (const child of [...root.children])
       if (!/^physicalFixed00[39]$/.test(child.name)) child.removeFromParent();
-    parcel(root, 45, 48, 1.1);
+    parcel(root, 45, 48, 1.2);
     const face = root.getObjectByName("physicalFixed003");
     if (!face) throw new Error("入口地图牌面缺失");
     // The native kiosk uses a small square paper insert. Widen that insert

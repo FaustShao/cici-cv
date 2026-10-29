@@ -36,6 +36,12 @@ Apache 2.0. Notices: draco/LICENSE.txt and basis/LICENSE.txt.
 Amatic SC, Xiaolai, Long Cang (archived), Nunito and Noto Sans SC font subsets
 SIL Open Font License 1.1. Full notices in fonts/.
 
+Outer-world neutral lettering: scene-sans.ttf is a static weight-600
+instance of the supplied Noto Sans SC subset; scene-latin.ttf is a
+static weight-800 instance of the supplied Nunito subset. Generated
+with fontTools; glyph outlines are not redrawn. These do not override
+the original fonts inside the resume or portfolio projects.
+
 Active Chinese handwriting: Xiaolai Regular v3.126, lxgw/kose-font.
 https://github.com/lxgw/kose-font/releases/tag/v3.126
 Subset of the author's original font, without redrawing or restyling glyphs.
