@@ -79,6 +79,7 @@ export function createFixtures(world) {
           pz = z + dz;
         if (
           reserved.some(r => {
+            if(options.ignoreReservations?.includes(r.name))return false;
             if(hull&&r.hull)return overlaps(hull.map(p=>[p[0]+px,p[1]+pz]),r.hull);
             if (Math.abs(px-r.x) >= (width+r.width)/2+.4 || Math.abs(pz-r.z) >= (depth+r.depth)/2+.4) return false;
             if (!r.oriented) return true;
@@ -119,7 +120,7 @@ export function createFixtures(world) {
     surface.clearGrass(best.x, best.z, width + 0.6, depth + 0.6);
     root.userData.parcel = best;
     placements.push({ name: root.name, ...best });
-    if (options.reserve !== false) reserved.push({ ...best, oriented:options.oriented,hull:hull?.map(p=>[p[0]+best.x,p[1]+best.z]) });
+    if (options.reserve !== false) reserved.push({ ...best,name:root.name, oriented:options.oriented,hull:hull?.map(p=>[p[0]+best.x,p[1]+best.z]) });
     return root;
   }
   function print(
@@ -156,7 +157,7 @@ export function createFixtures(world) {
       material({ colorNode: texture(tex).rgb, alphaNode:bg?undefined:texture(tex).a, transparent:!bg, hasWater: false }),
     );
   }
-  function sign(text, x, z, width = 3.4) {
+  function sign(text, x, z, width = 3.4,options={}) {
     const root = new T.Group();
     root.name = "wood-sign-" + text;
     for (const px of [-width * 0.32, width * 0.32]) {
@@ -168,7 +169,7 @@ export function createFixtures(world) {
     face.position.set(0, 1.38, 0.1);
     root.add(face);
     root.rotation.y = 0.35;
-    parcel(root, x, z);
+    parcel(root, x, z,1,options);
     return root;
   }
   function books(parent, x, y, z, count = 3, standing = false) {
@@ -243,37 +244,25 @@ export function createFixtures(world) {
       );
       pen.rotation.z = (i - 1) * 0.14;
     }
+    parcel(root, 26, 24,1,{precise:true,hull:true});
     if(previewTexture){
       const stand=new T.Group();stand.name="resume-preview-board";
-      // The native table mesh also includes raised props. Sample the actual
-      // surface beneath both support posts, not its highest bounding-box point.
-      const supportRay=new T.Raycaster();let support,score=Infinity;
-      for(let dz=-1.5;dz<=1.5;dz+=.1)for(let dx=-1.5;dx<=1.5;dx+=.1){
-        const x=-.45+dx,z=-.1+dz,heights=[];
-        for(const offset of [-.58,.58]){
-          const foot=new T.Vector3(offset,0,0).applyAxisAngle(new T.Vector3(0,1,0),.25).add(new T.Vector3(x,deskBox.max.y+1,z));
-          supportRay.set(foot,new T.Vector3(0,-1,0));
-          const hit=supportRay.intersectObject(desk,true)[0];
-          if(hit&&hit.point.y>deskBox.max.y*.5)heights.push(hit.point.y);
-        }
-        if(heights.length===2&&Math.abs(heights[0]-heights[1])<.025&&dx*dx+dz*dz<score){
-          support={x,z,heights};score=dx*dx+dz*dz;
-        }
-      }
-      if(!support)throw new Error("简历预览板未找到两脚均可支撑的桌面");
-      const supportHeights=support.heights,tabletop=Math.max(...supportHeights);
-      stand.position.set(support.x,tabletop,support.z);
-      stand.userData.supportY=tabletop;
-      stand.userData.supportGaps=supportHeights.map(y=>tabletop-y);
       stand.rotation.y=.25;
-      for(const x of [-.58,.58])box(stand,[.10,.85,.12],[x,.425,0],"edge");
-      box(stand,[2.05,2.88,.12],[0,1.75,0],"wood");
+      // Independent planted posts, not a table attachment. The page starts
+      // above the small sign; all foliage is cleared from the board's volume.
+      for(const x of [-.58,.58])box(stand,[.12,.6,.16],[x,.3,0],"edge");
+      box(stand,[2.05,2.88,.12],[0,1.65,0],"wood");
       const page=new T.Mesh(new T.PlaneGeometry(1.87,2.645),material({colorNode:texture(previewTexture).rgb,hasWater:false}));
-      page.name="actual-resume-first-page";page.position.set(0,1.75,.068);stand.add(page);
+      page.name="actual-resume-first-page";page.position.set(0,1.65,.068);stand.add(page);
       stand.userData.document="resume.html?document=1";stand.userData.preview="ui/resume-preview.webp";
-      root.add(stand);
+      parcel(stand,21.5,22.1,1.6,{precise:true,radius:0,hull:true});
+      stand.position.y-=.075;
+      stand.userData.support="planted-ground";
+      stand.userData.insertionDepth=.06;
+      stand.updateWorldMatrix(true,true);
+      stand.userData.parcel.groundedY=new T.Box3().setFromObject(stand,true).min.y;
+      Object.assign(placements.find(p=>p.name===stand.name),{groundedY:stand.userData.parcel.groundedY,planted:true});
     }
-    parcel(root, 26, 24,1,{precise:true});
     return root;
   }
   function contactCorner(original) {
@@ -404,7 +393,7 @@ export function createFixtures(world) {
   function reserveExisting(root) {
     if (!root) return;
     const bounds = new T.Box3().setFromObject(root), center = bounds.getCenter(new T.Vector3()), size = bounds.getSize(new T.Vector3());
-    reserved.push({x:center.x,z:center.z,width:size.x,depth:size.z});
+    reserved.push({name:root.name,x:center.x,z:center.z,width:size.x,depth:size.z});
   }
   function welcomeSign() {
     const native = scene.getObjectByName("fencePhysicalDynamic005");
@@ -419,7 +408,7 @@ export function createFixtures(world) {
       root.add(label);
     }
     root.rotation.set(0,.28,0);
-    parcel(root,48.6,32.3,1.65,{plaza:true,radius:0,precise:true});
+    parcel(root,48,34.56,1.65,{plaza:true,radius:0,precise:true,ignoreReservations:["enlarged-native-map-kiosk"]});
     root.userData.text="Welcome to Cecilia’s world.";
     return root;
   }

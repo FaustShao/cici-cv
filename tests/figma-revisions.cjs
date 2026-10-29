@@ -31,11 +31,11 @@ const {chromium}=require('playwright');
    await page.screenshot({path:'/tmp/figma-final-'+k+'.png'});
    if(k==='resume'){
     assert.ok(await page.evaluate(()=>{
-     const board=designWorld.stations.get('resume').root.getObjectByName('resume-preview-board');
-     return Math.abs(board.position.y-board.userData.supportY)<1e-6&&board.userData.supportGaps.every(g=>g<.025);
-    }),'Preview board rests on the actual tabletop, not on the open book bounds');
+     const board=designWorld.world.scene.getObjectByName('resume-preview-board');
+     return board.parent===designWorld.world.scene&&board.userData.support==='planted-ground';
+    }),'Preview board is independently planted behind the retained sign');
     const point=await page.evaluate(()=>{
-     const mesh=designWorld.stations.get('resume').root.getObjectByName('actual-resume-first-page');
+     const mesh=designWorld.world.scene.getObjectByName('actual-resume-first-page');
      const p=mesh.position.clone().set(0,0,0);mesh.localToWorld(p).project(designWorld.world.camera);
      const x=(p.x+1)*innerWidth/2,y=(1-p.y)*innerHeight/2;
      return{x,y,hit:designWorld.pick(x,y)};
@@ -47,7 +47,7 @@ const {chromium}=require('playwright');
    }
   }
   await page.locator('#reset-view').click();
-  await page.waitForFunction(()=>WORLD_STATE.place==='home'&&designWorld.viewState().yaw===.55);
+  await page.waitForFunction(()=>WORLD_STATE.place==='home'&&designWorld.viewState().yaw===.8231748736701113);
   assert.deepEqual(await page.evaluate(()=>designWorld.viewState()),result.initial);
   assert.deepEqual(errors,[]);console.log('PASS Figma revisions:',JSON.stringify(result));
  }finally{await browser.close();}

@@ -9,7 +9,7 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
     await page.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
     assert.equal(await page.locator("body").getAttribute("data-failed"),null);
     const initial=await page.evaluate(()=>designWorld.viewState());
-    assert.equal(initial.fov,25);assert.equal(initial.yaw,.55);assert.equal(initial.pitch,1.02);
+    assert.equal(initial.fov,25);assert.equal(initial.yaw,.8231748736701113);assert.equal(initial.pitch,1.2176592998276086);
     assert.ok(await page.evaluate(()=>designWorld.world.groundedLights.length>10&&designWorld.world.groundedLights.every(l=>Math.abs(l.gap-.008)<.001&&(l.support==="bridge"||l.water<=5))));
     assert.equal(await page.evaluate(()=>designWorld.crates.children.length),3);
     assert.ok(await page.evaluate(()=>Math.abs(designWorld.crates.userData.stackSupportGap-.005)<.001));

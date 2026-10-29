@@ -99,7 +99,7 @@ const review = path.resolve(
     assert.ok(await page.evaluate(() => designWorld.identity.userData.blockCount > 500));
     assert.ok(await page.evaluate(() => designWorld.identity.getObjectByName("voxel-name-blocks").isInstancedMesh));
     assert.ok(await page.evaluate(() => designWorld.placements.every(p => p.maxWater <= 5 && (p.plaza || p.maxRoad <= 120))));
-    assert.ok(await page.evaluate(() => designWorld.placements.every(p => Math.abs(p.groundedY-p.height-.015)<.001)), "Fixtures' actual geometry bottoms sit on the checked ground");
+    assert.ok(await page.evaluate(() => designWorld.placements.every(p => Math.abs(p.groundedY-p.height-(p.planted?-.06:.015))<.001)), "Fixtures sit on the ground; planted sign posts extend into the soil");
     assert.ok(await page.evaluate(() => [...designWorld.stations.values()].every(s => s.label.name.startsWith("wood-sign-"))));
     await shot("home");
     assert.equal(await page.evaluate(() => designWorld.devices.roots.length), 3);

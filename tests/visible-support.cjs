@@ -4,7 +4,7 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
 (async()=>{
   const browser=await chromium.launch({executablePath:"/usr/bin/chromium",args:["--no-sandbox","--use-angle=swiftshader","--enable-unsafe-swiftshader"]});
   try{
-    const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:"reduce"}),errors=[],bad=[];
+    const page=await browser.newPage({viewport:{width:1662,height:882},reducedMotion:"reduce"}),errors=[],bad=[];
     page.on("pageerror",e=>errors.push(e.message));page.on("response",r=>{if(r.status()>=400)bad.push(r.url());});
     await page.goto(new URL("bruno-preview/hub.html?webgl=1",root).href);
     await page.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
@@ -19,7 +19,7 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
         scale:w.kioskRoot.scale.x,bodyScale:w.devices.roots[0].scale.x,handParent:w.pixelHand.parent.name,handMeshes:w.pixelHand.children.map(m=>m.isInstancedMesh),textureType:texture?.image?.tagName,textureURL:texture?.image?.src,
         imageElements:document.querySelectorAll("canvas").length};
     });
-    assert.equal(result.scale,2);assert.equal(result.bodyScale,.62);
+    assert.equal(result.scale,2.022352518678825);assert.equal(result.bodyScale,.62);
     assert.equal(result.handParent,"physicalFixed009");assert.deepEqual(result.handMeshes,[true,true]);
     assert.equal(result.textureType,"IMG");assert.ok(result.textureURL.endsWith("/ui/cecilia-map.png"),"Board uses the original unannotated map, not the old text/hand canvas");
     assert.equal(result.contacts.length,2);

@@ -2,6 +2,7 @@ import { T, createWorld } from "./create-world.js";
 import { texture, uniform } from "three/tsl";
 import { createFixtures } from "./scene-fixtures.js";
 import { createWorldMap } from "./world-map.js";
+import { referenceViews } from "./scene-views.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 import "../../../resume.js";
 
@@ -302,8 +303,13 @@ try {
   }
   const original = game.resources.areasModel.scene;
   const fixtures = createFixtures(world);
+  function referencePose(key){
+    const view=referenceViews[key],direction=new T.Vector3().setFromSpherical(new T.Spherical(1,view.pitch,view.yaw));
+    return {...view,focus:new T.Vector3(...view.position).addScaledVector(direction,-view.distance)};
+  }
   identity = fixtures.nameModel();
-  fixtures.reserveExisting(scene.getObjectByName("benchPhysicalDynamic001"));
+  const entranceBench=scene.getObjectByName("benchPhysicalDynamic001");
+  fixtures.parcel(entranceBench,40.6,37.15,1.6,{plaza:true,radius:0,precise:true,hull:true});
   const crates = fixtures.nativeCrates();
   let effectTime=0, mapFlashAt=-100;
   const mapBrightness=uniform(1);
@@ -317,7 +323,7 @@ try {
   const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp"));
   resumeTexture.colorSpace=T.SRGBColorSpace;
   const resumeCorner = fixtures.resumeCorner(original,resumeTexture);
-  const resumePreview=resumeCorner.getObjectByName("resume-preview-board");
+  const resumePreview=scene.getObjectByName("resume-preview-board");
   const project = original.getObjectByName("projects").clone(true);
   for (const child of [...project.children])
     if (
@@ -377,7 +383,7 @@ try {
     const child=landing.getObjectByName(name); if(child)kioskRoot.attach(child);
   }
   fixtures.levelKiosk(kioskRoot,kioskRoot.getObjectByName("physicalFixed009"),kioskFace);
-  fixtures.parcel(kioskRoot,42,31.5,2,{plaza:true,radius:1,precise:true,supportName:"physicalFixed009"});
+  fixtures.parcel(kioskRoot,42.89033170249464,33.57996186497684,2.022352518678825,{plaza:true,radius:0,precise:true,supportName:"physicalFixed009",ignoreReservations:["benchPhysicalDynamic001"]});
   const welcome = fixtures.welcomeSign();
   const pixelHand=fixtures.pixelPointer(mapBrightness);
   if(kioskFace){
@@ -401,8 +407,10 @@ try {
     const size = box.getSize(new T.Vector3());
     const label = fixtures.sign(
       title,
-      focus.x - size.x * 0.5 - 1.2,
-      focus.z + 1.2,
+      key==="resume"?22.35:key==="contact"?55:focus.x - size.x * 0.5 - 1.2,
+      key==="resume"?25.9:key==="contact"?46.5:focus.z + 1.2,
+      key==="resume"?2.5:3.4,
+      key==="resume"||key==="contact"?{plaza:true,radius:0,precise:true,hull:true}:{},
     );
     const focusWithLabel = focus.clone();
     focusWithLabel.y += 1;
@@ -415,9 +423,7 @@ try {
   station("contact", social, "联系方式", 12);
   Object.assign(stations.get("resume"),{focus:new T.Vector3(25.4,1.8,24.3),distance:15,yaw:.5,pitch:.99});
   Object.assign(stations.get("other"),{distance:16,yaw:.55,pitch:1.18});
-  Object.assign(stations.get("contact"),{distance:12.5,yaw:.35,pitch:1.1,fov:34});
-  // Include the freestanding wood sign, rather than centering only the mailbox.
-  stations.get("contact").focus.add(new T.Vector3(-1.3,-.6,0));
+  Object.assign(stations.get("contact"),referencePose("contact"));
   const landingBounds = new T.Box3().setFromObject(identity);
   for (const root of devices.roots) landingBounds.union(new T.Box3().setFromObject(root));
   // Match the upstream landing's focus behind the letters, adapted to our
@@ -433,10 +439,12 @@ try {
       landingPoints.push(new T.Vector3(x,y,z).applyMatrix4(mesh.matrixWorld));
   });
   function fitLanding() {
+    const calibrated=referencePose("home");
+    if(innerWidth>=1000)return calibrated;
     const aspect = innerWidth / innerHeight,
       fov = innerWidth < 700 ? 40 : 25;
     const vertical = Math.tan(T.MathUtils.degToRad(fov / 2));
-    const yaw = .55, pitch = 1.02;
+    const {yaw,pitch}=calibrated;
     const forward = new T.Vector3().setFromSpherical(new T.Spherical(1, pitch, yaw));
     const right = new T.Vector3().crossVectors(new T.Vector3(0, 1, 0), forward).normalize();
     const up = new T.Vector3().crossVectors(forward, right).normalize();
@@ -446,7 +454,7 @@ try {
       distance = Math.max(distance, near + Math.abs(v.dot(right)) / (vertical * aspect * .85), near + Math.abs(v.dot(up)) / (vertical * .8));
     }
     return {
-      focus: landingCenter.clone(),
+      focus: calibrated.focus.clone(),
       distance,
       yaw,
       pitch,
@@ -719,6 +727,30 @@ try {
     openCurrent,
     selectOther,
     pick,
+    geometryContacts(a,b){
+      const collect=root=>{const list=[];root.traverse(m=>{if(m.isMesh&&!m.isInstancedMesh)list.push(m);});return list;};
+      const first=collect(a),second=collect(b),probe=new T.Raycaster(),contacts=[];
+      function edges(source,target){
+        const box=new T.Box3().setFromObject(target,true),p=source.geometry.attributes.position,index=source.geometry.index;
+        const count=index?index.count:p.count;
+        for(let i=0;i<count;i+=3){
+          const points=[0,1,2].map(j=>new T.Vector3().fromBufferAttribute(p,index?index.getX(i+j):i+j).applyMatrix4(source.matrixWorld));
+          if(!new T.Box3().setFromPoints(points).intersectsBox(box))continue;
+          for(let j=0;j<3;j++){
+            const from=points[j],delta=points[(j+1)%3].clone().sub(from),length=delta.length();
+            if(length<.002)continue;
+            probe.set(from,delta.normalize());probe.near=.001;probe.far=length-.001;
+            const hit=probe.intersectObject(target,false)[0];
+            if(hit){contacts.push({a:source.name,b:target.name,point:hit.point.toArray()});return;}
+          }
+        }
+      }
+      for(const x of first)for(const y of second){
+        if(!new T.Box3().setFromObject(x,true).intersectsBox(new T.Box3().setFromObject(y,true)))continue;
+        edges(x,y);edges(y,x);
+      }
+      return contacts;
+    },
   };
 } catch (error) {
   fail(error);
