@@ -23,7 +23,7 @@ const root = process.env.PREVIEW_ROOT || "http://127.0.0.1:8000/";
       page.on("console", (message) => {
         if (message.type() === "error") errors.push(message.text());
       });
-      await page.goto(new URL("bruno-preview/" + search, root).href);
+      await page.goto(new URL("cecilia-world/" + search, root).href);
       await page.waitForFunction(
         () => document.body.dataset.ready || document.body.dataset.failed,
         null,

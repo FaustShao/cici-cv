@@ -5,7 +5,7 @@ const {chromium}=require('playwright');
  try{
   const page=await browser.newPage({viewport:{width:1600,height:850},reducedMotion:'reduce'}),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('http://127.0.0.1:8000/bruno-preview/hub.html?webgl=1');
+  await page.goto('http://127.0.0.1:8000/cecilia-world/hub.html?webgl=1');
   await page.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
   assert.equal(await page.locator('body').getAttribute('data-failed'),null);
   const result=await page.evaluate(()=>{

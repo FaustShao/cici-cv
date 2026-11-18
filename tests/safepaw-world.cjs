@@ -5,7 +5,7 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
  try{
   const p=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'}),errors=[],bad=[];
   p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.status()>=400)bad.push(r.url())});
-  await p.goto(new URL('bruno-preview/index.html?webgl=1',root).href);
+  await p.goto(new URL('cecilia-world/index.html?webgl=1',root).href);
   await p.waitForFunction(()=>window.preview||document.body.dataset.failed,null,{timeout:90000});
   assert.equal(await p.locator('body').getAttribute('data-failed'),null);
   await p.waitForFunction(()=>document.body.dataset.ready,null,{timeout:90000});

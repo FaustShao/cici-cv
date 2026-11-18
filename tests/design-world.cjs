@@ -31,7 +31,7 @@ const review = path.resolve(
       if (r.status() >= 400) bad.push(r.url());
     });
     await page.goto(new URL("index.html?webgl=1", root).href);
-    await page.waitForURL("**/bruno-preview/hub.html?webgl=1");
+    await page.waitForURL("**/cecilia-world/hub.html?webgl=1");
     await page.waitForFunction(
       () => document.body.dataset.ready || document.body.dataset.failed,
       null,
@@ -89,7 +89,7 @@ const review = path.resolve(
       assert.ok(await target.locator("#world-map").evaluate(e => e.open));
       await target.locator(`[data-destination="${key}"]`).click();
       if (key === "portfolio") {
-        await target.waitForURL("**/bruno-preview/index.html*");
+        await target.waitForURL("**/cecilia-world/index.html*");
         return;
       }
       await target.waitForTimeout(500);
@@ -228,7 +228,7 @@ const review = path.resolve(
       reducedMotion: "no-preference",
     });
     await live.goto(
-      new URL("bruno-preview/hub.html?webgl=1#resume", root).href,
+      new URL("cecilia-world/hub.html?webgl=1#resume", root).href,
     );
     await live.waitForFunction(
       () => document.body.dataset.ready || document.body.dataset.failed,
@@ -263,7 +263,7 @@ const review = path.resolve(
       hasTouch: true,
       reducedMotion: "reduce",
     });
-    await phone.goto(new URL("bruno-preview/hub.html?webgl=1", root).href);
+    await phone.goto(new URL("cecilia-world/hub.html?webgl=1", root).href);
     await phone.waitForFunction(
       () => document.body.dataset.ready || document.body.dataset.failed,
       null,

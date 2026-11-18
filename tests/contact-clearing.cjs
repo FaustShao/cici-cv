@@ -4,7 +4,7 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
  try{
   const p=await browser.newPage({viewport:{width:1662,height:882},reducedMotion:'reduce'}),errors=[];
   p.on('pageerror',e=>errors.push(e.message));
-  await p.goto(new URL('bruno-preview/hub.html?webgl=1',process.env.PREVIEW_ROOT||'http://127.0.0.1:8000/').href);
+  await p.goto(new URL('cecilia-world/hub.html?webgl=1',process.env.PREVIEW_ROOT||'http://127.0.0.1:8000/').href);
   await p.waitForFunction(()=>window.designWorld||document.body.dataset.failed,null,{timeout:90000});
   assert.equal(await p.locator('body').getAttribute('data-failed'),null,await p.locator('#error-message').textContent());
   const initial=await p.evaluate(()=>designWorld.viewState());

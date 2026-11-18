@@ -17,7 +17,7 @@ const marks={
  try{
   const page=await browser.newPage({viewport:{width:1662,height:882},reducedMotion:'reduce'}),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(new URL('bruno-preview/hub.html?webgl=1',process.env.PREVIEW_ROOT||'http://127.0.0.1:8000/').href);
+  await page.goto(new URL('cecilia-world/hub.html?webgl=1',process.env.PREVIEW_ROOT||'http://127.0.0.1:8000/').href);
   await page.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
   assert.equal(await page.locator('body').getAttribute('data-failed'),null,await page.locator('#error-message').textContent());
   const initial=await page.evaluate(()=>designWorld.viewState());

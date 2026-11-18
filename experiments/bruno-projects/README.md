@@ -6,7 +6,7 @@
 
 在站点根目录启动原作品静态服务 `python -m http.server 8000`。
 在本目录执行 `npm ci`、`npm run dev`，打开 `http://127.0.0.1:5174/`。
-生产构建 `npm run build` 输出至站点根目录的 `bruno-preview/`（已忽略生成文件）；可通过 `http://127.0.0.1:8000/bruno-preview/` 检查真实相对路径。
+生产构建 `npm run build` 输出至站点根目录的 `cecilia-world/`（已忽略生成文件）；可通过 `http://127.0.0.1:8000/cecilia-world/` 检查真实相对路径。
 
 ## 来源与改动
 
@@ -20,7 +20,7 @@
 - 项目预览为现有页面的浏览器截图，仅替换原展示屏内容；点击实际图片打开同站点原页面，返回保留场景与作品选择。
 - 支持拖动观察、滚轮／触屏双指缩放、原模型箭头／外部按钮／方向键切换和键盘阅读入口；日间画面固定，无夜间或画质按钮。
 - 阅读器打开或页面隐藏时不渲染 3D；减少动态效果设置下关闭环境动画。
-- 首页入口 `/bruno-preview/hub.html`，主站 index.html 为兼容入口；作品集保持 `/bruno-preview/`，portfolio.html 为兼容跳转。hub 的 hash 路由为 resume / other / contact；简历正文与打印在 `resume.html?document=1`，原作品页面和素材不修改。
+- 首页入口 `/cecilia-world/hub.html`，主站 index.html 为兼容入口；作品集保持 `/cecilia-world/`，portfolio.html 为兼容跳转。hub 的 hash 路由为 resume / other / contact；简历正文与打印在 `resume.html?document=1`，原作品页面和素材不修改。
 
 ## 资产重建
 

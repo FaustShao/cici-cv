@@ -6,7 +6,7 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
   try{
     const page=await browser.newPage({viewport:{width:1662,height:882},reducedMotion:"reduce"}),errors=[],bad=[];
     page.on("pageerror",e=>errors.push(e.message));page.on("response",r=>{if(r.status()>=400)bad.push(r.url());});
-    await page.goto(new URL("bruno-preview/hub.html?webgl=1",root).href);
+    await page.goto(new URL("cecilia-world/hub.html?webgl=1",root).href);
     await page.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
     assert.equal(await page.locator("body").getAttribute("data-failed"),null);
     const result=await page.evaluate(()=>{

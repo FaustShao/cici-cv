@@ -2,11 +2,11 @@
 
 ## 当前统一入口
 
-`index.html` 进入 `/bruno-preview/hub.html`：全屏可拖动的开放场景，四类入口为个人简历、作品集、其他项目、联系方式；没有驾驶系统或重复顶部分类栏。中文使用小赖字体，模型、色板、光照及后期来自已确认的 Bruno 官方 MIT 工程。来源、版权和固定提交见 `experiments/bruno-projects/ASSET_SOURCE.md`，完整许可证随资源发布。
+`index.html` 进入 `/cecilia-world/hub.html`：全屏可拖动的开放场景，四类入口为个人简历、作品集、其他项目、联系方式；没有驾驶系统或重复顶部分类栏。中文使用小赖字体，模型、色板、光照及后期来自已确认的 Bruno 官方 MIT 工程。来源、版权和固定提交见 `experiments/bruno-projects/ASSET_SOURCE.md`，完整许可证随资源发布。
 
 - `hub.html` / `src/hub.js`：姓名、阅读桌、实验室与联络模型及分类交互；简历入口优先，点击模型可以完整阅读。
 - `src/create-world.js`：复用原视觉模块和模型，开放地面、固定日间、植被、光影与触屏；保留初始辉光和景深，不启动物理、车辆或后台，不再提供夜间/画质切换。
-- `/bruno-preview/`：保留已确认的作品展架，四件作品同级直接阅读。原项目内部画面和素材不重新设计。
+- `/cecilia-world/`：保留已确认的作品展架，四件作品同级直接阅读。原项目内部画面和素材不重新设计。
 - `resume.html?document=1`、`resume-document.css`、`resume-document.js`：保留用户两页 PDF 原稿的简历阅读与打印页；`resume.html`、`works.html` 和旧书签跳至对应三维入口。旧 `world-resume.css` 仍供历史其他项目页使用，不修改。
 - QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。真实截图在 `experiments/bruno-projects/public/review/`。
 - 联系方式整组位于入口右侧的原键盘空地，信箱字面与呼吸圆环可直接写邮件；平面地图同步新落点，姓名入口可回到原始镜头。红屋顶地图牌缩小 15% 并按实际双脚落地，欢迎牌保留原比例和位置，两行小赖文字限制在木板内。姓名使用 56 像素采样方块，提高笔画间隙；风场与原生叶簇摆动共用日间渲染，补充粉色植被。`tests/contact-clearing.cjs` 校验迁移、模型碰撞、字面边界、风动和地图返回。
@@ -26,7 +26,7 @@
 - 桌面使用 `assets/island/` 中的立体指针、悬停手势和抓取光标，无跟随延迟。触屏设备不显示自定义光标，原作品阅读区保留正常光标。键盘导航仅聚焦时出现，不持续遮挡场景。WebGL 不可用时提供可点击的简洁界面和相同阅读入口。
 - Fredoka、中文 Noto Sans SC 子集及立体字轮廓位于 `assets/fonts/`，OFL 许可证同目录保留。可用 `scripts/build-island-fonts.py` 从官方原字体重建，需开发依赖 `fonttools[woff]` 与 Brotli；线上不需要 Python 或外部字体服务。
 - 三个作品的原有页面与素材保持独立；点击模型按需加载，同次访问返回展架后保留阅读位置。外层阅读导航统一小岛字体，原项目画面不重新配色。读者可用「独立打开」访问原页面。
-- 作品集分类已替换为获确认的原版模型展示区，入口 `/bruno-preview/`；首页作品集建筑、文字导航、旧 `index.html#portfolio` 和 `portfolio.html` 书签均可进入。此阶段不重做首页与其他分类。展示区中文使用小赖字体 Xiaolai，项目英文标题、学校和地点保留；模型来源和完整许可证保留在该目录。开发源码与说明见 `experiments/bruno-projects/`。
+- 作品集分类已替换为获确认的原版模型展示区，入口 `/cecilia-world/`；首页作品集建筑、文字导航、旧 `index.html#portfolio` 和 `portfolio.html` 书签均可进入。此阶段不重做首页与其他分类。展示区中文使用小赖字体 Xiaolai，项目英文标题、学校和地点保留；模型来源和完整许可证保留在该目录。开发源码与说明见 `experiments/bruno-projects/`。
 - 部署工作流需复制全部 `island-*` 脚本及 `island.css`，并保留本地 Three.js 及许可证。
 
 无需构建的静态个人网站。简历支持响应式布局、深浅色切换和浏览器打印 PDF；小岛使用随站点打包的 Three.js，不依赖在线 CDN。简历内容依据用户提供的 PDF 整理，包含个人联系方式与照片。
@@ -152,3 +152,5 @@ Gazette 将导航/下载收进紧凑工具栏，按可用窗口等比例放大�
 封面及封底表面带书脊压痕、圆角及倒角高光。按住书页中间高度（28%–72%）拖动时，交互适配层将拖拽映射到竖直折线；其他位置保留自由卷角。适配固定的 StPageFlip 2.0.7 的指针入口，不修改库文件。
 
 阅读页面使用响应式 WebP：1067px 宽的高清整套约7.4MB，640px 宽的整套约2.8MB（原 JPEG 约12.1MB）。浏览器按纸张显示宽度及设备像素比选择资源；封面预加载、当前页高优先级，远处页面延迟加载，相邻页提前准备。原始约21.4MB PDF 保持不变，只在用户点击下载时请求。更换原稿后需同时重新生成 WebP 和小尺寸 WebP。
+
+站点公开路径统一为 `cecilia-world/`；`legacy-world/` 部署到旧 `bruno-preview/` 地址，仅用于保留旧书签的参数与分类位置并跳转。

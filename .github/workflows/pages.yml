@@ -37,7 +37,8 @@ jobs:
           cp world-resume.css public/
           cp resume-document.css resume-document.js resume-layers.js public/
           cp safepaw.html safepaw.css safepaw.js safepaw-layers.js public/
-          cp -R bruno-preview public/bruno-preview
+          cp -R cecilia-world public/cecilia-world
+          cp -R legacy-world public/bruno-preview
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

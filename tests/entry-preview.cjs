@@ -12,7 +12,7 @@ const review = path.resolve(__dirname,"../experiments/bruno-projects/public/revi
     const errors=[],bad=[];
     page.on("pageerror",e=>errors.push(e.message));
     page.on("response",r=>{if(r.status()>=400)bad.push(r.url());});
-    await page.goto(new URL("bruno-preview/hub.html",root).href);
+    await page.goto(new URL("cecilia-world/hub.html",root).href);
     await page.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
     assert.equal(await page.locator("body").getAttribute("data-failed"),null);
     assert.equal(await page.evaluate(()=>WORLD_STATE.place),"home");

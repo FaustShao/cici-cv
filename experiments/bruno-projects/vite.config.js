@@ -3,7 +3,7 @@ export default defineConfig({
   base: "./",
   build: {
     target: "esnext",
-    outDir: "../../bruno-preview",
+    outDir: "../../cecilia-world",
     emptyOutDir: true,
     rollupOptions: { input: { portfolio: "index.html", hub: "hub.html" } },
   },

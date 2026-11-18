@@ -35,7 +35,7 @@ const review = path.resolve(
     });
     // The original portfolio URL now leads to the accepted exhibition.
     await page.goto(new URL("portfolio.html?webgl=1", root).href);
-    await page.waitForURL("**/bruno-preview/?webgl=1");
+    await page.waitForURL("**/cecilia-world/?webgl=1");
     await page.waitForFunction(
       () => document.body.dataset.ready || document.body.dataset.failed,
       null,
@@ -165,7 +165,7 @@ const review = path.resolve(
       isMobile: true,
       hasTouch: true,
     });
-    await phone.goto(new URL("bruno-preview/?webgl=1", root).href);
+    await phone.goto(new URL("cecilia-world/?webgl=1", root).href);
     await phone.waitForFunction(() => document.body.dataset.ready, null, {
       timeout: 60000,
     });
@@ -202,7 +202,7 @@ const review = path.resolve(
     await phone.close();
     const failed = await browser.newPage();
     await failed.route("**/bruno/areas/areas.glb", (r) => r.abort());
-    await failed.goto(new URL("bruno-preview/?webgl=1", root).href);
+    await failed.goto(new URL("cecilia-world/?webgl=1", root).href);
     await failed.waitForFunction(() => document.body.dataset.failed, null, {
       timeout: 60000,
     });

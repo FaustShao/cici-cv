@@ -105,7 +105,7 @@ function openReader(title, file) {
             const name = url.pathname.split("/").pop();
             if (
               name === "index.html" &&
-              !url.pathname.endsWith("bruno-preview/index.html")
+              !url.pathname.endsWith("cecilia-world/index.html")
             ) {
               event.preventDefault();
               closeReader();

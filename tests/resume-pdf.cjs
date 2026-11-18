@@ -61,7 +61,7 @@ const {chromium}=require('playwright'),sharp=require('sharp');
   assert.ok((await page.locator('.resume-page').first().boundingBox()).width>mobile.width);
   await page.locator('#zoom-reset').click();assert.equal(await page.locator('#zoom-reset').textContent(),'100%');
   await page.screenshot({path:'/tmp/resume-matched-mobile.png',fullPage:true});
-  await page.goto('http://127.0.0.1:8000/resume.html');await page.waitForURL('**/bruno-preview/hub.html#resume');
+  await page.goto('http://127.0.0.1:8000/resume.html');await page.waitForURL('**/cecilia-world/hub.html#resume');
   assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
   console.log('PASS all 57 original PNG slices used once at measured positions, two-page original layout, original PDF, photo/section hover, contact links, mobile zoom, reduced motion, two-page A4 printing and route.');
  }finally{await browser.close();}
