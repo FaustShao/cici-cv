@@ -1,3 +1,4 @@
+import "../../../site-loader.js";
 import { getClickSound } from "./click-sound.js";
 import { addWorldAtmosphere } from "./world-atmosphere.js";
 import * as T from "three/webgpu";
@@ -35,6 +36,7 @@ import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
 const clickSound = getClickSound();
 clickSound.bind(document);
+const loadingScreen = window.CeciliaLoader.create(document.getElementById("loading"));
 const $ = (id) => document.getElementById(id),
   reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 gsap.ticker.lagSmoothing(0);
@@ -288,7 +290,7 @@ try {
   let loaded = 0,
     total = Object.keys(textures).length + Object.keys(models).length;
   const progress = () => {
-    $("loading").textContent = `正在布置作品展架 ${++loaded} / ${total}`;
+    loadingScreen.setPercent(++loaded / total * 90);
   };
   await Promise.all([
     ...Object.entries(textures).map(async ([key, path]) => {
@@ -799,14 +801,14 @@ try {
       if (!ready) {
         ready = true;
         document.body.dataset.ready = "true";
-        $("loading").hidden = true;
+        loadingScreen.finish();
       }
       // The upstream arrows update their internal index; sync accessible controls.
       if (selected !== area.navigation.index) syncSelection();
     } catch (error) {
       renderer.setAnimationLoop(null);
       console.error(error);
-      $("loading").hidden = true;
+      loadingScreen.cancel();
       $("fallback").hidden = false;
       $("fallback-title").textContent = "场景运行暂时中断";
       $("error-message").textContent = "渲染中断：" + error.message;
@@ -816,7 +818,7 @@ try {
   window.preview = { game, area, select, readWork, renderer };
 } catch (error) {
   console.error(error);
-  $("loading").hidden = true;
+  loadingScreen.cancel();
   $("fallback").hidden = false;
   $("error-message").textContent = "3D 预览未能启动：" + error.message;
   document.body.dataset.failed = "true";

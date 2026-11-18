@@ -109,19 +109,7 @@ header > div {
   display: flex;
   gap: 9px;
 }
-#loading {
-  position: fixed;
-  left: 50%;
-  top: 46%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  padding: 22px;
-  background: #432c49b0;
-  border: 1px solid #ffceca60;
-  border-radius: 10px;
-  font-size: 13px;
-  max-width: 90vw;
-}
+
 #controls {
   position: fixed;
   bottom: 65px;

@@ -1,3 +1,4 @@
+import "../../../site-loader.js";
 import { getClickSound } from "./click-sound.js";
 import { T, createWorld } from "./create-world.js";
 import { texture, uniform } from "three/tsl";
@@ -9,6 +10,7 @@ import "../../../resume.js";
 
 const clickSound = getClickSound();
 clickSound.bind(document);
+const loadingScreen = window.CeciliaLoader.create(document.getElementById("loading"));
 const $ = (id) => document.getElementById(id),
   profile = window.RESUME;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -276,7 +278,7 @@ try {
   await document.fonts.load('400 24px "World Xiaolai"', "王钰欣的个人网站邮箱想去哪里个人简历作品集其他项目联系方式地图Cecilia");
   await document.fonts.load('700 36px "Amatic SC"', "Welcome to Cecilia’s world.");
   world = await createWorld($("world"), (n, total) => {
-    $("loading").textContent = `正在布置设计世界 ${n} / ${total}`;
+    loadingScreen.setPercent(n / total * 90);
   });
   const {
     game,
@@ -704,7 +706,7 @@ try {
       pipeline.render();
       world.renderCount=(world.renderCount||0)+1;
       document.body.dataset.ready = "true";
-      $("loading").hidden = true;
+      loadingScreen.finish();
       if(entryFlashPending){
         entryFlashPending=false;
         if(place==="home"){
@@ -769,7 +771,7 @@ try {
 }
 function fail(error) {
   console.error(error);
-  $("loading").hidden = true;
+  loadingScreen.cancel();
   $("fallback").hidden = false;
   $("error-message").textContent = "场景暂时无法继续显示：" + error.message;
   document.body.dataset.failed = "true";
