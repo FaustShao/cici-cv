@@ -342,6 +342,8 @@ export class ProjectsArea extends Area
         this.images.animationProgress = uniform(0)
         this.images.animationDirection = uniform(0)
         this.images.glassStrength = uniform(1)
+        this.images.glassIOR = uniform(1.62)
+        this.images.glassThickness = uniform(0.018)
 
         // Mesh
         this.images.mesh = this.references.items.get('images')[0]
@@ -366,6 +368,19 @@ export class ProjectsArea extends Area
                 const uvOld = uv().toVar()
                 const uvNew = uv().toVar()
 
+                // Optical depth is concentrated in the bevel; the reading area
+                // stays sharp instead of receiving a full-screen milky overlay.
+                const viewDirection = cameraPosition.sub(positionWorld).normalize()
+                const edgeXY = uv().min(uv().oneMinus())
+                const edgeDistance = edgeXY.x.min(edgeXY.y)
+                const bevel = smoothstep(0.003, 0.035, edgeDistance).oneMinus()
+                const opticalDepth = this.images.glassThickness.mul(this.images.glassIOR.sub(1))
+                    .mul(this.images.glassStrength)
+                const refractionOffset = uv().sub(0.5).mul(bevel).mul(opticalDepth)
+                    .add(viewDirection.xy.mul(bevel).mul(opticalDepth).mul(0.15))
+                uvOld.addAssign(refractionOffset)
+                uvNew.addAssign(refractionOffset)
+
                 // Parallax (add an offset according to progress)
                 uvNew.x.addAssign(this.images.animationProgress.oneMinus().mul(-0.25).mul(this.images.animationDirection))
                 uvOld.x.addAssign(this.images.animationProgress.mul(0.25).mul(this.images.animationDirection))
@@ -386,15 +401,24 @@ export class ProjectsArea extends Area
                 const threshold = step(this.images.animationProgress, reveal)
 
                 const textureColor = mix(textureNewColor, textureOldColor, threshold)
-                // A restrained, view-dependent sheen on the display glass.
-                const viewDirection = cameraPosition.sub(positionWorld).normalize()
+                // Clear glass: narrow highlights and a double bevel, without
+                // washing out the cover's blacks or reducing its saturation.
                 const reflectionUV = uv().x.add(uv().y.mul(0.55)).add(viewDirection.x.mul(0.2))
-                const reflectionBand = smoothstep(0.45, 0.58, reflectionUV)
-                    .sub(smoothstep(0.72, 0.95, reflectionUV)).max(0)
-                const fresnel = normalWorld.dot(viewDirection).abs().oneMinus().pow(3)
-                const reflection = reflectionBand.mul(0.09).add(fresnel.mul(0.08)).add(0.012)
-                    .mul(this.images.glassStrength).clamp(0, 0.18)
-                return mix(textureColor, color('#e5f3ff'), reflection)
+                const reflectionBand = smoothstep(0.50, 0.525, reflectionUV)
+                    .sub(smoothstep(0.56, 0.61, reflectionUV)).max(0)
+                const fresnelBase = this.images.glassIOR.sub(1).div(this.images.glassIOR.add(1)).pow(2)
+                const fresnel = normalWorld.dot(viewDirection).abs().oneMinus().pow(5)
+                    .mul(fresnelBase.oneMinus()).add(fresnelBase)
+                const outerRim = smoothstep(0.001, 0.005, edgeDistance).oneMinus()
+                const innerRim = smoothstep(0.010, 0.014, edgeDistance)
+                    .sub(smoothstep(0.016, 0.023, edgeDistance)).max(0)
+                const bevelShadow = smoothstep(0.004, 0.010, edgeDistance)
+                    .sub(smoothstep(0.014, 0.020, edgeDistance)).max(0)
+                const highlight = reflectionBand.mul(0.035).add(outerRim.mul(0.40))
+                    .add(innerRim.mul(0.10)).add(bevel.mul(fresnel).mul(0.18))
+                    .mul(this.images.glassStrength)
+                return textureColor.mul(bevelShadow.mul(this.images.glassStrength).mul(-0.08).add(1))
+                    .add(color('#e5f5ff').mul(highlight))
 
             })()
             
@@ -412,7 +436,7 @@ export class ProjectsArea extends Area
                     mix(
                         baseOutput.rgb,
                         colorNode,
-                        this.shadeMix.images.mixUniform
+                        this.shadeMix.images.mixUniform.max(0.92)
                     ),
                     baseOutput.a
                 )
