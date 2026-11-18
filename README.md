@@ -7,7 +7,7 @@
 - `hub.html` / `src/hub.js`：姓名、阅读桌、实验室与联络模型及分类交互；简历入口优先，点击模型可以完整阅读。
 - `src/create-world.js`：复用原视觉模块和模型，开放地面、昼夜、植被、光影、触屏与性能选项；不启动物理、车辆或后台。
 - `/bruno-preview/`：保留已确认的作品展架，三件作品同级直接阅读。原项目内部画面和素材不重新设计。
-- `resume.html?document=1`、`world-resume.css`：同风格的简历阅读与打印页，资料来自 `resume.js`；`resume.html`、`works.html` 和旧书签跳至对应三维入口。
+- `resume.html?document=1`、`resume-document.css`、`resume-document.js`：保留用户两页 PDF 原稿的简历阅读与打印页；`resume.html`、`works.html` 和旧书签跳至对应三维入口。旧 `world-resume.css` 仍供历史其他项目页使用，不修改。
 - QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。真实截图在 `experiments/bruno-projects/public/review/`。
 
 ## 历史小岛实现（已不作为入口）
@@ -102,6 +102,14 @@ mkdir -p public && cp index.html resume.html works.html tideline.html tideline.c
 检查 HTTPS、页面及三个静态资源返回成功；确认无示例信息、联系方式正确、手机无横向溢出、PDF 无内容截断。后续修改 `resume.js` 并推送即可自动更新。需要回退时，通过新的 Git 提交还原到上一版，再触发部署。
 
 ## 照片与动效
+
+### 2026-11-18 简历原稿一致性
+
+以用户上传的 `A4 - 1-combined (1).pdf` 为简历视觉权威来源。该文件为两张1588×2248的扫描/图片页，没有嵌入字体或文字层，因此不推测字体名称、不用系统字体重新排版。`assets/resume/page-1.webp` 与 `page-2.webp` 为原PDF按原始像素尺寸渲染后的无损WebP；`wang-yuxin-resume.pdf` 保留用户原文件字节。照片从第一页同一位置无损拆出，静态时覆盖原位置，悬停轻微上浮；内容区只添加可退回的淡金色悬停提示，原排版不动。电话、邮件可点击，微信可复制。保留辅助文字摘要，但完整正文依旧是图片，未声称可搜索或可编辑。
+
+阅读器可缩放，手机可横向浏览放大后的页面；深色场景不会改色纸页。打印关闭交互层和工具条，保留两页A4；下载按钮直接提供原版PDF。场景中的简历缩略图同步更新并携带缓存版本，场景模型及镜头不改。`resume.js` 仍为其他网站模块的数据来源，本次不改。
+
+`node tests/resume-pdf.cjs` 直接渲染原PDF并逐像素比较网页两页（原始尺寸下差异为0），另测照片/内容悬停、联系方式、缩放、减少动态效果、原文件下载和两页打印。`node tests/resume-world.cjs` 检查三维入口打开新简历并返回原场景。
 
 `assets/portrait.jpg` 为用户上传的首页原图。桌面鼠标悬停时照片卡片轻微上浮、转正，照片微微放大。系统开启“减少动态效果”时关闭此动效，打印时恢复静态。
 

@@ -1,121 +1,70 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <script>
-      if (
-        window.top === window &&
-        !new URLSearchParams(location.search).has("document")
-      )
-        location.replace("bruno-preview/hub.html#resume");
-    </script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="个人简历与作品集" />
-    <meta name="color-scheme" content="light dark" />
-    <title>个人简历</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script src="resume.js?v=sentinel-1" defer></script>
-    <link rel="stylesheet" href="site.css?v=portfolio-collection-1" />
-    <script src="site.js?v=design-world-1" defer></script>
-    <script src="app.js" defer></script>
-    <link rel="stylesheet" href="world-resume.css?v=original-type-2" />
-  </head>
-  <body>
-    <header class="topbar">
-      <a class="wordmark" href="index.html">YUXIN WANG<span> / 王钰欣</span></a>
-      <nav aria-label="主导航">
-        <a href="index.html">首页</a><a href="resume.html">简历</a
-        ><a href="portfolio.html">作品集</a><a href="works.html">其它作品</a
-        ><button id="theme" type="button" aria-label="切换主题">切换主题</button
-        ><button id="print" class="print-button" type="button">
-          导出 PDF ↗
-        </button>
-      </nav>
-    </header>
-    <main>
-      <section class="hero" aria-labelledby="name">
-        <div>
-          <p class="eyebrow">个人简历</p>
-          <h1 id="name"></h1>
-          <p id="role" class="role"></p>
-          <p id="summary" class="summary"></p>
-          <div id="contacts" class="contacts"></div>
-          <div id="personal" class="personal"></div>
-        </div>
-        <aside class="profile-card">
-          <div class="portrait">
-            <img id="portrait-photo" alt="" width="222" height="294" /><span
-              id="initial"
-              hidden
-            ></span>
-          </div>
-          <div class="card-bottom">
-            <span id="english-name"></span><span id="location"></span>
-          </div>
-          <p class="availability">
-            <span></span><span id="availability"></span>
-          </p>
-        </aside>
-      </section>
-      <section class="intro-strip">
-        <span>关于我</span>
-        <p id="about"></p>
-      </section>
-      <div class="resume-grid">
-        <div class="main-column">
-          <section id="experience" class="section">
-            <div class="section-heading">
-              <h2>实习经历</h2>
-              <span>01</span>
-            </div>
-            <div id="experience-list"></div>
-          </section>
-          <section id="projects" class="section">
-            <div class="section-heading">
-              <h2>精选项目</h2>
-              <span>02</span>
-            </div>
-            <div id="project-list" class="projects"></div>
-          </section>
-          <section class="section">
-            <div class="section-heading">
-              <h2>竞赛奖项</h2>
-              <span>05</span>
-            </div>
-            <div id="awards"></div>
-          </section>
-        </div>
-        <aside class="side-column">
-          <section class="section">
-            <div class="section-heading">
-              <h2>专业技能</h2>
-              <span>03</span>
-            </div>
-            <div id="skills"></div>
-          </section>
-          <section class="section">
-            <div class="section-heading">
-              <h2>教育背景</h2>
-              <span>04</span>
-            </div>
-            <div id="education"></div>
-          </section>
-          <section class="note">
-            <span>保持联系</span>
-            <h2>期待下一次，<br />一起创造好作品。</h2>
-            <a id="contact-link">联系我 ↗</a>
-          </section>
-        </aside>
+<head>
+  <meta charset="UTF-8" />
+  <script>if(window.top===window&&!new URLSearchParams(location.search).has('document'))location.replace('bruno-preview/hub.html#resume');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="王钰欣的两页个人简历，保留原稿排版与字形。" />
+  <meta name="color-scheme" content="light" />
+  <title>王钰欣 · 个人简历</title>
+  <link rel="stylesheet" href="resume-document.css?v=pdf-layout-1" />
+  <script src="resume-document.js?v=pdf-layout-1" defer></script>
+</head>
+<body>
+  <header class="resume-toolbar" aria-label="简历阅读工具">
+    <a class="back-world" href="bruno-preview/hub.html#resume">← 返回简历场景</a>
+    <span class="document-title">王钰欣 · 个人简历 <small>2 页</small></span>
+    <div class="toolbar-actions">
+      <div class="zoom-controls" aria-label="页面缩放">
+        <button id="zoom-out" type="button" aria-label="缩小简历">−</button>
+        <button id="zoom-reset" type="button" aria-label="恢复适合窗口的大小">100%</button>
+        <button id="zoom-in" type="button" aria-label="放大简历">＋</button>
       </div>
-      <footer>
-        <span id="footer-name"></span
-        ><span
-          >用心设计，持续成长。<span class="screen-only">
-            / 可打印为 PDF</span
-          ></span
-        >
-      </footer>
-    </main>
-    <noscript>请启用 JavaScript 以查看简历内容。</noscript>
-  </body>
+      <a class="download-pdf" href="assets/resume/wang-yuxin-resume.pdf" download="王钰欣-个人简历.pdf">下载原版 PDF ↗</a>
+      <button id="print" type="button">打印</button>
+    </div>
+  </header>
+  <main class="page-scroll" aria-label="两页个人简历">
+    <div class="resume-pages">
+      <article class="resume-page" aria-labelledby="name">
+        <img class="page-art" src="assets/resume/page-1.webp" width="1588" height="2248" alt="简历第1页：基本信息、教育背景、专业技能、实习经历，以及Findhorn海藻茶循环交互系统项目。保留所提供PDF的原始排版。" fetchpriority="high" />
+        <div class="portrait-slot page-layer" style="--x:1278;--y:90;--w:224;--h:296">
+          <div class="profile-card" tabindex="0" aria-label="王钰欣的证件照">
+            <img id="portrait-photo" src="assets/resume/portrait.webp" width="224" height="296" alt="王钰欣的照片" />
+          </div>
+        </div>
+        <a class="contact-hotspot page-layer" style="--x:88;--y:333;--w:244;--h:50" href="tel:15066290491" aria-label="拨打电话 15066290491"></a>
+        <a class="contact-hotspot page-layer" style="--x:375;--y:333;--w:405;--h:50" href="mailto:wangyuxinqd2025@163.com" aria-label="发送邮件至 wangyuxinqd2025@163.com"></a>
+        <button class="contact-hotspot page-layer" id="copy-wechat" type="button" style="--x:814;--y:333;--w:250;--h:50" aria-label="复制微信号 Cecilia_cici68"></button>
+        <div class="hover-zone page-layer" style="--x:88;--y:414;--w:1413;--h:383" aria-hidden="true"></div>
+        <div class="hover-zone page-layer" style="--x:88;--y:816;--w:1413;--h:298" aria-hidden="true"></div>
+        <div class="hover-zone page-layer" style="--x:88;--y:1130;--w:1413;--h:480" aria-hidden="true"></div>
+        <div class="hover-zone page-layer" style="--x:88;--y:1632;--w:1413;--h:465" aria-hidden="true"></div>
+        <div class="page-description">
+          <h1 id="name">王钰欣</h1><p>政治面貌：共产党员。出生年月：2003年6月。所在地：上海。</p>
+          <p>电话15066290491，邮箱wangyuxinqd2025@163.com，微信Cecilia_cici68。</p>
+          <h2>01 教育背景</h2><p>格拉斯哥大学（University of Glasgow），QS 79，硕士，2025.9～2026.11。格拉斯哥艺术学院（Glasgow School of Art），设计创新与交互设计（MDes Design Innovation and Interaction Design）。青岛大学，工业设计本科，机电工程学院，2021.09～2025.06。</p>
+          <h2>02 专业技能</h2><p>UI与视觉设计；建模与产品表现；AI辅助设计；设计研究与方法。普通话二级甲等，PTE 71分，英语六级。</p>
+          <h2>03 实习经历</h2><p>三维视觉与体验，亚速尔（上海）广告传媒有限公司，2023.06–2023.09。</p>
+          <h2>04 项目经历</h2><p>Findhorn海藻茶循环交互系统设计，用户研究与服务创新，2025.10～2026.01。格拉斯哥艺术学院与苏格兰Findhorn社区合作项目，项目负责人。</p>
+          <p>该原稿为图片型PDF，详细内容保留在页面图像中。可下载原版PDF或使用设备的图像文字识别功能阅读完整文字。</p>
+        </div>
+      </article>
+      <article class="resume-page" aria-label="个人简历，第2页">
+        <img class="page-art" src="assets/resume/page-2.webp" width="1588" height="2248" alt="简历第2页：Forres Future Gazette 2050、TASA-ICoD国际设计工作坊、Cardinal独立游戏项目、竞赛奖项及自我评价。保留所提供PDF的原始排版。" />
+        <div class="hover-zone page-layer" style="--x:88;--y:89;--w:1413;--h:400" aria-hidden="true"></div>
+        <div class="hover-zone page-layer" style="--x:88;--y:535;--w:1413;--h:343" aria-hidden="true"></div>
+        <div class="hover-zone page-layer" style="--x:88;--y:922;--w:1413;--h:232" aria-hidden="true"></div>
+        <div class="hover-zone page-layer" style="--x:88;--y:1192;--w:1413;--h:486" aria-hidden="true"></div>
+        <div class="hover-zone page-layer" style="--x:88;--y:1720;--w:1413;--h:242" aria-hidden="true"></div>
+        <div class="page-description">
+          <h2>项目经历（续）</h2><p>Forres Future Gazette 2050，AI辅助地方文化与数字体验设计，2026.05～2026.08。TASA-ICoD国际设计工作坊，未来概念探索设计合作，2024.08–2024.09。Cardinal独立游戏设计项目，游戏UI设计，2026.03。</p>
+          <h2>05 竞赛奖项</h2><p>全国大学生创新创业训练计划，省级立项共2项，项目负责人，2023.10～2024.5。国际大学生旅游文创设计大赛，银奖共2项，2022.11。中国大学生计算机设计大赛，二等奖，2022.7。全国大学生工业设计大赛，三等奖，2024.9。</p>
+          <h2>06 自我评价</h2><p>具备工业设计与交互设计复合专业背景，拥有扎实的设计研究、用户需求分析及视觉表达能力。具备完整项目实践经验、跨文化沟通及团队协作能力，拥有商业设计实习经验。</p>
+        </div>
+      </article>
+    </div>
+  </main>
+  <p id="resume-feedback" role="status" aria-live="polite"></p>
+</body>
 </html>

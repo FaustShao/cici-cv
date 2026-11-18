@@ -42,7 +42,7 @@ const {chromium}=require('playwright');
     });
     assert.equal(point.hit,'resume-preview');await page.mouse.click(point.x,point.y);
     assert.equal(await page.locator('#reader').evaluate(e=>e.open),true);
-    assert.ok((await page.locator('#frames iframe').getAttribute('src')).endsWith('resume.html?document=1'));
+    assert.equal(new URL(await page.locator('#frames iframe').getAttribute('src')).searchParams.get('document'),'1');
     await page.locator('#close-reader').click();
    }
   }

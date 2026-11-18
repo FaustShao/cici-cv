@@ -163,7 +163,7 @@ reader.addEventListener("cancel", (e) => {
   closeReader();
 });
 function openCurrent() {
-  if (place === "resume") openReader("个人简历", "resume.html?document=1");
+  if (place === "resume") openReader("个人简历", "resume.html?document=1&v=pdf-layout-1");
   if (place === "other") openReader(notes[otherIndex].name);
   if (place === "contact") location.href = "mailto:wangyuxinqd2025@163.com";
 }
@@ -192,7 +192,7 @@ function go(next, historyMode = "push") {
   $("place-actions").hidden = place === "home";
   if (place === "resume") {
     action("阅读完整简历 ↗", openCurrent);
-    link("独立阅读／打印 ↗", new URL("resume.html?document=1", contentRoot));
+    link("独立阅读／打印 ↗", new URL("resume.html?document=1&v=pdf-layout-1", contentRoot));
   }
   if (place === "other") {
     action("←", () => selectOther(otherIndex - 1)).setAttribute(
@@ -320,7 +320,7 @@ try {
   });
   clean(career);
   scene.add(career);
-  const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp"));
+  const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp?v=pdf-layout-1"));
   resumeTexture.colorSpace=T.SRGBColorSpace;
   const resumeCorner = fixtures.resumeCorner(original,resumeTexture);
   const resumePreview=scene.getObjectByName("resume-preview-board");
