@@ -104,6 +104,7 @@
     reader.dataset.entering='true';
     reader.querySelector('.book-pose').addEventListener('animationend',()=>{delete reader.dataset.entering;},{once:true});
   }
+  reduced.addEventListener('change',()=>{if(reduced.matches)delete reader.dataset.entering;});
   function syncFullscreen(){
     const active=!!document.fullscreenElement||stage.classList.contains('is-expanded');
     fullscreen.setAttribute('aria-pressed',String(active));fullscreen.textContent=active?'退出全屏 ⛶':'全屏阅读 ⛶';

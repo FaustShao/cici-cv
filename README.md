@@ -5,7 +5,7 @@
 `index.html` 进入 `/bruno-preview/hub.html`：全屏可拖动的开放场景，四类入口为个人简历、作品集、其他项目、联系方式；没有驾驶系统或重复顶部分类栏。中文使用小赖字体，模型、色板、光照及后期来自已确认的 Bruno 官方 MIT 工程。来源、版权和固定提交见 `experiments/bruno-projects/ASSET_SOURCE.md`，完整许可证随资源发布。
 
 - `hub.html` / `src/hub.js`：姓名、阅读桌、实验室与联络模型及分类交互；简历入口优先，点击模型可以完整阅读。
-- `src/create-world.js`：复用原视觉模块和模型，开放地面、昼夜、植被、光影、触屏与性能选项；不启动物理、车辆或后台。
+- `src/create-world.js`：复用原视觉模块和模型，开放地面、固定日间、植被、光影与触屏；保留初始辉光和景深，不启动物理、车辆或后台，不再提供夜间/画质切换。
 - `/bruno-preview/`：保留已确认的作品展架，三件作品同级直接阅读。原项目内部画面和素材不重新设计。
 - `resume.html?document=1`、`resume-document.css`、`resume-document.js`：保留用户两页 PDF 原稿的简历阅读与打印页；`resume.html`、`works.html` 和旧书签跳至对应三维入口。旧 `world-resume.css` 仍供历史其他项目页使用，不修改。
 - QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。真实截图在 `experiments/bruno-projects/public/review/`。
