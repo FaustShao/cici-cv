@@ -254,7 +254,7 @@ export function createFixtures(world) {
       box(stand,[2.05,2.88,.12],[0,1.65,0],"wood");
       const page=new T.Mesh(new T.PlaneGeometry(1.87,2.645),material({colorNode:texture(previewTexture).rgb,hasWater:false}));
       page.name="actual-resume-first-page";page.position.set(0,1.65,.068);stand.add(page);
-      stand.userData.document="resume.html?document=1&v=pdf-layout-1";stand.userData.preview="ui/resume-preview.webp?v=pdf-layout-1";
+      stand.userData.document="resume.html?document=1&v=cv-slices-2";stand.userData.preview="ui/resume-preview.webp?v=cv-slices-2";
       parcel(stand,21.5,22.1,1.6,{precise:true,radius:0,hull:true});
       stand.position.y-=.075;
       stand.userData.support="planted-ground";
@@ -329,35 +329,41 @@ export function createFixtures(world) {
       A: ["01110","11011","11011","11111","11011","11011","11011"],
       "/": ["0001","0001","0010","0010","0100","1000","1000"],
     };
-    offset += 3;
+    const chineseCount=pixels.length;
+    const caption=[];
+    let captionOffset=0;
     for (const char of "/ CECILIA") {
-      if (char === " ") { offset += 7; continue; }
+      if (char === " ") { captionOffset += 2; continue; }
       const glyph = alphabet[char];
       glyph.forEach((row, y) => [...row].forEach((on, x) => {
-        if (on === "1") for (let dx = 0; dx < 3; dx++) for (let dy = 0; dy < 3; dy++)
-          pixels.push([offset + x * 3 + dx, (6 - y) * 3 + dy + 2]);
+        if (on === "1")caption.push([captionOffset+x,6-y]);
       }));
-      offset += glyph[0].length * 3 + 4;
+      captionOffset += glyph[0].length+1;
     }
-    const block = new T.BoxGeometry(cell * .96, cell * .96, .27);
     // Actual individual cubes: pale front (+Z), purple sides and backs.
     const frontPower = uniform(1);
     const front = material({colorNode:color(colors.cream).mul(frontPower),hasWater:false});
     const sides = [materials.purple, materials.purple, materials.purple, materials.purple, front, materials.purple];
-    const mesh = new T.InstancedMesh(block, sides, pixels.length);
-    mesh.name = "voxel-name-blocks";
-    mesh.castShadow = mesh.receiveShadow = true;
-    const matrix = new T.Matrix4();
-    pixels.forEach(([x, y], i) => mesh.setMatrixAt(i, matrix.makeTranslation((x - offset / 2) * cell, (y + .5) * cell, 0)));
-    mesh.instanceMatrix.needsUpdate = true;
-    root.add(mesh);
+    const chineseCell=cell*1.1,captionCell=.045;
+    const minX=Math.min(...pixels.map(p=>p[0]))*chineseCell-chineseCell/2;
+    const chineseRight=Math.max(...pixels.map(p=>p[0]))*chineseCell+chineseCell/2;
+    const captionStart=chineseRight+.24,captionRight=captionStart+(captionOffset-1)*captionCell;
+    const centerX=(minX+captionRight)/2,minY=Math.min(...pixels.map(p=>p[1]));
+    function blocks(points,size,name,xOffset=0,yOffset=0){
+      const mesh=new T.InstancedMesh(new T.BoxGeometry(size*.96,size*.96,name==='voxel-name-caption'?.15:.27),sides,points.length),matrix=new T.Matrix4();
+      mesh.name=name;mesh.castShadow=mesh.receiveShadow=true;
+      points.forEach(([x,y],i)=>mesh.setMatrixAt(i,matrix.makeTranslation(x*size+xOffset-centerX,(y+yOffset+.5)*size,0)));
+      mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();root.add(mesh);return mesh;
+    }
+    blocks(pixels,chineseCell,"voxel-name-blocks",0,-minY);
+    blocks(caption,captionCell,"voxel-name-caption",captionStart);
     root.rotation.y = Math.PI / 7.2;
-    mesh.computeBoundingBox();
-    const bounds=mesh.boundingBox;
+    const localWidth=captionRight-minX;
     parcel(root, 43, 42.5, 1, { plaza: true, radius: 1, prepared: true,
-      oriented:{angle:root.rotation.y,width:bounds.max.x-bounds.min.x,depth:.27} });
+      precise:true,oriented:{angle:root.rotation.y,width:localWidth,depth:.27} });
     root.userData.text = "王钰欣 / CECILIA";
-    root.userData.blockCount = pixels.length;
+    root.userData.blockCount = chineseCount+caption.length;
+    root.userData.captionRatio=captionCell*7/((Math.max(...pixels.map(p=>p[1]))-minY+1)*chineseCell);
     root.userData.lightOn = false;
     root.toggleLight = () => {
       root.userData.lightOn = !root.userData.lightOn;

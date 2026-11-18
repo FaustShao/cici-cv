@@ -33,6 +33,20 @@ main{height:100svh;padding:16px 20px;display:flex;flex-direction:column;align-it
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 /* Rounded fore-edge, bevel highlights and a pressed hinge in each rigid cover. */
+.portfolio-page.gazette-page main{height:100svh;padding:0;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#f6f3ec,#eae7e0 70%)}
+.reader-toolbar{flex-shrink:0;width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;border-bottom:1px solid #cdd0c5;font-size:12px}
+.reader-toolbar .collection-return{padding:0;align-self:auto}.reader-toolbar>div{display:flex;align-items:center;gap:16px}.reader-toolbar button{font:inherit;color:inherit;cursor:pointer;border:1px solid #b8bdaf;border-radius:5px;background:#fff9;padding:6px 12px}
+.reader-toolbar button:hover{background:#fff}.gazette-page .reader{overflow:visible;padding:6px;perspective:1400px;min-height:0}
+.book-pose{position:relative;transform-style:preserve-3d;will-change:auto}
+.book-shell{transition:translate .45s ease}
+.book-shell[data-single=false][data-cover=true]{translate:calc(var(--page-width)*-.5) 0}
+.book-shell[data-single=false][data-back-cover=true]{translate:calc(var(--page-width)*.5) 0}
+.reader[data-entering=true] .book-pose{animation:gazette-arrive 1.15s cubic-bezier(.2,.7,.2,1) both;pointer-events:none;will-change:transform}
+@keyframes gazette-arrive{from{transform:translate3d(0,28px,-160px) rotateX(17deg) rotateY(-28deg) rotateZ(-4deg);opacity:.25}to{transform:none;opacity:1}}
+.gazette-page main:fullscreen,.gazette-page main.is-expanded{width:100vw;height:100dvh;max-width:none}
+.gazette-page main.is-expanded{position:fixed;inset:0;z-index:1000}
+@media(max-width:700px){.reader-toolbar{font-size:11px;padding:8px 10px}.reader-toolbar>span{display:none}.reader-toolbar>div{gap:12px}}
+@media(prefers-reduced-motion:reduce){.reader[data-entering=true] .book-pose{animation:none!important;transform:none!important}.book-shell{transition:none!important}}
 .paper[data-pdf-page="1"]{border-radius:2px 9px 9px 2px}
 .paper[data-pdf-page="31"]{border-radius:9px 2px 2px 9px}
 .paper[data-pdf-page="1"] .paper-surface,.paper[data-pdf-page="31"] .paper-surface{border-radius:inherit;overflow:hidden}

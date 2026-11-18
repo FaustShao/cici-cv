@@ -56,7 +56,7 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
     await page.locator("#reset-view").click();await frame();
     assert.equal(await page.evaluate(()=>WORLD_STATE.place),"home");assert.deepEqual(await page.evaluate(()=>designWorld.viewState()),initial);
     await shot("entry-reset");
-    await page.locator("#theme").click();await shot("home-night");
+    assert.equal(await page.locator("#theme").count(),0);assert.equal(await page.locator("#quality").count(),0);
     assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
     console.log("PASS: rear device composition, native three crates, grounded lamps, 25-degree landing, middle pan/left rotation, name toggle, one-shot map flash, reset equals initial landing from home and resume, no errors/404.");
   }finally{await browser.close();}

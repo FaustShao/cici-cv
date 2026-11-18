@@ -10,19 +10,9 @@
   document.querySelectorAll('.topbar nav a').forEach(a => {
     if (a.getAttribute('href') === (page === 'gazette.html' ? 'portfolio.html' : page)) a.setAttribute('aria-current', 'page');
   });
-  const button = document.getElementById('theme');
-  function applyTheme(theme) {
-    document.documentElement.dataset.theme = theme;
-    if (button) { button.setAttribute('aria-pressed', String(theme === 'dark')); button.textContent = theme === 'dark' ? '浅色模式' : '深色模式'; }
-  }
-  let saved;
-  try { saved = localStorage.getItem('resume-theme'); } catch {}
-  applyTheme(['light', 'dark'].includes(saved) ? saved : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  button?.addEventListener('click', () => {
-    const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    applyTheme(theme);
-    try { localStorage.setItem('resume-theme', theme); } catch {}
-  });
+  document.documentElement.dataset.theme='light';
+  document.getElementById('theme')?.remove();
+  try { localStorage.setItem('resume-theme','light'); } catch {}
   const data = window.RESUME;
   if (!data) return;
   document.querySelectorAll('[data-profile]').forEach(node => { node.textContent = data[node.dataset.profile] || ''; });

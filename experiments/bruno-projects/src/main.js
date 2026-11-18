@@ -41,7 +41,6 @@ const contentRoot = import.meta.env.DEV
 $("back-site").href = new URL("hub.html", location.href);
 let selected = 0,
   reading = false,
-  low = false,
   area,
   renderer,
   pipeline,
@@ -68,7 +67,7 @@ function readWork() {
       try {
         const style = frame.contentDocument.createElement("style");
         style.textContent =
-          "header.topbar,.portfolio-bar,.collection-return{display:none!important}";
+          "header.topbar,.collection-return{display:none!important}";
         frame.contentDocument.head.append(style);
         frame.contentDocument.addEventListener("click", (event) => {
           const link = event.target.closest("a");
@@ -329,13 +328,9 @@ try {
     game.dayCycles.progress = night ? 0.45 : 0.12;
     game.dayCycles.intervalEvents.get("night").inInterval = night;
     game.dayCycles.events.trigger("night", [night]);
-    $("theme").textContent = night ? "日间" : "夜间";
-    $("theme").setAttribute("aria-pressed", String(night));
-    try { localStorage.setItem("resume-theme", night ? "dark" : "light"); } catch {}
   }
-  let rememberedNight = false;
-  try { rememberedNight = localStorage.getItem("resume-theme") === "dark"; } catch {}
-  applyPreset(rememberedNight);
+  applyPreset(false);
+  try { localStorage.setItem("resume-theme", "light"); } catch {}
   // Same high-quality default-view ground bounds as upstream View.setOptimalArea:
   // max radius 30 * (1 - (-0.4)), phi .31PI, theta .25PI, vertical FOV 25.
   // Use the original 16:9 calibration consistently in this single-scene study.
@@ -581,19 +576,6 @@ try {
   const dofPass = cheapDOF(renderOutput(renderPass));
   pipeline = new T.RenderPipeline(renderer);
   pipeline.outputNode = dofPass.add(bloomPass);
-  $("theme").onclick = () =>
-    applyPreset($("theme").getAttribute("aria-pressed") !== "true");
-  $("quality").onclick = () => {
-    low = !low;
-    pipeline.outputNode = low
-      ? renderColor.add(bloomPass)
-      : dofPass.add(bloomPass);
-    pipeline.needsUpdate = true;
-    renderer.setPixelRatio(low ? 1 : Math.min(devicePixelRatio, 1.5));
-    game.lighting.light.shadow.mapSize.set(low ? 512 : 2048, low ? 512 : 2048);
-    $("quality").textContent = low ? "低画质" : "高画质";
-    $("quality").setAttribute("aria-pressed", String(low));
-  };
   let yaw = 0,
     pitch = 0,
     zoom = 1,

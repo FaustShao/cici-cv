@@ -2,7 +2,7 @@ export default [
   {
     title: "Tideline Seaweed Tea",
     titleSmall: ["Tideline", "Seaweed Tea"],
-    url: "tideline.html",
+    url: "tideline.html?v=navigation-2",
     attributes: {
       role: ["设计研究", "服务设计"],
       at: "GSA / Findhorn",
@@ -14,7 +14,7 @@ export default [
   {
     title: "Forres Future Gazette 2050",
     titleSmall: ["Future Gazette", "2050"],
-    url: "gazette.html",
+    url: "gazette.html?v=large-reader-10",
     attributes: {
       role: ["设计研究", "体验设计"],
       at: "GSA / Rural Lab",

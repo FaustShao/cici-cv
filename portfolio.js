@@ -5,14 +5,15 @@
   const shell = document.querySelector('.book-shell');
   const status = document.getElementById('reader-message');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const stage=document.getElementById('gazette-reader'),fullscreen=document.getElementById('fullscreen-book');
   let flip;
   let lastSize = '';
   const leafToPdf = index => Math.min(index, count - 1);
   const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.webp`);
   function build() {
     const single = matchMedia('(max-width: 700px)').matches;
-    const availableHeight = Math.max(150, reader.clientHeight - 36);
-    const pageWidth = Math.floor(Math.min(550, (reader.clientWidth - 24) / (single ? 1 : 2), availableHeight * 2 / 3));
+    const availableHeight = Math.max(150, reader.clientHeight - 16);
+    const pageWidth = Math.floor(Math.min((reader.clientWidth - 16) / (single ? 1 : 2), availableHeight * 2 / 3));
     const key = `${single}:${pageWidth}`;
     if (key === lastSize) return;
     const realPage = flip ? Math.max(0, leafToPdf(flip.getCurrentPageIndex())) : 0;
@@ -20,6 +21,7 @@
     lastSize = key;
     shell.style.width = `${pageWidth * (single ? 1 : 2)}px`;
     shell.style.height = `${pageWidth * 1.5}px`;
+    shell.style.setProperty('--page-width',pageWidth+'px');
     shell.dataset.single = String(single);
     const root = document.createElement('div'); root.id = 'book'; root.className = 'book';
     shell.prepend(root);
@@ -98,10 +100,27 @@
   }
   book.remove();
   build();
+  if(!reduced.matches){
+    reader.dataset.entering='true';
+    reader.querySelector('.book-pose').addEventListener('animationend',()=>{delete reader.dataset.entering;},{once:true});
+  }
+  function syncFullscreen(){
+    const active=!!document.fullscreenElement||stage.classList.contains('is-expanded');
+    fullscreen.setAttribute('aria-pressed',String(active));fullscreen.textContent=active?'退出全屏 ⛶':'全屏阅读 ⛶';
+    requestAnimationFrame(build);
+  }
+  fullscreen.addEventListener('click',async()=>{
+    if(document.fullscreenElement){await document.exitFullscreen();return;}
+    if(stage.classList.contains('is-expanded')){stage.classList.remove('is-expanded');syncFullscreen();return;}
+    try{if(!stage.requestFullscreen)throw Error('Fullscreen unavailable');await stage.requestFullscreen();}
+    catch{stage.classList.add('is-expanded');syncFullscreen();}
+  });
+  document.addEventListener('fullscreenchange',syncFullscreen);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&stage.classList.contains('is-expanded')){stage.classList.remove('is-expanded');syncFullscreen();}});
   let resizeTimer;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(build, 200); });
   document.addEventListener('keydown', event => {
-    if (event.target.closest('a') || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.target.closest('a,input,textarea,select') || event.altKey || event.ctrlKey || event.metaKey) return;
     const index = flip.getCurrentPageIndex();
     if (!['ArrowRight','ArrowLeft','Home','End'].includes(event.key)) return;
     event.preventDefault();

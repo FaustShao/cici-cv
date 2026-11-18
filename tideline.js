@@ -3,6 +3,18 @@
   const viewer = document.querySelector('#image-viewer');
   const names = {home:'HOME',research:'RESEARCH',diary:'DESIGN DIARY',teas:'TEAS',merch:'MERCH',service:'SERVICE SYSTEM',packaging:'Packaging',material:'Material',about:'About Us'};
   const available = new Set(['home','research','teas','material','packaging','merch','diary','service']);
+  // Only traverse entries created during this project visit. An external entry
+  // must never send the visitor to an unrelated previous website.
+  const visit=crypto.randomUUID(),back=document.getElementById('project-back');
+  let step=0;
+  history.replaceState({...history.state,tidelineVisit:visit,tidelineStep:0},'');
+  back.addEventListener('click',()=>{
+    if(step>0){history.back();return;}
+    if((location.hash.slice(1)||'home')!=='home'){
+      history.replaceState({...history.state,tidelineVisit:visit,tidelineStep:0},'','#home');
+      render();window.scrollTo({top:0,behavior:'instant'});
+    }else document.querySelector('.portfolio-bar a[href="portfolio.html"]').click();
+  });
   const image = (folder, file, alt) => {
     const img = document.createElement('img');
     img.src = `assets/tideline/${folder}/${encodeURIComponent(file)}.png`;
@@ -175,12 +187,14 @@
       layer(folder,'Line 6',47,1410,1633,3,'');layer(folder,'Line 7',38,1926,1633,3,'');
       const featureSource=image(folder,'Group 19','').src;
       for(const [i,key] of ['packaging','material','about'].entries()){
-        const a=document.createElement('a');a.className='feature-link';a.href=`#${key}`;a.setAttribute('aria-label',names[key]);a.style.left=`${38+i*558}px`;a.style.width='517px';
+        const a=document.createElement(key==='about'?'div':'a');a.className=`feature-link${key==='about'?' feature-static':''}`;if(key!=='about')a.href=`#${key}`;a.setAttribute('aria-label',names[key]);a.style.left=`${38+i*558}px`;a.style.width='517px';
         const art=document.createElement('span');art.className='feature-art';art.setAttribute('aria-hidden','true');
         art.style.backgroundImage=`url("${featureSource}")`;art.style.backgroundPosition=`-${i*558}px 0`;
         a.append(art);canvas.append(a);
       }
-      layer(folder,'Group 22',0,2868,1728,494,'Tideline Tea revives seaweed as a traditional coastal food. Newsletter sign-up shown in the design is not active.');
+      layer(folder,'Group 22',0,2868,1728,494,'Tideline Tea revives seaweed as a traditional coastal food. Join by email.');
+      const join=document.createElement('a');join.className='layer join-link';join.href='mailto:wangyuxinqd2025@163.com';join.setAttribute('aria-label','JOIN — send an email');join.textContent='JOIN';
+      join.style.cssText='left:1537px;top:3243px;width:122px;height:75px';canvas.append(join);
     } else if(current==='service') {
       layer(folder,'Service Process',680,281,362.5,45.5,'Service Process');
       const processImage=layer(folder,'未标题-1_画板 1 1',253,393,1222,1728,'Tideline service process and circular service system');
@@ -295,6 +309,11 @@
     observer=new ResizeObserver(resize);observer.observe(shell);resize();
   }
   viewer.querySelector('button').addEventListener('click',()=>viewer.close());
-  window.addEventListener('hashchange',()=>{render();window.scrollTo({top:0,behavior:'instant'});});
+  window.addEventListener('hashchange',()=>{
+    const state=history.state;
+    if(state?.tidelineVisit===visit&&Number.isInteger(state.tidelineStep))step=state.tidelineStep;
+    else{step++;history.replaceState({...state,tidelineVisit:visit,tidelineStep:step},'');}
+    render();window.scrollTo({top:0,behavior:'instant'});
+  });
   render();
 })();

@@ -22,7 +22,6 @@ let world,
   place = "home",
   reading = false,
   otherIndex = 0,
-  low = false,
   drag = false;
 let targetLook,
   currentLook,
@@ -163,7 +162,7 @@ reader.addEventListener("cancel", (e) => {
   closeReader();
 });
 function openCurrent() {
-  if (place === "resume") openReader("个人简历", "resume.html?document=1&v=pdf-layout-1");
+  if (place === "resume") openReader("个人简历", "resume.html?document=1&v=cv-slices-2");
   if (place === "other") openReader(notes[otherIndex].name);
   if (place === "contact") location.href = "mailto:wangyuxinqd2025@163.com";
 }
@@ -192,7 +191,7 @@ function go(next, historyMode = "push") {
   $("place-actions").hidden = place === "home";
   if (place === "resume") {
     action("阅读完整简历 ↗", openCurrent);
-    link("独立阅读／打印 ↗", new URL("resume.html?document=1&v=pdf-layout-1", contentRoot));
+    link("独立阅读／打印 ↗", new URL("resume.html?document=1&v=cv-slices-2", contentRoot));
   }
   if (place === "other") {
     action("←", () => selectOther(otherIndex - 1)).setAttribute(
@@ -320,7 +319,7 @@ try {
   });
   clean(career);
   scene.add(career);
-  const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp?v=pdf-layout-1"));
+  const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp?v=cv-slices-2"));
   resumeTexture.colorSpace=T.SRGBColorSpace;
   const resumeCorner = fixtures.resumeCorner(original,resumeTexture);
   const resumePreview=scene.getObjectByName("resume-preview-board");
@@ -510,27 +509,10 @@ try {
   world.updateLab(notes[0]);
   currentLook = pt(0, 2, 2);
   targetLook = currentLook.clone();
-  let night = false;
-  try {
-    night = localStorage.getItem("resume-theme") === "dark";
-  } catch {}
-  const theme = (value) => {
-    night = value;
-    world.setTheme(night);
-    $("theme").textContent = night ? "日间" : "夜间";
-    $("theme").setAttribute("aria-pressed", String(night));
-    try {
-      localStorage.setItem("resume-theme", night ? "dark" : "light");
-    } catch {}
-  };
-  theme(night);
-  $("theme").onclick = () => theme(!night);
-  $("quality").onclick = () => {
-    low = !low;
-    world.setQuality(low);
-    $("quality").textContent = low ? "低画质" : "高画质";
-    $("quality").setAttribute("aria-pressed", String(low));
-  };
+  // Keep the approved initial render, including cheapDOF and bloom. The old
+  // low-quality toggle removed DOF, so do not invoke it when removing controls.
+  world.setTheme(false);
+  try{localStorage.setItem("resume-theme","light");}catch{}
   $("reset-view").onclick = () => go("home", "replace");
   $("overview-world").onclick = () => {
     targetLook.set(35, 2, 25);

@@ -150,9 +150,8 @@ const review = path.resolve(
     await page.keyboard.press("Escape");
     assert.equal(await page.locator("#world-map").evaluate(e => e.open), false);
     assert.equal(await page.evaluate(() => WORLD_STATE.place), "home");
-    await page.locator("#theme").click();
-    await shot("home-night");
-    await page.locator("#theme").click();
+    assert.equal(await page.locator("#theme").count(),0);
+    assert.equal(await page.locator("#quality").count(),0);
     await clickMap("resume");
     assert.equal(await page.evaluate(() => WORLD_STATE.place), "resume");
     await shot("resume-station");

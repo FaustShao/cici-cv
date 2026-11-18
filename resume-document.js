@@ -1,5 +1,17 @@
 (() => {
   const root=document.documentElement;
+  const layout=window.RESUME_LAYERS;
+  if(layout){
+    for(const layer of layout.layers){
+      if(layer.photo)continue;
+      const image=document.createElement('img');image.className='resume-art';image.alt='';image.draggable=false;
+      image.src='assets/resume/slices/cv拆分/'+encodeURIComponent(layer.file);
+      image.dataset.source=layer.file;image.width=layer.pixelWidth;image.height=layer.pixelHeight;image.decoding='async';
+      image.style.cssText=`left:${layer.x/layout.width*100}%;top:${layer.y/layout.height*100}%;width:${layer.w/layout.width*100}%;height:${layer.h/layout.height*100}%`;
+      image.addEventListener('error',()=>{document.getElementById('resume-feedback').textContent='部分简历素材未加载，请刷新或下载原版 PDF。';});
+      document.querySelector(`.resume-artwork[data-page="${layer.page}"]`).append(image);
+    }
+  }
   let zoom=1,timer;
   function fit(){root.style.setProperty('--fit-width',Math.min(1060,root.clientWidth-(innerWidth<=700?24:48))+'px');}
   function setZoom(value){

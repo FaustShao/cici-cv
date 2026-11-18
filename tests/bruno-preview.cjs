@@ -83,12 +83,7 @@ const review = path.resolve(
     await sharp(await page.screenshot())
       .webp({ quality: 90 })
       .toFile(path.join(review, "day.webp"));
-    await page.locator("#theme").click();
-    await page.waitForTimeout(800);
-    await sharp(await page.screenshot())
-      .webp({ quality: 90 })
-      .toFile(path.join(review, "night.webp"));
-    await page.locator("#theme").click();
+    assert.equal(await page.locator("#theme").count(),0);
     for (let i = 0; i < 3; i++) {
       if (i) {
         await page.locator("#next").click();
@@ -119,7 +114,7 @@ const review = path.resolve(
       await page.mouse.click(point.x, point.y);
       await page.waitForFunction(() => document.getElementById("reader").open);
       const frame = page.locator("iframe:visible"),
-        file = ["tideline.html", "gazette.html", "dream-sentinel.html"][i];
+        file = ["tideline.html?v=navigation-2", "gazette.html?v=large-reader-10", "dream-sentinel.html"][i];
       assert.equal(await frame.getAttribute("src"), new URL(file, root).href);
       await page.waitForFunction(() => {
         const frame = [...document.querySelectorAll("iframe")].find(
@@ -156,11 +151,7 @@ const review = path.resolve(
     await page.waitForFunction(() => preview.area.navigation.index === 0);
     await page.keyboard.press("ArrowRight");
     assert.equal(await page.locator("#selection").innerText(), "02 / 03");
-    await page.locator("#quality").click();
-    assert.equal(
-      await page.locator("#quality").getAttribute("aria-pressed"),
-      "true",
-    );
+    assert.equal(await page.locator("#quality").count(),0);
     await page.locator("#overview").click();
     await page.waitForTimeout(350);
     await page.locator("#overview").click();
