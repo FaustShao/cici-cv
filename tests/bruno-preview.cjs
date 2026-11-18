@@ -114,7 +114,7 @@ const review = path.resolve(
       await page.mouse.click(point.x, point.y);
       await page.waitForFunction(() => document.getElementById("reader").open);
       const frame = page.locator("iframe:visible"),
-        file = ["tideline.html?v=navigation-2", "gazette.html?v=large-reader-10", "dream-sentinel.html"][i];
+        file = ["tideline.html?v=navigation-2", "safepaw.html", "dream-sentinel.html"][i];
       assert.equal(await frame.getAttribute("src"), new URL(file, root).href);
       await page.waitForFunction(() => {
         const frame = [...document.querySelectorAll("iframe")].find(

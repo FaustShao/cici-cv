@@ -56,11 +56,29 @@ window.RESUME = {
       ],
       "url": "tideline.html",
       "collection": "portfolio",
-      "cover": "assets/tideline/HOME/Background.png"
+      "cover": "assets/portfolio-covers/tideline-cover-v2.webp"
+    },
+    {
+      "name": "SafePaw Family 宠爱守护",
+      "category": "02 / 儿童与宠物安全交互设计 · 2024.04 — 2024.08",
+      "description": "融合犬用智能穿戴、互动监测球与家长端 App，探索儿童与宠物犬互动中的状态感知、风险预警与互动引导。",
+      "tags": ["产品设计", "交互设计", "智能穿戴"],
+      "url": "safepaw.html",
+      "collection": "portfolio",
+      "cover": "assets/portfolio-covers/safepaw-cover-v2.webp"
+    },
+    {
+      "name": "DREAM SENTINEL 梦境哨兵",
+      "category": "03 / 未来智能穿戴设备设计 · 2024.08 — 2024.10",
+      "description": "面向2050年灾害场景的智能颈部穿戴设备概念，探索危险感知、感官反馈、防护与投影引导。",
+      "tags": ["未来概念", "智能穿戴", "交互设计"],
+      "url": "dream-sentinel.html",
+      "collection": "portfolio",
+      "cover": "assets/portfolio-covers/sentinel-cover-v2.webp"
     },
     {
       "name": "Forres Future Gazette 2050",
-      "category": "02 / AI辅助地方文化与数字体验 · 2026.05 — 2026.08",
+      "category": "04 / AI辅助地方文化与数字体验 · 2026.05 — 2026.08",
       "description": "格拉斯哥艺术学院 × 苏格兰当地 Rural Lab 合作研究；个人项目，涵盖用户研究、地方文化研究与 UX 设计。",
       "details": [
         "实地研究与多源信息收集：以苏格兰 Forres 小镇为对象，通过实地观察、社区访谈、地方档案研究及桌面调研，构建地方文化证据库。",
@@ -75,25 +93,7 @@ window.RESUME = {
       ],
       "url": "gazette.html",
       "collection": "portfolio",
-      "cover": "assets/gazette/page-01-small.webp"
-    },
-    {
-      "name": "DREAM SENTINEL 梦境哨兵",
-      "category": "03 / 未来智能穿戴设备设计 · 2024.08 — 2024.10",
-      "description": "面向2050年灾害场景的智能颈部穿戴设备概念，探索危险感知、感官反馈、防护与投影引导。",
-      "tags": ["未来概念", "智能穿戴", "交互设计"],
-      "url": "dream-sentinel.html",
-      "collection": "portfolio",
-      "cover": "assets/dream-sentinel/3.1/DREAM SENTINEL.png"
-    },
-    {
-      "name": "SafePaw Family 宠爱守护",
-      "category": "04 / 儿童与宠物安全交互设计 · 2024.04 — 2024.08",
-      "description": "融合犬用智能穿戴、互动监测球与家长端 App，探索儿童与宠物犬互动中的状态感知、风险预警与互动引导。",
-      "tags": ["产品设计", "交互设计", "智能穿戴"],
-      "url": "safepaw.html",
-      "collection": "portfolio",
-      "cover": "assets/safepaw-family/cover.webp"
+      "cover": "assets/portfolio-covers/gazette-cover-v2.webp"
     },
     {
       "name": "TASA-ICoD 国际设计工作坊",
