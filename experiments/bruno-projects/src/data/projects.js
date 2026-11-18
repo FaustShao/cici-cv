@@ -16,7 +16,7 @@ export default [
     },
     "distinctions": [],
     "images": [
-      "tideline-cover-v2.webp"
+      "tideline-cover-v3.webp"
     ]
   },
   {
@@ -36,7 +36,7 @@ export default [
     },
     "distinctions": [],
     "images": [
-      "safepaw-cover-v2.webp"
+      "safepaw-cover-v3.webp"
     ]
   },
   {
@@ -56,7 +56,7 @@ export default [
     },
     "distinctions": [],
     "images": [
-      "sentinel-cover-v2.webp"
+      "sentinel-cover-v3.webp"
     ]
   },
   {
@@ -76,7 +76,7 @@ export default [
     },
     "distinctions": [],
     "images": [
-      "gazette-cover-v2.webp"
+      "gazette-cover-v3.webp"
     ]
   }
 ];

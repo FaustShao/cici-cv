@@ -4,7 +4,7 @@ import { InteractivePoints } from '../../../preview-contract.js'
 import gsap from 'gsap'
 import projectsData from '../../../data/projects.js'
 import { TextCanvas } from '../../TextCanvas.js'
-import { add, color, float, Fn, If, luminance, mix, mul, normalWorld, positionGeometry, sin, step, texture, uniform, uv, vec3, vec4 } from 'three/tsl'
+import { cameraPosition, positionWorld, smoothstep, add, color, float, Fn, If, luminance, mix, mul, normalWorld, positionGeometry, sin, step, texture, uniform, uv, vec3, vec4 } from 'three/tsl'
 import { Inputs } from '../../../preview-contract.js'
 import { MeshDefaultMaterial } from '../../Materials/MeshDefaultMaterial.js'
 import { Area } from './Area.js'
@@ -341,6 +341,7 @@ export class ProjectsArea extends Area
         this.images.loadProgress = uniform(0)
         this.images.animationProgress = uniform(0)
         this.images.animationDirection = uniform(0)
+        this.images.glassStrength = uniform(1)
 
         // Mesh
         this.images.mesh = this.references.items.get('images')[0]
@@ -385,7 +386,15 @@ export class ProjectsArea extends Area
                 const threshold = step(this.images.animationProgress, reveal)
 
                 const textureColor = mix(textureNewColor, textureOldColor, threshold)
-                return textureColor
+                // A restrained, view-dependent sheen on the display glass.
+                const viewDirection = cameraPosition.sub(positionWorld).normalize()
+                const reflectionUV = uv().x.add(uv().y.mul(0.55)).add(viewDirection.x.mul(0.2))
+                const reflectionBand = smoothstep(0.45, 0.58, reflectionUV)
+                    .sub(smoothstep(0.72, 0.95, reflectionUV)).max(0)
+                const fresnel = normalWorld.dot(viewDirection).abs().oneMinus().pow(3)
+                const reflection = reflectionBand.mul(0.09).add(fresnel.mul(0.08)).add(0.012)
+                    .mul(this.images.glassStrength).clamp(0, 0.18)
+                return mix(textureColor, color('#e5f3ff'), reflection)
 
             })()
             

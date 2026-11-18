@@ -465,7 +465,7 @@ try {
   const screen = project.getObjectByName("refImages");
   if (screen) {
     const tex = await world.textures.loadAsync(
-      world.asset("projects/images/tideline-cover-v2.webp"),
+      world.asset("projects/images/tideline-cover-v3.webp"),
     );
     tex.flipY = false;
     tex.colorSpace = T.SRGBColorSpace;

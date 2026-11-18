@@ -56,7 +56,7 @@ window.RESUME = {
       ],
       "url": "tideline.html",
       "collection": "portfolio",
-      "cover": "assets/portfolio-covers/tideline-cover-v2.webp"
+      "cover": "assets/portfolio-covers/tideline-cover-v3.webp"
     },
     {
       "name": "SafePaw Family 宠爱守护",
@@ -65,7 +65,7 @@ window.RESUME = {
       "tags": ["产品设计", "交互设计", "智能穿戴"],
       "url": "safepaw.html",
       "collection": "portfolio",
-      "cover": "assets/portfolio-covers/safepaw-cover-v2.webp"
+      "cover": "assets/portfolio-covers/safepaw-cover-v3.webp"
     },
     {
       "name": "DREAM SENTINEL 梦境哨兵",
@@ -74,7 +74,7 @@ window.RESUME = {
       "tags": ["未来概念", "智能穿戴", "交互设计"],
       "url": "dream-sentinel.html",
       "collection": "portfolio",
-      "cover": "assets/portfolio-covers/sentinel-cover-v2.webp"
+      "cover": "assets/portfolio-covers/sentinel-cover-v3.webp"
     },
     {
       "name": "Forres Future Gazette 2050",
@@ -93,7 +93,7 @@ window.RESUME = {
       ],
       "url": "gazette.html",
       "collection": "portfolio",
-      "cover": "assets/portfolio-covers/gazette-cover-v2.webp"
+      "cover": "assets/portfolio-covers/gazette-cover-v3.webp"
     },
     {
       "name": "TASA-ICoD 国际设计工作坊",

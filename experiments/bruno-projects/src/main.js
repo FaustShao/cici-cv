@@ -118,6 +118,10 @@ function select(index) {
     area.changeProject(selected, ProjectsArea.DIRECTION_NEXT, true, true);
     area.navigation.index = selected;
   }
+  syncSelection();
+}
+function syncSelection() {
+  selected = area?.navigation.index ?? selected;
   $("selection").textContent = String(selected + 1).padStart(2, "0") + " / " + String(data.length).padStart(2,"0");
   $("project-name").textContent = data[selected].title;
 }
@@ -556,7 +560,19 @@ try {
   area.shadeMix.texts.mixUniform.value = area.shadeMix.texts.max;
   area.url.open = readWork;
   select(0);
-  for (const hit of hitAreas) hit.active = true;
+  // Only the visible pagination dots can receive pointer input.
+  for (const hit of hitAreas) {
+    const dot = area.pagination.items.find((item) => item.intersect === hit);
+    hit.active = dot ? dot.visible : true;
+  }
+  const modelButtons = [
+    ["arrowPreviousImage", area.pagination.previousIntersect],
+    ["arrowNextImage", area.pagination.nextIntersect],
+    ["arrowPreviousProject", area.adjacents.previous.intersect],
+    ["arrowNextProject", area.adjacents.next.intersect],
+  ].map(([name, hit]) => ({ mesh: refs.items.get(name)[0], hit }));
+  const modelButtonBounds = new T.Box3();
+  const modelButtonPoint = new T.Vector3();
   // Screen itself is directly clickable, in addition to original model arrows.
   const screen = area.images.mesh;
   screen.userData.openWork = true;
@@ -614,22 +630,43 @@ try {
     pinched = false,
     pinchDistance = 0;
   const pointers = new Map();
+  const screenTarget = { onClick: readWork };
   function pick(event) {
     pointer.set(
       (event.clientX / innerWidth) * 2 - 1,
       (-event.clientY / innerHeight) * 2 + 1,
     );
     ray.setFromCamera(pointer, camera);
-    const screenHit = ray.intersectObject(screen, false)[0];
-    if (screenHit) return { onClick: readWork };
-    for (const hit of hitAreas) {
-      if (!hit.active) continue;
-      if (hit.shape?.isObject3D) {
-        if (ray.intersectObject(hit.shape, true).length) return hit;
-      } else if (hit.shape?.isSphere && ray.ray.intersectsSphere(hit.shape))
-        return hit;
+    // Derive the button targets from the rendered meshes, rather than the
+    // upstream reference spheres, which do not match this adapted scene.
+    let button = null, distance = Infinity;
+    for (const target of modelButtons) {
+      if (!target.hit.active || !target.mesh.visible) continue;
+      modelButtonBounds.setFromObject(target.mesh).expandByScalar(0.035);
+      if (ray.ray.intersectBox(modelButtonBounds, modelButtonPoint)) {
+        const d = ray.ray.origin.distanceToSquared(modelButtonPoint);
+        if (d < distance) { button = target.hit; distance = d; }
+      }
     }
-    return null;
+    if (button) return button;
+    const screenHit = ray.intersectObject(screen, false)[0];
+    if (screenHit) return screenTarget;
+    let nearest = null;
+    distance = Infinity;
+    for (const hit of hitAreas) {
+      if (!hit.active || modelButtons.some((target) => target.hit === hit)) continue;
+      let point = null;
+      if (hit.shape?.isObject3D) {
+        point = ray.intersectObject(hit.shape, true)[0]?.point;
+      } else if (hit.shape?.isSphere) {
+        point = ray.ray.intersectSphere(hit.shape, modelButtonPoint);
+      }
+      if (point) {
+        const d = ray.ray.origin.distanceToSquared(point);
+        if (d < distance) { nearest = hit; distance = d; }
+      }
+    }
+    return nearest;
   }
   canvas.addEventListener("pointerdown", (event) => {
     if (event.button !== 0) return;
@@ -685,7 +722,10 @@ try {
   canvas.addEventListener("pointerup", (event) => {
     pointers.delete(event.pointerId);
     if (pointers.size) return;
-    if (!dragged && !pinched) pressed?.onClick?.();
+    if (!dragged && !pinched) {
+      pressed?.onClick?.();
+      syncSelection();
+    }
     start = last = pressed = null;
   });
   canvas.addEventListener("pointercancel", () => {
@@ -741,12 +781,7 @@ try {
         $("loading").hidden = true;
       }
       // The upstream arrows update their internal index; sync accessible controls.
-      if (selected !== area.navigation.index) {
-        selected = area.navigation.index;
-        $("selection").textContent =
-          String(selected + 1).padStart(2, "0") + " / " + String(data.length).padStart(2,"0");
-        $("project-name").textContent = data[selected].title;
-      }
+      if (selected !== area.navigation.index) syncSelection();
     } catch (error) {
       renderer.setAnimationLoop(null);
       console.error(error);
