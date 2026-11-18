@@ -310,7 +310,7 @@ try {
   const entranceBench=scene.getObjectByName("benchPhysicalDynamic001");
   fixtures.parcel(entranceBench,40.6,37.15,1.6,{plaza:true,radius:0,precise:true,hull:true});
   const crates = fixtures.nativeCrates();
-  let effectTime=0, mapFlashAt=-100;
+  let effectTime=0, mapFlashAt=-100, entryFlashPending=true;
   const mapBrightness=uniform(1);
   const career = original.getObjectByName("career").clone(true);
   career.getObjectByName("refYear")?.removeFromParent();
@@ -688,6 +688,14 @@ try {
       world.renderCount=(world.renderCount||0)+1;
       document.body.dataset.ready = "true";
       $("loading").hidden = true;
+      if(entryFlashPending){
+        entryFlashPending=false;
+        if(place==="home"){
+          // Reveal first, then cue the map and its hand together exactly once.
+          mapFlashAt=effectTime+.18;
+          kioskRoot.userData.entryFlashAt=mapFlashAt;
+        }
+      }
     } catch (error) {
       renderer.setAnimationLoop(null);
       fail(error);
@@ -708,6 +716,7 @@ try {
     placements: fixtures.placements,
     get landingView(){return landingView;},
     updateEffects,
+    get effectTime(){return effectTime;},
     viewState:()=>({look:currentLook.toArray(),target:targetLook.toArray(),yaw,pitch,distance:currentDistance,fov:camera.fov}),
     go,
     openCurrent,

@@ -27,6 +27,16 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
     }),"Every device is behind the name plane, not in front");
     async function frame(){const n=await page.evaluate(()=>designWorld.world.renderCount);await page.waitForFunction(n=>designWorld.world.renderCount>n,n);}
     async function shot(name){await frame();await sharp(await page.screenshot()).webp({quality:90}).toFile(path.join(review,name+".webp"));}
+    assert.ok(await page.evaluate(()=>{
+      const w=designWorld,start=w.kioskRoot.userData.entryFlashAt;
+      if(!Number.isFinite(start)||w.devices.roots.some(r=>r.userData.interactions))return false;
+      w.updateEffects(Math.max(0,start+.35-w.effectTime));
+      return w.mapBrightness.value>2.7&&w.kioskRoot.userData.flashActive;
+    }),"Entry automatically lights the map/hand uniform without clicking any device");
+    await shot("entry-map-intro");
+    assert.equal(await page.evaluate(()=>{designWorld.updateEffects(1);return designWorld.mapBrightness.value}),1);
+    assert.equal(await page.evaluate(()=>{designWorld.updateEffects(1);return designWorld.mapBrightness.value}),1,"Entry light is one shot, not a loop");
+    assert.ok(await page.evaluate(()=>{const n=designWorld.identity;return n.userData.chineseAdvance===49&&n.userData.angularGlyph==='欣'&&n.userData.captionStretch>1&&n.userData.captionLetterGap<1;}));
     async function clickDevice(index){
       const p=await page.evaluate(index=>{
         const root=designWorld.devices.roots[index],points=[];

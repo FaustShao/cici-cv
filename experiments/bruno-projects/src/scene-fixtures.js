@@ -337,10 +337,20 @@ export function createFixtures(world) {
       ctx.font = '700 48px "Scene Sans"';
       ctx.textBaseline = "top";
       ctx.fillText(char, 2, 0);
+      if(char==="欣"){
+        // Keep the existing glyph's top and radicals; replace only its three
+        // descending strokes with straight, constant-direction pixel cuts.
+        ctx.clearRect(0,22,13,25);
+        ctx.clearRect(23,23,29,24);
+        const stroke=points=>{ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fill();};
+        stroke([[6,22],[12,22],[7,45],[2,43]]);
+        stroke([[33,23],[39,23],[29,45],[23,43]]);
+        stroke([[35,28],[39,26],[49,42],[45,45]]);
+      }
       const data = ctx.getImageData(0, 0, 56, 56).data;
       for (let y = 0; y < 52; y++) for (let x = 0; x < 52; x++)
         if (data[(y * 56 + x) * 4 + 3] > 150) pixels.push([offset + x, 51 - y]);
-      offset += 52;
+      offset += 49;
     }
     const alphabet = {
       C: ["01111","11000","11000","11000","11000","11000","01111"],
@@ -359,26 +369,27 @@ export function createFixtures(world) {
       glyph.forEach((row, y) => [...row].forEach((on, x) => {
         if (on === "1")caption.push([captionOffset+x,6-y]);
       }));
-      captionOffset += glyph[0].length+1;
+      captionOffset += glyph[0].length+.55;
     }
     // Actual individual cubes: pale front (+Z), purple sides and backs.
     const frontPower = uniform(1);
     const front = material({colorNode:color(colors.cream).mul(frontPower),hasWater:false});
     const sides = [materials.purple, materials.purple, materials.purple, materials.purple, front, materials.purple];
     const overallScale=1.12;
-    const chineseCell=cell*1.1/2*1.15*overallScale,captionCell=.045*1.15*1.1*1.3*overallScale;
+    const chineseCell=cell*1.1/2*1.15*overallScale,captionCell=.045*1.15*1.1*1.3*overallScale*1.05;
+    const captionStretch=1.13;
     const minX=Math.min(...pixels.map(p=>p[0]))*chineseCell-chineseCell/2;
     const chineseRight=Math.max(...pixels.map(p=>p[0]))*chineseCell+chineseCell/2;
-    const captionStart=chineseRight+.24*1.15*overallScale,captionRight=captionStart+(captionOffset-1)*captionCell;
+    const captionStart=chineseRight+.24*1.15*overallScale,captionRight=captionStart+(Math.max(...caption.map(p=>p[0]))+.5)*captionCell;
     const centerX=(minX+captionRight)/2,minY=Math.min(...pixels.map(p=>p[1]));
-    function blocks(points,size,name,xOffset=0,yOffset=0){
-      const mesh=new T.InstancedMesh(new T.BoxGeometry(size*.88,size*.88,(name==='voxel-name-caption'?.15*1.1*1.3:.27)*1.15*overallScale),sides,points.length),matrix=new T.Matrix4();
+    function blocks(points,size,name,xOffset=0,yOffset=0,yStretch=1){
+      const mesh=new T.InstancedMesh(new T.BoxGeometry(size*.88,size*.88*yStretch,(name==='voxel-name-caption'?.15*1.1*1.3*1.05:.27)*1.15*overallScale),sides,points.length),matrix=new T.Matrix4();
       mesh.name=name;mesh.castShadow=mesh.receiveShadow=true;
-      points.forEach(([x,y],i)=>mesh.setMatrixAt(i,matrix.makeTranslation(x*size+xOffset-centerX,(y+yOffset+.5)*size,0)));
+      points.forEach(([x,y],i)=>mesh.setMatrixAt(i,matrix.makeTranslation(x*size+xOffset-centerX,(y+yOffset+.5)*size*yStretch,0)));
       mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();root.add(mesh);return mesh;
     }
     blocks(pixels,chineseCell,"voxel-name-blocks",0,-minY);
-    blocks(caption,captionCell,"voxel-name-caption",captionStart);
+    blocks(caption,captionCell,"voxel-name-caption",captionStart,0,captionStretch);
     root.rotation.y = Math.PI / 7.2;
     const localWidth=captionRight-minX;
     parcel(root, 43, 42.5, 1, { plaza: true, radius: 1, prepared: true,
@@ -386,8 +397,11 @@ export function createFixtures(world) {
     root.userData.text = "王钰欣 / CECILIA";
     root.userData.blockCount = chineseCount+caption.length;
     root.userData.glyphResolution=56;
-    root.userData.chineseAdvance=52;
-    root.userData.captionRatio=captionCell*7/((Math.max(...pixels.map(p=>p[1]))-minY+1)*chineseCell);
+    root.userData.chineseAdvance=49;
+    root.userData.angularGlyph="欣";
+    root.userData.captionStretch=captionStretch;
+    root.userData.captionLetterGap=.55;
+    root.userData.captionRatio=captionCell*7*captionStretch/((Math.max(...pixels.map(p=>p[1]))-minY+1)*chineseCell);
     root.userData.lightOn = false;
     root.toggleLight = () => {
       root.userData.lightOn = !root.userData.lightOn;

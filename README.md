@@ -11,6 +11,7 @@
 - QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。真实截图在 `experiments/bruno-projects/public/review/`。
 - 联系方式整组位于入口右侧的原键盘空地，信箱字面与呼吸圆环可直接写邮件；平面地图同步新落点，姓名入口可回到原始镜头。红屋顶地图牌缩小 15% 并按实际双脚落地，欢迎牌保留原比例和位置，两行小赖文字限制在木板内。姓名使用 56 像素采样方块，提高笔画间隙；风场与原生叶簇摆动共用日间渲染，补充粉色植被。`tests/contact-clearing.cjs` 校验迁移、模型碰撞、字面边界、风动和地图返回。
 - 植被补全：接入原版 `Flowers` 模块的八片花瓣与花丛分布资源，补充粉色／浅色花丛；树木及灌木显示范围扩大到 72 单位，按模型所在区域避让，入口补充原生粉色树。姓名组合再放大 12%，英文额外放大 30%，中文字进位从 58 收紧至 52；信箱字面透明，不再绘制矩形边框。原始花丛资源的 SHA-256 记于 `public/bruno/manifest.json`。
+- 入口字形微调：中文进位进一步收紧至 49，“欣”的下行笔画改成直斜线；`/ CECILIA` 再放大 5%、纵向拉伸 13%，字母间距从 1 格收紧为 0.55 格。首页首帧成功显示后，地图牌和像素小手同步自动亮一次，随后恢复原状，原开关点击亮灯保留。`tests/landing-controls.cjs` 同时验证无点击开场亮灯与后续手动交互；真实截图为 `public/review/entry-map-intro.webp`。
 
 ## 历史小岛实现（已不作为入口）
 
