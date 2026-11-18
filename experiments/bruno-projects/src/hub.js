@@ -1,3 +1,4 @@
+import { getClickSound } from "./click-sound.js";
 import { T, createWorld } from "./create-world.js";
 import { texture, uniform } from "three/tsl";
 import { createFixtures } from "./scene-fixtures.js";
@@ -6,6 +7,8 @@ import { referenceViews } from "./scene-views.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 import "../../../resume.js";
 
+const clickSound = getClickSound();
+clickSound.bind(document);
 const $ = (id) => document.getElementById(id),
   profile = window.RESUME;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -93,6 +96,7 @@ function openReader(title, file) {
       frame.addEventListener("load", () => {
         try {
           const doc = frame.contentDocument;
+          clickSound.bind(doc);
           const style = doc.createElement("style");
           style.textContent =
             "header.topbar{position:sticky}.topbar nav>a,.topbar .wordmark{display:none!important}";
@@ -603,6 +607,7 @@ try {
     pointers.delete(e.pointerId);
     if (pointers.size) return;
     if (!drag && !pinched && pressed) {
+      clickSound.play();
       if (pressed === "map") {showMapHint(false);navigationMap.open();}
       else if(pressed === "contact-mail")location.href=social.userData.mailto;
       else if(pressed === "resume-preview")openCurrent();

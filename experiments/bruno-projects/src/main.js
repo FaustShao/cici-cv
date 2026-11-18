@@ -1,3 +1,4 @@
+import { getClickSound } from "./click-sound.js";
 import { addWorldAtmosphere } from "./world-atmosphere.js";
 import * as T from "three/webgpu";
 import {
@@ -32,6 +33,8 @@ import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 import data from "./data/projects.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
+const clickSound = getClickSound();
+clickSound.bind(document);
 const $ = (id) => document.getElementById(id),
   reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 gsap.ticker.lagSmoothing(0);
@@ -66,6 +69,7 @@ function readWork() {
     frame.allow = "fullscreen";
     frame.addEventListener("load", () => {
       try {
+        clickSound.bind(frame.contentDocument);
         const style = frame.contentDocument.createElement("style");
         style.textContent =
           "header.topbar,.collection-return{display:none!important}";
@@ -739,6 +743,7 @@ try {
     pointers.delete(event.pointerId);
     if (pointers.size) return;
     if (!dragged && !pinched) {
+      if (pressed) clickSound.play();
       pressed?.onClick?.();
       syncSelection();
     }

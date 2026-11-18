@@ -14,5 +14,5 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright'),shar
  assert.equal(await p.locator('#sound-toggle,#overview-world,#overview').count(),0);
  await p.locator('#reset-view').click();
 
- assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);console.log('PASS live water/leaf shaders, slender grass, moving leaves, map hover guide and opening, no audio or overview controls, reset control; no errors/404.');
+ assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);console.log('PASS live water/leaf shaders, slender grass, moving leaves, map hover guide and opening, no ambient audio or overview controls, reset control; no errors/404.');
 }finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});
