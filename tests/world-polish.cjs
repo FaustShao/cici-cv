@@ -4,17 +4,20 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
  try{
   const p=await browser.newPage({viewport:{width:1662,height:882},reducedMotion:'reduce'}),errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.addInitScript(()=>{try{localStorage.setItem('resume-theme','dark');}catch{}});
-  await p.goto('http://127.0.0.1:8000/bruno-preview/hub.html?webgl=1');
+  const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8000/';
+  await p.goto(new URL('bruno-preview/hub.html?webgl=1',root).href);
   await p.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
   assert.equal(await p.locator('body').getAttribute('data-failed'),null);
   assert.equal(await p.locator('#theme,#quality').count(),0);
   const name=await p.evaluate(()=>{
    const w=designWorld,n=w.identity,cn=n.getObjectByName('voxel-name-blocks'),en=n.getObjectByName('voxel-name-caption');
-   return{center:n.userData.parcel,text:n.userData.text,cnHeight:cn.boundingBox.max.y-cn.boundingBox.min.y,enHeight:en.boundingBox.max.y-en.boundingBox.min.y,cnCell:cn.geometry.parameters.width,day:w.world.game.dayCycles.progress,view:w.viewState()};
+   const label=w.world.scene.getObjectByName('mailbox-label'),flowers=w.world.game.world.flowers;
+   return{center:n.userData.parcel,text:n.userData.text,cnHeight:cn.boundingBox.max.y-cn.boundingBox.min.y,enHeight:en.boundingBox.max.y-en.boundingBox.min.y,cnCell:cn.geometry.parameters.width,advance:n.userData.chineseAdvance,day:w.world.game.dayCycles.progress,view:w.viewState(),vegetation:w.world.game.world.vegetationStats,mailboxTransparent:label.material.transparent,flowersOnGrass:flowers.positions.every(([x,z])=>{const s=w.world.surface.sample(x,z);return s.water<=5&&s.road<120&&s.grass>100;})};
   });
-  assert.equal(name.center.x,43);assert.equal(name.center.z,42.5);assert.equal(name.text,'王钰欣 / CECILIA');assert.ok(name.enHeight<name.cnHeight*.25);assert.ok(name.cnHeight>1.65);assert.equal(name.day,.12);assert.equal(name.view.yaw,.8231748736701113);
+  assert.equal(name.center.x,43);assert.equal(name.center.z,42.5);assert.equal(name.text,'王钰欣 / CECILIA');assert.ok(name.enHeight>name.cnHeight*.25&&name.enHeight<name.cnHeight*.35);assert.ok(name.cnHeight>2);assert.equal(name.day,.12);assert.equal(name.view.yaw,.8231748736701113);
+  assert.equal(name.advance,52);assert.ok(name.mailboxTransparent);assert.ok(name.flowersOnGrass);assert.ok(Object.values(name.vegetation.trees).reduce((a,b)=>a+b,0)>40);assert.ok(name.vegetation.flowers>100,'Original flower clusters replace the previous two pink shrubs');
   await p.screenshot({path:'/tmp/name-caption-day.png'});
-  await p.goto('http://127.0.0.1:8000/bruno-preview/index.html?webgl=1');
+  await p.goto(new URL('bruno-preview/index.html?webgl=1',root).href);
   await p.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
   assert.equal(await p.locator('body').getAttribute('data-failed'),null);assert.equal(await p.locator('#theme,#quality').count(),0);assert.equal(await p.evaluate(()=>preview.game.dayCycles.progress),.12);
   await p.evaluate(()=>preview.readWork());

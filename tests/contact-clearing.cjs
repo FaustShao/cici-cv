@@ -4,7 +4,7 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
  try{
   const p=await browser.newPage({viewport:{width:1662,height:882},reducedMotion:'reduce'}),errors=[];
   p.on('pageerror',e=>errors.push(e.message));
-  await p.goto('http://127.0.0.1:8000/bruno-preview/hub.html?webgl=1');
+  await p.goto(new URL('bruno-preview/hub.html?webgl=1',process.env.PREVIEW_ROOT||'http://127.0.0.1:8000/').href);
   await p.waitForFunction(()=>window.designWorld||document.body.dataset.failed,null,{timeout:90000});
   assert.equal(await p.locator('body').getAttribute('data-failed'),null,await p.locator('#error-message').textContent());
   const initial=await p.evaluate(()=>designWorld.viewState());
@@ -22,7 +22,7 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
     bench:bench.userData.parcel,contact:root.userData.parcel,sign:sign.userData.parcel,
     welcome:{parcel:w.welcome.userData.parcel,scale:w.welcome.scale.x,text:w.welcome.userData.text,labels:w.welcome.children.filter(c=>c.userData.text).map(c=>({text:c.userData.text,font:c.userData.font,y:c.position.y,width:c.geometry.parameters.width,height:c.geometry.parameters.height}))},
     name:{resolution:w.identity.userData.glyphResolution,ratio:w.identity.userData.captionRatio},
-    wind:{strength:w.world.game.wind.strength.value,timeFrequency:w.world.game.wind.timeFrequency,pinkCount:w.world.game.world.pinkFlowers?.references.length||0},
+    wind:{strength:w.world.game.wind.strength.value,timeFrequency:w.world.game.wind.timeFrequency,pinkCount:w.world.game.world.flowers?.references.length||0},
     mailbox:{x:(pt.x+1)*innerWidth/2,y:(1-pt.y)*innerHeight/2,mailto:root.userData.mailto},ring:s.getObjectByName('mailbox-click-ring').material.opacity};
   });
   console.log(JSON.stringify(result,null,2));
@@ -31,10 +31,10 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
   assert.equal(result.welcome.scale,1.65);assert.equal(result.welcome.parcel.x,48);assert.equal(result.welcome.parcel.z,34.56);
   assert.deepEqual(result.welcome.labels.map(l=>l.text),['王钰欣 / Cecilia','的个人网站']);assert.ok(result.welcome.labels.every(l=>l.font==='World Xiaolai'&&l.width<=1.98&&l.height<=.28));
   for(const [i,limits] of [[0,[-.225,.17]],[1,[-.687,-.3]]]){const l=result.welcome.labels[i];assert.ok(l.y-l.height/2>limits[0]&&l.y+l.height/2<limits[1],'Text planes stay within the actual solid planks');}
-  assert.equal(result.name.resolution,56);assert.ok(result.name.ratio<.25);assert.ok(result.wind.strength>.5&&result.wind.pinkCount>0);
+  assert.equal(result.name.resolution,56);assert.ok(result.name.ratio>.25&&result.name.ratio<.35);assert.ok(result.wind.strength>.5&&result.wind.pinkCount>0);
   assert.equal(await p.evaluate(({x,y})=>designWorld.pick(x,y),result.mailbox),'contact-mail');
   assert.equal(result.mailbox.mailto,'mailto:wangyuxinqd2025@163.com');
-  assert.ok(await p.evaluate(()=>{const w=designWorld.world,foliage=w.game.world.pinkFlowers,rest=foliage.restMatrices.slice(),before=foliage.instanceMatrix.array.slice();w.game.ticker.elapsedScaled+=1;foliage.update();return before.some((n,i)=>n!==foliage.instanceMatrix.array[i])&&rest.every((n,i)=>n===foliage.restMatrices[i]);}),'Wind moves leaf clusters without drifting their rest positions');
+  assert.ok(await p.evaluate(()=>{const w=designWorld.world,foliage=w.game.world.cherryTrees.leaves,rest=foliage.restMatrices.slice(),before=foliage.instanceMatrix.array.slice();w.game.ticker.elapsedScaled+=1;foliage.update();return before.some((n,i)=>n!==foliage.instanceMatrix.array[i])&&rest.every((n,i)=>n===foliage.restMatrices[i]);}),'Wind moves leaf clusters without drifting their rest positions');
   await p.locator('#map-trigger').click();await p.screenshot({path:'/tmp/clearing-map.png'});
   assert.ok(await p.locator('#world-map').evaluate(n=>n.getBoundingClientRect().width<=942));
   await p.locator('.map-you').click();await frame();assert.deepEqual(await p.evaluate(()=>designWorld.viewState()),initial);

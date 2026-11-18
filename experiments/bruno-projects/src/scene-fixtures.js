@@ -276,7 +276,7 @@ export function createFixtures(world) {
     const roof = box(root, [1.2, 0.16, 0.92], [-0.65, 2.18, 0], "edge");
     roof.rotation.z = -0.06;
     box(root, [0.62, 0.055, 0.04], [-0.65, 1.8, 0.39], "edge");
-    const letter = print("邮箱", 0.85, 0.38, { bg: "#b65a69", size: 180, fit:true });
+    const letter = print("邮箱", 0.85, 0.38, { bg: null, size: 180, fit:true });
     letter.name="mailbox-label";
     letter.position.set(-0.65, 1.45, 0.385);
     root.add(letter);
@@ -340,7 +340,7 @@ export function createFixtures(world) {
       const data = ctx.getImageData(0, 0, 56, 56).data;
       for (let y = 0; y < 52; y++) for (let x = 0; x < 52; x++)
         if (data[(y * 56 + x) * 4 + 3] > 150) pixels.push([offset + x, 51 - y]);
-      offset += 58;
+      offset += 52;
     }
     const alphabet = {
       C: ["01111","11000","11000","11000","11000","11000","01111"],
@@ -365,13 +365,14 @@ export function createFixtures(world) {
     const frontPower = uniform(1);
     const front = material({colorNode:color(colors.cream).mul(frontPower),hasWater:false});
     const sides = [materials.purple, materials.purple, materials.purple, materials.purple, front, materials.purple];
-    const chineseCell=cell*1.1/2*1.15,captionCell=.045*1.15*1.1;
+    const overallScale=1.12;
+    const chineseCell=cell*1.1/2*1.15*overallScale,captionCell=.045*1.15*1.1*1.3*overallScale;
     const minX=Math.min(...pixels.map(p=>p[0]))*chineseCell-chineseCell/2;
     const chineseRight=Math.max(...pixels.map(p=>p[0]))*chineseCell+chineseCell/2;
-    const captionStart=chineseRight+.24*1.15,captionRight=captionStart+(captionOffset-1)*captionCell;
+    const captionStart=chineseRight+.24*1.15*overallScale,captionRight=captionStart+(captionOffset-1)*captionCell;
     const centerX=(minX+captionRight)/2,minY=Math.min(...pixels.map(p=>p[1]));
     function blocks(points,size,name,xOffset=0,yOffset=0){
-      const mesh=new T.InstancedMesh(new T.BoxGeometry(size*.88,size*.88,(name==='voxel-name-caption'?.15*1.1:.27)*1.15),sides,points.length),matrix=new T.Matrix4();
+      const mesh=new T.InstancedMesh(new T.BoxGeometry(size*.88,size*.88,(name==='voxel-name-caption'?.15*1.1*1.3:.27)*1.15*overallScale),sides,points.length),matrix=new T.Matrix4();
       mesh.name=name;mesh.castShadow=mesh.receiveShadow=true;
       points.forEach(([x,y],i)=>mesh.setMatrixAt(i,matrix.makeTranslation(x*size+xOffset-centerX,(y+yOffset+.5)*size,0)));
       mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();root.add(mesh);return mesh;
@@ -381,10 +382,11 @@ export function createFixtures(world) {
     root.rotation.y = Math.PI / 7.2;
     const localWidth=captionRight-minX;
     parcel(root, 43, 42.5, 1, { plaza: true, radius: 1, prepared: true,
-      precise:true,oriented:{angle:root.rotation.y,width:localWidth,depth:.27*1.15} });
+      precise:true,oriented:{angle:root.rotation.y,width:localWidth,depth:.27*1.15*overallScale} });
     root.userData.text = "王钰欣 / CECILIA";
     root.userData.blockCount = chineseCount+caption.length;
     root.userData.glyphResolution=56;
+    root.userData.chineseAdvance=52;
     root.userData.captionRatio=captionCell*7/((Math.max(...pixels.map(p=>p[1]))-minY+1)*chineseCell);
     root.userData.lightOn = false;
     root.toggleLight = () => {

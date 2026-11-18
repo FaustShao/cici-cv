@@ -18,7 +18,7 @@ import { Floor } from "./bruno/World/Floor.js";
 import { Grass } from "./bruno/World/Grass.js";
 import { Trees } from "./bruno/World/Trees.js";
 import { Bushes } from "./bruno/World/Bushes.js";
-import { Foliage } from "./bruno/World/Foliage.js";
+import { Flowers } from "./bruno/World/Flowers.js";
 import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 
 export { T };
@@ -136,6 +136,7 @@ export async function createWorld(canvas, progress) {
     birchTreesReferencesModel: "birchTrees/birchTreesReferences.glb",
     cherryTreesVisualModel: "cherryTrees/cherryTreesVisual.glb",
     cherryTreesReferencesModel: "cherryTrees/cherryTreesReferences.glb",
+    flowersReferencesModel: "flowers/flowersReferences.glb",
     benchesModel: "benches/benches.glb",
     fencesModel: "fences/fences.glb",
     lanternsModel: "lanterns/lanterns.glb",
@@ -289,37 +290,39 @@ export async function createWorld(canvas, progress) {
   game.world.grass.bladeHeight.value = 0.65;
   const near = (object) =>
     Math.hypot(object.position.x - center.x, object.position.z - center.z) < 48;
+  const nearVegetation = (object) =>
+    Math.hypot(object.position.x - center.x, object.position.z - center.z) < 72;
+  // Rectangles follow the actual fixtures, rather than clearing whole 9–12m
+  // circles around them. Keep the open entrance silhouette and dry paths.
+  const beds = {
+    trees:[[35,31,51,46],[18.5,19,30,28],[49.5,25,59.5,35],[21,2,29,10],[30,9,39,17],[10,14,18,22]],
+    low:[[35,35,43,42],[39,30,46.5,36.5],[46,33,50,36],[19.5,20,29,28],[50,26,59,34],[24,5,38,15],[10,14,18,21]],
+  };
+  const inBed=(x,z,kind)=>beds[kind].some(([left,top,right,bottom])=>x>left&&x<right&&z>top&&z<bottom);
+  const inName=(x,z)=>{
+    const a=Math.PI/7.2,dx=x-43,dz=z-42.5;
+    return Math.abs(dx*Math.cos(a)-dz*Math.sin(a))<7 && Math.abs(dx*Math.sin(a)+dz*Math.cos(a))<1.1;
+  };
+  game.world.vegetationStats={trees:{},bushes:0,flowers:0};
   for (const [type, a, b] of [
     ["oak", "#b4b536", "#d8cf3b"],
     ["birch", "#ff4f2b", "#ff903f"],
     ["cherry", "#ed82a0", "#ffc1c5"],
   ]) {
-    const clearings = [
-      [43, 43, 7],
-      [25, 6, 4],
-      [35, 13, 4],
-      [14, 18, 3],
-      [48, 25, 7],
-      [26, 24, 9],
-      [47, 29, 7],
-      [45, 49, 12],
-    ];
     const refs = game.resources[type + "TreesReferencesModel"].scene.children
-      .filter(near)
-      .filter((tree) =>
-        clearings.every(
-          ([x, z, r]) =>
-            Math.hypot(tree.position.x - x, tree.position.z - z) > r,
-        ),
-      );
+      .filter(nearVegetation)
+      .filter(tree=>!inBed(tree.position.x,tree.position.z,"trees")&&surface.check(tree.position.x,tree.position.z,.5,.5).maxWater<=5);
     if(type==="cherry"){
-      // Restore pink accents around the clearings, never on paving or water.
+      // Reuse the native cherry geometry to flank our wider bilingual entry.
+      // The native tree at the controller's location cannot stay under it.
       const template=game.resources.cherryTreesReferencesModel.scene.children[0];
-      for(const [x,z,scale] of [[32,35,.65],[47,23,.6],[59,33,.7]]){
-        if(surface.check(x,z,1.8,1.8).maxWater>5||surface.sample(x,z).road>120)continue;
-        const tree=template.clone();tree.position.set(x,surface.sample(x,z).height,z);tree.scale.multiplyScalar(scale);tree.updateMatrix();tree.updateMatrixWorld();refs.push(tree);
+      for(const [x,z,scale] of [[33,38,.75],[59,39,.65]]){
+        const ground=surface.check(x,z,.7,.7);
+        if(ground.maxWater>5||surface.sample(x,z).road>120)continue;
+        const ref=template.clone();ref.position.set(x,ground.height,z);ref.scale.multiplyScalar(scale);ref.updateMatrix();ref.updateMatrixWorld(true);refs.push(ref);
       }
     }
+    game.world.vegetationStats.trees[type]=refs.length;
     if (refs.length)
       game.world[type + "Trees"] = new Trees(
         type,
@@ -330,25 +333,23 @@ export async function createWorld(canvas, progress) {
       );
   }
   game.resources.bushesReferences.scene.children =
-    game.resources.bushesReferences.scene.children.filter(near).filter((b) =>
-      [
-        [26, 24, 6],
-        [47, 29, 5],
-        [45, 49, 12],
-      ].every(
-        ([x, z, r]) => Math.hypot(b.position.x - x, b.position.z - z) > r,
-      ),
+    game.resources.bushesReferences.scene.children.filter(nearVegetation).filter((b) =>
+      !inBed(b.position.x,b.position.z,"low")&&!inName(b.position.x,b.position.z),
     );
   game.world.bushes = new Bushes();
-  const flowers=[];
-  const bushTemplate=game.resources.bushesReferences.scene.children[0];
-  for(const [x,z] of [[34,36],[35,35.6],[46,23],[47,22.8],[58.5,32.5],[59.2,33.4]]){
-    if(surface.check(x,z,.7,.7).maxWater>5||surface.sample(x,z).road>120)continue;
-    const ref=bushTemplate.clone();ref.position.set(x,surface.sample(x,z).height+.22,z);ref.scale.setScalar(.45);ref.updateMatrix();flowers.push(ref);
+  game.world.vegetationStats.bushes=game.resources.bushesReferences.scene.children.length;
+  const flowerRefs=game.resources.flowersReferencesModel.scene.children.filter(nearVegetation);
+  // Native clusters now populate the banks and path edges, including the
+  // foreground that was previously blank. Each individual cluster is checked.
+  for(const [x,z] of [[33,36],[34,38],[34,41],[36,46],[39,48],[44,48],[49,47],[51,41],[52,36],[48,23],[29,29],[20,29]]){
+    const ref=new T.Object3D();ref.position.set(x,surface.sample(x,z).height+.384,z);flowerRefs.push(ref);
   }
-  if(flowers.length){
-    game.world.pinkFlowers=new Foliage(flowers,uniform(color("#df7198")),uniform(color("#ffb6bc")));
-  }
+  const flowerAccepts=(x,z)=>{
+    const floor=surface.sample(x,z);
+    return floor.water<=5&&floor.road<120&&floor.grass>100&&!inBed(x,z,"low")&&!inName(x,z);
+  };
+  game.world.flowers=new Flowers(flowerRefs,flowerAccepts);
+  game.world.vegetationStats.flowers=game.world.flowers.transformMatrices.length;
   function clean(root) {
     const remove = [];
     root.traverse((m) => {

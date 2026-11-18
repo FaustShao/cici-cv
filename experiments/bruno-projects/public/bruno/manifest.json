@@ -101,6 +101,11 @@
       "path": "terrain/terrain.png",
       "bytes": 334262,
       "sha256": "ba1e67981d31cceae305940246246a2eb50a6bda94dc58ca0875bbf2434573bc"
+    },
+    {
+      "path": "flowers/flowersReferences.glb",
+      "bytes": 19404,
+      "sha256": "cd277f227d6179f772b4feeab2dd7e06abcaf90fb2186bd7dfc14cc403c64e14"
     }
   ]
 }
