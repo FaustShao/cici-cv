@@ -3,11 +3,12 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
 (async()=>{const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});try{
  const page=await b.newPage({viewport:{width:1200,height:850}});
  // Exercise progress, unchanged geometry, reduced-motion, and completion independently of WebGL speed.
- await page.goto(root);await page.goto(new URL('click-sounds.html',root).href);
+ await page.goto(new URL('click-sounds.html',root).href);
  await page.addScriptTag({url:new URL('site-loader.js',root).href});await page.addStyleTag({url:new URL('site-loader.css',root).href});
  await page.evaluate(()=>{const el=document.createElement('div');el.id='test-loader';document.body.append(el);window.testLoader=CeciliaLoader.create(el);testLoader.setPercent(68);});
  assert.equal(await page.locator('#test-loader .cube').count(),27);assert.equal(await page.locator('#test-loader').getAttribute('aria-valuenow'),'68');
  assert.equal(await page.locator('#test-loader').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(91, 40, 98)');
+ await page.locator('#test-loader').waitFor({state:'visible'});
  await page.screenshot({path:path.join(__dirname,'../experiments/bruno-projects/public/review/loading-cubes.png')});
  await page.evaluate(()=>{testLoader.setPercent(30);});assert.equal(await page.locator('#test-loader').getAttribute('aria-valuenow'),'68');
  await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('#test-loader .cube').first().evaluate(e=>getComputedStyle(e).animationPlayState),'paused');
