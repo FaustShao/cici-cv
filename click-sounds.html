@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>点击声试听 · Cecilia</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff3dd;color:#38233f;font:16px/1.6 system-ui,sans-serif}main{max-width:850px;padding:48px 24px;margin:auto}a{color:inherit}h1{font-size:30px;margin:8px 0}p{margin:8px 0 24px;color:#68516c}.samples{display:grid;grid-template-columns:1fr 1fr;gap:18px}article{padding:22px;background:#fffaf0;border:1px solid #decab2;border-radius:16px;box-shadow:0 5px 0 #e9d4bd}h2{font-size:20px;margin:0 0 5px}small{color:#806d83}audio{display:block;width:100%;margin-top:20px}label{display:flex;align-items:center;gap:14px;margin:25px 0}input{accent-color:#9a5d75}footer{font-size:13px;margin-top:34px;color:#806d83}@media(max-width:580px){.samples{grid-template-columns:1fr}main{padding:24px 18px}}
+</style></head><body><main><a href="cecilia-world/hub.html">← 返回个人网站</a><h1>选一个喜欢的点击声</h1><p>每个样本连响三次。听完后在聊天里回复 1、2、3 或 4，我再把你选的那一个加入网站。</p><label>试听音量 <input id="volume" type="range" min="0" max="1" step="0.05" value="0.6"><output id="level">60%</output></label>
+<div class="samples">
+<article><h2>01 · 点击声一</h2><small>CLICK 001 · 单次约 0.10 秒</small><audio controls preload="none" aria-label="试听点击声一，重复三次" src="assets/click-options/1-preview.mp3"></audio></article>
+<article><h2>02 · 点击声二</h2><small>CLICK 002 · 单次约 0.012 秒</small><audio controls preload="none" aria-label="试听点击声二，重复三次" src="assets/click-options/2-preview.mp3"></audio></article>
+<article><h2>03 · 点击声三</h2><small>CLICK 004 · 单次约 0.022 秒</small><audio controls preload="none" aria-label="试听点击声三，重复三次" src="assets/click-options/3-preview.mp3"></audio></article>
+<article><h2>04 · 点击声四</h2><small>CLICK 005 · 单次约 0.007 秒</small><audio controls preload="none" aria-label="试听点击声四，重复三次" src="assets/click-options/4-preview.mp3"></audio></article>
+</div><footer>音效：<a href="https://kenney.nl/assets/interface-sounds" target="_blank" rel="noopener">Kenney · Interface Sounds</a>（CC0）。仅此页点击播放时发声，个人网站目前保持静音。</footer></main>
+<script>
+const players=[...document.querySelectorAll('audio')],volume=document.getElementById('volume');
+for(const player of players){player.volume=Number(volume.value);player.addEventListener('play',()=>players.forEach(other=>{if(other!==player)other.pause()}));}
+volume.addEventListener('input',()=>{players.forEach(player=>player.volume=Number(volume.value));document.getElementById('level').textContent=Math.round(Number(volume.value)*100)+'%'});
+</script></body></html>

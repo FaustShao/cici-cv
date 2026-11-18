@@ -33,6 +33,7 @@ jobs:
           mkdir public
           cp island.css island-ui.js island-scene.js island-models.js public/
           cp index.html resume.html works.html tideline.html tideline.css tideline.js dream-sentinel.html dream-sentinel.css dream-sentinel.js dream-sentinel-layers.js dream-sentinel-32.js dream-sentinel-32-layers.js dream-sentinel-33.js dream-sentinel-33-layers.js dream-sentinel-34.js dream-sentinel-34-layers.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/
+          cp click-sounds.html public/
           cp -R assets public/
           cp world-resume.css public/
           cp resume-document.css resume-document.js resume-layers.js public/
