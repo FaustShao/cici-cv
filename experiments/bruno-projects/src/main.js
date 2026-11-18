@@ -1,3 +1,5 @@
+import { getWorldAudio } from "./world-audio.js";
+import { addWorldAtmosphere } from "./world-atmosphere.js";
 import * as T from "three/webgpu";
 import {
   color,
@@ -31,6 +33,8 @@ import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 import data from "./data/projects.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
+const worldAudio = getWorldAudio();
+worldAudio.bind(document);
 const $ = (id) => document.getElementById(id),
   reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 gsap.ticker.lagSmoothing(0);
@@ -208,7 +212,7 @@ try {
       intervalEvents: new Map([["night", { inInterval: false }]]),
     },
     weather: {
-      wind: { value: 0.25 },
+      wind: { value: 0.76 },
       temperature: { value: 5 },
       rain: { value: 0 },
     },
@@ -384,6 +388,7 @@ try {
   }
   game.noises = new Noises();
   game.wind = new Wind();
+  game.wind.timeFrequency=.28;
   game.terrain = new Terrain();
   game.lighting = new Lighting();
   game.fog = new Fog();
@@ -402,6 +407,10 @@ try {
   Trees.prototype.setPhysical = noop;
   game.world.floor = new Floor();
   game.world.grass = new Grass();
+  game.world.grass.bladeWidth.value = 0.045;
+  game.world.grass.bladeHeight.value = 1.02;
+  game.world.grass.bladeHeightRandomness.value = 0.45;
+  game.world.atmosphere = addWorldAtmosphere(game, matchMedia("(prefers-reduced-motion: reduce)").matches);
   const near = (object) =>
     Math.hypot(object.position.x - center.x, object.position.z - center.z) < 33;
   const trees = [
@@ -734,6 +743,7 @@ try {
     pointers.delete(event.pointerId);
     if (pointers.size) return;
     if (!dragged && !pinched) {
+      if(pressed)worldAudio.play();
       pressed?.onClick?.();
       syncSelection();
     }

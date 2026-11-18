@@ -1,4 +1,4 @@
-import { vec2, Fn, texture, uniform } from 'three/tsl'
+import { sin, vec2, Fn, texture, uniform } from 'three/tsl'
 import { Game } from './Game.js'
 import { remapClamp } from './utilities/maths.js'
 
@@ -37,7 +37,8 @@ export class Wind
             const noiseUv2 = remapedPosition.xy.mul(0.1).add(this.direction.mul(this.localTime.mul(0.2))).xy
             const noise2 = texture(this.game.noises.perlin, noiseUv2).r.sub(0.5)
 
-            const intensity = noise2.add(noise1)
+            const gust = sin(position.x.mul(0.8).add(position.y.mul(0.45)).add(this.game.ticker.elapsedScaledUniform.mul(1.8))).mul(0.20)
+            const intensity = noise2.add(noise1).add(gust)
             
             return vec2(this.direction.mul(intensity).mul(this.strength))
         })

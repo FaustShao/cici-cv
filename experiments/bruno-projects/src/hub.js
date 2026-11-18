@@ -1,3 +1,4 @@
+import { getWorldAudio } from "./world-audio.js";
 import { T, createWorld } from "./create-world.js";
 import { texture, uniform } from "three/tsl";
 import { createFixtures } from "./scene-fixtures.js";
@@ -6,6 +7,8 @@ import { referenceViews } from "./scene-views.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 import "../../../resume.js";
 
+const worldAudio = getWorldAudio();
+worldAudio.bind(document);
 const $ = (id) => document.getElementById(id),
   profile = window.RESUME;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -386,6 +389,14 @@ try {
   fixtures.parcel(kioskRoot,42.89033170249464,33.57996186497684,2.022352518678825*.85,{plaza:true,radius:0,precise:true,supportName:"physicalFixed009",ignoreReservations:["benchPhysicalDynamic001"]});
   const welcome = fixtures.welcomeSign();
   const pixelHand=fixtures.pixelPointer(mapBrightness);
+  const mapHint=document.createElement("div");
+  mapHint.id="map-hover-hint";mapHint.setAttribute("aria-hidden","true");
+  mapHint.innerHTML='<span>MAP</span><i><b>↵</b></i>';
+  document.body.append(mapHint);
+  let mapHovered=false;
+  function showMapHint(value){mapHovered=value;mapHint.classList.toggle("visible",value&&place==="home"&&!navigationMap.dialog.open);}
+  $("world").addEventListener("pointerleave",()=>showMapHint(false));
+
   if(kioskFace){
     const g=kioskFace.geometry,p=g.attributes.position;
     const p0=new T.Vector3().fromBufferAttribute(p,0),p1=new T.Vector3().fromBufferAttribute(p,1),p2=new T.Vector3().fromBufferAttribute(p,2);
@@ -554,6 +565,7 @@ try {
   $("world").addEventListener("pointerdown", (e) => {
     if (e.button !== 0 && e.button !== 1) return;
     e.preventDefault();
+    showMapHint(false);
     mouseButton=e.button;
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     e.target.setPointerCapture(e.pointerId);
@@ -590,14 +602,19 @@ try {
         targetPitch = T.MathUtils.clamp(targetPitch-(e.clientY-last.y)*0.003,0.22,1.3);
       }
       last = { x: e.clientX, y: e.clientY };
-    } else $("world").dataset.hover = String(!!pick(e.clientX, e.clientY));
+    } else {
+      const hit=pick(e.clientX,e.clientY);
+      $("world").dataset.hover=String(!!hit);
+      showMapHint(hit==="map");
+    }
   });
   $("world").addEventListener("auxclick",e=>{if(e.button===1)e.preventDefault();});
   $("world").addEventListener("pointerup", (e) => {
     pointers.delete(e.pointerId);
     if (pointers.size) return;
     if (!drag && !pinched && pressed) {
-      if (pressed === "map") navigationMap.open();
+      worldAudio.play(pressed === "map" ? "map" : pressed.isObject3D ? "device" : "click");
+      if (pressed === "map") {showMapHint(false);navigationMap.open();}
       else if(pressed === "contact-mail")location.href=social.userData.mailto;
       else if(pressed === "resume-preview")openCurrent();
       else if (pressed.isObject3D) devices.hit(pressed);
@@ -681,6 +698,11 @@ try {
         );
       camera.lookAt(currentLook);
       camera.updateMatrixWorld();
+      if(mapHovered&&place==="home"){
+        const anchor=new T.Box3().setFromObject(kioskFace).getCenter(new T.Vector3()).project(camera);
+        mapHint.style.left=`${T.MathUtils.clamp((anchor.x+1)*innerWidth/2-35,90,innerWidth-100)}px`;
+        mapHint.style.top=`${T.MathUtils.clamp((1-anchor.y)*innerHeight/2+20,70,innerHeight-100)}px`;
+      }else mapHint.classList.remove("visible");
       game.view.spherical.offset.copy(camera.position).sub(currentLook);
       game.view.spherical.radius.current = currentDistance;
       game.view.focusPoint.position.copy(currentLook);

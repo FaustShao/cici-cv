@@ -1,3 +1,4 @@
+import { addWorldAtmosphere } from "./world-atmosphere.js";
 // Shared upstream visual modules, without vehicle, physics, or sound bootstraps.
 import * as T from "three/webgpu";
 import { color, float, uniform, pass, renderOutput } from "three/tsl";
@@ -78,7 +79,7 @@ export async function createWorld(canvas, progress) {
       intervalEvents: new Map([["night", { inInterval: false }]]),
     },
     weather: {
-      wind: { value: 0.55 },
+      wind: { value: 0.76 },
       temperature: { value: 5 },
       rain: { value: 0 },
     },
@@ -269,7 +270,7 @@ export async function createWorld(canvas, progress) {
   setTheme(false);
   game.noises = new Noises();
   game.wind = new Wind();
-  game.wind.timeFrequency=.18;
+  game.wind.timeFrequency=.28;
   game.terrain = new Terrain();
   game.lighting = new Lighting();
   game.fog = new Fog();
@@ -287,7 +288,11 @@ export async function createWorld(canvas, progress) {
   game.world.floor = new Floor();
   game.view.optimalArea.radius = 45;
   game.world.grass = new Grass();
-  game.world.grass.bladeHeight.value = 0.65;
+  game.world.grass.bladeWidth.value = 0.045;
+  game.world.grass.bladeHeight.value = 1.02;
+  game.world.grass.bladeHeightRandomness.value = 0.45;
+  game.world.atmosphere = addWorldAtmosphere(game, matchMedia("(prefers-reduced-motion: reduce)").matches);
+
   const near = (object) =>
     Math.hypot(object.position.x - center.x, object.position.z - center.z) < 48;
   const nearVegetation = (object) =>
