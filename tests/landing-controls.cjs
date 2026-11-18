@@ -14,6 +14,7 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
     assert.equal(await page.evaluate(()=>designWorld.crates.children.length),3);
     assert.ok(await page.evaluate(()=>Math.abs(designWorld.crates.userData.stackSupportGap-.005)<.001));
     assert.equal(await page.evaluate(()=>designWorld.welcome.userData.text),"王钰欣 / Cecilia\n的个人网站");
+    assert.deepEqual(await page.evaluate(()=>designWorld.identity.userData.chineseGapAdvances),[47,49]);
     assert.ok(await page.evaluate(()=>{
       const n=designWorld.identity.userData.parcel,a=designWorld.identity.rotation.y,s=Math.sin(a),c=Math.cos(a);
       return designWorld.devices.roots.every(root=>{

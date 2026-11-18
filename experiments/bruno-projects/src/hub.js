@@ -116,6 +116,7 @@ function openReader(title, file) {
                 "tideline.html",
                 "gazette.html",
                 "dream-sentinel.html",
+                "safepaw.html",
                 "portfolio.html",
               ].includes(name)
             ) {

@@ -6,12 +6,13 @@
 
 - `hub.html` / `src/hub.js`：姓名、阅读桌、实验室与联络模型及分类交互；简历入口优先，点击模型可以完整阅读。
 - `src/create-world.js`：复用原视觉模块和模型，开放地面、固定日间、植被、光影与触屏；保留初始辉光和景深，不启动物理、车辆或后台，不再提供夜间/画质切换。
-- `/bruno-preview/`：保留已确认的作品展架，三件作品同级直接阅读。原项目内部画面和素材不重新设计。
+- `/bruno-preview/`：保留已确认的作品展架，四件作品同级直接阅读。原项目内部画面和素材不重新设计。
 - `resume.html?document=1`、`resume-document.css`、`resume-document.js`：保留用户两页 PDF 原稿的简历阅读与打印页；`resume.html`、`works.html` 和旧书签跳至对应三维入口。旧 `world-resume.css` 仍供历史其他项目页使用，不修改。
 - QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。真实截图在 `experiments/bruno-projects/public/review/`。
 - 联系方式整组位于入口右侧的原键盘空地，信箱字面与呼吸圆环可直接写邮件；平面地图同步新落点，姓名入口可回到原始镜头。红屋顶地图牌缩小 15% 并按实际双脚落地，欢迎牌保留原比例和位置，两行小赖文字限制在木板内。姓名使用 56 像素采样方块，提高笔画间隙；风场与原生叶簇摆动共用日间渲染，补充粉色植被。`tests/contact-clearing.cjs` 校验迁移、模型碰撞、字面边界、风动和地图返回。
 - 植被补全：接入原版 `Flowers` 模块的八片花瓣与花丛分布资源，补充粉色／浅色花丛；树木及灌木显示范围扩大到 72 单位，按模型所在区域避让，入口补充原生粉色树。姓名组合再放大 12%，英文额外放大 30%，中文字进位从 58 收紧至 52；信箱字面透明，不再绘制矩形边框。原始花丛资源的 SHA-256 记于 `public/bruno/manifest.json`。
 - 入口字形微调：中文进位进一步收紧至 49，“欣”的下行笔画改成直斜线；`/ CECILIA` 再放大 5%、纵向拉伸 13%，字母间距从 1 格收紧为 0.55 格。首页首帧成功显示后，地图牌和像素小手同步自动亮一次，随后恢复原状，原开关点击亮灯保留。`tests/landing-controls.cjs` 同时验证无点击开场亮灯与后续手动交互；真实截图为 `public/review/entry-map-intro.webp`。
+- SafePaw Family 宠爱守护为作品集第 4 项，入口 `safepaw.html`；五张 3488×1744 画板按 Figma 2.1—2.5 原坐标连续排版，桌面适应宽度、按钮放大，手机默认横向阅读并支持适应宽度。292 张上传 PNG 字节全部保留，补回原稿缺少的装饰圆点；`assets/safepaw-family/source-inventory.json` 记录原文件名、Figma 节点、几何和 SHA-256。图卡仅局部高亮，无新页面或点击放大弹窗；`tests/safepaw.cjs` 验证逐图几何、完整性、Figma 截图与阅读交互，`tests/safepaw-world.cjs` 验证 04/04 展架入口和返回。首页此次只加粗“欣”最后一捺，并单独收紧“王—钰”间距。
 
 ## 历史小岛实现（已不作为入口）
 

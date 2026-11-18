@@ -36,6 +36,7 @@ jobs:
           cp -R assets public/
           cp world-resume.css public/
           cp resume-document.css resume-document.js resume-layers.js public/
+          cp safepaw.html safepaw.css safepaw.js safepaw-layers.js public/
           cp -R bruno-preview public/bruno-preview
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

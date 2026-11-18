@@ -84,7 +84,7 @@ const root = process.env.PREVIEW_ROOT || "http://127.0.0.1:8000/";
       );
       assert.equal(await page.locator("#fallback").isVisible(), false);
       await page.locator("#next").click();
-      assert.equal(await page.locator("#selection").innerText(), "02 / 03");
+      assert.equal(await page.locator("#selection").innerText(), "02 / 04");
       await page.locator("#open-work").evaluate((element) => element.click());
       assert.equal(
         await page.locator("#reader").evaluate((element) => element.open),

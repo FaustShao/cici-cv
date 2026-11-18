@@ -345,12 +345,12 @@ export function createFixtures(world) {
         const stroke=points=>{ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fill();};
         stroke([[6,22],[12,22],[7,45],[2,43]]);
         stroke([[33,23],[39,23],[29,45],[23,43]]);
-        stroke([[35,28],[39,26],[49,42],[45,45]]);
+        stroke([[34,28],[39,25],[50,42],[45,46]]);
       }
       const data = ctx.getImageData(0, 0, 56, 56).data;
       for (let y = 0; y < 52; y++) for (let x = 0; x < 52; x++)
         if (data[(y * 56 + x) * 4 + 3] > 150) pixels.push([offset + x, 51 - y]);
-      offset += 49;
+      offset += char==="王"?47:49;
     }
     const alphabet = {
       C: ["01111","11000","11000","11000","11000","11000","01111"],
@@ -398,6 +398,7 @@ export function createFixtures(world) {
     root.userData.blockCount = chineseCount+caption.length;
     root.userData.glyphResolution=56;
     root.userData.chineseAdvance=49;
+    root.userData.chineseGapAdvances=[47,49];
     root.userData.angularGlyph="欣";
     root.userData.captionStretch=captionStretch;
     root.userData.captionLetterGap=.55;

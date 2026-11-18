@@ -118,7 +118,7 @@ function select(index) {
     area.changeProject(selected, ProjectsArea.DIRECTION_NEXT, true, true);
     area.navigation.index = selected;
   }
-  $("selection").textContent = String(selected + 1).padStart(2, "0") + " / 03";
+  $("selection").textContent = String(selected + 1).padStart(2, "0") + " / " + String(data.length).padStart(2,"0");
   $("project-name").textContent = data[selected].title;
 }
 $("previous").onclick = () => select((area?.navigation.index ?? selected) - 1);
@@ -744,7 +744,7 @@ try {
       if (selected !== area.navigation.index) {
         selected = area.navigation.index;
         $("selection").textContent =
-          String(selected + 1).padStart(2, "0") + " / 03";
+          String(selected + 1).padStart(2, "0") + " / " + String(data.length).padStart(2,"0");
         $("project-name").textContent = data[selected].title;
       }
     } catch (error) {

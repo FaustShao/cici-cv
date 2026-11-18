@@ -87,6 +87,15 @@ window.RESUME = {
       "cover": "assets/dream-sentinel/3.1/DREAM SENTINEL.png"
     },
     {
+      "name": "SafePaw Family 宠爱守护",
+      "category": "04 / 儿童与宠物安全交互设计 · 2024.04 — 2024.08",
+      "description": "融合犬用智能穿戴、互动监测球与家长端 App，探索儿童与宠物犬互动中的状态感知、风险预警与互动引导。",
+      "tags": ["产品设计", "交互设计", "智能穿戴"],
+      "url": "safepaw.html",
+      "collection": "portfolio",
+      "cover": "assets/safepaw-family/cover.webp"
+    },
+    {
       "name": "TASA-ICoD 国际设计工作坊",
       "category": "03 / 未来概念探索设计合作 · 2024.08 — 2024.09",
       "description": "清华青岛艺术与科学创新研究院 × 国际设计联合会（ICoD）；团队项目，担任中韩国际团队组长。",

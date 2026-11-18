@@ -91,7 +91,7 @@ const review = path.resolve(
       }
       assert.equal(
         await page.locator("#selection").innerText(),
-        `0${i + 1} / 03`,
+        `0${i + 1} / 04`,
       );
       const point = await page.evaluate(() => {
         const mesh = preview.area.images.mesh;
@@ -133,11 +133,12 @@ const review = path.resolve(
       await page.locator("#close-reader").click();
       assert.equal(
         await page.locator("#selection").innerText(),
-        `0${i + 1} / 03`,
+        `0${i + 1} / 04`,
       );
       console.log("PASS direct model reading:", file);
     }
     // Test the original model's right arrow, not just the HTML fallback controls.
+    await page.evaluate(()=>preview.select(3));
     const arrow = await page.evaluate(() => {
       const p = preview.area.adjacents.next.intersect.shape.center
         .clone()
@@ -150,7 +151,7 @@ const review = path.resolve(
     await page.mouse.click(arrow.x, arrow.y);
     await page.waitForFunction(() => preview.area.navigation.index === 0);
     await page.keyboard.press("ArrowRight");
-    assert.equal(await page.locator("#selection").innerText(), "02 / 03");
+    assert.equal(await page.locator("#selection").innerText(), "02 / 04");
     assert.equal(await page.locator("#quality").count(),0);
     await page.locator("#overview").click();
     await page.waitForTimeout(350);
@@ -197,7 +198,7 @@ const review = path.resolve(
     });
     assert.equal(await phone.locator("#reader").evaluate((e) => e.open), false);
     await phone.locator("#next").click();
-    assert.equal(await phone.locator("#selection").innerText(), "02 / 03");
+    assert.equal(await phone.locator("#selection").innerText(), "02 / 04");
     await phone.close();
     const failed = await browser.newPage();
     await failed.route("**/bruno/areas/areas.glb", (r) => r.abort());
@@ -205,7 +206,7 @@ const review = path.resolve(
     await failed.waitForFunction(() => document.body.dataset.failed, null, {
       timeout: 60000,
     });
-    assert.equal(await failed.locator("#fallback a").count(), 3);
+    assert.equal(await failed.locator("#fallback a").count(), 4);
     assert.equal(
       await failed.locator("#fallback-title").innerText(),
       "暂时无法显示 3D 场景",

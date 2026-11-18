@@ -35,4 +35,16 @@ export default [
     distinctions: [],
     images: ["sentinel.webp"],
   },
+  {
+    title: "SafePaw Family",
+    titleSmall: ["SafePaw", "Family"],
+    url: "safepaw.html",
+    attributes: {
+      role: ["产品设计", "交互设计"],
+      at: "儿童 × 宠物",
+      with: "设计项目",
+    },
+    distinctions: [],
+    images: ["safepaw.webp"],
+  },
 ];
