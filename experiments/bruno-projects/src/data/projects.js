@@ -11,7 +11,7 @@ export default [
         "设计研究",
         "服务设计"
       ],
-      "at": "GSA / Findhorn",
+      "at": "Findhorn",
       "with": "团队项目"
     },
     "distinctions": [],
@@ -31,13 +31,19 @@ export default [
         "产品设计",
         "交互设计"
       ],
-      "at": "儿童 × 宠物",
-      "with": "设计项目"
+      "at": [
+        "家庭养宠",
+        "儿童与犬互动"
+      ],
+      "with": "个人项目"
     },
     "distinctions": [],
     "images": [
       "safepaw-cover-v3.webp"
-    ]
+    ],
+    "attributeLabels": {
+      "at": "应用场景"
+    }
   },
   {
     "title": "DREAM SENTINEL",
@@ -51,13 +57,19 @@ export default [
         "可穿戴设计",
         "交互设计"
       ],
-      "at": "未来概念",
-      "with": "设计项目"
+      "at": [
+        "灾害应急",
+        "智能防护"
+      ],
+      "with": "个人项目"
     },
     "distinctions": [],
     "images": [
       "sentinel-cover-v3.webp"
-    ]
+    ],
+    "attributeLabels": {
+      "at": "应用场景"
+    }
   },
   {
     "title": "Forres Future Gazette 2050",
@@ -71,7 +83,7 @@ export default [
         "设计研究",
         "体验设计"
       ],
-      "at": "GSA / Rural Lab",
+      "at": "Forres",
       "with": "个人项目"
     },
     "distinctions": [],

@@ -39,6 +39,7 @@ const contentRoot = import.meta.env.DEV
   ? new URL("http://127.0.0.1:8000/")
   : new URL("../", location.href);
 $("back-site").href = new URL("hub.html", location.href);
+let updateProjectLabels = () => {};
 let selected = 0,
   reading = false,
   area,
@@ -122,6 +123,7 @@ function select(index) {
 }
 function syncSelection() {
   selected = area?.navigation.index ?? selected;
+  updateProjectLabels();
   $("selection").textContent = String(selected + 1).padStart(2, "0") + " / " + String(data.length).padStart(2,"0");
   $("project-name").textContent = data[selected].title;
 }
@@ -146,7 +148,7 @@ try {
     document.fonts.load("700 18px Nunito"),
     document.fonts.load(
       '400 40px Xiaolai',
-      "精选作品设计研究服务角色地点合作档案",
+      "精选作品设计研究服务角色地点项目性质应用场景档案家庭养宠儿童与犬互动灾害应急智能防护个人",
     ),
   ]);
   renderer = new T.WebGPURenderer({
@@ -468,23 +470,32 @@ try {
   labelsCanvas.width = 2048;
   labelsCanvas.height = 512;
   const labelsContext = labelsCanvas.getContext("2d");
-  labelsContext.fillStyle = "#000";
-  labelsContext.fillRect(0, 0, 2048, 512);
-  labelsContext.fillStyle = "#fff";
-  labelsContext.textAlign = "center";
-  labelsContext.textBaseline = "middle";
-  for (const [label, x, y, size] of [
-    ["设计档案", 1024, 128, 150],
-    ["合作", 393, 384, 210],
-    ["角色", 1188, 384, 210],
-    ["地点", 1791, 384, 185],
-  ]) {
-    labelsContext.font = `400 ${size}px Xiaolai`;
-    labelsContext.fillText(label, x, y);
-  }
   const labelsTexture = new T.CanvasTexture(labelsCanvas);
   labelsTexture.colorSpace = T.SRGBColorSpace;
   labelsTexture.flipY = false;
+  let currentAtLabel = null;
+  updateProjectLabels = () => {
+    const atLabel = data[selected].attributeLabels?.at || "地点";
+    if (atLabel === currentAtLabel) return;
+    currentAtLabel = atLabel;
+    labelsContext.fillStyle = "#000";
+    labelsContext.fillRect(0, 0, 2048, 512);
+    labelsContext.fillStyle = "#fff";
+    labelsContext.textAlign = "center";
+    labelsContext.textBaseline = "middle";
+    for (const [label, x, y, size] of [
+      ["设计档案", 1024, 128, 150],
+      ["项目性质", 393, 384, 140],
+      ["角色", 1188, 384, 210],
+      [atLabel, 1791, 384, atLabel.length > 2 ? 105 : 185],
+    ]) {
+      labelsContext.font = `400 ${size}px Xiaolai`;
+      labelsContext.fillText(label, x, y);
+    }
+    labelsTexture.needsUpdate = true;
+    labelsCanvas.dataset.atLabel = atLabel;
+  };
+  updateProjectLabels();
   projectRoot.traverse((mesh) => {
     if (mesh.isMesh && mesh.material.name === "projectsLabels")
       mesh.material.map = labelsTexture;
