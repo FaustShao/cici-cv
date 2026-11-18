@@ -156,7 +156,7 @@ export class Foliage
         {
             instance(object.count, this.instanceMatrix).toStack()
 
-            return positionLocal//.add(vec3(wind.x, 0, wind.y).mul(multiplier))
+            return positionLocal
         })()
 
         // Received shadow position
@@ -201,7 +201,7 @@ export class Foliage
         this.game.scene.add(this.mesh)
 
         this.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(this.mesh.count * 16), 16)
-        this.instanceMatrix.setUsage(THREE.StaticDrawUsage)
+        this.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
 
         let i = 0
         for(const matrix of this.transformMatrices)
@@ -209,10 +209,30 @@ export class Foliage
             matrix.toArray(this.instanceMatrix.array, i * 16)
             i++
         }
+        this.restMatrices = this.instanceMatrix.array.slice()
     }
 
     update()
     {
+        // Sway native leaf clusters without adding costly vertex texture reads.
+        // Rest matrices keep trunks fixed and prevent accumulating drift.
+        const time = this.game.ticker.elapsedScaled
+        const strength = this.game.wind.strength.value
+        const direction = this.game.wind.direction.value
+        if(this.swayTime !== time || this.swayStrength !== strength)
+        {
+            for(let i = 0; i < this.transformMatrices.length; i++)
+            {
+                const k = i * 16
+                const x = this.restMatrices[k + 12], z = this.restMatrices[k + 14]
+                const gust = (Math.sin(time * 1.5 + x * .34 + z * .22) + Math.sin(time * .7 + z * .45) * .35) * strength * .14
+                this.instanceMatrix.array[k + 12] = x + direction.x * gust
+                this.instanceMatrix.array[k + 14] = z + direction.y * gust
+            }
+            this.instanceMatrix.needsUpdate = true
+            this.swayTime = time
+            this.swayStrength = strength
+        }
         this.material.seeThroughPosition.value.copy(this.game.world.visualVehicle.screenPosition)
 
         this.material.seeThroughEdgeMin.value = 3 / this.game.view.spherical.radius.current * this.seeThroughMultiplier

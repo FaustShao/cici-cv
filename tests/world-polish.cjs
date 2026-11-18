@@ -12,7 +12,7 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
    const w=designWorld,n=w.identity,cn=n.getObjectByName('voxel-name-blocks'),en=n.getObjectByName('voxel-name-caption');
    return{center:n.userData.parcel,text:n.userData.text,cnHeight:cn.boundingBox.max.y-cn.boundingBox.min.y,enHeight:en.boundingBox.max.y-en.boundingBox.min.y,cnCell:cn.geometry.parameters.width,day:w.world.game.dayCycles.progress,view:w.viewState()};
   });
-  assert.equal(name.center.x,43);assert.equal(name.center.z,42.5);assert.equal(name.text,'王钰欣 / CECILIA');assert.ok(name.enHeight<name.cnHeight*.25);assert.ok(name.cnCell>.066);assert.equal(name.day,.12);assert.equal(name.view.yaw,.8231748736701113);
+  assert.equal(name.center.x,43);assert.equal(name.center.z,42.5);assert.equal(name.text,'王钰欣 / CECILIA');assert.ok(name.enHeight<name.cnHeight*.25);assert.ok(name.cnHeight>1.65);assert.equal(name.day,.12);assert.equal(name.view.yaw,.8231748736701113);
   await p.screenshot({path:'/tmp/name-caption-day.png'});
   await p.goto('http://127.0.0.1:8000/bruno-preview/index.html?webgl=1');
   await p.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});

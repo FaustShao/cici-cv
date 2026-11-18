@@ -9,6 +9,7 @@
 - `/bruno-preview/`：保留已确认的作品展架，三件作品同级直接阅读。原项目内部画面和素材不重新设计。
 - `resume.html?document=1`、`resume-document.css`、`resume-document.js`：保留用户两页 PDF 原稿的简历阅读与打印页；`resume.html`、`works.html` 和旧书签跳至对应三维入口。旧 `world-resume.css` 仍供历史其他项目页使用，不修改。
 - QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。真实截图在 `experiments/bruno-projects/public/review/`。
+- 联系方式整组位于入口右侧的原键盘空地，信箱字面与呼吸圆环可直接写邮件；平面地图同步新落点，姓名入口可回到原始镜头。红屋顶地图牌缩小 15% 并按实际双脚落地，欢迎牌保留原比例和位置，两行小赖文字限制在木板内。姓名使用 56 像素采样方块，提高笔画间隙；风场与原生叶簇摆动共用日间渲染，补充粉色植被。`tests/contact-clearing.cjs` 校验迁移、模型碰撞、字面边界、风动和地图返回。
 
 ## 历史小岛实现（已不作为入口）
 

@@ -19,9 +19,9 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
         scale:w.kioskRoot.scale.x,bodyScale:w.devices.roots[0].scale.x,handParent:w.pixelHand.parent.name,handMeshes:w.pixelHand.children.map(m=>m.isInstancedMesh),textureType:texture?.image?.tagName,textureURL:texture?.image?.src,
         imageElements:document.querySelectorAll("canvas").length};
     });
-    assert.equal(result.scale,2.022352518678825);assert.equal(result.bodyScale,.62);
+    assert.equal(result.scale,2.022352518678825*.85);assert.equal(result.bodyScale,.62);
     assert.equal(result.handParent,"physicalFixed009");assert.deepEqual(result.handMeshes,[true,true]);
-    assert.equal(result.textureType,"IMG");assert.ok(result.textureURL.endsWith("/ui/cecilia-map.png"),"Board uses the original unannotated map, not the old text/hand canvas");
+    assert.equal(result.textureType,"IMG");assert.ok(new URL(result.textureURL).pathname.endsWith("/ui/cecilia-map.png"),"Board uses the unannotated map, not a text/hand canvas");
     assert.equal(result.contacts.length,2);
     for(const c of result.contacts)assert.ok(Math.abs(c.gap-.015)<.025,"Both visible kiosk feet touch the ground");
     assert.ok(Math.abs(result.frame.minY-.015)<.025);

@@ -269,7 +269,7 @@ try {
     "王钰欣个人简历其他项目联系方式",
   );
   await document.fonts.load('400 24px Xiaolai', "个人简历作品集其他项目联系方式信件地图");
-  await document.fonts.load('400 24px "World Xiaolai"', "想去哪里个人简历作品集其他项目联系方式信件地图");
+  await document.fonts.load('400 24px "World Xiaolai"', "王钰欣的个人网站邮箱想去哪里个人简历作品集其他项目联系方式地图Cecilia");
   await document.fonts.load('700 36px "Amatic SC"', "Welcome to Cecilia’s world.");
   world = await createWorld($("world"), (n, total) => {
     $("loading").textContent = `正在布置设计世界 ${n} / ${total}`;
@@ -352,7 +352,7 @@ try {
     )
       child.removeFromParent();
   const kioskFace = landing.getObjectByName("physicalFixed003");
-  const kioskTexture = await world.textures.loadAsync(world.asset("ui/cecilia-map.png"));
+  const kioskTexture = await world.textures.loadAsync(world.asset("ui/cecilia-map.png?v=contact-clearing"));
   kioskTexture.flipY = false;
   kioskTexture.colorSpace = T.SRGBColorSpace;
   if (kioskFace) {
@@ -382,7 +382,7 @@ try {
     const child=landing.getObjectByName(name); if(child)kioskRoot.attach(child);
   }
   fixtures.levelKiosk(kioskRoot,kioskRoot.getObjectByName("physicalFixed009"),kioskFace);
-  fixtures.parcel(kioskRoot,42.89033170249464,33.57996186497684,2.022352518678825,{plaza:true,radius:0,precise:true,supportName:"physicalFixed009",ignoreReservations:["benchPhysicalDynamic001"]});
+  fixtures.parcel(kioskRoot,42.89033170249464,33.57996186497684,2.022352518678825*.85,{plaza:true,radius:0,precise:true,supportName:"physicalFixed009",ignoreReservations:["benchPhysicalDynamic001"]});
   const welcome = fixtures.welcomeSign();
   const pixelHand=fixtures.pixelPointer(mapBrightness);
   if(kioskFace){
@@ -406,10 +406,10 @@ try {
     const size = box.getSize(new T.Vector3());
     const label = fixtures.sign(
       title,
-      key==="resume"?22.35:key==="contact"?55:focus.x - size.x * 0.5 - 1.2,
-      key==="resume"?25.9:key==="contact"?46.5:focus.z + 1.2,
+      key==="resume"?22.35:key==="contact"?56:focus.x - size.x * 0.5 - 1.2,
+      key==="resume"?25.9:key==="contact"?29.5:focus.z + 1.2,
       key==="resume"?2.5:3.4,
-      key==="resume"||key==="contact"?{plaza:true,radius:0,precise:true,hull:true}:{},
+      key==="resume"||key==="contact"?{plaza:true,radius:0,precise:true,hull:true,ignoreReservations:key==="contact"?["roadside-post-corner"]:[]}:{},
     );
     const focusWithLabel = focus.clone();
     focusWithLabel.y += 1;
@@ -423,6 +423,7 @@ try {
   Object.assign(stations.get("resume"),{focus:new T.Vector3(25.4,1.8,24.3),distance:15,yaw:.5,pitch:.99});
   Object.assign(stations.get("other"),{distance:16,yaw:.55,pitch:1.18});
   Object.assign(stations.get("contact"),referencePose("contact"));
+  stations.get("contact").focus.z-=15.5;
   const landingBounds = new T.Box3().setFromObject(identity);
   for (const root of devices.roots) landingBounds.union(new T.Box3().setFromObject(root));
   // Match the upstream landing's focus behind the letters, adapted to our
@@ -525,6 +526,7 @@ try {
   function pick(x, y) {
     pointer.set((x / innerWidth) * 2 - 1, (-y / innerHeight) * 2 + 1);
     ray.setFromCamera(pointer, camera);
+    if(place==="contact" && (ray.intersectObject(social.getObjectByName("mailbox-label"),false).length || ray.intersectObject(social.getObjectByName("mailbox-click-ring"),false).length))return "contact-mail";
     if(place === "resume" && resumePreview && ray.intersectObject(resumePreview,true).length)return "resume-preview";
     if (place === "home") {
       const hits = devices.roots.flatMap(root => ray.intersectObject(root, true).map(hit => ({ ...hit, root })));
@@ -595,6 +597,7 @@ try {
     if (pointers.size) return;
     if (!drag && !pinched && pressed) {
       if (pressed === "map") navigationMap.open();
+      else if(pressed === "contact-mail")location.href=social.userData.mailto;
       else if(pressed === "resume-preview")openCurrent();
       else if (pressed.isObject3D) devices.hit(pressed);
       else if (place === pressed) openCurrent();
@@ -643,6 +646,7 @@ try {
   function updateEffects(dt) {
     effectTime+=dt;
     devices.update(effectTime,reduced);
+    social.animateCue(effectTime,reduced);
     const age=effectTime-mapFlashAt;
     mapBrightness.value=age>=0&&age<.7 ? 1+2*Math.sin(Math.PI*age/.7) : 1;
     kioskRoot.userData.flashActive=age>=0&&age<.7;

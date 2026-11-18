@@ -28,7 +28,7 @@ const marks={
     const errors=await page.evaluate(marks=>marks.map(({world,target})=>{
      const camera=designWorld.world.camera,p=camera.position.clone().set(...world).project(camera);
      return Math.hypot((p.x+1)*innerWidth/2-target[0]*innerWidth/1600,(1-p.y)*innerHeight/2-target[1]*innerHeight/850);
-    }),marks[kind]);
+    }),kind==='contact'?marks[kind].map(m=>({...m,world:[m.world[0],m.world[1],m.world[2]-15.5]})):marks[kind]);
     assert.ok(errors.every(e=>e<2.5),kind+' reference landmark pixel errors '+errors);console.log(kind,'reference landmark errors:',errors);
    }
    await page.screenshot({path:'/tmp/approved-layout-'+kind+'.png'});

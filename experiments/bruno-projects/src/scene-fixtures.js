@@ -268,15 +268,16 @@ export function createFixtures(world) {
   function contactCorner(original) {
     const root = new T.Group();
     root.name = "roadside-post-corner";
-    // Upright post box, an envelope tray and a small phone. The road
-    // remains empty: the entire fixture is registered to a dry grass parcel.
+    // Upright post box, an envelope tray and a small phone on the former
+    // keyboard clearing, with the native seat and sculpture kept together.
     box(root, [0.2, 1.2, 0.2], [-0.65, 0.6, 0], "edge");
     box(root, [0.75, 0.12, 0.7], [-0.65, 0.06, 0], "wood");
     box(root, [1.05, 1.1, 0.75], [-0.65, 1.55, 0], "red");
     const roof = box(root, [1.2, 0.16, 0.92], [-0.65, 2.18, 0], "edge");
     roof.rotation.z = -0.06;
     box(root, [0.62, 0.055, 0.04], [-0.65, 1.8, 0.39], "edge");
-    const letter = print("信件", 0.64, 0.28, { bg: "#b65a69", size: 100 });
+    const letter = print("邮箱", 0.85, 0.38, { bg: "#b65a69", size: 180, fit:true });
+    letter.name="mailbox-label";
     letter.position.set(-0.65, 1.45, 0.385);
     root.add(letter);
     box(root, [1.45, 0.15, 0.85], [0.95, 0.9, 0.03]);
@@ -299,7 +300,27 @@ export function createFixtures(world) {
     box(phone, [0.36, 0.02, 0.56], [0, 0.052, -0.03], "teal");
     box(phone, [0.07, 0.025, 0.035], [0, 0.055, 0.3], "cream");
     root.rotation.y = .35;
-    parcel(root, 54,43.5,1.25,{plaza:true,radius:3,precise:true});
+    parcel(root,53,28,1.25,{plaza:true,radius:0,precise:true});
+    // Keep the native bench and stone/sword sculpture together with the post.
+    // The keyboard clearing is exactly 15.5m behind their old location.
+    for(const name of ["Plane002","Plane004"])scene.getObjectByName(name)?.removeFromParent();
+    const bench=scene.getObjectByName("benchPhysicalDynamic005");
+    parcel(bench,51.90829619172057,31.83516334086772,bench.scale.x,{plaza:true,radius:0,precise:true,reserve:false});
+    root.attach(bench);
+    const sculpture=new T.Group();sculpture.name="contact-stone-sculpture";scene.add(sculpture);
+    for(const name of ["base015","sword","refBonfireBurn001","refBonfireHashes"]){
+      const part=scene.getObjectByName(name);if(part)sculpture.attach(part);
+    }
+    // Native stone bases are intentionally buried; preserve their insertion.
+    sculpture.position.z-=15.5;
+    sculpture.userData.insertionDepth=.7290516788259163;
+    root.attach(sculpture);
+    const cue=new T.Mesh(new T.RingGeometry(.4,.435,48),new T.MeshBasicNodeMaterial({colorNode:color("#ffe1a1").mul(1.7),transparent:true,opacity:.7,side:T.DoubleSide,depthWrite:false}));
+    cue.name="mailbox-click-ring";cue.position.set(-.65,1.55,.4);
+    root.add(cue);
+    root.userData.mailto="mailto:wangyuxinqd2025@163.com";
+    root.animateCue=(time,reduced)=>{const phase=reduced?0:(time*.45)%1;cue.scale.setScalar(1+phase*.45);cue.material.opacity=reduced?.7:.8*(1-phase*.7);};
+    root.userData.relocatedFrom={x:53,z:43.5,dz:-15.5};
     return root;
   }
   function nameModel() {
@@ -307,19 +328,19 @@ export function createFixtures(world) {
     root.name = "single-line-owner-name";
     const pixels = [], cell = 0.066;
     const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = 28;
+    canvas.width = canvas.height = 56;
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     let offset = 0;
     for (const char of "王钰欣") {
-      ctx.clearRect(0, 0, 28, 28);
+      ctx.clearRect(0, 0, 56, 56);
       ctx.fillStyle = "white";
-      ctx.font = '900 24px "Scene Sans"';
+      ctx.font = '700 48px "Scene Sans"';
       ctx.textBaseline = "top";
-      ctx.fillText(char, 1, 0);
-      const data = ctx.getImageData(0, 0, 28, 28).data;
-      for (let y = 0; y < 26; y++) for (let x = 0; x < 26; x++)
-        if (data[(y * 28 + x) * 4 + 3] > 100) pixels.push([offset + x, 25 - y]);
-      offset += 28;
+      ctx.fillText(char, 2, 0);
+      const data = ctx.getImageData(0, 0, 56, 56).data;
+      for (let y = 0; y < 52; y++) for (let x = 0; x < 52; x++)
+        if (data[(y * 56 + x) * 4 + 3] > 150) pixels.push([offset + x, 51 - y]);
+      offset += 58;
     }
     const alphabet = {
       C: ["01111","11000","11000","11000","11000","11000","01111"],
@@ -344,13 +365,13 @@ export function createFixtures(world) {
     const frontPower = uniform(1);
     const front = material({colorNode:color(colors.cream).mul(frontPower),hasWater:false});
     const sides = [materials.purple, materials.purple, materials.purple, materials.purple, front, materials.purple];
-    const chineseCell=cell*1.1,captionCell=.045;
+    const chineseCell=cell*1.1/2*1.15,captionCell=.045*1.15*1.1;
     const minX=Math.min(...pixels.map(p=>p[0]))*chineseCell-chineseCell/2;
     const chineseRight=Math.max(...pixels.map(p=>p[0]))*chineseCell+chineseCell/2;
-    const captionStart=chineseRight+.24,captionRight=captionStart+(captionOffset-1)*captionCell;
+    const captionStart=chineseRight+.24*1.15,captionRight=captionStart+(captionOffset-1)*captionCell;
     const centerX=(minX+captionRight)/2,minY=Math.min(...pixels.map(p=>p[1]));
     function blocks(points,size,name,xOffset=0,yOffset=0){
-      const mesh=new T.InstancedMesh(new T.BoxGeometry(size*.96,size*.96,name==='voxel-name-caption'?.15:.27),sides,points.length),matrix=new T.Matrix4();
+      const mesh=new T.InstancedMesh(new T.BoxGeometry(size*.88,size*.88,(name==='voxel-name-caption'?.15*1.1:.27)*1.15),sides,points.length),matrix=new T.Matrix4();
       mesh.name=name;mesh.castShadow=mesh.receiveShadow=true;
       points.forEach(([x,y],i)=>mesh.setMatrixAt(i,matrix.makeTranslation(x*size+xOffset-centerX,(y+yOffset+.5)*size,0)));
       mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();root.add(mesh);return mesh;
@@ -360,9 +381,10 @@ export function createFixtures(world) {
     root.rotation.y = Math.PI / 7.2;
     const localWidth=captionRight-minX;
     parcel(root, 43, 42.5, 1, { plaza: true, radius: 1, prepared: true,
-      precise:true,oriented:{angle:root.rotation.y,width:localWidth,depth:.27} });
+      precise:true,oriented:{angle:root.rotation.y,width:localWidth,depth:.27*1.15} });
     root.userData.text = "王钰欣 / CECILIA";
     root.userData.blockCount = chineseCount+caption.length;
+    root.userData.glyphResolution=56;
     root.userData.captionRatio=captionCell*7/((Math.max(...pixels.map(p=>p[1]))-minY+1)*chineseCell);
     root.userData.lightOn = false;
     root.toggleLight = () => {
@@ -407,15 +429,16 @@ export function createFixtures(world) {
     const root = native.clone(true);
     native.removeFromParent();
     root.name = "welcome-to-cecilias-world";
-    const font="Amatic SC";
-    for (const [text,y] of [["Welcome to",.065],["Cecilia’s world.",-.33]]) {
-      const label=print(text,1.98,.28,{bg:null,size:110,font,fit:true});
+    const font="World Xiaolai";
+    for (const [text,y] of [["王钰欣 / Cecilia",-.0275],["的个人网站",-.4935]]) {
+      const label=print(text,1.98,.25,{bg:null,size:110,font,fit:true});
+      label.userData.text=text;label.userData.font=font;
       label.position.set(0,y,.22);
       root.add(label);
     }
     root.rotation.set(0,.28,0);
     parcel(root,48,34.56,1.65,{plaza:true,radius:0,precise:true,ignoreReservations:["enlarged-native-map-kiosk"]});
-    root.userData.text="Welcome to Cecilia’s world.";
+    root.userData.text="王钰欣 / Cecilia\n的个人网站";
     return root;
   }
   function gameDevices(original, activate) {

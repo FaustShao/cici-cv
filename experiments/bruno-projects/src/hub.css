@@ -6,7 +6,7 @@
 }
 @font-face {
   font-family: "World Xiaolai";
-  src: url("/fonts/world-xiaolai.woff2?v=entry-controls");
+  src: url("/fonts/world-xiaolai.woff2?v=contact-clearing");
   font-weight: 400;
   font-display: swap;
 }
@@ -131,9 +131,9 @@ header > div {
 #world-map {
   margin: auto;
   height: fit-content;
-  width: min(1060px, calc(100vw - 60px));
+  width: min(900px, calc(100vw - 60px));
   max-height: calc(100dvh - 56px);
-  padding: 22px 26px 14px;
+  padding: 16px 18px 10px;
   border: 3px solid #eed8ac;
   border-radius: 15px;
   background: #f5e9c8;
@@ -169,7 +169,8 @@ header > div {
 .map-location span { padding:5px 12px; border:2px solid var(--pin); border-radius:20px; background:#fff3d6; font-size:21px; white-space:nowrap; }
 .map-location:hover,.map-location:focus-visible { transform:translate(-50%,-74%) translateY(-7px); color:#57404b; background:none; }
 .map-location:hover span,.map-location[aria-current="true"] span { background:var(--pin); color:#fff3d6; }
-.map-you { position:absolute; left:75.5%; top:79.5%; transform:translate(-50%,-50%); font-size:16px; white-space:nowrap; color:#8b5657; text-align:center; }
+.map-you { position:absolute; left:75.5%; top:79.5%; transform:translate(-50%,-50%); font:400 16px "World Xiaolai",sans-serif; white-space:nowrap; color:#8b5657; text-align:center; border:0; background:transparent; padding:8px; cursor:pointer; transition:filter .2s; }
+.map-you:hover,.map-you:focus-visible { background:transparent; color:#8b5657; filter:brightness(1.15); outline:2px solid #8b5657; outline-offset:2px; }
 .map-you span { display:block; font-size:28px; filter:drop-shadow(0 3px 0 #fff3d6); }
 .map-you b { display:block; position:relative; left:-35px; padding:3px 9px; border-radius:14px; background:#fff3d6e8; font-weight:400; }
 .map-caption { margin:12px 3px 2px; font-size:17px; display:flex; justify-content:space-between; gap:12px; }

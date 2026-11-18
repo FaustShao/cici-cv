@@ -18,6 +18,7 @@ import { Floor } from "./bruno/World/Floor.js";
 import { Grass } from "./bruno/World/Grass.js";
 import { Trees } from "./bruno/World/Trees.js";
 import { Bushes } from "./bruno/World/Bushes.js";
+import { Foliage } from "./bruno/World/Foliage.js";
 import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 
 export { T };
@@ -77,7 +78,7 @@ export async function createWorld(canvas, progress) {
       intervalEvents: new Map([["night", { inInterval: false }]]),
     },
     weather: {
-      wind: { value: 0.25 },
+      wind: { value: 0.55 },
       temperature: { value: 5 },
       rain: { value: 0 },
     },
@@ -267,6 +268,7 @@ export async function createWorld(canvas, progress) {
   setTheme(false);
   game.noises = new Noises();
   game.wind = new Wind();
+  game.wind.timeFrequency=.18;
   game.terrain = new Terrain();
   game.lighting = new Lighting();
   game.fog = new Fog();
@@ -290,7 +292,7 @@ export async function createWorld(canvas, progress) {
   for (const [type, a, b] of [
     ["oak", "#b4b536", "#d8cf3b"],
     ["birch", "#ff4f2b", "#ff903f"],
-    ["cherry", "#ff6d6d", "#ff9990"],
+    ["cherry", "#ed82a0", "#ffc1c5"],
   ]) {
     const clearings = [
       [43, 43, 7],
@@ -310,6 +312,14 @@ export async function createWorld(canvas, progress) {
             Math.hypot(tree.position.x - x, tree.position.z - z) > r,
         ),
       );
+    if(type==="cherry"){
+      // Restore pink accents around the clearings, never on paving or water.
+      const template=game.resources.cherryTreesReferencesModel.scene.children[0];
+      for(const [x,z,scale] of [[32,35,.65],[47,23,.6],[59,33,.7]]){
+        if(surface.check(x,z,1.8,1.8).maxWater>5||surface.sample(x,z).road>120)continue;
+        const tree=template.clone();tree.position.set(x,surface.sample(x,z).height,z);tree.scale.multiplyScalar(scale);tree.updateMatrix();tree.updateMatrixWorld();refs.push(tree);
+      }
+    }
     if (refs.length)
       game.world[type + "Trees"] = new Trees(
         type,
@@ -330,6 +340,15 @@ export async function createWorld(canvas, progress) {
       ),
     );
   game.world.bushes = new Bushes();
+  const flowers=[];
+  const bushTemplate=game.resources.bushesReferences.scene.children[0];
+  for(const [x,z] of [[34,36],[35,35.6],[46,23],[47,22.8],[58.5,32.5],[59.2,33.4]]){
+    if(surface.check(x,z,.7,.7).maxWater>5||surface.sample(x,z).road>120)continue;
+    const ref=bushTemplate.clone();ref.position.set(x,surface.sample(x,z).height+.22,z);ref.scale.setScalar(.45);ref.updateMatrix();flowers.push(ref);
+  }
+  if(flowers.length){
+    game.world.pinkFlowers=new Foliage(flowers,uniform(color("#df7198")),uniform(color("#ffb6bc")));
+  }
   function clean(root) {
     const remove = [];
     root.traverse((m) => {

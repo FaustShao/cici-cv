@@ -12,7 +12,7 @@ export function createWorldMap(go) {
     { key: "resume", title: "个人简历", x: 37, y: 42, color: "#ae6d69" },
     { key: "portfolio", title: "作品集", x: 49.5, y: 18, color: "#867398" },
     { key: "other", title: "其他项目", x: 16.6, y: 30.8, color: "#b28a50" },
-    { key: "contact", title: "联系方式", x: 89.2, y: 79.5, color: "#698f83" },
+    { key: "contact", title: "联系方式", x: 87, y: 53, color: "#698f83" },
   ];
   for (const site of sites) {
     const button = document.createElement("button");
@@ -31,6 +31,7 @@ export function createWorldMap(go) {
   }
   function close() { if (dialog.open) dialog.close(); }
   trigger.onclick = open;
+  dialog.querySelector(".map-you").onclick=()=>{close();go("home");};
   document.getElementById("close-map").onclick = close;
   dialog.addEventListener("click", e => { if (e.target === dialog) close(); });
   window.addEventListener("keydown", e => {
