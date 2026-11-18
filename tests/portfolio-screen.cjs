@@ -11,6 +11,8 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
   await page.goto(new URL('cecilia-world/index.html?webgl=1',root).href);
   await page.waitForFunction(()=>document.body.dataset.ready||document.body.dataset.failed,null,{timeout:90000});
   assert.equal(await page.locator('body').getAttribute('data-failed'),null);
+  assert.equal(await page.locator('#sound-toggle,#overview,#overview-world').count(),0);
+  assert.equal(await page.locator('#reset-view').count(),1);
   await page.waitForFunction(()=>preview.area.title.status==='visible');
   assert.deepEqual(await page.evaluate(()=>preview.area.pagination.items.map(i=>i.intersect.active)),[true,false,false,false,false]);
   async function clickArrow(name,index){

@@ -153,9 +153,9 @@ const review = path.resolve(
     await page.keyboard.press("ArrowRight");
     assert.equal(await page.locator("#selection").innerText(), "02 / 04");
     assert.equal(await page.locator("#quality").count(),0);
-    await page.locator("#overview").click();
+    await page.locator("#reset-view").click();
     await page.waitForTimeout(350);
-    await page.locator("#overview").click();
+    await page.locator("#reset-view").click();
     assert.deepEqual(errors, []);
     assert.deepEqual(bad, []);
     assert.equal(await page.locator("body").getAttribute("data-failed"), null);

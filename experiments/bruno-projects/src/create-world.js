@@ -288,9 +288,9 @@ export async function createWorld(canvas, progress) {
   game.world.floor = new Floor();
   game.view.optimalArea.radius = 45;
   game.world.grass = new Grass();
-  game.world.grass.bladeWidth.value = 0.045;
-  game.world.grass.bladeHeight.value = 1.02;
-  game.world.grass.bladeHeightRandomness.value = 0.45;
+  game.world.grass.bladeWidth.value *= 0.90;
+  game.world.grass.bladeHeight.value = 0.70;
+  game.world.grass.bladeHeightRandomness.value = 0.6;
   game.world.atmosphere = addWorldAtmosphere(game, matchMedia("(prefers-reduced-motion: reduce)").matches);
 
   const near = (object) =>

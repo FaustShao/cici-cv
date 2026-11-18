@@ -1,4 +1,3 @@
-import { getWorldAudio } from "./world-audio.js";
 import { addWorldAtmosphere } from "./world-atmosphere.js";
 import * as T from "three/webgpu";
 import {
@@ -33,8 +32,6 @@ import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 import data from "./data/projects.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
-const worldAudio = getWorldAudio();
-worldAudio.bind(document);
 const $ = (id) => document.getElementById(id),
   reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 gsap.ticker.lagSmoothing(0);
@@ -51,8 +48,7 @@ let selected = 0,
   pipeline,
   game,
   baseCamera,
-  baseTarget,
-  overview = false;
+  baseTarget;
 const reader = $("reader"),
   frames = new Map();
 function readWork() {
@@ -407,9 +403,9 @@ try {
   Trees.prototype.setPhysical = noop;
   game.world.floor = new Floor();
   game.world.grass = new Grass();
-  game.world.grass.bladeWidth.value = 0.045;
-  game.world.grass.bladeHeight.value = 1.02;
-  game.world.grass.bladeHeightRandomness.value = 0.45;
+  game.world.grass.bladeWidth.value *= 0.90;
+  game.world.grass.bladeHeight.value *= 1.07;
+  game.world.grass.bladeHeightRandomness.value = 0.6;
   game.world.atmosphere = addWorldAtmosphere(game, matchMedia("(prefers-reduced-motion: reduce)").matches);
   const near = (object) =>
     Math.hypot(object.position.x - center.x, object.position.z - center.z) < 33;
@@ -623,10 +619,10 @@ try {
     screenCenter = new T.Box3()
       .setFromObject(screen)
       .getCenter(new T.Vector3());
-  $("overview").onclick = () => {
-    overview = !overview;
-    targetZoom = overview ? 1.7 : 1;
-    $("overview").textContent = overview ? "展示近景" : "场景全景";
+  $("reset-view").onclick = () => {
+    targetYaw = 0;
+    targetPitch = 0;
+    targetZoom = 1;
   };
   function resize() {
     camera.aspect = innerWidth / innerHeight;
@@ -743,7 +739,6 @@ try {
     pointers.delete(event.pointerId);
     if (pointers.size) return;
     if (!dragged && !pinched) {
-      if(pressed)worldAudio.play();
       pressed?.onClick?.();
       syncSelection();
     }

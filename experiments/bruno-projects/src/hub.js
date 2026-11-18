@@ -1,4 +1,3 @@
-import { getWorldAudio } from "./world-audio.js";
 import { T, createWorld } from "./create-world.js";
 import { texture, uniform } from "three/tsl";
 import { createFixtures } from "./scene-fixtures.js";
@@ -7,8 +6,6 @@ import { referenceViews } from "./scene-views.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 import "../../../resume.js";
 
-const worldAudio = getWorldAudio();
-worldAudio.bind(document);
 const $ = (id) => document.getElementById(id),
   profile = window.RESUME;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -189,7 +186,6 @@ function go(next, historyMode = "push") {
   document.title =
     place === "home" ? "王钰欣 / CECILIA" : `${labels[place]} · 王钰欣`;
   $("back-home").hidden = place === "home";
-  $("overview-world").hidden = place !== "home";
   $("feedback").textContent = "";
   $("place-actions").replaceChildren();
   $("place-actions").hidden = place === "home";
@@ -527,12 +523,6 @@ try {
   world.setTheme(false);
   try{localStorage.setItem("resume-theme","light");}catch{}
   $("reset-view").onclick = () => go("home", "replace");
-  $("overview-world").onclick = () => {
-    targetLook.set(35, 2, 25);
-    targetDistance = innerWidth < 700 ? 78 : 60;
-    targetPitch = 0.85;
-    targetYaw = 0.5;
-  };
   const ray = new T.Raycaster(),
     pointer = new T.Vector2();
   function pick(x, y) {
@@ -613,7 +603,6 @@ try {
     pointers.delete(e.pointerId);
     if (pointers.size) return;
     if (!drag && !pinched && pressed) {
-      worldAudio.play(pressed === "map" ? "map" : pressed.isObject3D ? "device" : "click");
       if (pressed === "map") {showMapHint(false);navigationMap.open();}
       else if(pressed === "contact-mail")location.href=social.userData.mailto;
       else if(pressed === "resume-preview")openCurrent();
