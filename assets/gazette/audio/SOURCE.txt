@@ -1,0 +1,6 @@
+Quiet page-turn recording: Kenney, RPG Audio, bookFlip2.ogg (CC0 1.0).
+Original pack: https://kenney.nl/assets/rpg-audio
+Obtained through recorded WAV mirror: https://raw.githubusercontent.com/receptron/jinglescript/main/samples/sfx/book-flip.wav
+Mirror provenance: https://github.com/receptron/jinglescript/blob/main/samples/sfx/SOURCES.md
+Converted to mono 44.1kHz/96kbps MP3 with 6ms/30ms edge fades. Duration about 0.40s. Reader playback gain: 0.16.
+Bundled CC0 legal text: https://github.com/spdx/license-list-data/blob/main/text/CC0-1.0.txt

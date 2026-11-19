@@ -10,6 +10,37 @@
   let lastSize = '';
   const leafToPdf = index => Math.min(index, count - 1);
   const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.webp`);
+  // A quiet recording, unlocked by a real gesture; never block the reader on audio.
+  let soundContext, soundBuffer, soundLoading, soundSource, soundTicket=0, lastSoundAt=-Infinity;
+  const soundBytes=fetch('assets/gazette/audio/page-turn.mp3').then(r=>r.ok?r.arrayBuffer():null).catch(()=>null);
+  function unlockPageSound(event){
+    if(!event.isTrusted)return;
+    if(!stage.contains(event.target)&&(event.type!=='keydown'||!['ArrowRight','ArrowLeft','Home','End'].includes(event.key)))return;
+    try{
+      if(!soundContext){
+        const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;
+        soundContext=new Audio();
+        soundLoading=soundBytes.then(bytes=>bytes?soundContext.decodeAudioData(bytes):null).then(buffer=>{soundBuffer=buffer;}).catch(()=>{});
+      }
+      if(soundContext.state==='suspended')soundContext.resume().catch(()=>{});
+    }catch{/* Audio is optional; page controls keep working. */}
+  }
+  stage.addEventListener('pointerdown',unlockPageSound,{capture:true});
+  document.addEventListener('keydown',unlockPageSound,{capture:true});
+  function playPageSound(){
+    if(!soundContext||!soundLoading||document.hidden)return;
+    const ticket=++soundTicket,at=performance.now();
+    soundLoading.then(()=>{
+      if(ticket!==soundTicket||!soundBuffer||soundContext.state!=='running'||document.hidden||performance.now()-at>300||at-lastSoundAt<100)return;
+      try{
+        lastSoundAt=at;if(soundSource)soundSource.stop();
+        const source=soundContext.createBufferSource(),gain=soundContext.createGain();
+        source.buffer=soundBuffer;gain.gain.value=.16;source.connect(gain);gain.connect(soundContext.destination);
+        soundSource=source;source.onended=()=>{source.disconnect();gain.disconnect();if(soundSource===source)soundSource=null;};source.start();
+      }catch{/* Silence is preferable to interrupting a page turn. */}
+    }).catch(()=>{});
+  }
+
   function build() {
     const padding = getComputedStyle(reader);
     const availableHeight = Math.max(150, reader.clientHeight - parseFloat(padding.paddingTop) - parseFloat(padding.paddingBottom) - 8);
@@ -59,8 +90,13 @@
       useMouseEvents: true, showPageCorners: false, disableFlipByClick: false,
       mobileScrollSupport: true, swipeDistance: 35, startPage: realPage === count - 1 ? count : realPage
     });
-    flip.on('init', announce);
-    flip.on('flip', announce);
+    let initialized=false,previousIndex=realPage;
+    flip.on('init',()=>{initialized=true;previousIndex=flip.getCurrentPageIndex();announce();});
+    flip.on('flip',()=>{
+      const next=flip.getCurrentPageIndex();
+      if(initialized&&next!==previousIndex)playPageSound();
+      previousIndex=next;announce();
+    });
     flip.on('changeState', event => { reader.dataset.flipState = event.data; });
     installSideDrag(flip);
     flip.loadFromHTML(sheets);
