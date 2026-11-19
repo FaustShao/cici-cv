@@ -14,7 +14,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
     permissions:
+      contents: read
+      actions: read
       pages: write
       id-token: write
     steps:
@@ -45,7 +49,24 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
+          name: ${{ env.PAGES_ARTIFACT_NAME }}
           path: public
+      - name: Wait for the uploaded Pages artifact to become visible
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for attempt in $(seq 1 12); do
+            artifact_count=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" --jq '[.artifacts[] | select(.name == env.PAGES_ARTIFACT_NAME)] | length')
+            if [ "$artifact_count" = "1" ]; then
+              exit 0
+            fi
+            echo "Waiting for Pages artifact metadata (attempt $attempt/12)."
+            sleep 5
+          done
+          echo "Pages artifact metadata did not become available."
+          exit 1
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
