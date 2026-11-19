@@ -1,25 +1,28 @@
 /* A stationery desk: one material system for the mat, archive, badges and papers. */
 @font-face{font-family:Huiwen;src:url('assets/fonts/huiwen-ui.woff2') format('woff2');font-weight:400;font-display:swap}
-.gazette-page{--desk-ink:#2c342b;--desk-gold:#c9a664;--desk-paper:#f8f3e7;--desk-green:#314b3c}
-.portfolio-page.gazette-page main{background-color:#355a46;background-image:linear-gradient(#dce2b814 1px,transparent 1px),linear-gradient(90deg,#dce2b814 1px,transparent 1px),linear-gradient(#e4e8bf0a 1px,transparent 1px),linear-gradient(90deg,#e4e8bf0a 1px,transparent 1px),radial-gradient(ellipse at 45% 35%,#52735a88,transparent 80%);background-size:120px 120px,120px 120px,24px 24px,24px 24px,100% 100%;color:var(--desk-ink)}
-.reader-toolbar{z-index:7;position:relative;border:0;background:#223b2c26;color:#f1eddb;padding:10px 22px;min-height:50px;font:14px/1.4 Huiwen,serif;letter-spacing:.3px}
+.gazette-page{--desk-ink:#2c342b;--desk-gold:#c9a664;--desk-paper:#fff;--desk-green:#1d7150;--mat-edge:#175d43;--mat-light:#2c825f;--grid-line:#d5e2d470;--folder-face:#dec58e;--folder-tab:#e6ce9e;--paper-rule:#8cdef0;--paper-margin:#ff3939}
+/* Screenshot reference: 40px single grid, inset cutting-mat frame, saturated green. */
+.portfolio-page.gazette-page main{position:relative;isolation:isolate;background:radial-gradient(ellipse at 48% 34%,var(--mat-light),var(--desk-green) 55%,var(--mat-edge));color:var(--desk-ink)}
+.portfolio-page.gazette-page main:before{content:'';position:absolute;z-index:0;top:64px;left:64px;right:64px;bottom:-1px;border:1px solid var(--grid-line);background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:40px 40px;background-position:-1px -1px;pointer-events:none}
+.portfolio-page.gazette-page main:after{content:'';position:absolute;z-index:0;inset:0;background:url('assets/gazette-desk/mat-grain.svg') repeat;mix-blend-mode:soft-light;pointer-events:none}
+.reader-toolbar{z-index:7;position:relative;border:0;background:transparent;color:#f1eddb;padding:10px 22px;min-height:50px;font:14px/1.4 Huiwen,serif;letter-spacing:.3px}
 .reader-toolbar a{color:inherit;text-decoration:none}.reader-toolbar a:hover{text-decoration:underline;text-underline-offset:4px}.reader-toolbar button{border:1px solid #dddcc27a;background:#edf0d50d;border-radius:2px;color:#fff7e2;font:inherit}.reader-toolbar button:hover{background:#edf0d52b}
-.research-workspace{position:relative;isolation:isolate;flex:1;min-height:0;width:100%;padding:10px clamp(115px,11vw,180px) 28px;display:flex}
+.research-workspace{position:relative;z-index:1;isolation:isolate;flex:1;min-height:0;width:100%;padding:10px clamp(115px,11vw,180px) 28px;display:flex}
 .research-workspace>.reader{position:relative;width:100%;min-width:0;min-height:0;isolation:isolate;overflow:visible;padding:6px 12px 8px;z-index:1}
 .book-pose{position:relative}.reader.toc-open .book-pose{transform:none}
 .desk-props{position:absolute;inset:0;pointer-events:none;z-index:0}
-.desk-folder{position:absolute;left:17%;right:17%;top:4%;bottom:-220px;border-radius:5px;background:linear-gradient(100deg,#bfa174,#d1b589 55%,#c0a078);transform:rotate(-3deg);box-shadow:0 2px 1px #654f35,0 4px 4px #18261e44,0 15px 20px #14291b40;border:1px solid #ddc69b}
-.desk-folder:before{content:'';position:absolute;width:25%;height:25px;left:5%;top:-24px;border-radius:7px 7px 0 0;background:#c3a67c;border:1px solid #d2b88c;border-bottom:0}
-.desk-folder:after{content:'';position:absolute;left:22px;top:0;bottom:0;width:1px;box-shadow:1px 0 #f8e1b544;background:#82674655}
+.desk-folder{position:absolute;left:17%;right:17%;top:4%;bottom:-220px;border-radius:5px;background:url('assets/gazette-desk/material-grain.svg') repeat,linear-gradient(100deg,#dac18b,var(--folder-face) 55%,#e4cc97);transform:rotate(-3deg);box-shadow:0 2px 1px #654f35,0 4px 4px #18261e44,0 15px 20px #14291b40;border:1px solid #d2b980}
+.desk-folder:before{content:'';position:absolute;width:190px;height:44px;left:5%;top:-43px;border-radius:11px 11px 0 0;background:var(--folder-tab);border:1px solid #d2b980;border-bottom:0;display:flex;align-items:center;justify-content:center;color:#897345;font:18px/1 ui-monospace,monospace;letter-spacing:1px}
+.desk-folder:after{content:'';position:absolute;left:22px;top:0;bottom:0;width:1px;box-shadow:1px 0 #fff2c455;background:#b99b5d66}
 .desk-folder>span{position:absolute;bottom:10px;left:40px;font:11px/1.2 Huiwen,serif;letter-spacing:2px;color:#604f37}
-.desk-sheet{position:absolute;left:18.5%;right:18.5%;top:5%;bottom:-240px;background:#ece6d7;box-shadow:0 1px 1px #443e2e50,0 3px 6px #202b1e30;transform:rotate(1.8deg)}
-.desk-sheet-front{left:19%;right:18%;top:6%;bottom:-250px;transform:rotate(-.8deg);background:repeating-linear-gradient(transparent 0 27px,#778e9a30 27px 28px),linear-gradient(90deg,transparent 39px,#b9766b66 39px 40px,transparent 40px),#faf7e9;border:1px solid #e1d8bf}
-.desk-sheet-front:after{content:'';position:absolute;left:13px;top:14%;width:10px;height:10px;border-radius:50%;background:#b8a987;box-shadow:0 150px #b8a987,0 300px #b8a987,inset 1px 1px 2px #493e2a88}
+.desk-sheet{position:absolute;left:18.5%;right:18.5%;top:5%;bottom:-240px;background:#fff url('assets/gazette-desk/material-grain.svg') repeat;box-shadow:0 1px 1px #443e2e50,0 3px 6px #202b1e30;transform:rotate(1.8deg)}
+.desk-sheet-front{left:19%;right:18%;top:6%;bottom:-250px;transform:rotate(-.8deg);background:url('assets/gazette-desk/material-grain.svg') repeat,repeating-linear-gradient(transparent 0 35px,var(--paper-rule) 35px 36px),linear-gradient(90deg,transparent 127px,var(--paper-margin) 127px 128px,transparent 128px),#fff;border:1px solid #deded9}
+.desk-sheet-front:after{display:none}
 .desk-binder{position:absolute;top:2.5%;left:24%;width:60px;height:29px;border-radius:2px;background:linear-gradient(100deg,#333633,#585b50 50%,#242a24);box-shadow:1px 3px 2px #18231977;rotate:-3deg;z-index:2}
 .desk-binder:before,.desk-binder:after{content:'';position:absolute;bottom:17px;left:10px;width:35px;height:35px;border:3px solid #c0c5bd;border-radius:10px 10px 4px 4px;box-shadow:1px 0 1px #555,inset 1px 0 #fff8}.desk-binder:after{bottom:-20px;height:30px;border-width:2px;opacity:.8}
 .desk-paperclip{position:absolute;right:18%;top:9%;width:25px;height:74px;border:3px solid #c6c9bd;border-radius:14px;rotate:16deg;box-shadow:1px 2px 2px #10251b88,inset 1px 0 1px #fff9;z-index:2}.desk-paperclip:after{content:'';position:absolute;inset:8px 3px -9px;border:2px solid #a8aea2;border-radius:11px}
 .desk-tape{position:absolute;left:18%;top:30%;width:60px;height:30px;rotate:-25deg;background:#dac8a999;box-shadow:inset 0 0 8px #f5e7c855;clip-path:polygon(0 5%,97% 0,100% 16%,96% 30%,100% 50%,96% 68%,100% 90%,1% 100%,4% 75%,0 50%,4% 25%)}
-.desk-sticky{position:absolute;right:3.6%;top:4%;width:128px;height:112px;padding:17px 13px;background:linear-gradient(135deg,#eee5ae,#e5d994);box-shadow:1px 2px 2px #20342366,5px 13px 13px -8px #152c1a66;transform:rotate(7deg);font:16px/1.5 Huiwen,serif;color:#5c573f}.desk-sticky span{display:block;margin-top:8px;font-size:10px;letter-spacing:.7px}
+.desk-sticky{position:absolute;right:3.6%;top:4%;width:128px;height:112px;padding:17px 13px;background:linear-gradient(135deg,#f6e38d,#efda77);box-shadow:1px 2px 2px #20342366,5px 13px 13px -8px #152c1a66;transform:rotate(7deg);font:16px/1.5 Huiwen,serif;color:#5c573f}.desk-sticky span{display:block;margin-top:8px;font-size:10px;letter-spacing:.7px}
 .desk-pencil{position:absolute;left:8%;bottom:8%;width:11px;height:135px;background:linear-gradient(90deg,#ba7839 30%,#f4bd58 32% 72%,#d2933c 74%);rotate:-30deg;box-shadow:2px 3px 2px #142d1a66;border-top:16px solid #c7b9b4;border-radius:3px}.desk-pencil:after{content:'';position:absolute;top:100%;width:11px;height:24px;background:linear-gradient(#d0b889 65%,#333 66%);clip-path:polygon(0 0,100% 0,50% 100%)}
 /* Spread the badges around the fixed reading surface. Each button owns its full label. */
 .research-rail{position:absolute;inset:0;pointer-events:none;z-index:3}
@@ -59,6 +62,8 @@
 @media(max-height:720px) and (min-width:761px){.research-workspace{padding-top:10px;padding-bottom:28px}.research-badge{width:82px;height:82px}.research-tab{gap:5px;font-size:13px}.desk-sticky{width:112px;height:96px;font-size:15px}}
 @media(max-width:1000px) and (min-width:761px){.research-workspace{padding-left:95px;padding-right:95px}.research-badge{width:76px;height:76px}.research-tab{font-size:12px}.desk-sticky{right:2%;width:105px;font-size:15px}}
 @media(max-width:760px){
+ .portfolio-page.gazette-page main:before{top:54px;left:16px;right:16px;background-size:40px 40px}
+ .desk-folder:before{width:130px;font-size:13px}
  .reader-toolbar{padding:9px 12px;font-size:12px}.reader-toolbar>div{gap:8px}.reader-toolbar>div>a{display:none}
  .research-workspace{padding:24px 16px 185px;min-height:0}.research-workspace>.reader{padding:8px 5px 45px;overflow:visible}
  .desk-folder{left:5%;right:5%;top:5%;bottom:-130px;rotate:1deg}.desk-folder>span{display:none}.desk-sheet,.desk-sheet-front{left:7%;right:7%;top:6%;bottom:-145px}.desk-sheet-front{rotate:-1deg}.desk-sticky,.desk-pencil,.desk-tape{display:none}.desk-binder{left:10%;top:3%;scale:.7}.desk-paperclip{right:5%;top:13%;scale:.7}
