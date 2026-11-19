@@ -12,6 +12,13 @@
   const labels = ['小镇与AI','地图与邮票','居民访谈','留学生访谈','旅程与设计','制作与未来'];
   const rails = [document.getElementById('research-left'),document.getElementById('research-right')];
   const tabs = [], previews = [];
+  const shell=document.querySelector('.book-shell');
+  function syncDesk(){
+    workspace.dataset.bookOpen=String(shell.dataset.cover==='false'&&shell.dataset.backCover==='false');
+    workspace.style.setProperty('--book-half',shell.offsetWidth/2+'px');
+  }
+  syncDesk();document.addEventListener('gazette-page-change',syncDesk);new ResizeObserver(syncDesk).observe(shell);
+
   const paper=elPaper();
   function elPaper(){const n=document.createElement('div');n.className='research-paper';while(detail.firstChild)n.append(detail.firstChild);detail.append(n);detail.setAttribute('role','dialog');detail.setAttribute('aria-modal','true');detail.setAttribute('aria-labelledby','research-detail-title');return n;}
   const icons=[

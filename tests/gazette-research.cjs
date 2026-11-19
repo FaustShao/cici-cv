@@ -7,10 +7,13 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
   const context=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'});
   const p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.status()>=400)failed.push(r.url())});
   await p.goto(new URL('gazette.html',root).href);await p.waitForFunction(()=>document.querySelector('.paper[data-pdf-page="1"]'));
-  const cover=await p.locator('.paper[data-pdf-page="1"]').boundingBox();await p.mouse.click(cover.x+cover.width*.6,cover.y+cover.height*.5);
+  await p.waitForFunction(()=>[...document.querySelectorAll('.desk-scrap')].every(im=>im.complete&&im.naturalWidth>0));
+  assert.equal(await p.locator('.desk-scrap').count(),4);
+  const cover=await p.locator('.paper[data-pdf-page="1"]').boundingBox();assert(cover.height>=760,'Desktop book uses the available height');await p.mouse.click(cover.x+cover.width*.6,cover.y+cover.height*.5);
   await p.waitForFunction(()=>document.getElementById('reader-message').textContent.startsWith('第 2 页')&&document.getElementById('reader').dataset.flipState==='read');
   // Hover cards overlay the desk without moving or resizing the publication.
   const originalBook=await p.locator('.book-pose').boundingBox();
+  assert.equal(await p.locator('.desk-scraps').evaluate(e=>getComputedStyle(e).opacity),'0','Cutouts withdraw under the open spread');
   const note=await p.locator('#research-tab-2').boundingBox();await p.mouse.move(Math.max(10,note.x+note.width/2),note.y+note.height/2);await p.waitForTimeout(250);
   assert.equal(await p.locator('#research-tab-2').getAttribute('aria-expanded'),'true');
   async function noOverlap(){const b=await p.locator('.book-pose').boundingBox();for(const k of ['x','y','width','height'])assert(Math.abs(b[k]-originalBook[k])<1,'Book geometry stays fixed: '+k);}
