@@ -12,8 +12,10 @@
   const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.webp`);
   function build() {
     const single = matchMedia('(max-width: 700px)').matches;
-    const availableHeight = Math.max(150, reader.clientHeight - 16);
-    const pageWidth = Math.floor(Math.min((reader.clientWidth - 16) / (single ? 1 : 2), availableHeight * 2 / 3));
+    const padding = getComputedStyle(reader);
+    const availableHeight = Math.max(150, reader.clientHeight - parseFloat(padding.paddingTop) - parseFloat(padding.paddingBottom) - 16);
+    const availableWidth = reader.clientWidth - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight);
+    const pageWidth = Math.floor(Math.min(availableWidth / (single ? 1 : 2), availableHeight * 2 / 3));
     const key = `${single}:${pageWidth}`;
     if (key === lastSize) return;
     const realPage = flip ? Math.max(0, leafToPdf(flip.getCurrentPageIndex())) : 0;
@@ -54,7 +56,7 @@
       width: pageWidth, height: pageWidth * 1.5, size: 'fixed',
       autoSize: true, usePortrait: single, showCover: true,
       drawShadow: true, maxShadowOpacity: .48, flippingTime: 900,
-      useMouseEvents: true, showPageCorners: false, disableFlipByClick: true,
+      useMouseEvents: true, showPageCorners: false, disableFlipByClick: false,
       mobileScrollSupport: true, swipeDistance: 35, startPage: realPage === count - 1 ? count : realPage
     });
     flip.on('init', announce);

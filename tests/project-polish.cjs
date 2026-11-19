@@ -11,7 +11,7 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
   await p.waitForFunction(()=>!document.querySelector('#reader').dataset.entering);
   assert.equal(await p.locator('.book-pose').evaluate(e=>getComputedStyle(e).transform),'none');
   let cover=await p.locator('.paper[data-pdf-page="1"]').boundingBox();
-  assert.ok(cover.height>810,'Book fills the reading height instead of the old small stage');
+  assert.ok(cover.height>780,'Book remains large enough to read');assert.ok(900-cover.y-cover.height>=35,'Bottom has comfortable room for the book and shadow');
   assert.ok(Math.abs(cover.width/cover.height-2/3)<.001);assert.ok(Math.abs(cover.x+cover.width/2-720)<2,'Closed cover is centered');
   await p.screenshot({path:'/tmp/gazette-large-centered.png'});
   await p.locator('#fullscreen-book').click();await p.waitForFunction(()=>document.fullscreenElement||document.querySelector('main').classList.contains('is-expanded'));

@@ -77,7 +77,7 @@ export default [
       "Future Gazette",
       "2050"
     ],
-    "url": "gazette.html?v=large-reader-10",
+    "url": "gazette.html?v=reader-click-12",
     "attributes": {
       "role": [
         "设计研究",
