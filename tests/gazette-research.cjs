@@ -12,10 +12,14 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
   await p.waitForFunction(()=>[...document.querySelectorAll('.research-pin')].length===6&&[...document.querySelectorAll('.research-pin')].every(im=>im.complete&&im.naturalWidth===400));
   assert.match(await p.locator('#research-tab-3 .research-pin').getAttribute('src'),/hi\.svg$/);
   assert.match(await p.locator('#research-tab-4 .research-pin').getAttribute('src'),/pencil\.svg$/);
+  assert.equal(await p.locator('.research-pin').evaluateAll(es=>new Set(es.map(e=>e.src)).size),6,'Every entry has a distinct pin');
+  assert.match(await p.locator('.contents-handle').evaluate(e=>getComputedStyle(e).fontFamily),/Huiwen/);
+  assert(Math.abs((await p.locator('#contents-toggle').boundingBox()).y+(await p.locator('#contents-toggle').boundingBox()).height-900)<2,'Collapsed index reaches window bottom');
   const cover=await p.locator('.paper[data-pdf-page="1"]').boundingBox();assert(cover.height>=760,'Desktop book uses the available height');await p.mouse.click(cover.x+cover.width*.6,cover.y+cover.height*.5);
   await p.waitForFunction(()=>document.getElementById('reader-message').textContent.startsWith('第 2 页')&&document.getElementById('reader').dataset.flipState==='read');
   // Hover cards overlay the desk without moving or resizing the publication.
   const originalBook=await p.locator('.book-pose').boundingBox();
+  assert.equal(await p.locator('.book-pose').evaluate(e=>getComputedStyle(e).rotate),'0deg','Reading spread is upright');
   assert.equal(await p.locator('.desk-scraps').evaluate(e=>getComputedStyle(e).opacity),'0','Cutouts withdraw under the open spread');
   const note=await p.locator('#research-tab-2').boundingBox();await p.mouse.move(Math.max(10,note.x+note.width/2),note.y+note.height/2);await p.waitForTimeout(250);
   assert.equal(await p.locator('#research-tab-2').getAttribute('aria-expanded'),'true');

@@ -37,7 +37,7 @@
   tick.addEventListener('pointerenter',()=>{if(!dragging&&!major)showTip(page);});tick.addEventListener('pointerleave',()=>{if(!dragging)tip.hidden=true;});
   tick.addEventListener('focus',()=>showTip(page));tick.addEventListener('blur',()=>{if(!dragging)tip.hidden=true;});tick.addEventListener('click',()=>go(page));track.append(tick);
  }
- const canvas=el('div','contents-canvas');canvas.append(headings,track,range,marker);panel.append(canvas);dock.append(handle,panel,tip);reader.append(dock);
+ const canvas=el('div','contents-canvas');canvas.append(headings,track,range,marker);panel.append(canvas);dock.append(handle,panel,tip);workspace.append(dock);
  function showTip(page){
   const t=titles[page-1];tip.replaceChildren(el('span','tooltip-en',t[0]),el('span','tooltip-zh',t[1]+' · '+page+' / 31'));
   const x=panel.offsetLeft+(page-1)/30*canvas.clientWidth-panel.scrollLeft;tip.style.left=Math.max(dock.clientWidth*.17,Math.min(dock.clientWidth*.83,x))+'px';tip.hidden=false;

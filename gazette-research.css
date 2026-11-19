@@ -7,7 +7,7 @@
 .portfolio-page.gazette-page main:after{content:'';position:absolute;z-index:0;inset:0;background:url('assets/gazette-desk/mat-grain.svg') repeat;mix-blend-mode:soft-light;pointer-events:none}
 .reader-toolbar{z-index:7;position:relative;border:0;background:transparent;color:#f1eddb;padding:10px 22px;min-height:50px;font:14px/1.4 Huiwen,serif;letter-spacing:.3px}
 .reader-toolbar a{color:inherit;text-decoration:none}.reader-toolbar a:hover{text-decoration:underline;text-underline-offset:4px}.reader-toolbar button{border:1px solid #dddcc27a;background:#edf0d50d;border-radius:2px;color:#fff7e2;font:inherit}.reader-toolbar button:hover{background:#edf0d52b}
-.research-workspace{position:relative;z-index:1;isolation:isolate;flex:1;min-height:0;width:100%;padding:10px clamp(115px,11vw,180px) 28px;display:flex}
+.research-workspace{position:relative;z-index:1;isolation:isolate;flex:1;min-height:0;width:100%;padding:8px clamp(115px,11vw,180px) 20px;display:flex}
 .research-workspace>.reader{position:relative;width:100%;min-width:0;min-height:0;isolation:isolate;overflow:visible;padding:6px 12px 8px;z-index:1}
 .book-pose{position:relative}.reader.toc-open .book-pose{transform:none}
 .desk-props{position:absolute;inset:0;pointer-events:none;z-index:0}
@@ -59,13 +59,13 @@
 .research-workspace[data-detail]>.research-rail{visibility:hidden}
 @keyframes paper-peek{from{opacity:0;transform:translateY(8px) rotate(-2deg)}to{opacity:1;transform:none}}
 @media(min-width:1700px){.research-workspace{padding-left:15%;padding-right:15%}.research-badge{width:112px;height:112px}}
-@media(max-height:720px) and (min-width:761px){.research-workspace{padding-top:10px;padding-bottom:28px}.research-badge{width:82px;height:82px}.research-tab{gap:5px;font-size:13px}.desk-sticky{width:112px;height:96px;font-size:15px}}
+@media(max-height:720px) and (min-width:761px){.research-workspace{padding-top:8px;padding-bottom:20px}.research-badge{width:82px;height:82px}.research-tab{gap:5px;font-size:13px}.desk-sticky{width:112px;height:96px;font-size:15px}}
 @media(max-width:1000px) and (min-width:761px){.research-workspace{padding-left:95px;padding-right:95px}.research-badge{width:76px;height:76px}.research-tab{font-size:12px}.desk-sticky{right:2%;width:105px;font-size:15px}}
 @media(max-width:760px){
  .portfolio-page.gazette-page main:before{top:54px;left:16px;right:16px;background-size:40px 40px}
  .desk-folder:before{width:130px;font-size:13px}
  .reader-toolbar{padding:9px 12px;font-size:12px}.reader-toolbar>div{gap:8px}.reader-toolbar>div>a{display:none}
- .research-workspace{padding:24px 16px 185px;min-height:0}.research-workspace>.reader{padding:8px 5px 45px;overflow:visible}
+ .research-workspace{padding:24px 16px 200px;min-height:0}.research-workspace>.reader{padding:8px 5px 45px;overflow:visible}
  .desk-folder{left:5%;right:5%;top:5%;bottom:-130px;rotate:1deg}.desk-folder>span{display:none}.desk-sheet,.desk-sheet-front{left:7%;right:7%;top:6%;bottom:-145px}.desk-sheet-front{rotate:-1deg}.desk-sticky,.desk-pencil,.desk-tape{display:none}.desk-binder{left:10%;top:3%;scale:.7}.desk-paperclip{right:5%;top:13%;scale:.7}
  .research-tab{font-size:11px;gap:6px}.tab-label{padding:3px 5px;letter-spacing:0}.research-badge{width:62px;height:62px}
  .research-rail-left .research-tab:nth-of-type(1){left:7%;top:auto;bottom:96px}.research-rail-left .research-tab:nth-of-type(2){left:39%;top:auto;bottom:96px}.research-rail-left .research-tab:nth-of-type(3){left:auto;right:6%;top:auto;bottom:96px}
@@ -89,15 +89,30 @@
 
 /* Keep every badge on the mat, clear of the archive and the spread. */
 @media(min-width:761px){
- .research-rail-left .research-tab:nth-of-type(1),.research-rail-left .research-tab:nth-of-type(3){left:max(6px,calc(50% - var(--book-half) - 135px))}
- .research-rail-right .research-tab:nth-of-type(1),.research-rail-right .research-tab:nth-of-type(3){right:max(6px,calc(50% - var(--book-half) - 135px))}
- .research-rail-left .research-tab:nth-of-type(2){left:max(5px,calc(50% - var(--book-half) - 150px))}
- .research-rail-right .research-tab:nth-of-type(2){right:max(5px,calc(50% - var(--book-half) - 150px))}
+ .research-rail-left .research-tab:nth-of-type(1),.research-rail-left .research-tab:nth-of-type(3){left:max(6px,calc(var(--safe-edge-left,140px) - 125px))}
+ .research-rail-right .research-tab:nth-of-type(1),.research-rail-right .research-tab:nth-of-type(3){right:max(6px,calc(var(--safe-edge-right,140px) - 125px))}
+ .research-rail-left .research-tab:nth-of-type(2){left:max(5px,calc(var(--safe-edge-left,140px) - 140px))}
+ .research-rail-right .research-tab:nth-of-type(2){right:max(5px,calc(var(--safe-edge-right,140px) - 140px))}
 }
 @media(max-width:760px){
- .desk-props{overflow:hidden;bottom:170px}
+ .desk-props{overflow:hidden;bottom:194px}
  .desk-folder{bottom:-90px}.desk-sheet,.desk-sheet-front{bottom:-100px}
  .research-tab{gap:0}
- .research-rail-left .research-tab:nth-of-type(1),.research-rail-left .research-tab:nth-of-type(2),.research-rail-left .research-tab:nth-of-type(3){bottom:86px}
- .research-rail-right .research-tab:nth-of-type(1),.research-rail-right .research-tab:nth-of-type(2),.research-rail-right .research-tab:nth-of-type(3){bottom:2px}
+ .research-rail-left .research-tab:nth-of-type(1),.research-rail-left .research-tab:nth-of-type(2),.research-rail-left .research-tab:nth-of-type(3){bottom:110px}
+ .research-rail-right .research-tab:nth-of-type(1),.research-rail-right .research-tab:nth-of-type(2),.research-rail-right .research-tab:nth-of-type(3){bottom:30px}
 }
+
+/* Tilt the closed cover only. Reading spreads remain flat and keep their page geometry. */
+.research-workspace .book-pose{rotate:0deg;translate:0 0;scale:1;transition:rotate .4s ease,translate .4s ease,scale .4s ease}
+.research-workspace[data-book-open=false] .book-pose{rotate:-2.2deg;translate:0 -12px;scale:1.02}
+.research-tab{gap:0}
+.tab-label{position:relative;z-index:1;margin-top:-8px}
+.research-tab[data-pin=pencil] .tab-label{margin-top:-23px}
+.research-tab[data-pin=hi] .tab-label{margin-top:-12px}
+.research-tab[data-pin=ghost] .tab-label,.research-tab[data-pin=lime] .tab-label{margin-top:-3px}
+@media(max-width:1000px){.tab-label{margin-top:-5px}.research-tab[data-pin=pencil] .tab-label{margin-top:-16px}.research-tab[data-pin=hi] .tab-label{margin-top:-7px}}
+@media(max-width:760px){
+ .research-workspace[data-book-open=false] .book-pose{rotate:-1.5deg;translate:0 -4px;scale:1}
+ .tab-label{margin-top:-3px}.research-tab[data-pin=pencil] .tab-label{margin-top:-12px}.research-tab[data-pin=hi] .tab-label{margin-top:-5px}.research-tab[data-pin=ghost] .tab-label,.research-tab[data-pin=lime] .tab-label{margin-top:-2px}
+}
+@media(prefers-reduced-motion:reduce){.research-workspace .book-pose{transition:none!important}}
