@@ -21,14 +21,7 @@
 
   const paper=elPaper();
   function elPaper(){const n=document.createElement('div');n.className='research-paper';while(detail.firstChild)n.append(detail.firstChild);detail.append(n);detail.setAttribute('role','dialog');detail.setAttribute('aria-modal','true');detail.setAttribute('aria-labelledby','research-detail-title');return n;}
-  const icons=[
-    '<path d="M11 32h28M15 32V19l12-9 11 9v13M22 32v-9h9v9"/><path d="m33 8 2-4m3 9 5-1"/>',
-    '<path d="m8 14 11-5 12 5 12-5v28l-12 5-12-5-11 5zM19 9v28m12-23v28"/><circle cx="31" cy="23" r="4"/>',
-    '<path d="M8 11h30v23H23l-9 8v-8H8z"/><path d="M15 19h16m-16 7h10"/>',
-    '<path d="m5 17 21-9 21 9-21 9zM13 21v13q13 10 26 0V21M44 19v17"/>',
-    '<path d="M9 37q2-15 12-10t13-8q0-6 7-9" stroke-dasharray="3 4"/><circle cx="9" cy="37" r="3"/><path d="m35 10 6-6 6 6-6 10z"/>',
-    '<path d="M9 8h32v35H9zM16 15h18m-18 7h18m-18 7h10"/><path d="m30 35 5 5 10-13"/>'
-  ];
+  const pinAssets=['eyes','sparkle','hi','pencil','sparkle','eyes'];
   let active = null, pinned = false, timer, detailId = null, zoom = 1, returnFocus;
   const el = (tag, cls, text) => { const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n; };
   function artwork(board) {
@@ -63,7 +56,7 @@
   rails.forEach((rail,side)=>{
     for(let i=side*3;i<side*3+3;i++){
       const tab=el('button','research-tab');tab.type='button';tab.dataset.number=String(i+1).padStart(2,'0');tab.style.setProperty('--note-index',i%3);tab.id='research-tab-'+(i+1);tab.setAttribute('aria-controls','research-preview-'+side);tab.setAttribute('aria-expanded','false');tab.append(el('span','tab-label',labels[i]));
-      const badge=el('span','research-badge');badge.setAttribute('aria-hidden','true');badge.innerHTML='<svg viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">'+icons[i]+'</svg>';tab.prepend(badge);
+      const badge=el('span','research-badge');badge.setAttribute('aria-hidden','true');const pin=new Image();pin.src='assets/gazette-desk/pins/'+pinAssets[i]+'.svg';pin.alt='';pin.draggable=false;pin.className='research-pin';badge.append(pin);tab.prepend(badge);
       tab.addEventListener('pointerenter',()=>{if(hover.matches)showPreview(i);});
       tab.addEventListener('focus',()=>{if(tab.matches(':focus-visible'))showPreview(i);});
       tab.addEventListener('click',()=>{

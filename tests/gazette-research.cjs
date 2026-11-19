@@ -9,6 +9,9 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
   await p.goto(new URL('gazette.html',root).href);await p.waitForFunction(()=>document.querySelector('.paper[data-pdf-page="1"]'));
   await p.waitForFunction(()=>[...document.querySelectorAll('.desk-scrap')].every(im=>im.complete&&im.naturalWidth>0));
   assert.equal(await p.locator('.desk-scrap').count(),4);
+  await p.waitForFunction(()=>[...document.querySelectorAll('.research-pin')].length===6&&[...document.querySelectorAll('.research-pin')].every(im=>im.complete&&im.naturalWidth===400));
+  assert.match(await p.locator('#research-tab-3 .research-pin').getAttribute('src'),/hi\.svg$/);
+  assert.match(await p.locator('#research-tab-4 .research-pin').getAttribute('src'),/pencil\.svg$/);
   const cover=await p.locator('.paper[data-pdf-page="1"]').boundingBox();assert(cover.height>=760,'Desktop book uses the available height');await p.mouse.click(cover.x+cover.width*.6,cover.y+cover.height*.5);
   await p.waitForFunction(()=>document.getElementById('reader-message').textContent.startsWith('第 2 页')&&document.getElementById('reader').dataset.flipState==='read');
   // Hover cards overlay the desk without moving or resizing the publication.
