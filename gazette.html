@@ -7,15 +7,28 @@
 <title>Future Gazette · 作品集</title>
 <link rel="stylesheet" href="portfolio.css?v=reader-click-12">
 <link rel="stylesheet" href="site.css?v=portfolio-collection-1">
+<link rel="stylesheet" href="gazette-research.css?v=research-1">
 <script src="site.js?v=day-only-2" defer></script>
 <script src="assets/vendor/page-flip/page-flip.browser.js" defer></script><script src="portfolio.js?v=reader-click-12" defer></script>
+<script src="gazette-research-layout.js?v=research-1" defer></script>
+<script src="gazette-research.js?v=research-1" defer></script>
 </head>
 <body class="portfolio-page gazette-page">
 <main id="gazette-reader">
 <header class="reader-toolbar"><a class="collection-return" href="portfolio.html">← 返回作品集</a><span>Future Gazette 2050</span><div><a href="assets/gazette/future-gazette.pdf" download>下载源文件</a><button id="fullscreen-book" type="button" aria-pressed="false">全屏阅读 ⛶</button></div></header>
+<div class="research-workspace" id="research-workspace">
+<aside class="research-rail research-rail-left" aria-label="项目背景与调研" id="research-left"></aside>
 <section id="reader" class="reader" aria-label="Future Gazette，点击左右书页、拖动书页或使用键盘方向键翻页" tabindex="0">
 <div class="book-pose"><div class="book-shell" data-cover="true"><div id="book" class="book"></div></div></div>
 </section>
+<aside class="research-rail research-rail-right" aria-label="用户研究与设计过程" id="research-right"></aside>
+<section class="research-detail" id="research-detail" aria-label="研究材料详览" hidden>
+<header class="research-detail-toolbar"><h1 id="research-detail-title"></h1><div class="research-detail-controls"><button type="button" id="research-zoom-out" aria-label="缩小研究材料">−</button><button type="button" id="research-zoom-reset">适应宽度</button><button type="button" id="research-zoom-in" aria-label="放大研究材料">＋</button><button type="button" id="research-close-detail">返回画册 ×</button></div></header>
+<div class="research-detail-scroll" id="research-detail-scroll" tabindex="0"><div id="research-detail-content"></div></div>
+<p class="sr-only" id="research-transcript"></p>
+</section>
+</div>
+<p class="sr-only" id="research-status" role="status" aria-live="polite"></p>
 <p id="reader-message" class="sr-only" role="status" aria-live="polite"></p>
 <noscript><p>请启用 JavaScript，或下载源文件阅读。</p></noscript>
 </main>

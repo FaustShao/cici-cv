@@ -1,0 +1,55 @@
+/* The research panels reserve their own columns; they never cover a book page. */
+.research-workspace{--rail:64px;--panel:clamp(280px,25vw,380px);display:grid;grid-template-columns:var(--rail) minmax(0,1fr) var(--rail);grid-template-rows:minmax(0,1fr);gap:12px;flex:1;min-height:0;width:100%;padding:14px 16px 0;isolation:isolate}
+.research-workspace[data-side=left]{grid-template-columns:var(--panel) minmax(0,1fr) var(--rail)}
+.research-workspace[data-side=right]{grid-template-columns:var(--rail) minmax(0,1fr) var(--panel)}
+.research-workspace>.reader{grid-column:2;grid-row:1;min-width:0}
+.research-rail{align-self:center;min-width:0;max-height:100%;display:flex;flex-direction:column;gap:18px;padding:10px 0 30px;overflow:visible}
+.research-rail-left{grid-column:1;grid-row:1}.research-rail-right{grid-column:3;grid-row:1}
+.research-tab{border:0;background:#fffdf6;box-shadow:1px 4px 10px #48341c13;cursor:pointer;color:#292622;display:flex;align-items:center;gap:10px;min-height:54px;padding:12px 14px;text-align:left;font:inherit;border-radius:1px;transition:background .18s,translate .18s}
+.research-tab:before{content:attr(data-number);color:#e86812;font:700 15px/1 ui-monospace,monospace}
+.research-tab .tab-label{writing-mode:vertical-rl;font-size:14px;letter-spacing:2px;line-height:1.7}
+.research-tab[aria-expanded=true]{background:#f9e6cc;box-shadow:inset 3px 0 #f67418}.research-tab:hover{translate:0 -2px;background:#fff6e8}
+.research-preview{width:100%;max-height:min(78svh,810px);overflow:auto;overscroll-behavior:contain;padding:10px 2px 14px}
+.research-preview[hidden],.research-detail[hidden]{display:none}
+.research-open{border:0;padding:0;width:100%;background:transparent;cursor:zoom-in;text-align:left;display:block;color:inherit}
+.research-open:focus-visible{outline-offset:-3px!important}
+.research-preview-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px 0}
+.research-preview-actions button{font:inherit;color:#6c4727;background:transparent;border:0;padding:5px 2px;cursor:pointer;font-size:12px}
+.research-preview-actions button:first-child{border-bottom:1px solid #c2894c}
+.research-rail.is-active{gap:5px}.research-rail.is-active .research-tab .tab-label{writing-mode:horizontal-tb;letter-spacing:1px;font-size:13px}.research-rail.is-active .research-tab{min-height:38px;padding:8px 13px}
+.research-rail.is-active .research-tab:not([aria-expanded=true]){box-shadow:none;background:transparent;opacity:.75}
+.research-artboard{position:relative;width:100%;aspect-ratio:var(--art-w)/var(--art-h);user-select:none}
+.research-artboard img{position:absolute;display:block;max-width:none;pointer-events:none;-webkit-user-drag:none}
+.research-artboard.is-detail{background:#fffdf6 url('assets/gazette-research/paper.webp') center/100% 100% no-repeat;box-shadow:0 2px 12px #3526190d}
+.research-detail{grid-row:1;grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;align-self:stretch;border-left:1px solid #d5cbb7;padding-left:20px}
+.research-detail-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:0 4px 12px}
+.research-detail-toolbar h1{font-size:15px;line-height:1.5;font-weight:500;margin:0;color:#51452f}
+.research-detail-controls{display:flex;gap:6px;align-items:center}.research-detail-controls button{font:inherit;border:1px solid #d1c4ae;border-radius:3px;background:#fff9ed;color:#5b4832;min-height:32px;padding:5px 10px;cursor:pointer}.research-detail-controls button:disabled{opacity:.35;cursor:default}
+.research-detail-controls button:hover:not(:disabled){background:#fff}
+.research-detail-scroll{overflow:auto;min-height:0;min-width:0;flex:1;padding:4px 8px 32px;overscroll-behavior:contain;scrollbar-gutter:stable;outline-offset:-3px}
+#research-detail-content{width:calc(100% * var(--research-zoom,1));min-width:100%}
+.research-detail-scroll.is-zoomed{cursor:grab}.research-detail-scroll.is-dragging{cursor:grabbing}
+.research-workspace[data-detail]{grid-template-columns:clamp(160px,16vw,250px) minmax(0,1fr);gap:20px}
+.research-workspace[data-detail]>.reader{grid-column:1;padding:0 0 36px}
+.research-workspace[data-detail]>.research-rail{display:none}
+.research-workspace[data-detail] .book-pose:after{content:'当前画册 · 已保留页码';display:block;position:absolute;top:100%;left:0;width:100%;text-align:center;padding-top:18px;font-size:11px;color:#84745d;white-space:nowrap}
+@media(max-height:650px) and (min-width:1001px){.research-rail{gap:8px}.research-tab{padding:9px 12px}.research-tab .tab-label{font-size:12px}.research-preview{max-height:70svh}}
+@media(max-width:1000px){
+ .portfolio-page.gazette-page main{overflow:auto}
+ .research-workspace,.research-workspace[data-side],.research-workspace[data-detail]{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(250px,calc(100svh - 210px)) auto auto auto;gap:10px;padding:10px 12px 24px;flex:none;min-height:calc(100svh - 50px)}
+ .research-workspace>.reader,.research-workspace[data-detail]>.reader{grid-column:1;grid-row:1;padding:0 0 24px;min-height:0;height:100%;width:100%}
+ .research-rail,.research-rail.is-active{grid-column:1;align-self:start;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:0;max-height:none}
+ .research-rail-left{grid-row:2}.research-rail-right{grid-row:3}
+ .research-tab,.research-rail.is-active .research-tab{min-height:44px;padding:10px 8px;gap:6px;justify-content:center;box-shadow:none;background:#fffdf6}
+ .research-tab .tab-label,.research-rail.is-active .research-tab .tab-label{writing-mode:horizontal-tb;letter-spacing:0;font-size:12px;line-height:1.4}
+ .research-preview{grid-column:1/-1;grid-row:2;max-height:none;padding:0;max-width:400px;justify-self:center}
+ .research-workspace[data-detail]>.research-rail{display:none}
+ .research-workspace[data-detail]{grid-template-rows:220px minmax(0,1fr)}
+ .research-workspace[data-detail]>.research-detail{grid-column:1;grid-row:2;min-height:60svh;max-height:90svh;border-left:0;border-top:1px solid #d5cbb7;padding:16px 0 0}
+ .research-workspace[data-detail] .book-pose:after{display:none}
+ .research-detail-toolbar{align-items:start}.research-detail-controls{flex-wrap:wrap;gap:4px}.research-detail-controls button{font-size:11px;padding:5px 8px}
+}
+@media(prefers-reduced-motion:reduce){.research-tab{transition:none}}
+/* The flip library has an invisible half beside a closed cover. Contain that hit area. */
+.research-workspace>.reader{overflow:hidden;isolation:isolate}
+.research-rail{position:relative;z-index:2}

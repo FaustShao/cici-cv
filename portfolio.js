@@ -11,10 +11,10 @@
   const leafToPdf = index => Math.min(index, count - 1);
   const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.webp`);
   function build() {
-    const single = matchMedia('(max-width: 700px)').matches;
     const padding = getComputedStyle(reader);
     const availableHeight = Math.max(150, reader.clientHeight - parseFloat(padding.paddingTop) - parseFloat(padding.paddingBottom) - 16);
     const availableWidth = reader.clientWidth - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight);
+    const single = matchMedia('(max-width: 700px)').matches || availableWidth < 460;
     const pageWidth = Math.floor(Math.min(availableWidth / (single ? 1 : 2), availableHeight * 2 / 3));
     const key = `${single}:${pageWidth}`;
     if (key === lastSize) return;
@@ -123,8 +123,9 @@
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&stage.classList.contains('is-expanded')){stage.classList.remove('is-expanded');syncFullscreen();}});
   let resizeTimer;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(build, 200); });
+  new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(build, 100); }).observe(reader);
   document.addEventListener('keydown', event => {
-    if (event.target.closest('a,input,textarea,select') || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.defaultPrevented || event.target.closest('a,button,input,textarea,select,aside,.research-detail') || event.altKey || event.ctrlKey || event.metaKey) return;
     const index = flip.getCurrentPageIndex();
     if (!['ArrowRight','ArrowLeft','Home','End'].includes(event.key)) return;
     event.preventDefault();

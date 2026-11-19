@@ -1,0 +1,2229 @@
+{
+  "figma": "C51AiB0A5NzZ1K47auoljM",
+  "frame": "73:156",
+  "name": "修改最终版",
+  "uploadedPNGCount": 370,
+  "mapping": [
+    {
+      "board": 0,
+      "asset": "小卡内容a/AI给出了历史氛围、风景与苏格兰传统；居民日常、志愿劳动和历史争议需要更具体的材料。.png",
+      "node": "68:1873",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Vector-5.png",
+      "node": "68:2040",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/原稿纸张底纹-4.png",
+      "node": "68:1997",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Vector-4.png",
+      "node": "68:1996",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Vector-1.png",
+      "node": "68:1885",
+      "cost": 1
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Vector-3.png",
+      "node": "68:2014",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Vector-2.png",
+      "node": "68:1971",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Tolbooth 邮票.png",
+      "node": "68:1945",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/展开详细材料-3.png",
+      "node": "68:2021",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/展开详细材料-2.png",
+      "node": "68:1978",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Vector.png",
+      "node": "68:1867",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/展开详细材料-1.png",
+      "node": "68:1892",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/阅读 → 贡献 → 再次访问.png",
+      "node": "68:2010",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/展开详细材料-4.png",
+      "node": "68:2003",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/展开详细材料.png",
+      "node": "68:1874",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/AI 回答中的笼统描述与推测.png",
+      "node": "68:1882",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/FORRES.png",
+      "node": "68:1880",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Sueno’s Stone 邮票.png",
+      "node": "68:1957",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/Cluny Hill 邮票.png",
+      "node": "68:1932",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容a/原稿纸张底纹.png",
+      "node": "68:1868",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/原稿橙色胶带-2.png",
+      "node": "68:1875",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/原稿橙色胶带-3.png",
+      "node": "68:2142",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/原稿纸张底纹-5.png",
+      "node": "68:2041",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/原稿橙色胶带-1.png",
+      "node": "68:2022",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/原稿橙色胶带-4.png",
+      "node": "68:2143",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/原稿橙色胶带-5.png",
+      "node": "68:2145",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/原稿纸张底纹-2.png",
+      "node": "68:1972",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/原稿橙色胶带.png",
+      "node": "68:2144",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/留学生访谈/已遮脸.png",
+      "node": "68:2031",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容c/居民访谈/已遮脸.png",
+      "node": "68:1987",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/抵达 → 搜索 → 发现 → 探索.png",
+      "node": "68:2009",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/位中国留学生.png",
+      "node": "68:2036",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/具体内容.png",
+      "node": "68:1891",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/原稿纸张底纹-1.png",
+      "node": "68:1886",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/小镇与AI.png",
+      "node": "68:1870",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/“传统苏格兰气息” “日常生活可能围绕咖啡馆”.png",
+      "node": "68:1881",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/原稿纸张底纹-3.png",
+      "node": "68:2015",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/实体画册制作照片.png",
+      "node": "68:2053",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/活页装订容纳新内容，描图纸叠合地图与章节。2050情境探索车站、校园和市政厅的阅读与参与入口。.png",
+      "node": "68:2046",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/查看实体制作与2050使用情境.png",
+      "node": "68:2047",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/小镇与AI-2.png",
+      "node": "68:1974",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/小镇与AI-3.png",
+      "node": "68:2017",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/花草 · 邻里 · 志愿劳动.png",
+      "node": "68:1992",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/01.png",
+      "node": "68:1869",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/位本地居民.png",
+      "node": "68:1991",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/小镇与AI-1.png",
+      "node": "68:1888",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/容易被忽略的 Forres.png",
+      "node": "68:1889",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/小镇与AI-4.png",
+      "node": "68:1999",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/活页与半透明纸照片.png",
+      "node": "68:2052",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/小镇与AI-5.png",
+      "node": "68:2043",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/13.png",
+      "node": "68:1990",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/01-5.png",
+      "node": "68:2042",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/01-4.png",
+      "node": "68:1998",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/容易被忽略的 Forres-4.png",
+      "node": "68:2044",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/具体内容-2.png",
+      "node": "68:2020",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/容易被忽略的 Forres-1.png",
+      "node": "68:1975",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/01-3.png",
+      "node": "68:2016",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/01-2.png",
+      "node": "68:1973",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/32.png",
+      "node": "68:2035",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/具体内容-1.png",
+      "node": "68:1977",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/容易被忽略的 Forres-2.png",
+      "node": "68:2018",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/01-1.png",
+      "node": "68:1887",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/容易被忽略的 Forres-3.png",
+      "node": "68:2000",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/三类用户与七阶段旅程，逐项对应行为、感受、问题和设计机会，并说明画册章节的依据。.png",
+      "node": "68:2002",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/不起眼的小镇Forres.png",
+      "node": "68:1871",
+      "cost": 0
+    },
+    {
+      "board": 0,
+      "asset": "小卡内容b/环岛 · 运动会 · 二手店.png",
+      "node": "68:2037",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/用“可能”推测商家与咖啡馆。.png",
+      "node": "73:373",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/以游客可见的风景与氛围组织。.png",
+      "node": "73:381",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/Sueno’s Stone：雕刻内容与未确定的解释。 Nelson’s Tower：建塔背景、公众认捐与地方象征。 Forres Heritage Trust：志愿者、解说、教育和保护。 Fantastic Forres：插画、地方符号、故事与创意出版.png",
+      "node": "73:389",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/社区角色.png",
+      "node": "73:376",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/历史.png",
+      "node": "73:356",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/原稿图钉-1.png",
+      "node": "77:182",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/笼统提及社区。.png",
+      "node": "73:377",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/2 54.png",
+      "node": "68:2056",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/Forres 位于苏格兰东北部的 Moray。作为曾经的皇家自治镇，其历史涉及贸易、地方治理与区域认同，包含史前及中世纪早期遗存、王室历史、维多利亚时期发展、社区传统和当代文化。 Sueno.png",
+      "node": "73:347",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/2 55.png",
+      "node": "68:2057",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/地标.png",
+      "node": "73:360",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/传统庆祝、友善氛围。.png",
+      "node": "73:369",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/容易被忽略的 Forres.png",
+      "node": "73:331",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/提供证据包.png",
+      "node": "73:354",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/未说明历史解读存在争议。.png",
+      "node": "73:365",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/2 53.png",
+      "node": "68:2055",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/比较.png",
+      "node": "73:349",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/初到 Forres，我用 AI去 了解当地历史、文化与身份。但是回答中只反复出现苏格兰传统和概括风景，完全没有当地独特性的体现。项目基于此思考如何让这些地方在ai中可以有具体内容可读.png",
+      "node": "73:333",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/王室联系、老建筑、区域遗产。.png",
+      "node": "73:357",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/日常生活.png",
+      "node": "73:372",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/Forres 位于苏格兰东北部，是一座具有浓厚传统苏格兰气息的历史小镇。它的历史与王室联系、古老建筑和更广泛的区域遗产有关。 游客可能注意到历史地标、绿地和周围景观。 当地文化.png",
+      "node": "73:344",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/无本地证据.png",
+      "node": "73:353",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/实验.png",
+      "node": "73:335",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/皇家自治镇、贸易与治理，多层历史及维多利亚时期发展。.png",
+      "node": "73:358",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/2 53-1.png",
+      "node": "62:1538",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/共同提示词 · 中文译文 请向一位从未到访的人介绍苏格兰 Forres，包括历史、重要地标、地方文化、日常生活及独特之处，并从文化遗产角度解释。.png",
+      "node": "73:338",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/叙述视角.png",
+      "node": "73:380",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/一个知名度较低的小镇，如何在数字叙述中留下具体的地方经验？.png",
+      "node": "73:332",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/高地运动会、遗产信托、Fantastic Forres 的具体实践。.png",
+      "node": "73:370",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/不确定性.png",
+      "node": "73:364",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/高街、独立店铺、相聚地点、活动与居民记忆。.png",
+      "node": "73:374",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/原稿图钉.png",
+      "node": "68:2058",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/未点名的历史地标。.png",
+      "node": "73:361",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/保留苏埃诺石创作者、所指事件与象征含义的多种解释。.png",
+      "node": "73:366",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/Sueno’s Stone、Nelson’s Tower 及其具体意义。.png",
+      "node": "73:362",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/同时说明物件、景观、组织、实践与记忆的联系。.png",
+      "node": "73:382",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/证据包包含六组材料.png",
+      "node": "73:388",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/2 54-1.png",
+      "node": "68:2054",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/报告使用同一条介绍性提示词。第一轮在未使用本地证据包的条件下生成基线回答；第二轮限定只使用证据包。第三阶段记录差异，提出社区纠正和未来归档流程。.png",
+      "node": "73:336",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/维度.png",
+      "node": "73:352",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/地方文化.png",
+      "node": "73:368",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/公众认捐、志愿劳动、参与、解说、教育和保护。.png",
+      "node": "73:378",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/02/仅使用本地证据包.png",
+      "node": "73:346",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/FUTURE GAZETTE/01.png",
+      "node": "73:330",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/01/未提供本地证据.png",
+      "node": "73:343",
+      "cost": 0
+    },
+    {
+      "board": 1,
+      "asset": "大卡1/两轮回答/中文完整译文.png",
+      "node": "73:340",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector-6.png",
+      "node": "73:419",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Stamp frame - Yellow-2.png",
+      "node": "73:485",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/O 实地观察 走访、照片与步行经验 S 二手研究 档案、地图与历史记录 C 社区相关 公共活动与地方关系.png",
+      "node": "73:432",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/image 363.png",
+      "node": "73:460",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/历史记忆.png",
+      "node": "73:407",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Sueno’s Stone-1.png",
+      "node": "73:489",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Stamp frame - Yellow-3.png",
+      "node": "73:499",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector-7.png",
+      "node": "73:404",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector-5.png",
+      "node": "73:408",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Stamp frame - Yellow-1.png",
+      "node": "73:471",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/July-4.png",
+      "node": "73:448",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/image 361.png",
+      "node": "73:498",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Grant Park.png",
+      "node": "73:417",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/49.png",
+      "node": "73:457",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Sueno’s Stone-2.png",
+      "node": "73:495",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/575923.png",
+      "node": "73:479",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector-4.png",
+      "node": "73:415",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/575927.png",
+      "node": "73:500",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/image 365.png",
+      "node": "73:486",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/July-1.png",
+      "node": "73:465",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/image 8.png",
+      "node": "73:472",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/High Street-1.png",
+      "node": "73:509",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/image 364.png",
+      "node": "73:502",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/image 204.png",
+      "node": "73:484",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/575926.png",
+      "node": "73:451",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector-1.png",
+      "node": "73:402",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector-3.png",
+      "node": "73:423",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/575924.png",
+      "node": "73:480",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/image 212.png",
+      "node": "73:455",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/575930.png",
+      "node": "73:494",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/July-2.png",
+      "node": "73:477",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/林地景观.png",
+      "node": "73:422",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/公共空间.png",
+      "node": "73:418",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/July-3.png",
+      "node": "73:491",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/O.png",
+      "node": "73:405",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/67.png",
+      "node": "73:456",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/575925.png",
+      "node": "73:450",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector-2.png",
+      "node": "73:403",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/25'-3.png",
+      "node": "73:492",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Cluny Hill-1.png",
+      "node": "73:463",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/镇中心.png",
+      "node": "73:410",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/25'-2.png",
+      "node": "73:449",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/邮票把建筑、景观和地方物件提取为鲜明图像，与实地照片并置。读者可以对照视觉符号和真实地点，继续追问建筑的意义、公共空间的使用，以及日常生活留下的记忆。.png",
+      "node": "73:511",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector.png",
+      "node": "73:401",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/认识具体的地方.png",
+      "node": "73:395",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/HighStreet.png",
+      "node": "73:505",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Cluny Hill-2.png",
+      "node": "73:467",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/N ↑.png",
+      "node": "73:400",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Group 15.png",
+      "node": "73:442",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/25'-1.png",
+      "node": "73:466",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Sueno’s Stone.png",
+      "node": "73:406",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Nelson’s Tower.png",
+      "node": "73:425",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/山顶纪念建筑.png",
+      "node": "73:426",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/25'-4.png",
+      "node": "73:508",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/C-1.png",
+      "node": "73:409",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/初来者视角.png",
+      "node": "73:430",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Forres.png",
+      "node": "73:446",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/C-2.png",
+      "node": "73:416",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/店铺与日常生活.png",
+      "node": "73:510",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/五枚邮票 · 保留原有设计.png",
+      "node": "73:438",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Tolbooth.png",
+      "node": "73:412",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/林地景观-1.png",
+      "node": "73:468",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/O-1.png",
+      "node": "73:424",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Town Hall.png",
+      "node": "73:413",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/地方证据空间关系图.png",
+      "node": "73:399",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/25'.png",
+      "node": "73:478",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Stamp frame - Yellow.png",
+      "node": "73:459",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/High Street.png",
+      "node": "73:411",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/历史建筑与市中心.png",
+      "node": "73:453",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/GSA Highlands Campus.png",
+      "node": "73:429",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/575928.png",
+      "node": "73:501",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/image 7.png",
+      "node": "73:470",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/证据分类.png",
+      "node": "73:431",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/C.png",
+      "node": "73:428",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Nelson’s Tower-1.png",
+      "node": "73:475",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/575929.png",
+      "node": "73:493",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Forres-4.png",
+      "node": "73:504",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/示意空间关系，非精确导航地图.png",
+      "node": "73:433",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/雕刻与历史解读.png",
+      "node": "73:496",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/走访留下地点与材料，邮票让这些线索变成可以辨认和记住的视觉对象。.png",
+      "node": "73:396",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Nelson’s Tower-2.png",
+      "node": "73:481",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Under the Leaves.png",
+      "node": "73:414",
+      "cost": 1
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Forres-3.png",
+      "node": "73:488",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/July.png",
+      "node": "73:507",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Cluny Hill.png",
+      "node": "73:421",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Tolbooth-1.png",
+      "node": "73:447",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/S.png",
+      "node": "73:420",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/地图里的六处节点.png",
+      "node": "73:435",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Sueno’s Stone：历史记忆与多种解读。 Town Centre：High Street、Tolbooth、Town Hall、Under the Leaves 连接市中心日常。 Grant Park：公共空间与社区生活。 Cluny Hill：林地景观与步行环境。 Nelson’s Tower.png",
+      "node": "73:436",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Forres-2.png",
+      "node": "73:474",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Vector-8.png",
+      "node": "73:427",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Tolbooth-2.png",
+      "node": "73:452",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/纪念与公众参与.png",
+      "node": "73:482",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/Forres-1.png",
+      "node": "73:462",
+      "cost": 0
+    },
+    {
+      "board": 2,
+      "asset": "大卡2/FUTURE GAZETTE/02.png",
+      "node": "73:394",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/居民怎样记住这里.png",
+      "node": "73:516",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/熟悉的人、反复参加的活动、共同维护的街道，留下了小镇的生活经验。.png",
+      "node": "73:517",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/2 55.png",
+      "node": "68:2124",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/位本地居民.png",
+      "node": "73:523",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/2 57.png",
+      "node": "68:2126",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/居民提到地方传统、创意活动和志愿贡献。一些知识通过参与和交谈传播，正式的文字档案未必记录了这些经验。.png",
+      "node": "73:542",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/2 56.png",
+      "node": "68:2125",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/13.png",
+      "node": "73:522",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/研究注记-1.png",
+      "node": "73:528",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/研究注记-3.png",
+      "node": "73:533",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/研究注记.png",
+      "node": "73:538",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/讨论长期居住经验、邻里关系、 公共活动与地方记忆。.png",
+      "node": "73:524",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/研究注记-2.png",
+      "node": "73:543",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/居民用社区园艺和街道种植举例。花草营造欢迎的氛围，也记录着居民投入的时间、志愿劳动和共同维护公共空间的责任。.png",
+      "node": "73:537",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/地方活动、志愿服务、园艺项目和社区组织，让居民反复参与、交换知识，并与地方传统保持联系。这些经历构成小镇持续积累的生活记忆。.png",
+      "node": "73:532",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/2 58.png",
+      "node": "68:2127",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/访谈说明 共13位本地居民。以下内容依据原稿中的主题归纳，未使用逐字引语，也不推算每个主题的出现人数或比例。照片遮脸处理。.png",
+      "node": "73:546",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/居民匿名访谈.png",
+      "node": "73:519",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/居民提到，镇上的人彼此认得，邻居经常交流，社区活动提供了见面的机会。熟悉感来自反复遇见和持续交往。.png",
+      "node": "73:527",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/03/街道花草由谁照顾.png",
+      "node": "73:536",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/04/聊天与参与中的知识.png",
+      "node": "73:541",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/02/活动留下的记忆.png",
+      "node": "73:531",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/FUTURE GAZETTE/03.png",
+      "node": "73:515",
+      "cost": 0
+    },
+    {
+      "board": 3,
+      "asset": "大卡3/01/街头认得的人.png",
+      "node": "73:526",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/初来时，学生首先寻找最近的超市、购买日用品的地点、餐厅咖啡馆和公共交通信息。他们需要知道怎样在镇上移动，建立日常生活的把握感。.png",
+      "node": "73:565",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/位中国留学生.png",
+      "node": "73:561",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/学生把高地运动会描述为令人记住的经历。体育、音乐、社区参与和地方认同同时出现，体验后也促使他们继续查找活动背景与含义。.png",
+      "node": "73:575",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/访谈说明 共32位中国留学生。内容依据原稿中的主题归纳；照片遮脸。.png",
+      "node": "73:584",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/2 55.png",
+      "node": "68:2128",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/2 57.png",
+      "node": "68:2131",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/2 56.png",
+      "node": "68:2130",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/实际生活中的小问题.png",
+      "node": "73:562",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/研究注记-1.png",
+      "node": "73:566",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/研究注记-3.png",
+      "node": "73:571",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/研究注记.png",
+      "node": "73:576",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/研究注记-2.png",
+      "node": "73:581",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/部分学生不熟悉当地环岛的行驶方向；骑行规则、手势，以及行人、自行车和机动车之间的预期，也需要重新学习。这些小差异明显影响初来体验。.png",
+      "node": "73:570",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/学生注意到复古服饰、手工制品、本地创作和小规模作品。这些物件携带个人故事，也让他们接触到当地消费、创作和社区之间的联系。.png",
+      "node": "73:580",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/留学生怎样熟悉这里.png",
+      "node": "73:549",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/32.png",
+      "node": "73:560",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/留学生匿名访谈1.png",
+      "node": "73:552",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/2 58.png",
+      "node": "68:2132",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/留学生匿名访谈2.png",
+      "node": "73:556",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/超市、环岛、运动会和二手店，累积成对 Forres 的认识。.png",
+      "node": "73:550",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/03/Highland Games 的现场体验.png",
+      "node": "73:574",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/04/二手店里的手作与故事.png",
+      "node": "73:579",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/02/环岛和骑行带来的困惑.png",
+      "node": "73:569",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/FUTURE GAZETTE/04.png",
+      "node": "73:548",
+      "cost": 0
+    },
+    {
+      "board": 4,
+      "asset": "大卡4/01/先解决吃住与出行.png",
+      "node": "73:564",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-6.png",
+      "node": "77:250",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/image 363.png",
+      "node": "77:322",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/景观观察.png",
+      "node": "73:668",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/image 161.png",
+      "node": "77:321",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/分享记忆，补充照片、故事和知识。.png",
+      "node": "77:366",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/居民缺少分享个人记忆的数字空间。.png",
+      "node": "77:368",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/本地贡献者.png",
+      "node": "73:601",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/翻阅 Gazette，对照AI未来叙事与地方证据。.png",
+      "node": "77:361",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-7.png",
+      "node": "77:251",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-5.png",
+      "node": "77:252",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/先前了解有限，难以找到认识小镇的入口。.png",
+      "node": "77:343",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/设计安排：Living Forres：文化、社区、日常生活，保留具体经验。.png",
+      "node": "73:674",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/抵达.png",
+      "node": "77:340",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/七阶段旅程.png",
+      "node": "77:189",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-4.png",
+      "node": "77:253",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Group 427319805.png",
+      "node": "77:208",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/思考.png",
+      "node": "77:362",
+      "cost": 1
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/设计机会.png",
+      "node": "77:339",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Group 427319804.png",
+      "node": "77:278",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-1.png",
+      "node": "77:241",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-3.png",
+      "node": "77:254",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/阶段.png",
+      "node": "77:335",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/设计安排：景观与环境记忆章节，连接空间与叙述。.png",
+      "node": "73:670",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/两组访谈.png",
+      "node": "73:672",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/AI实验.png",
+      "node": "73:660",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/研究材料怎样进入画册.png",
+      "node": "73:658",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/保留证据、解读与不确定性供读者判断。.png",
+      "node": "77:364",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-2.png",
+      "node": "77:248",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/建立联结.png",
+      "node": "77:357",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/用 AI 搜索历史、文化和游览地点。.png",
+      "node": "77:346",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/感受.png",
+      "node": "77:337",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/需要：理解地点、人物与记忆的关系。.png",
+      "node": "73:599",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/找到苏埃诺石、纳尔逊塔与社区故事。.png",
+      "node": "77:351",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/2 55.png",
+      "node": "68:2135",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/回答宽泛，遗漏地方细节。.png",
+      "node": "77:348",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/未来叙事可能把历史简化为通用故事。.png",
+      "node": "77:363",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/把回答与本地资料相连，显示证据来源。.png",
+      "node": "77:349",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector.png",
+      "node": "77:239",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/再次访问.png",
+      "node": "77:370",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/2 57.png",
+      "node": "68:2137",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/留学生或新居民，初到GSA时对小镇了解有限，常先使用AI。.png",
+      "node": "73:594",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/2 56.png",
+      "node": "68:2136",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/三类用户.png",
+      "node": "73:590",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/需要：具体地方故事与日常生活信息。.png",
+      "node": "73:595",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/地点与真实生活经验之间缺少可见联系。.png",
+      "node": "77:358",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/行为.png",
+      "node": "77:336",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/把零散材料组织成可浏览的视觉叙事。.png",
+      "node": "77:354",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/设计安排：封面、地图、小镇身份介绍，提供进入 Forres 的线索。.png",
+      "node": "73:662",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/国际初来者.png",
+      "node": "73:593",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/保存更新记录，让档案持续增补。.png",
+      "node": "77:374",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/形成归属.png",
+      "node": "77:367",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/感兴趣.png",
+      "node": "77:347",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/通过地点、人物与日常记忆提供分层介绍。.png",
+      "node": "77:344",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/阅读.png",
+      "node": "77:360",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/记忆材料分散在档案、书籍与社区中。.png",
+      "node": "77:353",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/研究依据：回答遗漏地方细节，需要具体来源。.png",
+      "node": "73:661",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/发现.png",
+      "node": "77:350",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/搜索.png",
+      "node": "77:345",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/用户旅程与设计决定.png",
+      "node": "73:587",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/持续联结.png",
+      "node": "77:372",
+      "cost": 1
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/需要：补充证据、分享故事和保留观点。.png",
+      "node": "73:603",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/贡献.png",
+      "node": "77:365",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/提供投稿、补充证据与纠错入口。.png",
+      "node": "77:369",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/2 58.png",
+      "node": "68:2139",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/建筑与历史.png",
+      "node": "73:664",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/缺少持续参与时，数字遗产容易静止。.png",
+      "node": "77:373",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/研究依据：关系、参与与适应经历具有地方价值。.png",
+      "node": "73:673",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/让故事对应具体地点与环境。.png",
+      "node": "77:359",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/掌握个人记忆与地方知识，希望保存当地特色。.png",
+      "node": "73:602",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/设计安排：石刻与街道章节：Sueno’s Stone、Tolbooth、Nelson’s Tower、Grant Park。.png",
+      "node": "73:666",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/image 7.png",
+      "node": "77:316",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/image 357.png",
+      "node": "77:317",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/好奇.png",
+      "node": "77:342",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/小镇文化探索者.png",
+      "node": "73:597",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Group 427319809.png",
+      "node": "77:193",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/关注乡镇遗产与隐蔽故事，出发前会在线搜索。.png",
+      "node": "73:598",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/困惑.png",
+      "node": "77:352",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Group 427319808.png",
+      "node": "77:311",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/实地走访，将数字信息与现场对应。.png",
+      "node": "77:356",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-9.png",
+      "node": "77:255",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/研究依据：地点包含不同含义和解读。.png",
+      "node": "73:665",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/问题.png",
+      "node": "77:338",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/研究依据：环境影响人的步行、感知和地方经验。.png",
+      "node": "73:669",
+      "cost": 1
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/Vector-8.png",
+      "node": "77:256",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/重读画册，关注新故事与更新。.png",
+      "node": "77:371",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/image 151.png",
+      "node": "77:319",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/image 3.png",
+      "node": "77:318",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/探索.png",
+      "node": "77:355",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/image 150.png",
+      "node": "77:320",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/地方证据、社区记忆与AI解读共同构成可持续补充的档案。.png",
+      "node": "77:375",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/设计原则：地方具体性、日常经验、多种解释、来源可追溯、参与补充、实体与数字共同访问。.png",
+      "node": "73:675",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/到达 Forres，观察街道、建筑与景观。.png",
+      "node": "77:341",
+      "cost": 0
+    },
+    {
+      "board": 5,
+      "asset": "大卡5/FUTURE GAZETTE/05.png",
+      "node": "73:586",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/材料结构.png",
+      "node": "73:687",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/实体原型探索材料与装订，2050情境探索持续阅读、补充与纠正地方记忆。.png",
+      "node": "73:680",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/装订与内容页.png",
+      "node": "73:684",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/实体翻阅细节.png",
+      "node": "73:685",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/阅读：读者能否找到具体地点和内容来源？ 理解：能否区分已有证据、历史解读与未来设想？ 参与：投稿和纠错任务是否清晰，如何说明审核与隐私？ 制作：活页增补、纸张透明度与翻.png",
+      "node": "73:706",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/车站：在既有信息屏中提供小镇记忆入口。 GSA图书馆：设置实体画册阅读点，让新来者接触地方故事。 Town Hall（FACT）：提供数字终端和实体投稿点，连接社区活动与记忆补充。.png",
+      "node": "73:700",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/活页装订：允许未来页面增补、替换和重新组织。 半透明描图纸：用于地图与章节分隔，让空间关系与内容层次叠合。 厚卡纸：承载主要内容页，形成与半透明页不同的阅读手感。 数字.png",
+      "node": "73:688",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/后续验证.png",
+      "node": "73:705",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/2050使用情境de三处触点.png",
+      "node": "73:692",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/2 58.png",
+      "node": "68:2140",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/GSA Highlands Campus.png",
+      "node": "73:695",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/Forres Railway Station.png",
+      "node": "73:694",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/制作一本可以继续增补的画册.png",
+      "node": "73:679",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/描图纸叠层.png",
+      "node": "73:683",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/Town Hall FACT.png",
+      "node": "73:696",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/未来记忆更新流程.png",
+      "node": "73:702",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/车站/抵达时看见.png",
+      "node": "73:697",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/市政厅/分享与贡献.png",
+      "node": "73:699",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/FUTURE GAZETTE/06.png",
+      "node": "73:678",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/校园图书馆/深入阅读.png",
+      "node": "73:698",
+      "cost": 0
+    },
+    {
+      "board": 6,
+      "asset": "大卡6/居民/初来者/访客 ↓ 分享记忆、照片与纠错材料 社区审核与来源标注 ↓ 整理进入地方记忆档案 AI依据档案解读，记录证据与不确定性 ↓ 通过画册与公共触点阅读 社区继续补充、纠错和更新.png",
+      "node": "73:703",
+      "cost": 0
+    }
+  ],
+  "sharedPaper": "paper.webp"
+}
