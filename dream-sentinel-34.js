@@ -23,10 +23,13 @@
     const targets=related.map(id=>nodes.get(id)).filter(Boolean);
     if(options.card)targets.forEach(n=>n.classList.add('ui-card'));
     const control={button,targets,hovered:false,...options};controls.push(control);board.append(button);
+    if(options.zoom){button.classList.add('ui-zoom-trigger');button.setAttribute('aria-haspopup','dialog');}
     button.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){control.hovered=true;update();}});
     button.addEventListener('pointerleave',()=>{control.hovered=false;update();});
     button.addEventListener('focus',update);button.addEventListener('blur',update);
     button.addEventListener('click',()=>{
+      const zoom=window.ProjectUIZoom?.get('dream',options.zoom);
+      if(zoom){window.ProjectUIZoom.open(zoom,button);return;}
       const selected=button.getAttribute('aria-pressed')!=='true';
       controls.forEach(c=>c.button.setAttribute('aria-pressed','false'));
       button.setAttribute('aria-pressed',String(selected));update();
@@ -51,7 +54,7 @@
     ['Page 3：用户身体状态',[2724,661,680,515],['34:740']],
     ['Page 4：安全撤离路线',[2004,1199,680,511],['34:746']],
     ['Page 5：设备连接与运行参数',[2724,1199,680,511],['34:747']]
-  ].forEach(([label,rect,ids])=>addHotspot(label,rect,ids,{card:true}));
+  ].forEach(([label,rect,ids])=>addHotspot(label,rect,ids,{card:true,zoom:ids[0]}));
   addHotspot('实时投影导航：沿指引方向撤离',[1297,366,598,365],[],{projection:true});
   const dot=document.createElement('span');dot.className='projection-dot';dot.setAttribute('aria-hidden','true');board.append(dot);
   board.addEventListener('click',e=>{if(!e.target.closest('.signal-hotspot'))reset();});

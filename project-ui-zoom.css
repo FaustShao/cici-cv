@@ -1,0 +1,12 @@
+.project-ui-lightbox{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:44px 24px 24px;border:0;background:rgba(20,22,22,.88);color:#fff;overflow:auto;overscroll-behavior:contain;box-sizing:border-box}
+.project-ui-lightbox[open]{display:grid;place-items:center}
+.project-ui-lightbox::backdrop{background:transparent}
+.project-ui-lightbox figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px;max-width:100%;pointer-events:none}
+.project-ui-lightbox img{display:block;width:auto;height:auto;max-width:min(94vw,100%);max-height:calc(100dvh - 110px);object-fit:contain;pointer-events:auto;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 8px 20px #0003)}
+.project-ui-lightbox figcaption{font:12px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:#eee8df;text-align:center;pointer-events:auto}
+.project-ui-lightbox .ui-zoom-close{position:fixed;right:18px;top:12px;width:36px;height:36px;padding:0;border:1px solid #ffffff65;border-radius:50%;background:#2228;color:#fff;font:24px/1 sans-serif;cursor:pointer;z-index:1}
+.project-ui-lightbox .ui-zoom-close:hover{background:#ffffff30}
+.project-ui-lightbox .ui-zoom-close:focus-visible{outline:2px solid white;outline-offset:3px}
+.ui-zoom-trigger,.signal-hotspot.ui-zoom-trigger{cursor:zoom-in!important}
+body.ui-zoom-open{overflow:hidden}
+@media(max-width:600px){.project-ui-lightbox{padding:52px 12px 20px}.project-ui-lightbox img{max-width:94vw;max-height:calc(100dvh - 120px)}}

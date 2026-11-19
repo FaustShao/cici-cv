@@ -30,6 +30,7 @@
     const board=document.createElementNS(svgNS,'svg');board.classList.add('design-board');board.id=`board-${index+1}`;board.style.background=layout.background;
     board.setAttribute('viewBox','0 0 3488 1744');board.setAttribute('width','3488');board.setAttribute('height','1744');
     for(const layer of layout.layers){
+      const zoom=window.ProjectUIZoom?.get('safepaw',layer.id);
       const interactive=cardIds.has(layer.id)||index===4&&/^Group 336(19|2[0-6])$/.test(layer.name);
       const node=document.createElementNS(svgNS,'g');node.classList.add('design-layer');node.dataset.node=layer.id;
       if(blend[layer.blend])node.style.mixBlendMode=blend[layer.blend];
@@ -38,10 +39,17 @@
       image.setAttribute('preserveAspectRatio','xMidYMid meet');
       if(generic.test(layer.name))image.setAttribute('aria-hidden','true');else{image.setAttribute('role','img');image.setAttribute('aria-label',layer.name);}
       node.append(image);
-      if(interactive){
+      if(zoom||interactive){
         const label=cardNames[layer.id]||(generic.test(layer.name)?'使用情景故事板图卡':layer.name);
-        node.setAttribute('role','button');node.tabIndex=0;node.setAttribute('aria-label',`高亮：${label}`);node.setAttribute('aria-pressed','false');
-        node.addEventListener('click',()=>{const wasActive=node.getAttribute('aria-pressed')==='true';resetCards();node.setAttribute('aria-pressed',String(!wasActive));});cards.push(node);
+        node.setAttribute('role','button');node.tabIndex=0;
+        node.setAttribute('aria-label',`${zoom?'放大查看':'高亮'}：${label}`);
+        if(zoom){
+          node.classList.add('ui-zoom-trigger');node.setAttribute('aria-haspopup','dialog');
+          node.addEventListener('click',()=>window.ProjectUIZoom.open(zoom,node));
+        }else{
+          node.setAttribute('aria-pressed','false');
+          node.addEventListener('click',()=>{const wasActive=node.getAttribute('aria-pressed')==='true';resetCards();node.setAttribute('aria-pressed',String(!wasActive));});cards.push(node);
+        }
         node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();node.dispatchEvent(new MouseEvent('click',{bubbles:true}));}});
       }
       board.append(node);
