@@ -6,8 +6,8 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
  async function idle(){await p.waitForFunction(()=>document.querySelector('#reader').dataset.flipState==='read');}
  async function pageNumber(n){await p.waitForFunction(n=>document.getElementById('reader-message').textContent.startsWith('第 '+n+' 页'),n);await idle();}
  let cover=await p.locator('.paper[data-pdf-page="1"]').boundingBox();
- assert(Math.abs(cover.width/cover.height-2/3)<.001);assert(cover.height>780);assert(900-cover.y-cover.height>=35);
- await p.screenshot({path:path.join(__dirname,'../experiments/bruno-projects/public/review/gazette-spacing.webp')});
+ assert(Math.abs(cover.width/cover.height-2/3)<.001);assert(cover.height>680);assert(900-cover.y-cover.height>=35);
+ await p.screenshot({path:path.join(__dirname,'../../checked-gazette/desk-book-spacing.webp')});
  // Click the middle of the cover, well away from every edge.
  await p.mouse.click(cover.x+cover.width*.6,cover.y+cover.height*.5);await pageNumber(2);
  async function clickPage(side,n,y=.5){const s=await p.locator('.book-shell').boundingBox();await p.mouse.click(s.x+s.width*(side==='right'?.75:.25),s.y+s.height*y);await pageNumber(n);}

@@ -1,0 +1,8 @@
+Huiwen-mincho / 汇文明朝体
+Original author: 特里王 / 天王帝廷
+Original release: https://zhuanlan.zhihu.com/p/344103391
+Source file (punctuation fixes): https://github.com/bosswnx/huiwenmincho-improved
+Source font: 匯文明朝體.ttf, obtained 2026-11-19.
+License: CC0 1.0; bundled unmodified license in huiwen-LICENSE.txt.
+Web asset: huiwen-ui.woff2, fontTools subset containing Gazette interface text and Latin characters; outlines unchanged, original font name and copyright records retained.
+Only newly rendered Gazette interface text uses this font. Existing publication and exported research artwork retain their original typography.

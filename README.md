@@ -131,9 +131,11 @@ Gazette 将导航/下载收进紧凑工具栏，按可用窗口等比例放大�
 
 `gazette.html` 展示 Future Gazette 翻页书、返回作品集入口和源文件下载按钮。原始31页 PDF 位于 `assets/gazette/future-gazette.pdf`。桌面端可按住书页右上角或右下角向左拖动翻页，左侧书角可向右翻回；手机支持单页触摸翻页。键盘左右键翻页，Home/End 定位首尾。系统设置减少动态效果时，键盘直接切页。
 
-Gazette 两侧各三张横排手写纸条：悬停标题直接展开对应小卡，点击小卡打开同页详细材料，不再显示额外筛选按钮。桌面卡片使用独立栏，详览时画册缩至侧边并保留当前页码；窄屏内容置于画册下方。详情可滚动、缩放，放大后可鼠标拖动查看，Escape 或“返回画册”恢复阅读。素材采用作者“修改最终版”的370张分层切图，详细卡片共用纸张底纹，不添加作品内部加载动画。验证：`node tests/gazette-research.cjs`、`node tests/gazette-contents.cjs`、`node tests/gazette-clicks.cjs`（先在8765端口启动静态服务器）。
+Gazette 使用切割垫、牛皮纸文件夹与原稿纸堆组成的桌面。六枚珐琅风格徽章分散摆放，悬停徽章或短标题显示小纸卡（不放大徽章），点击小卡展开为书本上方的大纸张。画册尺寸、位置和页码保持不变。点击纸张外的桌面、Escape 或“返回画册”关闭；纸内支持滚动和缩放，放大后可拖动查看。触屏点按徽章显示小卡，再点小卡打开大纸张。素材仍使用作者“修改最终版”的370张切图，不更改书页、卡片正文或其字体，不添加内部加载动画。
 
-画册底部木质目录默认收起，悬停或手机点按“目录”展开。四个大章节显示中英标题，小刻度悬停或聚焦时显示对应文章名称和页码；木楔拖动期间只预览位置，松开后定位。目录展开时为书页让出空间，研究详览期间隐藏目录。手写纸条使用带OFL许可的小赖字体子集。
+书本下方的纸质目录默认收起，悬停或触屏点按展开，四个大章节常显中英标题，小刻度悬停显示文章名。拖动索引贴仅预览，松开定位；目录不移动书本。新增外围文字使用汇文明朝体的自托管 WOFF2 子集，来源、处理方式与授权见 `assets/fonts/huiwen-source.txt` 和 `assets/fonts/huiwen-LICENSE.txt`。
+
+验证：静态服务器运行于8765端口后，执行 `node tests/gazette-research.cjs`、`node tests/gazette-contents.cjs`、`node tests/gazette-clicks.cjs`。
 
 使用 [StPageFlip](https://github.com/Nodlik/StPageFlip)（page-flip 2.0.7，MIT）。本地副本和许可证在 `assets/vendor/page-flip/`，发布包通过 npm 的 SHA-512 integrity 校验。无需外部 CDN、安装或构建。
 

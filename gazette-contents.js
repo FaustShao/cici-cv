@@ -16,12 +16,12 @@
   ['Living Forres','Forres 的日常生活'],['Forres Highland Games','高地运动会'],['Town Hall','市政厅与公共生活'],['Falconer Museum','法尔科纳博物馆'],['Whisky','土地、劳动与时间'],['Under the Leaves','书店中的地方故事'],['Findhorn Bay Arts','共同创作地方故事'],['FACT','日常生活背后的社区网络'],['Be Like Pablo','青年声音与未来遗产'],['GSA Highlands Campus','历史景观中的未来学习空间'],['Conclusion','结语：持续增补的地方记忆'],['Back Cover','封底']
  ];
  const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls;if(text)n.textContent=text;return n;};
- const dock=el('nav','gazette-contents');dock.setAttribute('aria-label','木质画册目录与页码检索');
+ const dock=el('nav','gazette-contents');dock.setAttribute('aria-label','纸质画册目录与页码检索');
  const handle=el('button','contents-handle');handle.type='button';handle.id='contents-toggle';handle.setAttribute('aria-expanded','false');handle.setAttribute('aria-controls','contents-panel');handle.append(el('span','','目录'),el('span','contents-handle-en','CONTENTS'));
  const panel=el('div','contents-panel');panel.id='contents-panel';panel.inert=true;panel.setAttribute('aria-hidden','true');
  const headings=el('div','contents-chapters'),track=el('div','contents-ticks');
  const tip=el('output','contents-tooltip');tip.hidden=true;tip.id='contents-tooltip';
- const range=document.createElement('input');range.type='range';range.min='1';range.max='31';range.step='1';range.value=String(book.getPage());range.className='contents-range';range.setAttribute('aria-label','拖动木楔定位画册页码');
+ const range=document.createElement('input');range.type='range';range.min='1';range.max='31';range.step='1';range.value=String(book.getPage());range.className='contents-range';range.setAttribute('aria-label','拖动索引贴定位画册页码');
  const marker=el('div','contents-marker');marker.setAttribute('aria-hidden','true');
  let current=book.getPage(),open=false,pinned=false,dragging=false,timer;
  const coarse=matchMedia('(hover: none), (pointer: coarse)');
@@ -51,20 +51,13 @@
   track.querySelectorAll('button').forEach(b=>b.classList.toggle('is-current',Number(b.dataset.page)===page));
  }
  function go(page){book.goToPage(page);sync(book.getPage());tip.hidden=true;}
- function fitBook(){
-  if(!open)return;
-  const pose=reader.querySelector('.book-pose'),h=reader.querySelector('.book-shell').offsetHeight;
-  const available=reader.clientHeight-dock.offsetHeight-38;
-  const scale=Math.min(1,Math.max(.25,available/h));
-  reader.style.setProperty('--toc-scale',scale);
-  reader.style.setProperty('--toc-shift',(12+h*scale/2-pose.offsetTop-h/2)+'px');
- }
+ function fitBook(){}
  function setOpen(value){
   clearTimeout(timer);if(workspace.hasAttribute('data-detail'))value=false;
   open=value;dock.classList.toggle('is-open',value);reader.classList.toggle('toc-open',value);handle.setAttribute('aria-expanded',String(value));panel.inert=!value;panel.setAttribute('aria-hidden',String(!value));
   if(value)fitBook();else{tip.hidden=true;reader.style.removeProperty('--toc-scale');reader.style.removeProperty('--toc-shift');}
  }
- handle.addEventListener('click',()=>{pinned=!open;setOpen(pinned);});
+ handle.addEventListener('click',()=>{pinned=coarse.matches?!open:!pinned;setOpen(pinned);});
  dock.addEventListener('pointerenter',()=>{clearTimeout(timer);if(!coarse.matches)setOpen(true);});
  dock.addEventListener('pointerleave',()=>{if(!pinned&&!dragging)timer=setTimeout(()=>setOpen(false),260);});
  dock.addEventListener('focusin',e=>{if(e.target.matches(':focus-visible'))setOpen(true);});

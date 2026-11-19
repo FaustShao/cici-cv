@@ -7,9 +7,9 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
  assert.equal(await p.locator('.contents-chapter').count(),4);assert.equal(await p.locator('.contents-tick').count(),31);assert.equal(await p.locator('.contents-tick.is-major').count(),4);
  assert.equal(await p.locator('#contents-toggle').getAttribute('aria-expanded'),'false');
  // Opening the tray does not change the reading page and it clears the visible book.
- const start=await p.evaluate(()=>GAZETTE_BOOK.getPage());await p.locator('#contents-toggle').hover();await p.waitForTimeout(100);
+ const initialBook=await p.locator('.book-pose').boundingBox();const start=await p.evaluate(()=>GAZETTE_BOOK.getPage());await p.locator('#contents-toggle').hover();await p.waitForTimeout(100);
  assert.equal(await p.locator('#contents-toggle').getAttribute('aria-expanded'),'true');assert.equal(await p.evaluate(()=>GAZETTE_BOOK.getPage()),start);
- const book=await p.locator('.book-pose').boundingBox(),tray=await p.locator('.gazette-contents').boundingBox();assert(book.y+book.height<tray.y-8,'Wood tray must not cover book pages');
+ const book=await p.locator('.book-pose').boundingBox();for(const k of ['x','y','width','height'])assert(Math.abs(book[k]-initialBook[k])<1,'Paper index must keep the book fixed');
  for(const n of [4,9,15,20]){
   await p.locator(`.contents-chapter[data-page="${n}"]`).click();
   const actual=await p.evaluate(()=>GAZETTE_BOOK.getPage());assert(actual===n||actual===n-1,`chapter ${n} is visible in its spread`);
@@ -17,7 +17,7 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
  }
  // Small titles appear at individual ticks, without opening another menu.
  await p.locator('.contents-tick[data-page="21"]').hover();assert.match(await p.locator('#contents-tooltip').textContent(),/Forres Highland Games/);
- await p.screenshot({path:'/workspace/checked-gazette/wood-contents-verified.png'});
+ await p.screenshot({path:'/workspace/checked-gazette/paper-contents-verified.png'});
  await p.locator('.contents-tick[data-page="11"]').click();let value=await p.evaluate(()=>GAZETTE_BOOK.getPage());assert(value===10||value===11);
  const slider=p.locator('.contents-range'),r=await slider.boundingBox();
  const old=await p.evaluate(()=>GAZETTE_BOOK.getPage());
@@ -42,8 +42,8 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
  const context=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true,reducedMotion:'reduce'});const m=await context.newPage();m.on('pageerror',e=>errors.push(e.message));
  await m.goto(new URL('gazette.html',root).href);await m.locator('#contents-toggle').tap();assert.equal(await m.locator('#contents-toggle').getAttribute('aria-expanded'),'true');
  await m.locator('.contents-chapter[data-page="20"]').tap();let mobilePage=await m.evaluate(()=>GAZETTE_BOOK.getPage());assert.equal(mobilePage,20);
- await m.waitForFunction(()=>{const im=document.querySelector('.paper[data-pdf-page=\"20\"] img');return im&&im.complete&&im.naturalWidth>0});await m.screenshot({path:'/workspace/checked-gazette/wood-contents-mobile.png'});
+ await m.waitForFunction(()=>{const im=document.querySelector('.paper[data-pdf-page=\"20\"] img');return im&&im.complete&&im.naturalWidth>0});await m.screenshot({path:'/workspace/checked-gazette/paper-contents-mobile.png'});
  await m.locator('#contents-toggle').tap();await m.locator('#research-tab-2').tap();assert.equal(await m.locator('#research-tab-2').getAttribute('aria-expanded'),'true');await m.locator('.research-open:visible').tap();assert(!await m.locator('#research-detail').isHidden());
  assert.equal(await m.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
- assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);await context.close();console.log('PASS: four bilingual chapter engravings, 31 individual hover ticks, thumb previews until release, direct chapter/keyboard jumps, separate paper notes, no book overlap, mobile tap and no JS/network errors.');
+ assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);await context.close();console.log('PASS: four bilingual chapter labels, 31 individual hover ticks, thumb previews until release, direct chapter/keyboard jumps, separate paper notes, fixed book position, mobile tap and no JS/network errors.');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});
