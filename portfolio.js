@@ -100,9 +100,19 @@
     shell.dataset.rearSpread = String(index >= count - 2);
     shell.dataset.backCover = String(index === count);
     status.textContent = index === count - 1 ? '封底内侧' : `第 ${leafToPdf(index) + 1} 页，共 ${count} 页`;
+    document.dispatchEvent(new CustomEvent('gazette-page-change',{detail:{page:index===count?count:Math.min(index+1,count-1),single:shell.dataset.single==='true'}}));
   }
   book.remove();
   build();
+  window.GAZETTE_BOOK={
+    getPage:()=>flip.getCurrentPageIndex()===count?count:Math.min(flip.getCurrentPageIndex()+1,count-1),
+    isSingle:()=>shell.dataset.single==='true',
+    goToPage(page){
+      const target=Math.max(1,Math.min(count,Math.round(page)));
+      flip.turnToPage(target===count?count:target-1);
+      announce();
+    }
+  };
   if(!reduced.matches){
     reader.dataset.entering='true';
     reader.querySelector('.book-pose').addEventListener('animationend',()=>{delete reader.dataset.entering;},{once:true});

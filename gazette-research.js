@@ -28,26 +28,26 @@
   function announce(message){status.textContent=message;}
   function showPreview(index, lock=false) {
     if(detailId!==null)return;
-    clearTimeout(timer);active=index;pinned=lock;
+    clearTimeout(timer);if(active===index){pinned=lock;return;}active=index;pinned=lock;
     const side=index<3?0:1;
     workspace.dataset.side=side===0?'left':'right';
     tabs.forEach((tab,i)=>tab.setAttribute('aria-expanded',String(i===index)));
-    rails.forEach((rail,i)=>rail.classList.toggle('is-active',i===side));
     previews.forEach((preview,i)=>{preview.hidden=i!==side;});
     const preview=previews[side];preview.replaceChildren();
     const open=el('button','research-open');open.type='button';open.setAttribute('aria-label','详细查看'+labels[index]);
     open.append(artwork(data.cards[index]));open.addEventListener('click',()=>openDetail(index,open));
-    const actions=el('div','research-preview-actions');
-    const more=el('button','','展开详细材料 ↗');more.type='button';more.addEventListener('click',()=>openDetail(index,more));
-    const close=el('button','','收起 ×');close.type='button';close.addEventListener('click',()=>{hidePreview();tabs[index].focus();});
-    actions.append(more,close);preview.append(open,actions);
+    preview.append(open);
   }
-  function hidePreview(){clearTimeout(timer);active=null;pinned=false;delete workspace.dataset.side;tabs.forEach(t=>t.setAttribute('aria-expanded','false'));rails.forEach(r=>r.classList.remove('is-active'));previews.forEach(p=>p.hidden=true);}
+  function hidePreview(){clearTimeout(timer);active=null;pinned=false;delete workspace.dataset.side;tabs.forEach(t=>t.setAttribute('aria-expanded','false'));previews.forEach(p=>p.hidden=true);}
   rails.forEach((rail,side)=>{
     for(let i=side*3;i<side*3+3;i++){
-      const tab=el('button','research-tab');tab.type='button';tab.dataset.number=String(i+1).padStart(2,'0');tab.id='research-tab-'+(i+1);tab.setAttribute('aria-controls','research-preview-'+side);tab.setAttribute('aria-expanded','false');tab.append(el('span','tab-label',labels[i]));
-      tab.addEventListener('pointerenter',()=>{if(hover.matches&&!mobile.matches&&(!pinned||active===i))showPreview(i,pinned);});
-      tab.addEventListener('click',()=>{if(active===i&&pinned)hidePreview();else showPreview(i,true);});
+      const tab=el('button','research-tab');tab.type='button';tab.dataset.number=String(i+1).padStart(2,'0');tab.style.setProperty('--note-index',i%3);tab.id='research-tab-'+(i+1);tab.setAttribute('aria-controls','research-preview-'+side);tab.setAttribute('aria-expanded','false');tab.append(el('span','tab-label',labels[i]));
+      tab.addEventListener('pointerenter',()=>{if(hover.matches&&!mobile.matches)showPreview(i);});
+      tab.addEventListener('focus',()=>{if(tab.matches(':focus-visible')&&!mobile.matches)showPreview(i);});
+      tab.addEventListener('click',()=>{
+        if(!mobile.matches&&hover.matches){openDetail(i,tab);return;}
+        if(active===i)openDetail(i,tab);else showPreview(i,true);
+      });
       rail.append(tab);tabs.push(tab);
     }
     const preview=el('div','research-preview');preview.id='research-preview-'+side;preview.hidden=true;rail.append(preview);previews.push(preview);
@@ -55,6 +55,7 @@
     rail.addEventListener('pointerleave',()=>{if(!pinned&&!mobile.matches)timer=setTimeout(hidePreview,280);});
     rail.addEventListener('focusout',()=>{if(!pinned)timer=setTimeout(()=>{if(!rail.contains(document.activeElement))hidePreview();},280);});
   });
+
   function syncZoom(){
     content.style.setProperty('--research-zoom',zoom);scroller.classList.toggle('is-zoomed',zoom>1);
     document.getElementById('research-zoom-reset').textContent=zoom===1?'适应宽度':Math.round(zoom*100)+'%';
