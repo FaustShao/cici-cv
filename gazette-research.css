@@ -27,12 +27,12 @@
 /* Spread the badges around the fixed reading surface. Each button owns its full label. */
 .research-rail{position:absolute;inset:0;pointer-events:none;z-index:3}
 .research-tab{position:absolute;pointer-events:auto;border:0;padding:0;background:none;color:#f6efd9;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:9px;font:15px/1.25 Huiwen,serif;outline-offset:7px;-webkit-tap-highlight-color:transparent;isolation:isolate}
-.research-rail-left .research-tab:nth-of-type(1){left:4%;top:12%;rotate:-8deg}
-.research-rail-left .research-tab:nth-of-type(2){left:4%;top:43%;rotate:5deg}
-.research-rail-left .research-tab:nth-of-type(3){left:5%;top:72%;rotate:-4deg}
-.research-rail-right .research-tab:nth-of-type(1){right:4%;top:22%;rotate:7deg}
-.research-rail-right .research-tab:nth-of-type(2){right:4%;top:52%;rotate:-5deg}
-.research-rail-right .research-tab:nth-of-type(3){right:5%;top:75%;rotate:6deg}
+.research-rail-left .research-tab:nth-of-type(1){left:4%;top:10%;rotate:-8deg}
+.research-rail-left .research-tab:nth-of-type(2){left:4%;top:44%;rotate:5deg}
+.research-rail-left .research-tab:nth-of-type(3){left:5%;top:76%;rotate:-4deg}
+.research-rail-right .research-tab:nth-of-type(1){right:4%;top:19%;rotate:7deg}
+.research-rail-right .research-tab:nth-of-type(2){right:4%;top:49%;rotate:-5deg}
+.research-rail-right .research-tab:nth-of-type(3){right:5%;top:78%;rotate:6deg}
 .research-badge{width:100px;height:100px;display:grid;place-items:center;position:relative;transition:translate .22s ease,rotate .22s ease}
 .research-pin{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
 .tab-label{display:block;padding:4px 9px;background:#24362c;box-shadow:1px 2px 2px #14261988;white-space:nowrap;letter-spacing:1px;border:1px solid #b5bba42b;border-radius:1px}
@@ -87,15 +87,17 @@
 @media(max-width:760px){.desk-scraps{display:none}}
 @media(prefers-reduced-motion:reduce){.desk-scraps{transition:none}}
 
-/* Keep every badge on the mat, clear of the archive and the spread. */
+/* Stagger the pins across the available green margins, clear of every paper layer. */
 @media(min-width:761px){
- .research-rail-left .research-tab:nth-of-type(1),.research-rail-left .research-tab:nth-of-type(3){left:max(6px,calc(var(--safe-edge-left,140px) - 125px))}
- .research-rail-right .research-tab:nth-of-type(1),.research-rail-right .research-tab:nth-of-type(3){right:max(6px,calc(var(--safe-edge-right,140px) - 125px))}
- .research-rail-left .research-tab:nth-of-type(2){left:max(5px,calc(var(--safe-edge-left,140px) - 140px))}
- .research-rail-right .research-tab:nth-of-type(2){right:max(5px,calc(var(--safe-edge-right,140px) - 140px))}
+ .research-rail-left .research-tab:nth-of-type(1){left:max(16px,calc(var(--safe-edge-left,140px) - 130px))}
+ .research-rail-left .research-tab:nth-of-type(2){left:max(16px,calc(var(--safe-edge-left,140px) - 190px))}
+ .research-rail-left .research-tab:nth-of-type(3){left:max(16px,calc(var(--safe-edge-left,140px) - 148px))}
+ .research-rail-right .research-tab:nth-of-type(1){right:max(16px,calc(var(--safe-edge-right,140px) - 180px))}
+ .research-rail-right .research-tab:nth-of-type(2){right:max(16px,calc(var(--safe-edge-right,140px) - 130px))}
+ .research-rail-right .research-tab:nth-of-type(3){right:max(16px,calc(var(--safe-edge-right,140px) - 160px))}
 }
 @media(max-width:760px){
- .desk-props{overflow:hidden;bottom:194px}
+ .desk-props{overflow:hidden;bottom:206px}
  .desk-folder{bottom:-90px}.desk-sheet,.desk-sheet-front{bottom:-100px}
  .research-tab{gap:0}
  .research-rail-left .research-tab:nth-of-type(1),.research-rail-left .research-tab:nth-of-type(2),.research-rail-left .research-tab:nth-of-type(3){bottom:110px}
@@ -104,15 +106,26 @@
 
 /* Tilt the closed cover only. Reading spreads remain flat and keep their page geometry. */
 .research-workspace .book-pose{rotate:0deg;translate:0 0;scale:1;transition:rotate .4s ease,translate .4s ease,scale .4s ease}
-.research-workspace[data-book-open=false] .book-pose{rotate:-2.2deg;translate:0 -12px;scale:1.02}
+.research-workspace[data-book-open=false] .book-pose{rotate:2.2deg;translate:0 -12px;scale:1.02}
 .research-tab{gap:0}
 .tab-label{position:relative;z-index:1;margin-top:-8px}
 .research-tab[data-pin=pencil] .tab-label{margin-top:-23px}
 .research-tab[data-pin=hi] .tab-label{margin-top:-12px}
-.research-tab[data-pin=ghost] .tab-label,.research-tab[data-pin=lime] .tab-label{margin-top:-3px}
+.research-tab[data-pin=ghost] .tab-label{margin-top:-3px}
 @media(max-width:1000px){.tab-label{margin-top:-5px}.research-tab[data-pin=pencil] .tab-label{margin-top:-16px}.research-tab[data-pin=hi] .tab-label{margin-top:-7px}}
 @media(max-width:760px){
- .research-workspace[data-book-open=false] .book-pose{rotate:-1.5deg;translate:0 -4px;scale:1}
- .tab-label{margin-top:-3px}.research-tab[data-pin=pencil] .tab-label{margin-top:-12px}.research-tab[data-pin=hi] .tab-label{margin-top:-5px}.research-tab[data-pin=ghost] .tab-label,.research-tab[data-pin=lime] .tab-label{margin-top:-2px}
+ .research-workspace[data-book-open=false] .book-pose{rotate:1.5deg;translate:0 -4px;scale:1}
+ .tab-label{margin-top:-3px}.research-tab[data-pin=pencil] .tab-label{margin-top:-12px}.research-tab[data-pin=hi] .tab-label{margin-top:-5px}.research-tab[data-pin=ghost] .tab-label{margin-top:-2px}
 }
 @media(prefers-reduced-motion:reduce){.research-workspace .book-pose{transition:none!important}}
+
+/* Native SVG cursors: no following DOM layer that could cover a click target. */
+@media(hover:hover) and (pointer:fine){
+ .gazette-page{--desk-cursor:url('assets/gazette-desk/cursors/arrow.svg') 5 3,auto;--desk-pointer:url('assets/gazette-desk/cursors/hand.svg') 16 5,pointer}
+ .gazette-page,.gazette-page *{cursor:var(--desk-cursor)}
+ .gazette-page a,.gazette-page a *,.gazette-page button:not(:disabled),.gazette-page button:not(:disabled) *,.gazette-page .book,.gazette-page .book *{cursor:var(--desk-pointer)}
+ .gazette-page button:disabled{cursor:not-allowed}
+ .gazette-page .contents-range{cursor:ew-resize}
+ .gazette-page .reader[data-flip-state=user_fold] .book *,.gazette-page .research-detail-scroll.is-dragging{cursor:grabbing}
+ .gazette-page .research-detail-scroll.is-zoomed:not(.is-dragging){cursor:grab}
+}
