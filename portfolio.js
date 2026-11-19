@@ -36,12 +36,12 @@
       if (i < 2 || i === count - 1) sheet.dataset.density = 'hard';
       sheet.dataset.pdfPage = String(i + 1);
       const label = document.createElement('div'); label.className = 'page-placeholder';
-      let pageLoader = window.CeciliaLoader.create(label, true);
+      label.hidden = true;
       const img = document.createElement('img'); img.alt = `Future Gazette 第 ${i + 1} 页`; img.draggable = false;
       // Image readiness never blocks the reader or any other page.
-      img.addEventListener('load', () => { pageLoader.finish(); img.style.opacity = '1'; });
-      img.addEventListener('error', () => { label.textContent = `第 ${i + 1} 页暂未加载，点击重试`; sheet.classList.add('load-failed'); });
-      sheet.addEventListener('click', () => { if (sheet.classList.contains('load-failed')) { sheet.classList.remove('load-failed'); label.hidden=false;label.innerHTML='';delete label._ceciliaLoader;pageLoader=window.CeciliaLoader.create(label,true);img.src = src; } });
+      img.addEventListener('load', () => { label.hidden = true; img.style.opacity = '1'; });
+      img.addEventListener('error', () => { label.hidden = false; label.textContent = `第 ${i + 1} 页暂未加载，点击重试`; sheet.classList.add('load-failed'); });
+      sheet.addEventListener('click', () => { if (sheet.classList.contains('load-failed')) { sheet.classList.remove('load-failed'); label.hidden=true;label.textContent='';img.src = src; } });
       img.decoding = 'async'; img.loading = Math.abs(i - realPage) < 2 ? 'eager' : 'lazy';
       img.fetchPriority = i === realPage ? 'high' : 'low';
       img.sizes = `${pageWidth}px`;

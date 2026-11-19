@@ -13,13 +13,24 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
  await page.evaluate(()=>{testLoader.setPercent(30);});assert.equal(await page.locator('#test-loader').getAttribute('aria-valuenow'),'68');
  await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('#test-loader .cube').first().evaluate(e=>getComputedStyle(e).animationPlayState),'paused');
  await page.evaluate(()=>testLoader.finish());await page.waitForFunction(()=>document.getElementById('test-loader').hidden);
- // Each real reader must finish with cached or freshly decoded initial images;
- // deferred/lazy pages must not block the visible document.
+ // Resume/other documents keep their loaders; individual portfolio projects never load the loader library.
  for(const file of ['gazette.html','resume.html?document=1','tideline.html','safepaw.html','dream-sentinel.html','works.html?document=1']){
   const p=await b.newPage({viewport:{width:1200,height:850},reducedMotion:'reduce'}),errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.goto(new URL(file,root).href,{waitUntil:'domcontentloaded'});
-  await p.waitForFunction(()=>document.querySelector('#document-loading')?.hidden,null,{timeout:45000});
-  assert.equal(await p.locator('#document-loading').getAttribute('aria-valuenow'),'100');assert.deepEqual(errors,[],file);console.log('PASS document loader',file);await p.close();
+  if(['gazette.html','tideline.html','safepaw.html','dream-sentinel.html'].includes(file)){
+   await p.waitForLoadState('load');
+   assert.equal(await p.locator('.cecilia-loader').count(),0);
+   assert.equal(await p.evaluate(()=>typeof window.CeciliaLoader),'undefined');
+   if(file==='gazette.html'){
+    assert(await p.locator('.stf__item').count()>0);
+    assert.equal(await p.locator('.page-placeholder:not([hidden])').count(),0);
+   }
+   console.log('PASS no internal project loading UI',file);
+  }else{
+   await p.waitForFunction(()=>document.querySelector('#document-loading')?.hidden,null,{timeout:45000});
+   assert.equal(await p.locator('#document-loading').getAttribute('aria-valuenow'),'100');
+  }
+  assert.deepEqual(errors,[],file);await p.close();
  }
  const native=await b.newPage({viewport:{width:1200,height:850},reducedMotion:'reduce'}),errors=[];native.on('pageerror',e=>errors.push(e.message));
  for(const file of ['hub.html','index.html']){
