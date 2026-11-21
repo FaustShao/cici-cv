@@ -7,9 +7,9 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
  await p.mouse.move(250,170);
  const frame=await p.evaluate(()=>HAHA_READER.backgroundFrame);await p.waitForFunction(n=>HAHA_READER.backgroundFrame>n+1,frame);
  assert.notEqual(await p.locator('#paper-field').evaluate(c=>c.toDataURL()),before,'The paper field responds to the pointer');
- const card=await p.locator('[data-card="h"]').boundingBox();
+ const card=await p.locator('[data-card="a"]').boundingBox();
  await p.mouse.move(card.x+card.width/2,card.y+card.height/2);await p.mouse.down();await p.mouse.move(card.x+card.width/2+30,card.y+card.height/2+20,{steps:5});await p.mouse.up();
- assert.equal(await p.locator('[data-card="h"]').getAttribute('data-x'),'30');
+ assert.equal(await p.locator('[data-card="a"]').getAttribute('data-x'),'30');
  async function point(x,y=0){return p.evaluate(([x,y])=>{const w=HAHA_READER,v=w.bookGroup.localToWorld(w.bookGroup.position.clone().set(x,y,.03)).project(w.camera);return{x:(v.x+1)*innerWidth/2,y:(1-v.y)*innerHeight/2}},[x,y])}
  const afterDrag=await p.evaluate(()=>HAHA_READER.backgroundFrame);await p.waitForFunction(n=>HAHA_READER.backgroundFrame>n,afterDrag);
  await p.evaluate(()=>{window.pointerLog=[];for(const type of ['pointerdown','pointerup'])document.getElementById('magazine-canvas').addEventListener(type,e=>pointerLog.push({type,enabled:HAHA_READER.magazine.enabled,covers:HAHA_READER.magazine.covers(e.clientX,e.clientY),x:e.clientX,y:e.clientY}),true)});

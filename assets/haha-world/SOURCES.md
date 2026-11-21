@@ -5,5 +5,7 @@
 - 新增 `pages/back.webp`：按用户确认的方案，用品牌规范中的 `#FF8D06` 橙色和从原封面提取的白色 Logo 制作。`pages/inside-back.webp` 为空白内封底，使外封底位于装订书的背面。原稿第 30 页不被替代。
 - 纸页弯曲：LeafThrough 0.1.8，MIT，https://github.com/dmtrbrl/leafthrough 。完整许可证为 `LeafThrough-LICENSE.txt`。
 - 展示视觉参考：https://paper.design/mono 。本项目自行实现横版胶装几何、纸叠、背景场及交互；未复制该站的杂志内容或声称拥有该站源码。
-- 英文 UI 字体：Paper Mono 官方变量字库，https://github.com/paper-design/paper-mono ，SIL OFL 1.1，许可证随站点位于 `cecilia-world/fonts/PaperMono-OFL.txt`。中文 UI 沿用本站小赖字体；手册文字保留 PDF 原字形。
+- 英文 UI 字体：Paper Mono 官方变量字库，https://github.com/paper-design/paper-mono ，SIL OFL 1.1，许可证随站点位于 `cecilia-world/fonts/PaperMono-OFL.txt`。中文 UI 使用 Noto Sans SC 400 完整界面子集（Google Fonts，SIL OFL 1.1），许可证位于 `cecilia-world/fonts/NotoSansSC-OFL.txt`；`scripts/build-haha-ui-font.py` 校验所需字形并生成字库。手册文字保留 PDF 原字形。
 - `paper-grain.png` 是确定性生成的纸面颗粒，未使用外部图片服务。所有阅读资源随现有 GitHub Pages 站点部署。
+
+- 背景效果以用户后续提供的两张 Paper Mono 截图为准：浅蓝格线、蓝色 ASCII 鼠标轨迹、蓝边水平窗口；不再使用随机漂浮字符或倾斜灰纸片。

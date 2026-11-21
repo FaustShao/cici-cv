@@ -14,13 +14,13 @@
   <div class="paper-grain" aria-hidden="true"></div>
   <header class="mag-header">
     <a id="back-other" href="hub.html#other" aria-label="返回其他项目">返回其他项目</a>
-    <div class="identity"><span>HAHA WORLD</span><span>品牌视觉识别系统手册</span></div>
-    <button id="fullscreen" type="button">全屏阅读</button>
+    <div class="identity"><h1>哈哈世界</h1><span>视觉识别系统手册</span></div>
+    <div class="header-tools"><span id="page-status" aria-live="polite">封面</span><button id="contents-trigger" type="button" aria-expanded="false" aria-controls="contents">目录</button><button id="fullscreen" type="button">全屏阅读</button></div>
   </header>
   <div id="background-cards" aria-label="可拖动的背景纸片">
-    <div class="specimen" data-card="h" tabindex="0" aria-label="拖动 h 字母纸片"><span>h.glyph</span><b>h</b></div>
-    <div class="specimen" data-card="a" tabindex="0" aria-label="拖动 a 字母纸片"><span>a.glyph</span><b>a</b></div>
-    <div class="specimen specimen-smile" data-card="smile" tabindex="0" aria-label="拖动笑脸纸片"><span>哈哈传递</span><b>◡</b></div>
+    <div class="specimen" data-card="a" tabindex="0" aria-label="拖动 a 字母纸片"><span>a.glyph<i aria-hidden="true">×</i></span><b>a</b></div>
+    <div class="specimen" data-card="c" tabindex="0" aria-label="拖动 c 字母纸片"><span>c.glyph<i aria-hidden="true">×</i></span><b>c</b></div>
+    <div class="specimen" data-card="p" tabindex="0" aria-label="拖动 p 字母纸片"><span>p.glyph<i aria-hidden="true">×</i></span><b>p</b></div>
   </div>
   <main id="magazine-stage" aria-label="哈哈世界横版杂志阅读区">
     <img id="cover-poster" src="../assets/haha-world/pages/01.webp" alt="哈哈世界视觉识别系统手册封面" />
@@ -28,15 +28,7 @@
     <div id="plain-book" hidden><img id="plain-page" alt="杂志当前页" /></div>
   </main>
   <footer class="mag-footer">
-    <div class="credit"><span>哈哈世界 · VI 设计</span><small>刘洋 / 王钰欣 / 吴俊毅 / 傅诗瑶</small></div>
     <p id="reading-hint">点击封面，翻开手册</p>
-    <div class="book-tools" aria-label="杂志操作">
-      <button id="previous" type="button" aria-label="上一页">上一页</button>
-      <button id="contents-trigger" type="button" aria-expanded="false" aria-controls="contents"><span id="page-status">封面</span><span class="contents-label">目录</span></button>
-      <button id="next" type="button" aria-label="下一页">翻开</button>
-      <button id="zoom-page" type="button">放大</button>
-      <button id="close-book" type="button" hidden>合上</button>
-    </div>
   </footer>
   <section id="contents" aria-label="手册目录" hidden>
     <div class="contents-heading"><h2>翻到这一页</h2><button id="close-contents" type="button" aria-label="收起目录">收起</button></div>

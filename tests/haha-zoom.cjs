@@ -6,7 +6,7 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
  await p.goto(new URL('cecilia-world/haha-world.html',process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/').href);
  await p.waitForFunction(()=>window.HAHA_READER?.state.ready);
  assert.equal(await p.evaluate(()=>HAHA_READER.state.mode),'plain');
- await p.locator('#zoom-page').click();await p.locator('#page-zoom img').evaluate(i=>i.decode());
+ await p.locator('#plain-page').dblclick();await p.locator('#page-zoom img').evaluate(i=>i.decode());
  await p.locator('#detail-plus').click();assert.equal(await p.locator('#detail-reset').innerText(),'150%');
  assert.ok(await p.locator('#page-zoom').evaluate(el=>el.scrollWidth>innerWidth));
  assert.ok(await p.locator('.zoom-tools').evaluate(el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.bottom<=innerHeight}));
