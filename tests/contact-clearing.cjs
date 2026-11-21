@@ -20,7 +20,7 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
    return{keyboardRemoved:!s.getObjectByName('Plane002')&&!s.getObjectByName('Plane004'),
     contacts:pairs.map(([name,a,b])=>({name,contacts:w.geometryContacts(a,b)})).filter(n=>n.contacts.length),
     bench:bench.userData.parcel,contact:root.userData.parcel,sign:sign.userData.parcel,
-    welcome:{parcel:w.welcome.userData.parcel,scale:w.welcome.scale.x,text:w.welcome.userData.text,labels:w.welcome.children.filter(c=>c.userData.text).map(c=>({text:c.userData.text,font:c.userData.font,y:c.position.y,width:c.geometry.parameters.width,height:c.geometry.parameters.height}))},
+    welcome:{parcel:w.welcome.userData.parcel,scale:w.welcome.scale.x,resize:w.welcome.userData.resize,text:w.welcome.userData.text,labels:w.welcome.children.filter(c=>c.userData.text).map(c=>({text:c.userData.text,font:c.userData.font,y:c.position.y,width:c.geometry.parameters.width,height:c.geometry.parameters.height}))},
     name:{resolution:w.identity.userData.glyphResolution,ratio:w.identity.userData.captionRatio},
     wind:{strength:w.world.game.wind.strength.value,timeFrequency:w.world.game.wind.timeFrequency,pinkCount:w.world.game.world.flowers?.references.length||0},
     mailbox:{x:(pt.x+1)*innerWidth/2,y:(1-pt.y)*innerHeight/2,mailto:root.userData.mailto},ring:s.getObjectByName('mailbox-click-ring').material.opacity};
@@ -28,7 +28,10 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
   console.log(JSON.stringify(result,null,2));
   assert.ok(result.keyboardRemoved);assert.deepEqual(result.contacts,[]);
   assert.ok(Math.abs(result.bench.groundedY-.015)<.001);assert.equal(result.contact.z,28);assert.equal(result.sign.z,29.5);
-  assert.equal(result.welcome.scale,1.65);assert.equal(result.welcome.parcel.x,48);assert.equal(result.welcome.parcel.z,34.56);
+  assert.equal(result.welcome.scale,1.65*.9);
+  assert.equal(result.welcome.resize.factor,.9);
+  for(let i=0;i<3;i++)assert.ok(Math.abs(result.welcome.resize.before[i]-result.welcome.resize.after[i])<.001,'Left ground anchor stays fixed');
+  assert.ok(Math.abs(result.welcome.parcel.groundedY-result.welcome.parcel.height-.015)<.001,'Shrunken sign stays grounded');
   assert.deepEqual(result.welcome.labels.map(l=>l.text),['王钰欣 / Cecilia','的个人网站']);assert.ok(result.welcome.labels.every(l=>l.font==='World Xiaolai'&&l.width<=1.98&&l.height<=.28));
   for(const [i,limits] of [[0,[-.225,.17]],[1,[-.687,-.3]]]){const l=result.welcome.labels[i];assert.ok(l.y-l.height/2>limits[0]&&l.y+l.height/2<limits[1],'Text planes stay within the actual solid planks');}
   assert.equal(result.name.resolution,56);assert.ok(result.name.ratio>.25&&result.name.ratio<.35);assert.ok(result.wind.strength>.5&&result.wind.pinkCount>0);

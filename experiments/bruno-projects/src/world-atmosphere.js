@@ -16,12 +16,13 @@ export function addWorldAtmosphere(game, reduced = false) {
   game.scene.add(water);
 
   const shape = new T.Shape();shape.moveTo(0,-0.10);shape.lineTo(-0.055,-0.015);shape.lineTo(-0.036,0.055);shape.lineTo(0,0.11);shape.lineTo(0.05,0.015);shape.closePath();
-  const leaves = new T.InstancedMesh(new T.ShapeGeometry(shape),new T.MeshBasicMaterial({color:0xffffff,side:T.DoubleSide}),20);
+  const leafCount=24;
+  const leaves = new T.InstancedMesh(new T.ShapeGeometry(shape),new T.MeshBasicMaterial({color:0xffffff,side:T.DoubleSide}),leafCount);
   leaves.name='sparse-windblown-leaves';leaves.frustumCulled=false;leaves.visible=!reduced;
   const palette=['#db9a55','#db745f','#eaad75','#cc8b67'];
-  const data=Array.from({length:20},(_,i)=>({phase:i*2.399,age:(i*.731)%1,radius:3+(i*1.913)%12,speed:.06+(i%4)*.009}));
+  const data=Array.from({length:leafCount},(_,i)=>({phase:i*2.399,age:(i*.731)%1,radius:3+(i*1.913)%12,speed:.06+(i%4)*.009}));
   const transform=new T.Object3D();
-  for(let i=0;i<20;i++)leaves.setColorAt(i,new T.Color(palette[i%4]));
+  for(let i=0;i<leafCount;i++)leaves.setColorAt(i,new T.Color(palette[i%4]));
   game.scene.add(leaves);
   function update(){
     const t=game.ticker.elapsedScaled,focus=game.view.focusPoint.position;

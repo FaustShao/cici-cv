@@ -62,12 +62,12 @@ const link = (text, href) => {
   $("place-actions").append(a);
   return a;
 };
-async function copyWechat() {
+async function copyContact(value, label) {
   try {
-    await navigator.clipboard.writeText("Cecilia_cici68");
-    $("feedback").textContent = "微信号已复制：Cecilia_cici68";
+    await navigator.clipboard.writeText(value);
+    $("feedback").textContent = `${label}已复制：${value}`;
   } catch {
-    $("feedback").textContent = "微信号：Cecilia_cici68";
+    $("feedback").textContent = `未能自动复制，请手动复制${label}：${value}`;
   }
 }
 function closeReader() {
@@ -194,11 +194,7 @@ function go(next, historyMode = "push") {
   $("back-home").hidden = place === "home";
   $("feedback").textContent = "";
   $("place-actions").replaceChildren();
-  $("place-actions").hidden = place === "home";
-  if (place === "resume") {
-    action("阅读完整简历 ↗", openCurrent);
-    link("独立阅读／打印 ↗", new URL("resume.html?document=1&v=cv-slices-2", contentRoot));
-  }
+  $("place-actions").hidden = place === "home" || place === "resume";
   if (place === "other") {
     action("←", () => selectOther(otherIndex - 1)).setAttribute(
       "aria-label",
@@ -220,8 +216,8 @@ function go(next, historyMode = "push") {
         link("写邮件 ↗", "mailto:wangyuxinqd2025@163.com"),
         "wangyuxinqd2025@163.com",
       ],
-      [link("打电话 ↗", "tel:15066290491"), "15066290491"],
-      [action("复制微信号", copyWechat), "Cecilia_cici68"],
+      [action("复制电话", () => copyContact("15066290491", "电话号码")), "15066290491"],
+      [action("复制微信号", () => copyContact("Cecilia_cici68", "微信号")), "Cecilia_cici68"],
     ];
     for (const [element, value] of entries) {
       const detail = document.createElement("small");
@@ -434,7 +430,7 @@ try {
   station("portfolio", project, "作品集", 20);
   station("other", lab, "其他项目", 16);
   station("contact", social, "联系方式", 12);
-  Object.assign(stations.get("resume"),{focus:new T.Vector3(25.4,1.8,24.3),distance:15,yaw:.5,pitch:.99});
+  Object.assign(stations.get("resume"),referencePose("resume"));
   Object.assign(stations.get("other"),{distance:16,yaw:.55,pitch:1.18});
   Object.assign(stations.get("contact"),referencePose("contact"));
   stations.get("contact").focus.z-=15.5;

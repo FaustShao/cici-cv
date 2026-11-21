@@ -454,7 +454,30 @@ export function createFixtures(world) {
       root.add(label);
     }
     root.rotation.set(0,.28,0);
-    parcel(root,48,34.56,1.65,{plaza:true,radius:0,precise:true,ignoreReservations:["enlarged-native-map-kiosk"]});
+    // Keep the left ground anchor fixed while scaling the timber and both labels together.
+    const originalScale=1.65,shrink=.9;
+    clean(root);root.scale.setScalar(originalScale);root.updateWorldMatrix(true,true);
+    const localBounds=new T.Box3();
+    root.traverse(mesh=>{
+      if(!mesh.isMesh)return;
+      const positions=mesh.geometry.attributes.position;
+      for(let i=0;i<positions.count;i++){
+        const point=new T.Vector3().fromBufferAttribute(positions,i).applyMatrix4(mesh.matrixWorld);
+        localBounds.expandByPoint(root.worldToLocal(point));
+      }
+    });
+    const anchor=new T.Vector3(localBounds.min.x,localBounds.min.y,(localBounds.min.z+localBounds.max.z)/2);
+    const beforeBounds=new T.Box3().setFromObject(root,true),beforeCenter=beforeBounds.getCenter(new T.Vector3());
+    const beforeAnchor=root.localToWorld(anchor.clone());
+    beforeAnchor.x+=48-beforeCenter.x;beforeAnchor.z+=34.56-beforeCenter.z;
+    const originalSize=beforeBounds.getSize(new T.Vector3());
+    beforeAnchor.y=surface.check(48,34.56,originalSize.x,originalSize.z).height+.015;
+    root.scale.setScalar(originalScale*shrink);root.updateWorldMatrix(true,true);
+    const afterCenter=new T.Box3().setFromObject(root,true).getCenter(new T.Vector3());
+    const afterAnchor=root.localToWorld(anchor.clone());
+    parcel(root,beforeAnchor.x+afterCenter.x-afterAnchor.x,beforeAnchor.z+afterCenter.z-afterAnchor.z,originalScale*shrink,
+      {prepared:true,plaza:true,radius:0,precise:true,ignoreReservations:["enlarged-native-map-kiosk"]});
+    root.userData.resize={factor:shrink,anchorLocal:anchor.toArray(),before:beforeAnchor.toArray(),after:root.localToWorld(anchor.clone()).toArray()};
     root.userData.text="王钰欣 / Cecilia\n的个人网站";
     return root;
   }

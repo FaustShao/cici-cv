@@ -220,3 +220,53 @@ header > div {
 #map-hover-hint>i{width:48px;height:48px;margin-left:-10px;display:grid;place-items:center;background:#37223d;border:5px solid #fff;transform:rotate(45deg);font-style:normal;box-shadow:0 0 0 6px #37223d}
 #map-hover-hint b{transform:rotate(-45deg);font:700 37px/1 sans-serif}
 @media(prefers-reduced-motion:reduce){#map-hover-hint{transition:none}}
+
+/* A single warm paper strip, with all three contact actions on the same note. */
+body[data-place="contact"] #place-actions {
+  bottom: 70px;
+  width: max-content;
+  max-width: calc(100vw - 40px);
+  gap: 0;
+  padding: 20px 22px;
+  border: 1px solid #e4c995;
+  border-radius: 2px 3px 5px 2px;
+  background: repeating-linear-gradient(0deg, #96794c05 0 1px, transparent 1px 4px), #f9e9bf;
+  color: #654551;
+  box-shadow: 0 9px 17px #39203d38, inset 0 1px 0 #fff8dc;
+  font-family: "World Xiaolai", sans-serif;
+}
+body[data-place="contact"] #place-actions::before {
+  content: "";
+  position: absolute;
+  width: 88px;
+  height: 22px;
+  top: -12px;
+  left: calc(50% - 44px);
+  transform: rotate(-3deg);
+  background: #edd49fc9;
+  border-left: 1px dashed #c4a87e66;
+  border-right: 1px dashed #c4a87e66;
+  pointer-events: none;
+}
+body[data-place="contact"] #place-actions :is(a, button) {
+  padding: 9px 24px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 400;
+  text-align: left;
+  transition: background .18s, transform .18s;
+}
+body[data-place="contact"] #place-actions :is(a, button) + :is(a, button) { border-left: 1px solid #b59b7455; }
+body[data-place="contact"] #place-actions :is(a, button):hover { background: #e8c98855; transform: translateY(-2px); }
+body[data-place="contact"] #place-actions small { font-size: 15px; margin-top: 7px; }
+body[data-place="contact"] #feedback { bottom: 215px; max-width: calc(100vw - 32px); text-align: center; }
+@media (max-width: 700px) {
+  body[data-place="contact"] #place-actions { bottom: 180px; padding: 14px 8px; display: grid; grid-template-columns: 1.35fr 1fr 1fr; width: calc(100vw - 24px); max-width: calc(100vw - 24px); }
+  body[data-place="contact"] #place-actions :is(a, button) { padding: 8px; font-size: 16px; min-width: 0; white-space: normal; }
+  body[data-place="contact"] #place-actions small { font-size: 11px; overflow-wrap: anywhere; }
+  body[data-place="contact"] #feedback { bottom: 330px; }
+}

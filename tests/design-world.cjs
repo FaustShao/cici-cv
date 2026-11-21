@@ -190,13 +190,12 @@ const review = path.resolve(
         .getAttribute("href"),
       "mailto:wangyuxinqd2025@163.com",
     );
-    assert.equal(
-      await page.locator('#place-actions a[href^="tel:"]').getAttribute("href"),
-      "tel:15066290491",
-    );
+    assert.equal(await page.locator('#place-actions a[href^="tel:"]').count(),0);
     await page
       .context()
       .grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.getByRole("button", { name: "复制电话" }).click();
+    assert.equal(await page.evaluate(() => navigator.clipboard.readText()),"15066290491");
     await page.getByRole("button", { name: "复制微信号" }).click();
     assert.equal(
       await page.evaluate(() => navigator.clipboard.readText()),
