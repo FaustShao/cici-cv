@@ -15,7 +15,7 @@ sources.push({ src: new URL('pages/back.webp', assetRoot).href, alt: '哈哈世�
 const aspect = manifest.height / manifest.width;
 const state = { page: 0, visiblePages: [0], ready: false, zoomPage: 0, mode: 'webgl' };
 const clicks = getClickSound(); clicks.bind(document);
-let magazine, renderer, scene, camera, frameID, lastTime = 0, paused = false;
+let magazine, renderer, scene, camera, frameID, lastTime = 0, paused = false, bookAssetsReady = false;
 let cameraWidth = 2, bookX = -.5, open = 0, sceneDirty = true, lastPaperSignature = '', bookFrames = 0;
 const loaded = new Set(), pointer = { x: innerWidth / 2, y: innerHeight / 2, active: false };
 const bookGroup = new THREE.Group(), ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
@@ -171,7 +171,7 @@ function drawBackground(t) {
     grid.activeCells++;
     const variation = ((r * 17 + c * 23) % 11) / 11;
     const level = power * .86 + variation * .12;
-    const glyph = level < .19 ? '·' : level < .34 ? '−' : level < .52 ? 'Z' : level < .72 ? '*' : level < .89 ? 'a' : '@';
+    const glyph = (r + c + Math.floor(level * 4)) % 2 ? 'h' : 'a';
     bg.fillStyle = `rgba(120,165,232,${.27 + Math.min(.58, power * .58)})`;
     bg.fillText(glyph, grid.margin + (c + .5) * grid.width, (r + .5) * grid.height + 1);
   }
@@ -267,7 +267,7 @@ function setupBook() {
   spine.position.set(-.014, 0, thickness * .5 - .003); spine.castShadow = true; bookGroup.add(spine);
   magazine.addEventListener('pagechange', e => changePage(e.detail));
   magazine.addEventListener('pageload', e => loaded.add(e.detail.page));
-  magazine.addEventListener('ready', () => { state.ready = true; document.body.dataset.ready = 'true'; feedback(''); });
+  magazine.addEventListener('ready', () => { bookAssetsReady = true; sceneDirty = true; });
   magazine.addEventListener('error', () => { feedback('部分页面暂未加载成功，点击重试。'); $('book-feedback').onclick = () => { feedback(''); magazine.retry(); }; });
   resize();
   let pressedPoint, clickTimer;
@@ -339,7 +339,7 @@ function render(now) {
   const oldPose = [open, bookX, cameraWidth, readCount, ...bookGroup.rotation.toArray().slice(0, 3)];
   const closedFront = state.page === 0, closedBack = state.page === sources.length - 1;
   const isOpen = !closedFront && !closedBack;
-  const blend = reduced ? 1 : 1 - Math.exp(-dt * 7);
+  const blend = !state.ready || reduced ? 1 : 1 - Math.exp(-dt * 7);
   open += (Number(isOpen) - open) * blend;
   if (Math.abs(open - Number(isOpen)) < .0001) open = Number(isOpen);
   bindingOpen.value = open;
@@ -372,6 +372,9 @@ function render(now) {
   if (signature !== lastPaperSignature || poseMoved || sceneDirty) {
     renderer.shadowMap.needsUpdate = true; renderer.render(scene, camera); sceneDirty = false;
     lastPaperSignature = paperSignature(); bookFrames++;
+    if (!state.ready && bookAssetsReady && loaded.has(0)) {
+      state.ready = true; document.body.dataset.ready = 'true'; feedback('');
+    }
   }
 }
 try { setupBook(); } catch (error) {

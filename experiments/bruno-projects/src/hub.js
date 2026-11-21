@@ -1,4 +1,5 @@
 import "../../../site-loader.js";
+import { prepareLabCovers } from "./lab-covers.js";
 import { getClickSound } from "./click-sound.js";
 import { T, createWorld } from "./create-world.js";
 import { texture, uniform } from "three/tsl";
@@ -508,37 +509,13 @@ try {
       colorNode: texture(cardTexture).rgb,
       hasWater: false,
     });
-  let labCoverVersion = 0;
-  world.updateLab = (p) => {
-    const version = ++labCoverVersion;
-    ctx.fillStyle = "#f9e8ce";
-    ctx.fillRect(0, 0, 1400, 900);
-    ctx.fillStyle = "#a65765";
-    ctx.fillRect(80, 80, 1240, 12);
-    ctx.fillRect(80, 808, 1240, 12);
-    ctx.fillStyle = "#56344f";
-    ctx.textAlign = "left";
-    ctx.font = "400 64px Xiaolai";
-    const title = p.name;
-    const parts =
-      title.length > 15 ? [title.slice(0, 15), title.slice(15)] : [title];
-    parts.forEach((text, i) => ctx.fillText(text, 100, 240 + i * 80));
-    ctx.font = "400 34px Xiaolai";
-    ctx.fillText(p.tags.join(" · "), 100, 560);
-    ctx.fillText("点击阅读项目记录 ↗", 100, 710);
+  const labCovers = await prepareLabCovers(notes, contentRoot);
+  world.updateLab = (project) => {
+    const prepared = labCovers.get(project);
+    if (!prepared) return;
+    ctx.drawImage(prepared, 0, 0);
     cardTexture.needsUpdate = true;
-    if (p.cover) {
-      const cover = new Image();
-      cover.onload = () => {
-        if (version !== labCoverVersion) return;
-        ctx.fillStyle = "#f3f4f2"; ctx.fillRect(0, 0, 1400, 900);
-        const scale = Math.min(1400 / cover.naturalWidth, 900 / cover.naturalHeight);
-        const width = cover.naturalWidth * scale, height = cover.naturalHeight * scale;
-        ctx.drawImage(cover, (1400 - width) / 2, (900 - height) / 2, width, height);
-        cardTexture.needsUpdate = true;
-      };
-      cover.src = new URL(p.cover, contentRoot).href;
-    }
+    world.labCover = { name: project.name, source: prepared.dataset.source };
   };
   world.updateLab(notes[0]);
   currentLook = pt(0, 2, 2);
@@ -675,6 +652,7 @@ try {
   currentDistance = targetDistance;
   yaw = targetYaw;
   pitch = targetPitch;
+  await renderer.compileAsync(scene, camera);
   const clock = new T.Timer();
   function updateEffects(dt) {
     effectTime+=dt;

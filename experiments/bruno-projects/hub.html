@@ -2,6 +2,10 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
+    <script>
+      // A gallery return must never create a second scene inside a project reader.
+      try { if (parent !== window) parent.CeciliaProjectReader?.close(); } catch {}
+    </script>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#b9869b" />
     <meta

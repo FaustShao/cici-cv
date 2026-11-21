@@ -331,3 +331,6 @@ dialog::backdrop {
     transition: none !important;
   }
 }
+
+/* Only the current reader document may occupy the reader viewport. */
+#frames iframe[hidden]{display:none!important}

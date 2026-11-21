@@ -252,8 +252,20 @@ export function createFixtures(world) {
       // above the small sign; all foliage is cleared from the board's volume.
       for(const x of [-.58,.58])box(stand,[.12,.6,.16],[x,.3,0],"edge");
       box(stand,[2.05,2.88,.12],[0,1.65,0],"wood");
-      const page=new T.Mesh(new T.PlaneGeometry(1.87,2.645),material({colorNode:texture(previewTexture).rgb,hasWater:false}));
-      page.name="actual-resume-first-page";page.position.set(0,1.65,.068);stand.add(page);
+      // The document is printed paper: preserve its original whites and portrait colour,
+      // independently of the world's purple shadow/bounce shader. Keep the timber lit normally.
+      const paperMaterial=new T.MeshBasicNodeMaterial({colorNode:texture(previewTexture).rgb,toneMapped:false});
+      paperMaterial.userData.prevent=true;
+      const contactShadow=new T.Mesh(new T.PlaneGeometry(1.91,2.68),new T.MeshBasicNodeMaterial({color:0x49382d,transparent:true,opacity:.18,depthWrite:false}));
+      contactShadow.name="resume-paper-contact-shadow";contactShadow.position.set(.012,1.634,.0625);contactShadow.material.userData.prevent=true;stand.add(contactShadow);
+      const paperEdge=new T.Mesh(new T.BoxGeometry(1.88,2.655,.01),new T.MeshBasicNodeMaterial({color:0xf4f1e9,toneMapped:false}));
+      paperEdge.name="resume-paper-backing";paperEdge.position.set(0,1.65,.069);paperEdge.material.userData.prevent=true;stand.add(paperEdge);
+      const page=new T.Mesh(new T.PlaneGeometry(1.87,2.645),paperMaterial);
+      page.name="actual-resume-first-page";page.position.set(0,1.65,.075);stand.add(page);
+      for(const [x,angle,label] of [[-.67,-.13,"left"],[.67,.11,"right"]]){
+        const tape=new T.Mesh(new T.PlaneGeometry(.32,.105),new T.MeshBasicNodeMaterial({color:0xe4cfa1,transparent:true,opacity:.62,depthWrite:false,toneMapped:false}));
+        tape.name=`resume-paper-tape-${label}`;tape.position.set(x,2.966,.079);tape.rotation.z=angle;tape.material.userData.prevent=true;stand.add(tape);
+      }
       stand.userData.document="resume.html?document=1&v=cv-slices-2&photo=1";stand.userData.preview="ui/resume-preview.webp?v=cv-slices-2";
       parcel(stand,21.5,22.1,1.6,{precise:true,radius:0,hull:true});
       stand.position.y-=.075;

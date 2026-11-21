@@ -300,3 +300,6 @@ body[data-place="contact"] #feedback { bottom: 215px; max-width: calc(100vw - 32
 #reader[data-project="icod"] #close-reader{justify-self:start}
 #reader[data-project="icod"] #reader-direct{justify-self:end}
 @media(max-width:700px){#reader[data-project="icod"] #reader-title{font-size:12px;max-width:calc(100vw - 230px)}}
+
+/* Never expose the uninitialised canvas while assets and the final camera are being prepared. */
+body:not([data-ready="true"]) #world{visibility:hidden}

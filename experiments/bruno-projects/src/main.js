@@ -62,7 +62,8 @@ function readWork() {
     url = new URL(p.url, contentRoot).href;
   $("reader-title").textContent = p.title;
   $("reader-direct").href = url;
-  frames.forEach((f) => (f.hidden = true));
+  // Keep exactly one live document; cached frames retain joint history and nested readers.
+  clearReaderFrames();
   let frame = frames.get(url);
   if (!frame) {
     frame = document.createElement("iframe");
@@ -71,6 +72,9 @@ function readWork() {
     frame.allow = "fullscreen";
     frame.addEventListener("load", () => {
       try {
+        if (!frame.isConnected || frames.get(url) !== frame) return;
+        const loadedURL = new URL(frame.contentWindow.location.href);
+        if (/\/cecilia-world\/(?:index\.html)?$/.test(loadedURL.pathname)) { closeReader(); return; }
         clickSound.bind(frame.contentDocument);
         const style = frame.contentDocument.createElement("style");
         style.textContent =
@@ -82,15 +86,13 @@ function readWork() {
           const url = new URL(link.href);
           if (url.origin !== contentRoot.origin) return;
           const file = url.pathname.split("/").pop();
-          if (file === "portfolio.html") {
-            event.preventDefault();
+          const gallery = file === "portfolio.html" || /\/cecilia-world\/(?:index\.html)?$/.test(url.pathname);
+          if (gallery || file === "index.html") {
+            event.preventDefault(); event.stopImmediatePropagation();
             closeReader();
+            if (!gallery) location.href = new URL("hub.html", location.href).href;
           }
-          if (file === "index.html") {
-            event.preventDefault();
-            location.href = new URL("hub.html", location.href).href;
-          }
-        });
+        }, true);
       } catch {}
     });
     frames.set(url, frame);
@@ -101,18 +103,22 @@ function readWork() {
   gsap.globalTimeline.pause();
   if (!reader.open) reader.showModal();
 }
+function clearReaderFrames() {
+  frames.forEach((frame) => {
+    try { frame.contentDocument.querySelectorAll("video,audio").forEach(media => media.pause()); } catch {}
+    frame.remove();
+  });
+  frames.clear();
+  $("frames").replaceChildren();
+}
 function closeReader() {
-  reader.close();
+  if (reader.open) reader.close();
+  clearReaderFrames();
   reading = false;
   gsap.globalTimeline.resume();
-  frames.forEach((f) => {
-    try {
-      f.contentDocument
-        .querySelectorAll("video,audio")
-        .forEach((m) => m.pause());
-    } catch {}
-  });
 }
+// Redirect-only legacy pages use this bridge instead of starting a gallery inside an iframe.
+window.CeciliaProjectReader = { close: closeReader };
 $("close-reader").onclick = closeReader;
 reader.addEventListener("cancel", (e) => {
   e.preventDefault();
