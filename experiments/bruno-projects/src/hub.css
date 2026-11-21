@@ -292,3 +292,11 @@ body[data-place="contact"] #feedback { bottom: 215px; max-width: calc(100vw - 32
 @media(max-width:700px) {
   #reader[data-project="haha-world"] #reader-title { font-size: 14px; max-width: calc(100vw - 200px); }
 }
+
+/* The ICoD archive keeps the same quiet, complete typeface in its outer reader bar. */
+@font-face{font-family:"ICoD Archive";src:url("/fonts/icod-ui.woff2");font-weight:400;font-display:swap}
+#reader[data-project="icod"] .reader-bar{display:grid;grid-template-columns:1fr auto 1fr;background:#f4f4f1;border-color:#d2d2cc}
+#reader[data-project="icod"] #reader-title{font:400 16px/1.5 "ICoD Archive",sans-serif;text-align:center;max-width:calc(100vw - 260px)}
+#reader[data-project="icod"] #close-reader{justify-self:start}
+#reader[data-project="icod"] #reader-direct{justify-self:end}
+@media(max-width:700px){#reader[data-project="icod"] #reader-title{font-size:12px;max-width:calc(100vw - 230px)}}

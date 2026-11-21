@@ -110,7 +110,8 @@ window.RESUME = {
         "人体工学",
         "国际团队协作"
       ],
-      "url": ""
+      "url": "cecilia-world/icod.html",
+      "cover": "assets/icod/final/01-preview.webp"
     },
     {
       "name": "Cardinal 独立游戏设计项目",

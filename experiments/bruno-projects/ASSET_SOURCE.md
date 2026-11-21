@@ -9,3 +9,8 @@
 MIT，Copyright (c) 2025 Bruno Simon；完整许可证位于 `public/BRUNO-LICENSE.txt`。模型保持原始几何、原色板；试验页仅提取作品区域、附近环境，替换个人作品数据和阅读行为。车辆、驾驶、后台和排行榜不接入。
 
 `src/bruno/Game.js` 是视觉依赖适配器，不是原游戏入口。物理和车辆相关回调在试验页中不运行，视觉模块的依赖适配记录在 `src/main.js`。
+
+
+## ICoD 研究档案
+
+`src/icod.js`、`src/icod.css` 为本项目新写的交互实现。视觉及档案探索方式参考 <https://experiment.obys.agency/>，不复制其项目素材或专有字体。37 张展示页仅来自用户上传的 `2408ppt1.pdf`（21 页中期研究）与 `132-combined.pdf`（16 页最终设计），完整保留原页，见 `assets/icod/manifest.json`。中文界面使用 Noto Sans SC 400 的独立子集（SIL OFL），许可证沿用 `public/fonts/NotoSansSC-OFL.txt`。参与证书须使用用户原图，禁止生成替代签名或重绘证书。

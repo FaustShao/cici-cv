@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4f4f1">
+  <meta name="description" content="TASA-ICoD 国际设计工作坊：2050情境研究与 Prot-mask 呼吸防护面罩设计档案。">
+  <title>2050 / Prot-mask · 王钰欣</title>
+</head>
+<body>
+  <header class="archive-header">
+    <a id="back-other" class="text-control" href="./hub.html#other">返回其他项目</a>
+    <h1>2050 / PROT-MASK<span>TASA–ICoD · 2024</span></h1>
+    <div class="layout-controls" role="group" aria-label="浏览方式">
+      <button type="button" data-view="space" aria-pressed="true">空间</button>
+      <button type="button" data-view="grid" aria-pressed="false">总览</button>
+    </div>
+  </header>
+  <main>
+    <div class="archive-context">
+      <nav id="sections" aria-label="项目分区"></nav>
+      <p id="section-description"></p>
+    </div>
+    <section id="space-view" aria-label="横向图片档案">
+      <div id="stage" aria-label="拖动或滚动切换图片，点击中央图片放大"><div id="cards"></div></div>
+      <div class="stage-caption"><p><span id="current-number"></span><span id="current-label"></span></p><span class="gesture-hint">拖动浏览 · 点击大图</span></div>
+      <div class="archive-controls">
+        <button id="previous" type="button" aria-label="上一张"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m19 8-8 8 8 8"/></svg></button>
+        <div id="timeline" role="group" aria-label="选择图片"></div>
+        <button id="next" type="button" aria-label="下一张"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m13 8 8 8-8 8"/></svg></button>
+      </div>
+    </section>
+    <section id="grid-view" aria-label="图片总览" hidden></section>
+    <section id="certificate-view" aria-labelledby="certificate-title" hidden>
+      <div class="certificate-meta"><p>TASA–ICoD / 2024</p><h2 id="certificate-title">参与证书</h2><p>2024 TASA–ICoD 暑期国际设计教育工作坊</p><p>清华青岛艺术与科学创新研究院<br>国际设计联合会</p><p>2024.08.05 — 2024.09.06</p></div>
+      <div id="certificate-art"></div>
+    </section>
+  </main>
+  <footer class="archive-footer"><span>王钰欣 / CECILIA</span><p>未来情境研究 · 概念设计 · 国际团队协作</p><span id="archive-count">37 张 / 2 份档案</span></footer>
+  <div id="announcements" class="sr-only" role="status" aria-live="polite"></div>
+  <dialog id="image-viewer" aria-label="原稿大图阅读">
+    <header class="viewer-header"><div><span id="viewer-section"></span><span id="viewer-label"></span></div><div><button id="zoom-toggle" type="button">放大细节</button><button id="close-viewer" type="button">关闭</button></div></header>
+    <div id="image-scroll"><img id="full-image" alt="" draggable="false"></div>
+    <footer class="viewer-footer"><button id="viewer-prev" type="button">上一张</button><span id="viewer-position"></span><button id="viewer-next" type="button">下一张</button></footer>
+  </dialog>
+  <script type="module" src="./src/icod.js"></script>
+</body>
+</html>

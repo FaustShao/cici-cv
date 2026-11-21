@@ -14,6 +14,16 @@
 - 入口字形微调：中文进位进一步收紧至 49，“欣”的下行笔画改成直斜线；`/ CECILIA` 再放大 5%、纵向拉伸 13%，字母间距从 1 格收紧为 0.55 格。首页首帧成功显示后，地图牌和像素小手同步自动亮一次，随后恢复原状，原开关点击亮灯保留。`tests/landing-controls.cjs` 同时验证无点击开场亮灯与后续手动交互；真实截图为 `public/review/entry-map-intro.webp`。
 - SafePaw Family 宠爱守护为作品集第 4 项，入口 `safepaw.html`；五张 3488×1744 画板按 Figma 2.1—2.5 原坐标连续排版，桌面适应宽度、按钮放大，手机默认横向阅读并支持适应宽度。292 张上传 PNG 字节全部保留，补回原稿缺少的装饰圆点；`assets/safepaw-family/source-inventory.json` 记录原文件名、Figma 节点、几何和 SHA-256。图卡仅局部高亮，无新页面或点击放大弹窗；`tests/safepaw.cjs` 验证逐图几何、完整性、Figma 截图与阅读交互，`tests/safepaw-world.cjs` 验证 04/04 展架入口和返回。首页此次只加粗“欣”最后一捺，并单独收紧“王—钰”间距。
 
+## TASA–ICoD · 2050 / Prot-mask
+
+`/cecilia-world/icod.html` 接入「其他项目」首项。以 Obys Experiment Space 的视觉档案为参考：小标题、浅灰底、中央大图和两侧有透视的图片队列；拖动、滚轮、左右按钮及键盘均可切换，也可切到大图网格总览。点击图像查看原页、放大细节，空白处或 Esc 退出。没有额外的内部加载动画。退出主站阅读框时销毁该项目 iframe，每次重新进入先展示最终设计封面。
+
+`132-combined.pdf` 为最终设计（16 页），`2408ppt1.pdf` 为中期研究（21 页）；每页保留原比例、页序、字体及色彩。`assets/icod/manifest.json` 保存来源及显示标签，标签位于图片之外，不改写原稿。`scripts/prepare-icod.py` 可重建 2560px 原页、1200px 预览与 480px 缩略图；`scripts/build-icod-ui-font.py` 构建独立中文界面字库。
+
+证书设独立分区，使用用户压缩包中的原始 JPG（与输入逐字节一致），点击可放大，空白处可关闭。`scripts/add-icod-certificate.py` 可更新原文件，保留原图、排版及签名。
+
+验证：`tests/icod-archive.cjs` 覆盖原页数量、大预览、分区、拖动不误开图、网格、原页放大、空白关闭、键盘和手机边界；`tests/icod-integration.cjs` 检查主场景首项入口、嵌入返回与重新进入的重置。
+
 ## 哈哈世界 · 其他项目
 
 `/cecilia-world/haha-world.html` 为「其他项目」第 3 项，保留 TASA-ICoD 与 Cardinal 两项；实验室预览暂用 PDF 第 1 页。`resume.js` 的该项目 `cover` 字段可单独替换预览，不影响手册原封面。

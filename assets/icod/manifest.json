@@ -1,0 +1,286 @@
+{
+  "title": "2050 / Prot-mask",
+  "sections": [
+    {
+      "id": "final",
+      "title": "最终设计",
+      "subtitle": "132 · 呼吸防护面罩",
+      "source": "132-combined.pdf",
+      "pages": [
+        {
+          "number": 1,
+          "label": "Prot-mask：呼吸防护面罩",
+          "image": "final/01.webp",
+          "preview": "final/01-preview.webp",
+          "thumb": "final/01-thumb.webp"
+        },
+        {
+          "number": 2,
+          "label": "2050情境矩阵",
+          "image": "final/02.webp",
+          "preview": "final/02-preview.webp",
+          "thumb": "final/02-thumb.webp"
+        },
+        {
+          "number": 3,
+          "label": "空气污染情境",
+          "image": "final/03.webp",
+          "preview": "final/03-preview.webp",
+          "thumb": "final/03-thumb.webp"
+        },
+        {
+          "number": 4,
+          "label": "呼吸系统健康影响",
+          "image": "final/04.webp",
+          "preview": "final/04-preview.webp",
+          "thumb": "final/04-thumb.webp"
+        },
+        {
+          "number": 5,
+          "label": "目标使用人群",
+          "image": "final/05.webp",
+          "preview": "final/05-preview.webp",
+          "thumb": "final/05-thumb.webp"
+        },
+        {
+          "number": 6,
+          "label": "呼吸防护面罩",
+          "image": "final/06.webp",
+          "preview": "final/06-preview.webp",
+          "thumb": "final/06-thumb.webp"
+        },
+        {
+          "number": 7,
+          "label": "主要设计问题",
+          "image": "final/07.webp",
+          "preview": "final/07-preview.webp",
+          "thumb": "final/07-thumb.webp"
+        },
+        {
+          "number": 8,
+          "label": "佩戴体验考量",
+          "image": "final/08.webp",
+          "preview": "final/08-preview.webp",
+          "thumb": "final/08-thumb.webp"
+        },
+        {
+          "number": 9,
+          "label": "初步草图",
+          "image": "final/09.webp",
+          "preview": "final/09-preview.webp",
+          "thumb": "final/09-thumb.webp"
+        },
+        {
+          "number": 10,
+          "label": "方案深化",
+          "image": "final/10.webp",
+          "preview": "final/10-preview.webp",
+          "thumb": "final/10-thumb.webp"
+        },
+        {
+          "number": 11,
+          "label": "原型建模",
+          "image": "final/11.webp",
+          "preview": "final/11-preview.webp",
+          "thumb": "final/11-thumb.webp"
+        },
+        {
+          "number": 12,
+          "label": "呼吸阀结构",
+          "image": "final/12.webp",
+          "preview": "final/12-preview.webp",
+          "thumb": "final/12-thumb.webp"
+        },
+        {
+          "number": 13,
+          "label": "过滤材料结构",
+          "image": "final/13.webp",
+          "preview": "final/13-preview.webp",
+          "thumb": "final/13-thumb.webp"
+        },
+        {
+          "number": 14,
+          "label": "面部特征与表达",
+          "image": "final/14.webp",
+          "preview": "final/14-preview.webp",
+          "thumb": "final/14-thumb.webp"
+        },
+        {
+          "number": 15,
+          "label": "个性化定制",
+          "image": "final/15.webp",
+          "preview": "final/15-preview.webp",
+          "thumb": "final/15-thumb.webp"
+        },
+        {
+          "number": 16,
+          "label": "讨论",
+          "image": "final/16.webp",
+          "preview": "final/16-preview.webp",
+          "thumb": "final/16-thumb.webp"
+        }
+      ]
+    },
+    {
+      "id": "mid",
+      "title": "中期研究",
+      "subtitle": "2408 · 2050情境推演",
+      "source": "2408ppt1.pdf",
+      "pages": [
+        {
+          "number": 1,
+          "label": "2050：恶化情境",
+          "image": "mid/01.webp",
+          "preview": "mid/01-preview.webp",
+          "thumb": "mid/01-thumb.webp"
+        },
+        {
+          "number": 2,
+          "label": "可持续性情境矩阵",
+          "image": "mid/02.webp",
+          "preview": "mid/02-preview.webp",
+          "thumb": "mid/02-thumb.webp"
+        },
+        {
+          "number": 3,
+          "label": "全球升温",
+          "image": "mid/03.webp",
+          "preview": "mid/03-preview.webp",
+          "thumb": "mid/03-thumb.webp"
+        },
+        {
+          "number": 4,
+          "label": "冰川消融与海平面",
+          "image": "mid/04.webp",
+          "preview": "mid/04-preview.webp",
+          "thumb": "mid/04-thumb.webp"
+        },
+        {
+          "number": 5,
+          "label": "蚊虫繁殖",
+          "image": "mid/05.webp",
+          "preview": "mid/05-preview.webp",
+          "thumb": "mid/05-thumb.webp"
+        },
+        {
+          "number": 6,
+          "label": "干旱与水资源",
+          "image": "mid/06.webp",
+          "preview": "mid/06-preview.webp",
+          "thumb": "mid/06-thumb.webp"
+        },
+        {
+          "number": 7,
+          "label": "山火风险",
+          "image": "mid/07.webp",
+          "preview": "mid/07-preview.webp",
+          "thumb": "mid/07-thumb.webp"
+        },
+        {
+          "number": 8,
+          "label": "气候迁徙",
+          "image": "mid/08.webp",
+          "preview": "mid/08-preview.webp",
+          "thumb": "mid/08-thumb.webp"
+        },
+        {
+          "number": 9,
+          "label": "数字生活方式",
+          "image": "mid/09.webp",
+          "preview": "mid/09-preview.webp",
+          "thumb": "mid/09-thumb.webp"
+        },
+        {
+          "number": 10,
+          "label": "社会差距",
+          "image": "mid/10.webp",
+          "preview": "mid/10-preview.webp",
+          "thumb": "mid/10-thumb.webp"
+        },
+        {
+          "number": 11,
+          "label": "文化遗产",
+          "image": "mid/11.webp",
+          "preview": "mid/11-preview.webp",
+          "thumb": "mid/11-thumb.webp"
+        },
+        {
+          "number": 12,
+          "label": "文化多样性",
+          "image": "mid/12.webp",
+          "preview": "mid/12-preview.webp",
+          "thumb": "mid/12-thumb.webp"
+        },
+        {
+          "number": 13,
+          "label": "消费",
+          "image": "mid/13.webp",
+          "preview": "mid/13-preview.webp",
+          "thumb": "mid/13-thumb.webp"
+        },
+        {
+          "number": 14,
+          "label": "生产",
+          "image": "mid/14.webp",
+          "preview": "mid/14-preview.webp",
+          "thumb": "mid/14-thumb.webp"
+        },
+        {
+          "number": 15,
+          "label": "能源",
+          "image": "mid/15.webp",
+          "preview": "mid/15-preview.webp",
+          "thumb": "mid/15-thumb.webp"
+        },
+        {
+          "number": 16,
+          "label": "技术",
+          "image": "mid/16.webp",
+          "preview": "mid/16-preview.webp",
+          "thumb": "mid/16-thumb.webp"
+        },
+        {
+          "number": 17,
+          "label": "健康影响概览",
+          "image": "mid/17.webp",
+          "preview": "mid/17-preview.webp",
+          "thumb": "mid/17-thumb.webp"
+        },
+        {
+          "number": 18,
+          "label": "健康风险分类",
+          "image": "mid/18.webp",
+          "preview": "mid/18-preview.webp",
+          "thumb": "mid/18-thumb.webp"
+        },
+        {
+          "number": 19,
+          "label": "蚊媒疾病",
+          "image": "mid/19.webp",
+          "preview": "mid/19-preview.webp",
+          "thumb": "mid/19-thumb.webp"
+        },
+        {
+          "number": 20,
+          "label": "儿童与孕妇",
+          "image": "mid/20.webp",
+          "preview": "mid/20-preview.webp",
+          "thumb": "mid/20-thumb.webp"
+        },
+        {
+          "number": 21,
+          "label": "讨论",
+          "image": "mid/21.webp",
+          "preview": "mid/21-preview.webp",
+          "thumb": "mid/21-thumb.webp"
+        }
+      ]
+    }
+  ],
+  "certificate": {
+    "label": "王钰欣 · TASA–ICoD 工作坊参与证书",
+    "image": "certificate.jpg",
+    "preview": "certificate-preview.webp",
+    "source": "微信图片_20261121204348_567_42.jpg"
+  }
+}

@@ -78,7 +78,7 @@ function closeReader() {
         .querySelectorAll("video,audio")
         .forEach((m) => m.pause());
     } catch {}
-    if (f.dataset.project === "haha-world") {
+    if (["haha-world", "icod"].includes(f.dataset.project)) {
       try { f.contentWindow.HAHA_READER?.dispose(); } catch {}
       f.remove();
       frames.delete(url);
@@ -87,7 +87,8 @@ function closeReader() {
   reading = state.reading = false;
 }
 function openReader(title, file) {
-  const project = file && new URL(file, contentRoot).pathname.endsWith("/haha-world.html") ? "haha-world" : "";
+  const filename = file ? new URL(file, contentRoot).pathname.split("/").pop() : "";
+  const project = filename === "haha-world.html" ? "haha-world" : filename === "icod.html" ? "icod" : "";
   reader.dataset.project = project;
   $("reader-title").textContent = title;
   $("frames").querySelector(".details-sheet")?.remove();
