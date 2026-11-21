@@ -1,4 +1,5 @@
 import "../../../site-loader.js";
+import { createLabChalkboard } from "./lab-chalkboard.js";
 import { prepareLabCovers } from "./lab-covers.js";
 import { getClickSound } from "./click-sound.js";
 import { T, createWorld } from "./create-world.js";
@@ -268,7 +269,7 @@ try {
     "王钰欣个人简历其他项目联系方式",
   );
   await document.fonts.load('400 24px Xiaolai', "个人简历作品集其他项目联系方式信件地图");
-  await document.fonts.load('400 24px "World Xiaolai"', "王钰欣的个人网站邮箱想去哪里个人简历作品集其他项目联系方式地图Cecilia");
+  await document.fonts.load('400 24px "World Xiaolai"', "王钰欣的个人网站邮箱想去哪里个人简历作品集其他项目联系方式地图Cecilia未来概念穿戴产品防护设计独立游戏界面设计手绘美术视觉识别品牌设计VI手册");
   await document.fonts.load('700 36px "Amatic SC"', "Welcome to Cecilia’s world.");
   world = await createWorld($("world"), (n, total) => {
     loadingScreen.setPercent(n / total * 90);
@@ -524,11 +525,13 @@ try {
       hasWater: false,
     });
   const labCovers = await prepareLabCovers(notes, contentRoot);
+  const chalkboard = createLabChalkboard(lab);
   world.updateLab = (project) => {
     const prepared = labCovers.get(project);
     if (!prepared) return;
     ctx.drawImage(prepared, 0, 0);
     cardTexture.needsUpdate = true;
+    chalkboard.update(project);
     world.labCover = { name: project.name, source: prepared.dataset.source };
   };
   world.updateLab(notes[0]);

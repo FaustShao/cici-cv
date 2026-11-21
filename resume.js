@@ -97,6 +97,7 @@ window.RESUME = {
     },
     {
       "name": "TASA-ICoD 国际设计工作坊",
+      "boardTags": ["未来概念", "穿戴产品", "防护设计"],
       "category": "03 / 未来概念探索设计合作 · 2024.08 — 2024.09",
       "description": "清华青岛艺术与科学创新研究院 × 国际设计联合会（ICoD）；团队项目，担任中韩国际团队组长。",
       "details": [
@@ -115,6 +116,7 @@ window.RESUME = {
     },
     {
       "name": "Cardinal 独立游戏设计项目",
+      "boardTags": ["独立游戏", "界面设计", "手绘美术"],
       "category": "04 / 游戏UI设计 · 2026.03",
       "description": "Moray Game Jam 团队项目；负责 UI 与游戏美术相关设计。",
       "details": [
@@ -132,6 +134,7 @@ window.RESUME = {
     },
     {
       "name": "哈哈世界 · VI 视觉识别系统",
+      "boardTags": ["视觉识别", "品牌设计", "VI手册"],
       "category": "品牌视觉设计 · 团队项目",
       "description": "哈哈世界品牌视觉识别系统手册，包含品牌理念、标志与色彩规范、IP 形象及品牌应用。",
       "details": [],
