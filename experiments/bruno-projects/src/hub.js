@@ -169,7 +169,7 @@ reader.addEventListener("cancel", (e) => {
   closeReader();
 });
 function openCurrent() {
-  if (place === "resume") openReader("个人简历", "resume.html?document=1&v=cv-slices-2");
+  if (place === "resume") openReader("个人简历", "resume.html?document=1&v=cv-slices-2&photo=1");
   if (place === "other") openReader(notes[otherIndex].name);
   if (place === "contact") location.href = "mailto:wangyuxinqd2025@163.com";
 }

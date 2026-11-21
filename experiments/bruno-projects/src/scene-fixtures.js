@@ -254,7 +254,7 @@ export function createFixtures(world) {
       box(stand,[2.05,2.88,.12],[0,1.65,0],"wood");
       const page=new T.Mesh(new T.PlaneGeometry(1.87,2.645),material({colorNode:texture(previewTexture).rgb,hasWater:false}));
       page.name="actual-resume-first-page";page.position.set(0,1.65,.068);stand.add(page);
-      stand.userData.document="resume.html?document=1&v=cv-slices-2";stand.userData.preview="ui/resume-preview.webp?v=cv-slices-2";
+      stand.userData.document="resume.html?document=1&v=cv-slices-2&photo=1";stand.userData.preview="ui/resume-preview.webp?v=cv-slices-2";
       parcel(stand,21.5,22.1,1.6,{precise:true,radius:0,hull:true});
       stand.position.y-=.075;
       stand.userData.support="planted-ground";
