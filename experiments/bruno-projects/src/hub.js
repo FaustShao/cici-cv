@@ -72,16 +72,23 @@ async function copyContact(value, label) {
 }
 function closeReader() {
   if (reader.open) reader.close();
-  frames.forEach((f) => {
+  frames.forEach((f, url) => {
     try {
       f.contentDocument
         .querySelectorAll("video,audio")
         .forEach((m) => m.pause());
     } catch {}
+    if (f.dataset.project === "haha-world") {
+      try { f.contentWindow.HAHA_READER?.dispose(); } catch {}
+      f.remove();
+      frames.delete(url);
+    }
   });
   reading = state.reading = false;
 }
 function openReader(title, file) {
+  const project = file && new URL(file, contentRoot).pathname.endsWith("/haha-world.html") ? "haha-world" : "";
+  reader.dataset.project = project;
   $("reader-title").textContent = title;
   $("frames").querySelector(".details-sheet")?.remove();
   frames.forEach((f) => (f.hidden = true));
@@ -94,6 +101,7 @@ function openReader(title, file) {
       frame = document.createElement("iframe");
       frame.src = url;
       frame.title = title;
+      frame.dataset.project = project;
       frame.allow = "fullscreen";
       frame.addEventListener("load", () => {
         try {

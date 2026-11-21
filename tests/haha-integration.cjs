@@ -17,7 +17,7 @@ const assert=require('node:assert/strict'),{chromium}=require('playwright');
  assert.match(await page.evaluate(()=>RESUME.projects.find(p=>p.name.startsWith('哈哈世界')).cover),/pages\/01.webp$/);
  await frame.evaluate(()=>HAHA_READER.pause());
  await page.screenshot({path:'/tmp/haha-world-embedded.png',timeout:45000});
- await frame.locator('#back-other').click();
+ await frame.locator('#back-other').click().catch(error=>{if(!frame.isDetached())throw error});
  assert.ok(!await page.locator('#reader').evaluate(d=>d.open));
  assert.equal(await page.evaluate(()=>WORLD_STATE.place),'other');assert.equal(await page.evaluate(()=>WORLD_STATE.otherIndex),2);
  assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);

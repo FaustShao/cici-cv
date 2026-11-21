@@ -58,3 +58,19 @@ body{font-family:'Paper Mono','Magazine UI',monospace;background:#f7f7f5}
 .zoom-tools button:hover{background:#e9f1fc}
 .contents-heading button{color:#5274a4}
 #book-feedback{background:#f7f7f5;border:1px solid #9dbded;color:#33445f;box-shadow:3px 3px 0 #8cb2ed}
+
+/* Centre against the viewport, independently of the unequal left and right controls. */
+.mag-header .identity {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max-content;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+}
+.mag-header .header-tools { margin-left: auto; }
+@media(max-width:1040px) {
+  .mag-header .identity { top: 54px; transform: translateX(-50%); max-width: 100%; }
+}
+
+#zoom-return-cover{position:fixed;right:102px;top:20px;z-index:1;font:400 14px "Magazine UI",sans-serif;border:1px solid #9dbded;border-radius:4px;padding:10px 13px;background:#f7f7f5;color:#33445f}

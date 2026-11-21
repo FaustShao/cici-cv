@@ -270,3 +270,25 @@ body[data-place="contact"] #feedback { bottom: 215px; max-width: calc(100vw - 32
   body[data-place="contact"] #place-actions small { font-size: 11px; overflow-wrap: anywhere; }
   body[data-place="contact"] #feedback { bottom: 330px; }
 }
+
+/* The magazine reader's outer title uses the exact same complete font as its inner header. */
+@font-face {
+  font-family: "Magazine UI";
+  src: url("/fonts/haha-ui.woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+#reader[data-project="haha-world"] .reader-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+}
+#reader[data-project="haha-world"] #reader-title {
+  font: 400 18px/1.5 "Magazine UI", sans-serif;
+  text-align: center;
+  max-width: calc(100vw - 260px);
+}
+#reader[data-project="haha-world"] #close-reader { justify-self: start; }
+#reader[data-project="haha-world"] #reader-direct { justify-self: end; }
+@media(max-width:700px) {
+  #reader[data-project="haha-world"] #reader-title { font-size: 14px; max-width: calc(100vw - 200px); }
+}

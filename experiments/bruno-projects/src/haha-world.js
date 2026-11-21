@@ -44,6 +44,17 @@ function goTo(page, animate = false) {
   if (magazine) magazine.goTo(page, { animate });
   else { changePage({ page, visiblePages: [page] }); $('plain-page').src = sources[page].src; }
 }
+function returnToCover() {
+  if ($('page-zoom').open) closeZoom();
+  toggleContents(false);
+  state.zoomPage = 0;
+  goTo(0);
+}
+$('return-cover').onclick = returnToCover;
+$('zoom-return-cover').onclick = returnToCover;
+window.addEventListener('pageshow', event => {
+  if (event.persisted) { paused = false; sceneDirty = true; returnToCover(); }
+});
 $('fullscreen').onclick = async () => {
   try {
     if (document.fullscreenElement) await document.exitFullscreen();
@@ -381,11 +392,12 @@ try { setupBook(); } catch (error) {
   document.body.dataset.ready = 'true';
 }
 window.addEventListener('resize', () => { resize(); sizeZoom(); }); updateControls(); requestAnimationFrame(render);
-// Paused whenever the parent reader is closed; resume without rerunning entry or losing the spread.
+// Off-screen views stop drawing; the parent disposes this project on exit so each entry is fresh.
 if ('IntersectionObserver' in window) new IntersectionObserver(entries => { paused = !entries[0].isIntersecting; }).observe(document.documentElement);
 window.HAHA_READER = {
   manifest, sources, state, loaded, get magazine() { return magazine; }, get renderer() { return renderer; }, get scene() { return scene; }, get camera() { return camera; }, bookGroup,
-  goTo, turn, openZoom, closeZoom, get backgroundFrame() { return backgroundFrame; },
+  goTo, turn, openZoom, closeZoom, returnToCover, get backgroundFrame() { return backgroundFrame; },
   pause() { paused = true; }, resume() { paused = false; },
+  dispose() { paused = true; cancelAnimationFrame(frameID); magazine?.dispose(); renderer?.dispose(); },
   snapshot() { return { ...state, originalPages: manifest.pages.length, ratio: 1 / aspect, bindingOpen: bindingOpen.value, bookFrames, gridCells: grid.activeCells, sheetGap: thickness / 16, backgroundFrame, loaded: [...loaded] }; }
 };

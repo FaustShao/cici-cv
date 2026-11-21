@@ -15,7 +15,7 @@
   <header class="mag-header">
     <a id="back-other" href="hub.html#other" aria-label="返回其他项目">返回其他项目</a>
     <div class="identity"><h1>哈哈世界</h1><span>视觉识别系统手册</span></div>
-    <div class="header-tools"><span id="page-status" aria-live="polite">封面</span><button id="contents-trigger" type="button" aria-expanded="false" aria-controls="contents">目录</button><button id="fullscreen" type="button">全屏阅读</button></div>
+    <div class="header-tools"><button id="return-cover" type="button">回到封面</button><span id="page-status" aria-live="polite">封面</span><button id="contents-trigger" type="button" aria-expanded="false" aria-controls="contents">目录</button><button id="fullscreen" type="button">全屏阅读</button></div>
   </header>
   <div id="background-cards" aria-label="可拖动的背景纸片">
     <div class="specimen" data-card="a" tabindex="0" aria-label="拖动 a 字母纸片"><span>a.glyph<i aria-hidden="true">×</i></span><b>a</b></div>
@@ -36,6 +36,7 @@
     <div id="page-thumbnails"></div>
   </section>
   <dialog id="page-zoom" aria-label="原稿放大阅读">
+    <button id="zoom-return-cover" type="button">回到封面</button>
     <button id="close-zoom" type="button" aria-label="关闭放大">关闭</button>
     <div class="zoom-pages"></div>
     <div class="zoom-tools"><button id="zoom-previous" type="button">上一页</button><button id="detail-minus" type="button" aria-label="缩小原稿">−</button><button id="detail-reset" type="button" aria-label="恢复适合窗口">100%</button><button id="detail-plus" type="button" aria-label="放大原稿">＋</button><span id="zoom-status"></span><button id="zoom-next" type="button">下一页</button></div>
