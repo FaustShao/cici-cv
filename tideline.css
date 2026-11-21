@@ -39,6 +39,13 @@
 @keyframes intro-letter-bounce{0%,100%{transform:translateY(0)}35%{transform:translateY(-12px)}65%{transform:translateY(2px)}82%{transform:translateY(-3px)}}
 @media(prefers-reduced-motion:reduce){.intro-letter-ink.is-bouncing{animation:none}}
 .back-top{padding:0}
+#project-top{position:fixed;right:max(22px,env(safe-area-inset-right));bottom:max(22px,env(safe-area-inset-bottom));z-index:25;display:grid;place-items:center;width:48px;height:48px;padding:12px;color:#213c30;background:#f7f8f2;border:1px solid #53775e80;border-radius:50%;box-shadow:0 3px 12px #213c301a;cursor:pointer;transition:background .18s,transform .18s}
+#project-top svg{width:24px;height:24px;pointer-events:none}
+#project-top:hover{background:#e8eee3;transform:translateY(-3px)}
+#project-top:focus-visible{outline:2px solid #477359;outline-offset:4px}
+@media(max-width:640px){#project-top{right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));width:44px;height:44px;padding:10px}}
+@media(prefers-reduced-motion:reduce){#project-top{transition:none}#project-top:hover{transform:none}}
+@media print{#project-top{display:none}}
 .strip{cursor:grab;user-select:none;-webkit-user-select:none}
 .strip.is-dragging{cursor:grabbing}
 .strip img{width:auto;height:457px;max-width:none;pointer-events:none}

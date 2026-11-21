@@ -323,10 +323,10 @@ try {
     day: {
       lightColor: "#ffd2c2",
       lightIntensity: 1.2,
-      shadowColor: "#6d3fff",
+      shadowColor: "#663aef",
       fogColorA: "#00ffff",
       fogColorB: "#9b89ff",
-      fogNearRatio: 0.315,
+      fogNearRatio: 0.40,
       fogFarRatio: 1.25,
     },
   };
@@ -392,6 +392,8 @@ try {
   game.wind.timeFrequency=.28;
   game.terrain = new Terrain();
   game.lighting = new Lighting();
+  // Match the hub's daytime contrast without altering bloom or depth of field.
+  game.lighting.lightBounceMultiplier.value = 0.88;
   game.fog = new Fog();
   game.materials = new Materials();
   // Original terrain/trees' visual code is used without their physics hooks.

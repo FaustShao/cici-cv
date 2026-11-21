@@ -1,6 +1,9 @@
 (() => {
   const root = document.querySelector('#project');
   const viewer = document.querySelector('#image-viewer');
+  document.querySelector('#project-top').addEventListener('click',()=>{
+    window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  });
   const names = {home:'HOME',research:'RESEARCH',diary:'DESIGN DIARY',teas:'TEAS',merch:'MERCH',service:'SERVICE SYSTEM',packaging:'Packaging',material:'Material',about:'About Us'};
   const available = new Set(['home','research','teas','material','packaging','merch','diary','service']);
   // Only traverse entries created during this project visit. An external entry
