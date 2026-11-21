@@ -1,3 +1,4 @@
+import { worldBaseURL, versionedURL } from "./world-base.js";
 import { addWorldAtmosphere } from "./world-atmosphere.js";
 // Shared upstream visual modules, without vehicle, physics, or sound bootstraps.
 import * as T from "three/webgpu";
@@ -24,7 +25,7 @@ import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 
 export { T };
 export async function createWorld(canvas, progress) {
-  const asset = (path) => new URL(path, new URL(".", location.href)).href;
+  const asset = (path) => versionedURL(path, worldBaseURL());
   const renderer = new T.WebGPURenderer({
     canvas,
     antialias: true,
@@ -248,24 +249,15 @@ export async function createWorld(canvas, progress) {
       fogNearRatio: 0.315,
       fogFarRatio: 1.25,
     },
-    night: {
-      lightColor: "#3240ff",
-      lightIntensity: 3.8,
-      shadowColor: "#2f00db",
-      fogColorA: "#10266f",
-      fogColorB: "#490a42",
-      fogNearRatio: -0.85,
-      fogFarRatio: 1,
-    },
   };
-  function setTheme(night) {
-    for (const [key, value] of Object.entries(presets[night ? "night" : "day"]))
+  function setTheme() {
+    for (const [key, value] of Object.entries(presets.day))
       game.dayCycles.properties[key] = {
         value: typeof value === "string" ? new T.Color(value) : value,
       };
-    game.dayCycles.progress = night ? 0.45 : 0.12;
-    game.dayCycles.intervalEvents.get("night").inInterval = night;
-    game.dayCycles.events.trigger("night", [night]);
+    game.dayCycles.progress = 0.12;
+    game.dayCycles.intervalEvents.get("night").inInterval = false;
+    game.dayCycles.events.trigger("night", [false]);
   }
   setTheme(false);
   game.noises = new Noises();

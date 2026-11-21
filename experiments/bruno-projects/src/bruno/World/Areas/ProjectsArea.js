@@ -448,8 +448,9 @@ export class ProjectsArea extends Area
         // Load ended
         this.images.loadEnded = (key) =>
         {
-            // If first image => init
-            if(!this.images.initiated)
+            const initialLoad = !this.images.initiated
+            // The first actual cover is ready immediately; animate later user-driven switches only.
+            if(initialLoad)
                 this.images.init(key)
 
             // Current image => Reveal
@@ -458,7 +459,8 @@ export class ProjectsArea extends Area
                 const resource = this.images.getResourceAndLoad(key)
                 this.images.textureNew.copy(resource.texture)
                 this.images.textureNew.needsUpdate = true
-                gsap.to(this.images.loadProgress, { value: 1, duration: 1, overwrite: true })
+                if(initialLoad) this.images.loadProgress.value = 1
+                else gsap.to(this.images.loadProgress, { value: 1, duration: 1, overwrite: true })
 
                 this.images.loadSibling()
             }

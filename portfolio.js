@@ -9,7 +9,7 @@
   let flip;
   let lastSize = '';
   const leafToPdf = index => Math.min(index, count - 1);
-  const pages = Array.from({length: count}, (_, i) => `assets/gazette/page-${String(i + 1).padStart(2, '0')}.webp`);
+  const pages = Array.from({length: count}, (_, i) => window.CeciliaAssetURL(`assets/gazette/page-${String(i + 1).padStart(2, '0')}.webp`));
   // A quiet recording, unlocked by a real gesture; never block the reader on audio.
   let soundContext, soundBuffer, soundLoading, soundSource, soundTicket=0, lastSoundAt=-Infinity;
   const soundBytes=fetch('assets/gazette/audio/page-turn.mp3').then(r=>r.ok?r.arrayBuffer():null).catch(()=>null);

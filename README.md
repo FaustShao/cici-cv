@@ -2,17 +2,17 @@
 
 ## 当前统一入口
 
-`index.html` 进入 `/cecilia-world/hub.html`：全屏可拖动的开放场景，四类入口为个人简历、作品集、其他项目、联系方式；没有驾驶系统或重复顶部分类栏。中文使用小赖字体，模型、色板、光照及后期来自已确认的 Bruno 官方 MIT 工程。来源、版权和固定提交见 `experiments/bruno-projects/ASSET_SOURCE.md`，完整许可证随资源发布。
+正式 `index.html` 直接使用当前 `hub.html` 的构建结果，没有中间跳转页：全屏可拖动的开放场景，四类入口为个人简历、作品集、其他项目、联系方式；没有驾驶系统或重复顶部分类栏。中文使用小赖字体，模型、色板、光照及后期来自已确认的 Bruno 官方 MIT 工程。来源、版权和固定提交见 `experiments/bruno-projects/ASSET_SOURCE.md`，完整许可证随资源发布。
 
 - `hub.html` / `src/hub.js`：姓名、阅读桌、实验室与联络模型及分类交互；简历入口优先，点击模型可以完整阅读。
 - `src/create-world.js`：复用原视觉模块和模型，开放地面、固定日间、植被、光影与触屏；保留初始辉光和景深，不启动物理、车辆或后台，不再提供夜间/画质切换。
 - `/cecilia-world/`：保留已确认的作品展架，四件作品同级直接阅读。原项目内部画面和素材不重新设计。
-- `resume.html?document=1`、`resume-document.css`、`resume-document.js`：保留用户两页 PDF 原稿的简历阅读与打印页；`resume.html`、`works.html` 和旧书签跳至对应三维入口。旧 `world-resume.css` 仍供历史其他项目页使用，不修改。
-- QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。真实截图在 `experiments/bruno-projects/public/review/`。
+- `resume.html?document=1`、`resume-document.css`、`resume-document.js`：保留用户两页 PDF 原稿的简历阅读与打印页；`resume.html` 直接提供当前简历；`works.html`、`portfolio.html` 与旧书签由构建器生成当前对应场景，不发布旧列表页。
+- QA：`tests/design-world.cjs`、`tests/portfolio-routing.cjs`、`tests/bruno-preview.cjs`、`tests/bruno-animation.cjs`。本地检查截图不进入正式发布包。
 - 联系方式整组位于入口右侧的原键盘空地，信箱字面与呼吸圆环可直接写邮件，长条纸质便签显示邮箱及可复制的电话、微信；平面地图同步新落点，姓名入口可回到原始镜头。红屋顶地图牌缩小 15% 并按实际双脚落地，欢迎牌与两行小赖文字以左侧底部为固定基准整体缩小10%，重新按可见几何落地；落叶从20片小幅增至24片，尺寸、速度和风场不变。姓名使用 56 像素采样方块，提高笔画间隙；风场与原生叶簇摆动共用日间渲染，补充粉色植被。`tests/contact-clearing.cjs` 校验迁移、模型碰撞、字面边界、风动和地图返回。个人简历进入镜头按用户截图校准，隐藏底部阅读选项，直接点击桌面模型或大简历板打开原简历；`tests/resume-world.cjs` 验证模型点击阅读，`tests/contact-note.cjs` 验证复制和便签边界。
 - 植被补全：接入原版 `Flowers` 模块的八片花瓣与花丛分布资源，补充粉色／浅色花丛；树木及灌木显示范围扩大到 72 单位，按模型所在区域避让，入口补充原生粉色树。姓名组合再放大 12%，英文额外放大 30%，中文字进位从 58 收紧至 52；信箱字面透明，不再绘制矩形边框。原始花丛资源的 SHA-256 记于 `public/bruno/manifest.json`。
 - 入口字形微调：中文进位进一步收紧至 49，“欣”的下行笔画改成直斜线；`/ CECILIA` 再放大 5%、纵向拉伸 13%，字母间距从 1 格收紧为 0.55 格。首页首帧成功显示后，地图牌和像素小手同步自动亮一次，随后恢复原状，原开关点击亮灯保留。`tests/landing-controls.cjs` 同时验证无点击开场亮灯与后续手动交互；真实截图为 `public/review/entry-map-intro.webp`。
-- SafePaw Family 宠爱守护为作品集第 4 项，入口 `safepaw.html`；五张 3488×1744 画板按 Figma 2.1—2.5 原坐标连续排版，桌面适应宽度、按钮放大，手机默认横向阅读并支持适应宽度。292 张上传 PNG 字节全部保留，补回原稿缺少的装饰圆点；`assets/safepaw-family/source-inventory.json` 记录原文件名、Figma 节点、几何和 SHA-256。图卡仅局部高亮，无新页面或点击放大弹窗；`tests/safepaw.cjs` 验证逐图几何、完整性、Figma 截图与阅读交互，`tests/safepaw-world.cjs` 验证 04/04 展架入口和返回。首页此次只加粗“欣”最后一捺，并单独收紧“王—钰”间距。
+- SafePaw Family 宠爱守护为作品集第 2 项，入口 `safepaw.html`；五张 3488×1744 画板按 Figma 2.1—2.5 原坐标连续排版，桌面适应宽度、按钮放大，手机默认横向阅读并支持适应宽度。292 张上传 PNG 字节全部保留，补回原稿缺少的装饰圆点；`assets/safepaw-family/source-inventory.json` 记录原文件名、Figma 节点、几何和 SHA-256。图卡保留局部高亮，已导出的高清界面可点击放大并点击空白关闭；`tests/safepaw.cjs` 验证逐图几何、完整性、Figma 截图与阅读交互，`tests/safepaw-world.cjs` 验证 04/04 展架入口和返回。首页此次只加粗“欣”最后一捺，并单独收紧“王—钰”间距。
 
 ## 其他项目面板导航
 
@@ -52,39 +52,33 @@
 
 验证：`tests/haha-entry-reset.cjs` 检查标题字体、窗口居中、手机边界、两处回封面按钮及反复退出重进；`tests/haha-world.cjs` 检查原页顺序、尺寸、纸面内容、翻阅、目录、封底、放大和手机边界；`tests/haha-motion.cjs` 检查动态背景和真实鼠标手势；`tests/haha-integration.cjs` 检查原项目保留、第三项入口、嵌入与返回。
 
-## 历史小岛实现（已不作为入口）
+## 发布包与入口检查
 
-以下保留旧版说明以便追溯，当前入口以上述统一场景为准；旧 `island-*` 文件不再被首页加载。
+唯一发布工作流为 `.github/workflows/pages.yml`，只上传 `scripts/assemble-site.py` 生成的 `public/`。已移除旧 Jekyll 通道；历史 `island-*`、`app.js`、旧共享列表页样式、音效试听页、`review` 截图及旧版封面不进入发布包。
 
-`index.html` 是全屏 3D 小岛，不再采用左右分栏、顶部分类导航或常驻悬浮标签。四处地点依次为个人简历、作品集、其他项目、联系方式，名称直接融入实体模型。姓名「王钰欣 / YUXIN WANG」和 Cecilia 位于海岸立体招牌。拖动旋转、滚轮／双指缩放；点击建筑进入对应模型近景，Esc 返回全岛，R 恢复视角。桌面与手机使用不同的横向／纵向场景布局，建筑本身不压缩变形。
+首页、作品集、其他项目与旧 `bruno-preview` 地址均生成当前应用 HTML；`world-base.js` 统一资源基址，支持仓库子路径和这些入口。保留旧 URL 的访问能力，同时不再显示跳转壳或旧界面。`other-projects.html` 是无 WebGL 时的当前项目阅读入口。
 
-- `island-models.js`：地形、工作室、简历册、开放展亭、翻页展架、游戏工作台、小邮局、立体姓名、植物和书籍均由几何体生成。模型不是贴在网页上的整张渲染图。近景主动避让周围建筑、屋顶和前景物件。
-- `island-scene.js`：模型射线拾取、平滑镜头、日夜灯光、拖动／触屏输入、响应式场景与空闲暂停。打开阅读器或切到后台时停止渲染；减少动态效果设置下镜头和翻页直接到位。Three.js r164.1 与三个官方辅助模块本地打包，MIT 许可见 `assets/vendor/three-LICENSE.txt`。
-- `island-ui.js` / `island.css`：轻量场景控件、原作品全视口阅读、联系方式与无障碍导航。作品展架的任意封面均可直接点击阅读；按钮、键盘方向键或拖动切换作品，不再要求右侧阅读按钮。邮件使用 `mailto:`，电话使用 `tel:`，微信支持复制。
-- 桌面使用 `assets/island/` 中的立体指针、悬停手势和抓取光标，无跟随延迟。触屏设备不显示自定义光标，原作品阅读区保留正常光标。键盘导航仅聚焦时出现，不持续遮挡场景。WebGL 不可用时提供可点击的简洁界面和相同阅读入口。
-- Fredoka、中文 Noto Sans SC 子集及立体字轮廓位于 `assets/fonts/`，OFL 许可证同目录保留。可用 `scripts/build-island-fonts.py` 从官方原字体重建，需开发依赖 `fonttools[woff]` 与 Brotli；线上不需要 Python 或外部字体服务。
-- 三个作品的原有页面与素材保持独立；点击模型按需加载，同次访问返回展架后保留阅读位置。外层阅读导航统一小岛字体，原项目画面不重新配色。读者可用「独立打开」访问原页面。
-- 作品集分类已替换为获确认的原版模型展示区，入口 `/cecilia-world/`；首页作品集建筑、文字导航、旧 `index.html#portfolio` 和 `portfolio.html` 书签均可进入。此阶段不重做首页与其他分类。展示区中文使用小赖字体 Xiaolai，项目英文标题、学校和地点保留；模型来源和完整许可证保留在该目录。开发源码与说明见 `experiments/bruno-projects/`。
-- 部署工作流需复制全部 `island-*` 脚本及 `island.css`，并保留本地 Three.js 及许可证。
+`release.json` 的版本来自实际发布文件和构建器内容。HTML、CSS、JavaScript、字体及动态艺术素材使用一致版本；内部页面链接也携带版本，避免复用旧 HTML。`release-guard.js` 在页面绘制前检查最新版本；缓存过期时保留路径和分区更新文档，回退恢复同样检查。它不添加加载动画或最低等待时间。`page-boot.js` 等当前字库和首屏原稿完成布局后直接显示，不播放作品内加载动画。原生作品展架首次加载直接提交已就绪的标题和封面，后续主动切换保留原动效。
 
-无需构建的静态个人网站。简历支持响应式布局、深浅色切换和浏览器打印 PDF；小岛使用随站点打包的 Three.js，不依赖在线 CDN。简历内容依据用户提供的 PDF 整理，包含个人联系方式与照片。
+`python scripts/audit-site.py public` 会阻止缺失依赖、旧 UI 文件、无版本运行资源和入口跳转壳再次发布。`tests/production-entry-audit.cjs` 在 `/cici-cv/` 子路径验证 12 个入口、缓存旧 HTML 的绘制保护、真实主场景与展架、四个作品连续进入返回、动态原稿版本以及两页简历照片。
 
 ## 本地运行
 
 ```sh
-cd /workspace/cici-cv
 npm ci --prefix experiments/bruno-projects
 npm run build --prefix experiments/bruno-projects
-python3 -m http.server 8000 --bind 0.0.0.0
+python scripts/assemble-site.py
+python scripts/audit-site.py public
+python -m http.server 8000 --bind 0.0.0.0 --directory public
 ```
 
-在本机浏览器通过运行机器的地址与 8000 端口访问。停止服务使用 Ctrl+C。三维入口需要上述构建步骤；原作品内容仍为静态页面。使用 HTTP 服务访问，不能以 `file://` 直接打开。开发环境装有 Playwright 与 Chromium 时可运行上述 QA 脚本。
+检查实际 `public/`，不把整个源码目录当成上线站点。停止服务使用 Ctrl+C。需要 HTTP 访问，不直接打开 `file://`。如需 GitHub Pages 子路径检查，可在本地服务根目录把 `cici-cv` 指向 `public`，并将测试的 `PREVIEW_ROOT` 设为该子路径。
 
 ## 页面架构
 
-- `index.html`：首页，个人简介和内容入口。
+- 正式 `index.html`：当前姓名入口场景，由构建器生成。
 - `resume.html`：完整简历及打印 PDF。
-- `portfolio.html`：作品集总览，Tideline、Future Gazette 与 DREAM SENTINEL 同级展示。
+- 正式 `portfolio.html`：当前作品展架，顺序为海藻茶、宠爱守护、梦境哨兵、Gazette。
 - `dream-sentinel.html`：梦境哨兵项目连续画板，3.1—3.4 已全部接入；原图比例、局部关联高亮、轻微视差、减少动态效果适配，支持横向拖动/触屏/方向键和四张画板同步阅读尺寸切换。
 - `dream-sentinel-layers.js`：3.1 用户导出 PNG 与 Figma 实际渲染边界的映射；77 张素材分别保留，不重排原始文字。
 - `dream-sentinel-32-layers.js` / `dream-sentinel-32.js`：3.2 的63张可见导出图片、原有背景色层及传感器/思维导图/人体标注交互。ZIP 内两张透明1×1图不显示；`image 166` 地球背景已由用户补图，按原渲染边界恢复，保留PNG内置透明度，不重复降低透明度。原布局与文字保持不变。
@@ -100,7 +94,7 @@ python3 -m http.server 8000 --bind 0.0.0.0
 - Service System 页面接入 Service Process、Space Layout 和三张服务／空间设计图，保持原图比例与原稿位置，支持纵向滚动，本页所有图片不提供点击放大。入口为 SERVICE SYSTEM 或 `tideline.html#service`。
 - Service Process 图上悬停时，主题红色小球沿用户标记的虚线路径从左下向右上弹跳，约 12 秒一趟，拖尾为逐渐变小、变淡的红色圆点，无光晕；停留时循环，移开或切换页面停止，并遵循减少动态效果设置。
 - `tideline.html`：Tideline 海藻茶项目，已接入 HOME、RESEARCH 和 TEAS。HOME 六款茶图保持原图比例，支持滚轮、鼠标拖动、触屏滑动和方向键横向浏览，到达边缘后滚轮继续纵向浏览页面；TEAS 六张卡片悬停显示 tea2 详情、移开恢复，手机点击切换；研究长图可点击放大，其余页面待补充。
-- `site.js` / `site.css`：共享导航、当前页标记、主题和公共布局。
+- `page-boot.js` / `release-guard.js`：当前排版首次显示及跨版本缓存检查。
 
 个人资料与项目继续统一维护在 `resume.js`；项目标记 `collection: "portfolio"` 时列入作品集，其余列入其它作品，两处不重复展示。
 
@@ -113,45 +107,15 @@ python3 -m http.server 8000 --bind 0.0.0.0
 
 不要将身份证号、家庭住址、密钥或不希望公开的联系方式写入页面。此模板没有后端、表单或访问鉴权。
 
-## 部署计划
+## 部署
 
-### 推荐：GitHub Pages（公开简历）
-
-1. 替换示例内容，在桌面和手机浏览器检查排版、链接、主题切换与打印预览。
-2. 在仓库 Settings → Pages → Build and deployment 中选择 **GitHub Actions**。
-3. 将这些文件提交并推送到 `main`，或在 Actions 手动运行 **Deploy resume to GitHub Pages**。
-4. 等待工作流成功，使用部署步骤返回的地址检查完整页面。项目站点通常为 `https://<用户名>.github.io/cici-cv/`；当前代码采用相对资源路径，支持仓库子路径。
-5. 可选：在 Pages 中配置自定义域名，按 GitHub 提示添加 DNS 记录并开启 HTTPS。
-
-工作流只上传四个站点文件与 assets 资源目录，不会发布整个仓库。私有仓库能否使用 Pages 取决于 GitHub 套餐和组织策略；**私有仓库不代表 Pages 网站私有**。此任务仅准备部署文件，不会自动替你推送或上线。
-
-### 备选：Cloudflare Pages
-
-连接 GitHub 仓库，生产分支选 `main`。不选框架，构建命令填写：
-
-```sh
-mkdir -p public && cp index.html resume.html works.html tideline.html tideline.css tideline.js dream-sentinel.html dream-sentinel.css dream-sentinel.js dream-sentinel-layers.js dream-sentinel-32.js dream-sentinel-32-layers.js dream-sentinel-33.js dream-sentinel-33-layers.js dream-sentinel-34.js dream-sentinel-34-layers.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/ && cp -R assets public/
-```
-
-构建输出目录填 `public`，无需环境变量。部署成功后可绑定自定义域名。预览与生产地址均需按公开页面处理。
-
-### 如果需要私人简历
-
-不要直接公开部署。先决定允许访问的人群，再配置身份验证，例如使用 Cloudflare Access 保护站点及所有可直达的生产和预览入口，部署后验证未登录用户无法读取 HTML 和 `resume.js`。仅加前端密码、隐藏链接或 robots.txt 都不能保护简历内容。
-
-### 上线验收与维护
-
-检查 HTTPS、页面及三个静态资源返回成功；确认无示例信息、联系方式正确、手机无横向溢出、PDF 无内容截断。后续修改 `resume.js` 并推送即可自动更新。需要回退时，通过新的 Git 提交还原到上一版，再触发部署。
+推送 `main` 后，唯一工作流构建当前 Vite 应用、组装 `public/`、执行入口和依赖检查，再发布到 GitHub Pages。不得重新使用复制整个源码目录或手动拼接旧页面的命令。上线结果为工作流返回的 Pages 地址；可在 `release.json` 核对构建版本及发布范围。
 
 ## 照片与动效
 
-### 2026-11-18 简历原稿一致性
+### 个人简历原稿
 
-以用户上传的 `A4 - 1-combined (1).pdf` 为简历视觉权威来源。该文件为两张1588×2248的扫描/图片页，没有嵌入字体或文字层，因此不推测字体名称、不用系统字体重新排版。`assets/resume/page-1.webp` 与 `page-2.webp` 为原PDF按原始像素尺寸渲染后的无损WebP；`wang-yuxin-resume.pdf` 保留用户原文件字节。照片从第一页同一位置无损拆出，静态时覆盖原位置，悬停轻微上浮；内容区只添加可退回的淡金色悬停提示，原排版不动。电话、邮件可点击，微信可复制。保留辅助文字摘要，但完整正文依旧是图片，未声称可搜索或可编辑。
-
-阅读器可缩放，手机可横向浏览放大后的页面；深色场景不会改色纸页。打印关闭交互层和工具条，保留两页A4；下载按钮直接提供原版PDF。场景中的简历缩略图同步更新并携带缓存版本，场景模型及镜头不改。`resume.js` 仍为其他网站模块的数据来源，本次不改。
-
-上述整页 PDF 方案已由随后收到的 `cv拆分.zip` 高清素材替代。当前 `assets/resume/slices/cv拆分/` 保存全部57张原始PNG，无重采样或字体替换；`resume-layers.js` 保存两页中逐块测量的位置、尺寸及匹配置信度，网页原位组合56块图层与1张独立照片，不再加载模糊的整页图。原PDF仅用于排版参照及“下载原版PDF”。`scripts/map-resume-slices.py` 是开发用位置匹配工具，不进入线上依赖。
+当前简历使用 `cv拆分.zip` 的高清素材； `assets/resume/slices/cv拆分/` 保存全部57张原始PNG，无重采样或字体替换；`resume-layers.js` 保存两页中逐块测量的位置、尺寸及匹配置信度，网页原位组合56块图层与1张独立照片，不再加载模糊的整页图。原PDF仅用于排版参照及“下载原版PDF”。`scripts/map-resume-slices.py` 是开发用位置匹配工具，不进入线上依赖。
 
 `node tests/resume-pdf.cjs` 检查57张素材全部使用且各使用一次、原分辨率及页面边界、与原PDF的低频排版对照（高清字边缘和新照片不要求等同旧JPEG像素），另测照片/内容悬停、联系方式、缩放、减少动态效果、原文件下载和两页打印。`node tests/resume-world.cjs` 检查三维入口打开新简历并返回原场景。
 
@@ -163,7 +127,7 @@ Gazette 将返回导航和全屏按钮收进紧凑工具栏，按可用窗口等
 
 `tests/project-polish.cjs` 覆盖画册尺寸/全屏/翻页/入场/手机和海藻茶路由；`tests/world-polish.cjs` 覆盖姓名比例/中心、固定日间和镜头、嵌入项目返回及全屏。
 
-`assets/portrait.jpg` 为用户上传的首页原图。桌面鼠标悬停时照片卡片轻微上浮、转正，照片微微放大。系统开启“减少动态效果”时关闭此动效，打印时恢复静态。
+当前证件照为 `assets/resume/resume-photo.png`，原位显示并保留轻微悬停动效；旧首页头像不进入发布包。减少动态效果设置与打印均保持静态。
 
 ## 作品集翻页书
 

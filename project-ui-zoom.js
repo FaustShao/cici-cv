@@ -17,7 +17,7 @@
     open(asset,from){
       if(!asset)return;if(!dialog)create();
       trigger=from;scrollX=window.scrollX;scrollY=window.scrollY;
-      image.alt=(asset.project==='safepaw'?'宠爱守护':'梦境哨兵')+' · '+asset.title+'高清界面';image.src='assets/project-ui-details/'+asset.file;
+      image.alt=(asset.project==='safepaw'?'宠爱守护':'梦境哨兵')+' · '+asset.title+'高清界面';image.src=window.CeciliaAssetURL('assets/project-ui-details/'+asset.file);
       caption.textContent='点击图片外的空白处关闭';document.body.classList.add('ui-zoom-open');dialog.showModal();
     }
   };

@@ -1,3 +1,4 @@
+import { worldBaseURL, versionedURL } from "./world-base.js";
 import "../../../site-loader.js";
 import { getClickSound } from "./click-sound.js";
 import { addWorldAtmosphere } from "./world-atmosphere.js";
@@ -41,10 +42,11 @@ const $ = (id) => document.getElementById(id),
   reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 gsap.ticker.lagSmoothing(0);
 if (reduced) gsap.globalTimeline.timeScale(1000);
+const assetURL = path => versionedURL(path, worldBaseURL());
 const contentRoot = import.meta.env.DEV
   ? new URL("http://127.0.0.1:8000/")
-  : new URL("../", location.href);
-$("back-site").href = new URL("hub.html", location.href);
+  : new URL("../", worldBaseURL());
+$("back-site").href = versionedURL("hub.html", worldBaseURL());
 let updateProjectLabels = () => {};
 let selected = 0,
   reading = false,
@@ -59,7 +61,7 @@ const reader = $("reader"),
 function readWork() {
   selected = area?.navigation.index ?? selected;
   const p = data[selected],
-    url = new URL(p.url, contentRoot).href;
+    url = versionedURL(p.url, contentRoot);
   $("reader-title").textContent = p.title;
   $("reader-direct").href = url;
   // Keep exactly one live document; cached frames retain joint history and nested readers.
@@ -90,7 +92,7 @@ function readWork() {
           if (gallery || file === "index.html") {
             event.preventDefault(); event.stopImmediatePropagation();
             closeReader();
-            if (!gallery) location.href = new URL("hub.html", location.href).href;
+            if (!gallery) location.href = versionedURL("hub.html", worldBaseURL());
           }
         }, true);
       } catch {}
@@ -264,10 +266,10 @@ try {
   };
   const textureLoader = new T.TextureLoader(),
     gltfLoader = new GLTFLoader();
-  const draco = new DRACOLoader().setDecoderPath("draco/");
+  const draco = new DRACOLoader().setDecoderPath(assetURL("draco/"));
   gltfLoader.setDRACOLoader(draco);
   const ktx = new KTX2Loader()
-    .setTranscoderPath("basis/")
+    .setTranscoderPath(assetURL("basis/"))
     .detectSupport(renderer);
   gltfLoader.setKTX2Loader(ktx);
   const textures = {
@@ -300,7 +302,7 @@ try {
   };
   await Promise.all([
     ...Object.entries(textures).map(async ([key, path]) => {
-      const tex = await textureLoader.loadAsync("bruno/" + path);
+      const tex = await textureLoader.loadAsync(assetURL("bruno/" + path));
       tex.flipY = false;
       if (key === "paletteTexture") {
         tex.colorSpace = T.SRGBColorSpace;
@@ -313,7 +315,7 @@ try {
       progress();
     }),
     ...Object.entries(models).map(async ([key, path]) => {
-      game.resources[key] = await gltfLoader.loadAsync("bruno/" + path);
+      game.resources[key] = await gltfLoader.loadAsync(assetURL("bruno/" + path));
       progress();
     }),
   ]);
@@ -327,25 +329,16 @@ try {
       fogNearRatio: 0.315,
       fogFarRatio: 1.25,
     },
-    night: {
-      lightColor: "#3240ff",
-      lightIntensity: 3.8,
-      shadowColor: "#2f00db",
-      fogColorA: "#10266f",
-      fogColorB: "#490a42",
-      fogNearRatio: -0.85,
-      fogFarRatio: 1,
-    },
   };
-  function applyPreset(night) {
-    const values = presets[night ? "night" : "day"];
+  function applyPreset() {
+    const values = presets.day;
     for (const [key, value] of Object.entries(values))
       game.dayCycles.properties[key] = {
         value: typeof value === "string" ? new T.Color(value) : value,
       };
-    game.dayCycles.progress = night ? 0.45 : 0.12;
-    game.dayCycles.intervalEvents.get("night").inInterval = night;
-    game.dayCycles.events.trigger("night", [night]);
+    game.dayCycles.progress = 0.12;
+    game.dayCycles.intervalEvents.get("night").inInterval = false;
+    game.dayCycles.events.trigger("night", [false]);
   }
   applyPreset(false);
   try { localStorage.setItem("resume-theme", "light"); } catch {}
@@ -536,7 +529,7 @@ try {
     getLoader() {
       return {
         load(path, callback) {
-          textureLoader.load(path, (tex) => {
+          textureLoader.load(assetURL(path), (tex) => {
             tex.flipY = false;
             tex.colorSpace = T.SRGBColorSpace;
             tex.magFilter = T.LinearFilter;
@@ -774,6 +767,16 @@ try {
     },
     { passive: false },
   );
+  // Initial text and cover must be the selected current project before the first reveal.
+  for (const part of [area.title, area.url]) {
+    gsap.killTweensOf(part.inner.rotation);
+    part.inner.rotation.x = 0;
+    part.status = "visible";
+  }
+  area.title.textCanvas.updateText(data[selected].title);
+  area.url.textCanvas.updateText("点击查看完整项目");
+  area.url.panel.scale.x = Math.max(2.4, area.url.textCanvas.getMeasure().width / area.texts.density + .9);
+  await renderer.compileAsync(scene, camera);
   const clock = new T.Timer();
   let lastFrame = 0,
     ready = false;
@@ -804,7 +807,7 @@ try {
       area.update();
       emissiveMeshes.forEach((m) => (m.visible = true));
       pipeline.render();
-      if (!ready) {
+      if (!ready && area.images.initiated && area.images.loadProgress.value === 1) {
         ready = true;
         document.body.dataset.ready = "true";
         loadingScreen.finish();

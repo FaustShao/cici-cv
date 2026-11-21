@@ -32,21 +32,10 @@ jobs:
         run: |
           npm ci --prefix experiments/bruno-projects --no-audit --no-fund
           npm run build --prefix experiments/bruno-projects
-      - name: Assemble public files
+      - name: Assemble and audit the production artifact
         run: |
-          mkdir public
-          cp island.css island-ui.js island-scene.js island-models.js public/
-          cp index.html resume.html works.html tideline.html tideline.css tideline.js dream-sentinel.html dream-sentinel.css dream-sentinel.js dream-sentinel-layers.js dream-sentinel-32.js dream-sentinel-32-layers.js dream-sentinel-33.js dream-sentinel-33-layers.js dream-sentinel-34.js dream-sentinel-34-layers.js styles.css site.css site.js resume.js app.js portfolio.html gazette.html portfolio-local.html portfolio.css portfolio.js public/
-          cp click-sounds.html site-loader.css site-loader.js public/
-          cp gazette-research.css gazette-research.js gazette-research-layout.js public/
-          cp gazette-contents.css gazette-contents.js public/
-          cp project-ui-zoom.css project-ui-zoom.js public/
-          cp -R assets public/
-          cp world-resume.css public/
-          cp resume-document.css resume-document.js resume-layers.js public/
-          cp safepaw.html safepaw.css safepaw.js safepaw-layers.js public/
-          cp -R cecilia-world public/cecilia-world
-          cp -R legacy-world public/bruno-preview
+          python scripts/assemble-site.py
+          python scripts/audit-site.py public
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

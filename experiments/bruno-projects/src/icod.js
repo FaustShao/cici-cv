@@ -1,13 +1,14 @@
+import { versionedURL } from "./world-base.js";
 import './icod.css';
 const $ = id => document.getElementById(id);
 const root = new URL('../assets/icod/', location.href);
-const manifest = await fetch(new URL('manifest.json', root)).then(response => {
+const manifest = await fetch(versionedURL('manifest.json', root)).then(response => {
   if (!response.ok) throw new Error('ICoD archive could not be loaded');
   return response.json();
 });
 const sections = manifest.sections;
 const state = { section: 'final', index: 0, view: 'space', zoom: false };
-const asset = path => new URL(path, root).href;
+const asset = path => versionedURL(path, root);
 const current = () => sections.find(section => section.id === state.section);
 const pages = () => current()?.pages || [];
 const image = (src, label, lazy = false) => {

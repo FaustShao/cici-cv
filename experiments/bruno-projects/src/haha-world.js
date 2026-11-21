@@ -1,3 +1,4 @@
+import { versionedURL } from "./world-base.js";
 import * as THREE from 'three';
 import { LeafThroughObject } from 'leafthrough';
 import { bindingDeform, makePaperEdges, fitPaperEdges } from './haha-binding.js';
@@ -7,11 +8,11 @@ import './haha-world.css';
 const $ = id => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const assetRoot = new URL('../assets/haha-world/', location.href);
-const manifest = await (await fetch(new URL('manifest.json', assetRoot))).json();
-const sources = manifest.pages.map(p => ({ src: new URL(p.src, location.href).href, alt: `${p.number} / 30 · ${p.label}`, text: p.text }));
+const manifest = await (await fetch(versionedURL('manifest.json', assetRoot))).json();
+const sources = manifest.pages.map(p => ({ src: versionedURL(p.src, location.href), alt: `${p.number} / 30 · ${p.label}`, text: p.text }));
 // A blank inside back cover keeps the 30 supplied pages intact and the printed back cover outside.
-sources.push({ src: new URL('pages/inside-back.webp', assetRoot).href, alt: '封底内页（留白）' });
-sources.push({ src: new URL('pages/back.webp', assetRoot).href, alt: '哈哈世界 · 品牌橙色封底' });
+sources.push({ src: versionedURL('pages/inside-back.webp', assetRoot), alt: '封底内页（留白）' });
+sources.push({ src: versionedURL('pages/back.webp', assetRoot), alt: '哈哈世界 · 品牌橙色封底' });
 const aspect = manifest.height / manifest.width;
 const state = { page: 0, visiblePages: [0], ready: false, zoomPage: 0, mode: 'webgl' };
 const clicks = getClickSound(); clicks.bind(document);
@@ -68,7 +69,7 @@ document.addEventListener('fullscreenchange', () => { $('fullscreen').textConten
 const thumbnails = document.createDocumentFragment();
 for (const page of manifest.pages) {
   const button = document.createElement('button'); button.type = 'button'; button.dataset.page = String(page.number - 1);
-  const img = new Image(); img.src = new URL(page.thumb, location.href).href; img.alt = page.label; img.loading = 'lazy'; img.width = 320; img.height = 226;
+  const img = new Image(); img.src = versionedURL(page.thumb, location.href); img.alt = page.label; img.loading = 'lazy'; img.width = 320; img.height = 226;
   const span = document.createElement('span'); span.textContent = `${String(page.number).padStart(2, '0')} · ${page.number === 1 ? '封面' : page.label.slice(0, 12)}`;
   button.append(img, span); button.onclick = () => { goTo(page.number - 1); toggleContents(false); }; thumbnails.append(button);
 }

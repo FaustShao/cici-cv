@@ -12,7 +12,7 @@
     wrapper.className = 'design-layer';wrapper.dataset.node = layer.id;
     Object.assign(wrapper.style, {left:`${layer.x}px`,top:`${layer.y}px`,width:`${layer.w}px`,height:`${layer.h}px`});
     const img = document.createElement('img');
-    img.src = `assets/dream-sentinel/3.1/${encodeURIComponent(layer.file)}`;
+    img.src = window.CeciliaAssetURL(`assets/dream-sentinel/3.1/${encodeURIComponent(layer.file)}`);
     img.alt = layer.alt;img.decoding = 'async';img.draggable = false;
     // Preserve the original text PNGs and transparent export padding.
     if (!img.alt && !generic.test(layer.file)) img.alt = layer.file.slice(0,-4);

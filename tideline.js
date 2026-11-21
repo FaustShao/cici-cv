@@ -13,12 +13,11 @@
     if((location.hash.slice(1)||'home')!=='home'){
       history.replaceState({...history.state,tidelineVisit:visit,tidelineStep:0},'','#home');
       render();window.scrollTo({top:0,behavior:'instant'});
-    }else document.querySelector('.portfolio-bar a[href="portfolio.html"]').click();
+    }else document.querySelector('.portfolio-bar a[href^="portfolio.html"]').click();
   });
   const image = (folder, file, alt) => {
     const img = document.createElement('img');
-    img.src = `assets/tideline/${folder}/${encodeURIComponent(file)}.png`;
-    if(folder==='RESEARCH'&&file==='Relationship')img.src+='?v=relationship-2';
+    img.src = window.CeciliaAssetURL(`assets/tideline/${folder}/${encodeURIComponent(file)}.png`);
     img.alt = alt;
     img.decoding = 'async';
     return img;
@@ -255,7 +254,7 @@
     } else if(current==='material') {
       const video=document.createElement('video');video.className='layer material-video';
       video.controls=true;video.playsInline=true;video.preload='metadata';
-      video.src='assets/tideline/Material/seaweed-material.mp4';video.poster=image(folder,'Rectangle 331','').src;
+      video.src=window.CeciliaAssetURL('assets/tideline/Material/seaweed-material.mp4');video.poster=image(folder,'Rectangle 331','').src;
       video.setAttribute('aria-label','Seaweed Packaging Material — experiment video');
       Object.assign(video.style,{left:'253px',top:'165px',width:'1222px',height:'692px'});
       const fallback=document.createElement('a');fallback.href=video.src;fallback.textContent='Open the material experiment video';video.append(fallback);canvas.append(video);

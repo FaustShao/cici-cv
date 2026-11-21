@@ -12,7 +12,7 @@
     Object.assign(wrapper.style,{left:`${layer.x}px`,top:`${layer.y}px`,width:`${layer.w}px`,height:`${layer.h}px`},layer.style||{});
     if(layer.file){
       const img=document.createElement('img');
-      img.src=`assets/dream-sentinel/3.2/${encodeURIComponent(layer.file)}`;
+      img.src=window.CeciliaAssetURL(`assets/dream-sentinel/3.2/${encodeURIComponent(layer.file)}`);
       img.alt=layer.alt;img.decoding='async';img.draggable=false;
       wrapper.append(img);
     }

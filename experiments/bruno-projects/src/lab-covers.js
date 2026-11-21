@@ -1,3 +1,4 @@
+import { versionedURL } from "./world-base.js";
 // Prepare final canvases before the scene is revealed. Switching never paints a provisional card.
 export async function prepareLabCovers(projects, contentRoot) {
   return new Map(await Promise.all(projects.map(async project => {
@@ -5,7 +6,7 @@ export async function prepareLabCovers(projects, contentRoot) {
     const ctx = card.getContext('2d');
     if (project.cover) {
       try {
-        const cover = new Image(); cover.decoding = 'async'; cover.src = new URL(project.cover, contentRoot).href;
+        const cover = new Image(); cover.decoding = 'async'; cover.src = versionedURL(project.cover, contentRoot);
         await cover.decode();
         ctx.fillStyle = '#f3f4f2'; ctx.fillRect(0,0,1400,900);
         const scale = Math.max(1400 / cover.naturalWidth,900 / cover.naturalHeight);

@@ -12,7 +12,7 @@
     const pending=[...section.querySelectorAll('image[data-src]')].map(image=>new Promise(resolve=>{
       image.addEventListener('load',()=>{image.dataset.ready='true';resolve(true);},{once:true});
       image.addEventListener('error',()=>{image.dataset.ready='error';resolve(false);},{once:true});
-      image.setAttribute('href',image.dataset.src);delete image.dataset.src;
+      image.setAttribute('href',window.CeciliaAssetURL(image.dataset.src));delete image.dataset.src;
     }));
     Promise.all(pending).then(results=>section.dataset.loaded=results.every(Boolean)?'true':'error');
   };

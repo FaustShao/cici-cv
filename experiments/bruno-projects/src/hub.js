@@ -1,3 +1,4 @@
+import { worldBaseURL, versionedURL } from "./world-base.js";
 import "../../../site-loader.js";
 import { createLabChalkboard } from "./lab-chalkboard.js";
 import { prepareLabCovers } from "./lab-covers.js";
@@ -18,8 +19,8 @@ const $ = (id) => document.getElementById(id),
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const contentRoot = import.meta.env.DEV
   ? new URL("http://127.0.0.1:8000/")
-  : new URL("../", location.href);
-const portfolioURL = new URL("index.html", location.href).href;
+  : new URL("../", worldBaseURL());
+const portfolioURL = versionedURL("index.html", worldBaseURL());
 const notes = profile.projects.filter((p) => p.collection !== "portfolio");
 const reader = $("reader"),
   frames = new Map(),
@@ -97,7 +98,7 @@ function openReader(title, file) {
   frames.forEach((f) => (f.hidden = true));
   $("reader-direct").hidden = !file;
   if (file) {
-    const url = new URL(file, contentRoot).href;
+    const url = versionedURL(file, contentRoot);
     $("reader-direct").href = url;
     let frame = frames.get(url);
     if (!frame) {
@@ -670,7 +671,7 @@ try {
   }
   window.addEventListener("resize", resize);
   resize();
-  go(location.hash.slice(1) || "home", "replace");
+  go(location.hash.slice(1) || document.querySelector('meta[name="cecilia-initial-place"]')?.content || "home", "replace");
   currentLook.copy(targetLook);
   currentDistance = targetDistance;
   yaw = targetYaw;

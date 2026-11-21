@@ -11,7 +11,7 @@
   for(const layer of layers){
     const wrapper=document.createElement('div');wrapper.className='design-layer';wrapper.dataset.node=layer.id;
     Object.assign(wrapper.style,{left:`${layer.x}px`,top:`${layer.y}px`,width:`${layer.w}px`,height:`${layer.h}px`});
-    const img=document.createElement('img');img.src=`assets/dream-sentinel/3.3/${encodeURIComponent(layer.file)}`;
+    const img=document.createElement('img');img.src=window.CeciliaAssetURL(`assets/dream-sentinel/3.3/${encodeURIComponent(layer.file)}`);
     img.alt=layer.alt;img.decoding='async';img.draggable=false;wrapper.append(img);
     if(collageIds.includes(layer.id)){wrapper.classList.add('collage-piece');wrapper.style.setProperty('--depth',String(.35+collageIds.indexOf(layer.id)*.08));}
     if(layer.id==='34:302')wrapper.classList.add('sketch-reveal');

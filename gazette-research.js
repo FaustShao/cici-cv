@@ -34,7 +34,7 @@
     art.style.setProperty('--art-w',board.width);art.style.setProperty('--art-h',board.height);
     art.setAttribute('role','img');art.setAttribute('aria-label',labels[board.id-1]+'，'+(board.kind==='detail'?'完整研究材料':'预览'));
     board.layers.forEach(layer=>{
-      const img=new Image();img.src=layer.src;img.alt='';img.draggable=false;img.decoding='async';
+      const img=new Image();img.src=window.CeciliaAssetURL(layer.src);img.alt='';img.draggable=false;img.decoding='async';
       img.style.cssText=`left:${layer.x/board.width*100}%;top:${layer.y/board.height*100}%;width:${layer.w/board.width*100}%;height:${layer.h/board.height*100}%`;
       img.dataset.layer=layer.id;art.append(img);
     });
@@ -61,7 +61,7 @@
   rails.forEach((rail,side)=>{
     for(let i=side*3;i<side*3+3;i++){
       const tab=el('button','research-tab');tab.type='button';tab.dataset.number=String(i+1).padStart(2,'0');tab.style.setProperty('--note-index',i%3);tab.id='research-tab-'+(i+1);tab.setAttribute('aria-controls','research-preview-'+side);tab.setAttribute('aria-expanded','false');tab.append(el('span','tab-label',labels[i]));
-      const badge=el('span','research-badge');badge.setAttribute('aria-hidden','true');tab.dataset.pin=pinAssets[i].split('.')[0];const pin=new Image();pin.src='assets/gazette-desk/pins/'+pinAssets[i];pin.alt='';pin.draggable=false;pin.className='research-pin';badge.append(pin);tab.prepend(badge);
+      const badge=el('span','research-badge');badge.setAttribute('aria-hidden','true');tab.dataset.pin=pinAssets[i].split('.')[0];const pin=new Image();pin.src=window.CeciliaAssetURL('assets/gazette-desk/pins/'+pinAssets[i]);pin.alt='';pin.draggable=false;pin.className='research-pin';badge.append(pin);tab.prepend(badge);
       tab.addEventListener('pointerenter',()=>{if(hover.matches&&(!pinned||active===i))showPreview(i,pinned);});
       tab.addEventListener('focus',()=>{if(tab.matches(':focus-visible'))showPreview(i);});
       tab.addEventListener('click',()=>{

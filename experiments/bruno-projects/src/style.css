@@ -334,3 +334,5 @@ dialog::backdrop {
 
 /* Only the current reader document may occupy the reader viewport. */
 #frames iframe[hidden]{display:none!important}
+
+body:not([data-ready="true"]):not([data-failed="true"]) #world{visibility:hidden}
