@@ -81,8 +81,8 @@ function closeReader() {
         .querySelectorAll("video,audio")
         .forEach((m) => m.pause());
     } catch {}
-    if (["haha-world", "icod"].includes(f.dataset.project)) {
-      try { f.contentWindow.HAHA_READER?.dispose(); } catch {}
+    if (["haha-world", "icod", "sonicsense"].includes(f.dataset.project)) {
+      try { f.contentWindow.HAHA_READER?.dispose(); f.contentWindow.SONIC_FILM?.dispose(); } catch {}
       f.remove();
       frames.delete(url);
     }
@@ -91,7 +91,7 @@ function closeReader() {
 }
 function openReader(title, file) {
   const filename = file ? new URL(file, contentRoot).pathname.split("/").pop() : "";
-  const project = filename === "haha-world.html" ? "haha-world" : filename === "icod.html" ? "icod" : "";
+  const project = filename === "haha-world.html" ? "haha-world" : filename === "icod.html" ? "icod" : filename === "sonicsense.html" ? "sonicsense" : "";
   reader.dataset.project = project;
   $("reader-title").textContent = title;
   $("frames").querySelector(".details-sheet")?.remove();

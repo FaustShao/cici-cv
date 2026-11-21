@@ -141,6 +141,24 @@ window.RESUME = {
       "tags": ["品牌 VI", "视觉识别", "应用设计"],
       "url": "cecilia-world/haha-world.html",
       "cover": "assets/haha-world/pages/01.webp"
+    },
+    {
+      "name": "Sound Sensor in 2036 · 声学传感概念探索",
+      "boardTags": [
+        "未来情境",
+        "穿戴设计",
+        "交互探索"
+      ],
+      "category": "设计虚构 · 交互与产品概念 · 团队项目",
+      "description": "以声学传感研究为起点，探索2036年通过触摸验证服装材质的情境。个人过程档案包含研究、触摸实验、形态迭代、拼贴叙事与反思。",
+      "details": [],
+      "tags": [
+        "声学传感",
+        "未来情境",
+        "可穿戴概念"
+      ],
+      "url": "cecilia-world/sonicsense.html",
+      "cover": "assets/sonicsense/01-preview.webp"
     }
   ],
   "skills": [

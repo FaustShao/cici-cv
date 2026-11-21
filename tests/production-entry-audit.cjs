@@ -10,7 +10,7 @@ const release=JSON.parse(fs.readFileSync('public/release.json'));
   assert.equal(await p.locator('.island-shell,.hero,.entry-grid').count(),0,'No old site shell remains');
  }
  for(const entry of ['island-ui.js','island.css','site.js','click-sounds.html','cecilia-world/review/'])assert.equal((await staticContext.request.get(new URL(entry,base).href)).status(),404);
- await staticContext.close();console.log('PASS all 12 published entries: direct current documents; no legacy shell, scripts, audition page or review directory.');
+ await staticContext.close();console.log('PASS all published entries: direct current documents; no legacy shell, scripts, audition page or review directory.');
  // Simulate a browser holding stale HTML while the release manifest has already advanced.
  const cacheContext=await b.newContext();await cacheContext.route(/\/cecilia-world\/assets\/.*\.js/,r=>r.abort());
  const c=await cacheContext.newPage();let first=true,releaseManifest;const manifestGate=new Promise(r=>releaseManifest=r);
@@ -35,7 +35,7 @@ const release=JSON.parse(fs.readFileSync('public/release.json'));
  await page.waitForFunction(()=>window.designWorld&&document.body.dataset.ready&&!document.documentElement.dataset.releaseState,null,{timeout:120000});
  assert.equal(new URL(page.url()).pathname,new URL('index.html',base).pathname,'Home renders in the first document');
  assert.ok(await page.evaluate(()=>designWorld.world.labCover.source.includes('icod')));
- await page.evaluate(()=>designWorld.go('other'));assert.equal(await page.locator('#other-position').innerText(),'1 / 3');
+ await page.evaluate(()=>designWorld.go('other'));assert.equal(await page.locator('#other-position').innerText(),'1 / 4');
  await page.screenshot({path:'/tmp/production-home-direct.png',timeout:45000});
  await page.goto(new URL('portfolio.html?webgl=1',base).href,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.preview&&document.body.dataset.ready&&!document.documentElement.dataset.releaseState,null,{timeout:120000});

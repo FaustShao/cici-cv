@@ -26,7 +26,7 @@ for name in entries:
    assert (ROOT/path).is_file(),f'Missing runtime dependency: {path}'
    files.add(path)
 for name in sorted(files):shutil.copyfile(ROOT/name,OUT/name)
-asset_dirs=['tideline','dream-sentinel','safepaw-family','gazette','gazette-research','gazette-desk','project-ui-details','haha-world','icod','resume']
+asset_dirs=['tideline','dream-sentinel','safepaw-family','gazette','gazette-research','gazette-desk','project-ui-details','haha-world','icod','resume','sonicsense']
 for name in asset_dirs:shutil.copytree(ROOT/'assets'/name,OUT/'assets'/name)
 shutil.copytree(ROOT/'assets/vendor/page-flip',OUT/'assets/vendor/page-flip')
 for directory,patterns in [('portfolio-covers',['*-v3.webp']),('fonts',['huiwen*'])]:
@@ -119,6 +119,6 @@ for p in OUT.rglob('*'):
   p.write_text(body)
  elif p.suffix=='.css':
   body=p.read_text();body=re.sub(r'url\(\s*(["\']?)([^)"\']+)\1\s*\)',lambda m:'url('+m[1]+version(m[2],p.parent)+m[1]+')',body);p.write_text(body)
-report={'revision':revision,'entrypoints':['index.html','portfolio.html','works.html','resume.html','bruno-preview/hub.html','bruno-preview/index.html',*entries[1:],'cecilia-world/haha-world.html','cecilia-world/icod.html'],'runtime_files':sorted(files),'excluded':['island*.js','island.css','app.js','styles.css','world-resume.css','site.js','site.css','click-sounds.html','cecilia-world/review','assets/vendor/three.module.min.js','*-v2.webp','legacy redirect documents'],'entry_mode':'current application HTML; no intermediate redirect','resource_versioning':'content-derived build query + Vite module hashes'}
+report={'revision':revision,'entrypoints':['index.html','portfolio.html','works.html','resume.html','bruno-preview/hub.html','bruno-preview/index.html',*entries[1:],'cecilia-world/haha-world.html','cecilia-world/icod.html','cecilia-world/sonicsense.html'],'runtime_files':sorted(files),'excluded':['island*.js','island.css','app.js','styles.css','world-resume.css','site.js','site.css','click-sounds.html','cecilia-world/review','assets/vendor/three.module.min.js','*-v2.webp','legacy redirect documents'],'entry_mode':'current application HTML; no intermediate redirect','resource_versioning':'content-derived build query + Vite module hashes'}
 (OUT/'release.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(f'Assembled revision {revision}: {len(report["entrypoints"])} current entries; {len(files)} root runtime files; no legacy interface or review assets.')
