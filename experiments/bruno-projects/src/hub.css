@@ -303,3 +303,10 @@ body[data-place="contact"] #feedback { bottom: 215px; max-width: calc(100vw - 32
 
 /* Never expose the uninitialised canvas while assets and the final camera are being prepared. */
 body:not([data-ready="true"]) #world{visibility:hidden}
+
+#lab-navigation{position:fixed;inset:0;z-index:4;pointer-events:none}
+#lab-navigation button{position:absolute;transform:translate(-50%,-50%);padding:0;border:0;border-radius:7px;background:transparent;pointer-events:auto;cursor:pointer;touch-action:manipulation}
+#lab-navigation button:hover{background:#ffead020;box-shadow:0 0 15px #ffb65770}
+#lab-navigation button:focus-visible{outline:2px solid #ffead0;outline-offset:3px;background:#ffead022}
+body:has(#reader[open]) #lab-navigation{visibility:hidden}
+.screen-reader-only{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden;white-space:nowrap}

@@ -204,22 +204,9 @@ function go(next, historyMode = "push") {
   $("back-home").hidden = place === "home";
   $("feedback").textContent = "";
   $("place-actions").replaceChildren();
-  $("place-actions").hidden = place === "home" || place === "resume";
-  if (place === "other") {
-    action("←", () => selectOther(otherIndex - 1)).setAttribute(
-      "aria-label",
-      "上一个项目",
-    );
-    const count = document.createElement("span");
-    count.id = "other-position";
-    $("place-actions").append(count);
-    action("点击模型阅读", openCurrent);
-    action("→", () => selectOther(otherIndex + 1)).setAttribute(
-      "aria-label",
-      "下一个项目",
-    );
-    selectOther(otherIndex);
-  }
+  $("place-actions").hidden = place === "home" || place === "resume" || place === "other";
+  $("lab-navigation").hidden = place !== "other";
+  if (place === "other") selectOther(otherIndex);
   if (place === "contact") {
     const entries = [
       [
@@ -244,7 +231,7 @@ function go(next, historyMode = "push") {
     world.camera.updateProjectionMatrix();
     const station = stations.get(place);
     targetLook.copy(station ? station.focus : landingView.focus);
-    targetDistance = station ? station.distance : landingView.distance;
+    targetDistance = station ? (innerWidth < 700 ? station.mobileDistance || station.distance : station.distance) : landingView.distance;
     targetYaw = station ? station.yaw : landingView.yaw;
     targetPitch = station ? station.pitch : landingView.pitch;
     if (reduced) {
@@ -347,13 +334,40 @@ try {
   scene.add(project);
   const lab = original.getObjectByName("lab").clone(true);
   for (const child of [...lab.children])
-    if (/ref(?:Title|Url|Mini|Arrow|Interactive|Intersect)/.test(child.name))
+    if (/ref(?:Title|Url|Mini|Interactive|Intersect)/.test(child.name))
       child.removeFromParent();
   lab.traverse((m) => {
     if (/refBlackboardLabels/.test(m.name)) m.visible = false;
   });
   clean(lab);
   scene.add(lab);
+  const labArrows = [
+    [lab.getObjectByName("refArrowPrevious"), $("lab-previous"), -1],
+    [lab.getObjectByName("refArrowNext"), $("lab-next"), 1],
+  ];
+  for (const [arrow, button, step] of labArrows) {
+    if (!arrow) continue;
+    arrow.material = new T.MeshBasicNodeMaterial({ color: 0xffead0, side: T.DoubleSide, toneMapped: false });
+    arrow.material.userData.prevent = true;
+    arrow.translateZ(.012);
+    arrow.userData.step = step;
+    button.onclick = () => selectOther(otherIndex + step);
+  }
+  function updateLabControls() {
+    if (place !== "other") return;
+    for (const [arrow, button] of labArrows) {
+      if (!arrow) continue;
+      const anchor = new T.Box3().setFromObject(arrow).getCenter(new T.Vector3()).project(camera);
+      const point = arrow.getWorldPosition(new T.Vector3());
+      const distance = camera.position.distanceTo(point);
+      const pixels = innerHeight / (2 * Math.tan(T.MathUtils.degToRad(camera.fov / 2)) * distance);
+      const size = T.MathUtils.clamp(.64 * pixels, 44, 100);
+      button.style.left = `${(anchor.x + 1) * innerWidth / 2}px`;
+      button.style.top = `${(1 - anchor.y) * innerHeight / 2}px`;
+      button.style.width = button.style.height = `${size}px`;
+      button.hidden = anchor.z < -1 || anchor.z > 1;
+    }
+  }
   // Native landing props enrich the home without the original author's name.
   const landing = original.getObjectByName("landing").clone(true);
   for (const child of [...landing.children])
@@ -441,7 +455,7 @@ try {
   station("other", lab, "其他项目", 16);
   station("contact", social, "联系方式", 12);
   Object.assign(stations.get("resume"),referencePose("resume"));
-  Object.assign(stations.get("other"),{distance:16,yaw:.55,pitch:1.18});
+  Object.assign(stations.get("other"),referencePose("other"),{mobileDistance:16});
   Object.assign(stations.get("contact"),referencePose("contact"));
   stations.get("contact").focus.z-=15.5;
   const landingBounds = new T.Box3().setFromObject(identity);
@@ -531,6 +545,9 @@ try {
     pointer.set((x / innerWidth) * 2 - 1, (-y / innerHeight) * 2 + 1);
     ray.setFromCamera(pointer, camera);
     if(place==="contact" && (ray.intersectObject(social.getObjectByName("mailbox-label"),false).length || ray.intersectObject(social.getObjectByName("mailbox-click-ring"),false).length))return "contact-mail";
+    if (place === "other") {
+      for (const [arrow,,step] of labArrows) if (arrow && ray.intersectObject(arrow, false).length) return step < 0 ? "lab-previous" : "lab-next";
+    }
     if(place === "resume" && resumePreview && ray.intersectObject(resumePreview,true).length)return "resume-preview";
     if (place === "home") {
       const hits = devices.roots.flatMap(root => ray.intersectObject(root, true).map(hit => ({ ...hit, root })));
@@ -608,6 +625,8 @@ try {
       clickSound.play();
       if (pressed === "map") {showMapHint(false);navigationMap.open();}
       else if(pressed === "contact-mail")location.href=social.userData.mailto;
+      else if(pressed === "lab-previous")selectOther(otherIndex-1);
+      else if(pressed === "lab-next")selectOther(otherIndex+1);
       else if(pressed === "resume-preview")openCurrent();
       else if (pressed.isObject3D) devices.hit(pressed);
       else if (place === pressed) openCurrent();
@@ -640,6 +659,7 @@ try {
     game.viewport.width = innerWidth;
     game.viewport.height = innerHeight;
     landingView = fitLanding();
+    if (place === "other" && targetLook) targetDistance = innerWidth < 700 ? stations.get("other").mobileDistance : stations.get("other").distance;
     if (place === "home" && targetLook) {
       targetLook.copy(landingView.focus);
       targetDistance = landingView.distance;
@@ -691,6 +711,7 @@ try {
         );
       camera.lookAt(currentLook);
       camera.updateMatrixWorld();
+      updateLabControls();
       if(mapHovered&&place==="home"){
         const anchor=new T.Box3().setFromObject(kioskFace).getCenter(new T.Vector3()).project(camera);
         mapHint.style.left=`${T.MathUtils.clamp((anchor.x+1)*innerWidth/2-35,90,innerWidth-100)}px`;

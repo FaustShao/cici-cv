@@ -8,7 +8,7 @@ export async function prepareLabCovers(projects, contentRoot) {
         const cover = new Image(); cover.decoding = 'async'; cover.src = new URL(project.cover, contentRoot).href;
         await cover.decode();
         ctx.fillStyle = '#f3f4f2'; ctx.fillRect(0,0,1400,900);
-        const scale = Math.min(1400 / cover.naturalWidth,900 / cover.naturalHeight);
+        const scale = Math.max(1400 / cover.naturalWidth,900 / cover.naturalHeight);
         const width = cover.naturalWidth*scale, height = cover.naturalHeight*scale;
         ctx.drawImage(cover,(1400-width)/2,(900-height)/2,width,height);
         card.dataset.source = project.cover;
