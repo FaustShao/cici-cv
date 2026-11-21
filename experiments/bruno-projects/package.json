@@ -7,9 +7,10 @@
     "build": "vite build"
   },
   "dependencies": {
-    "three": "0.183.2",
     "gsap": "3.12.5",
-    "seedrandom": "3.0.5"
+    "leafthrough": "0.1.8",
+    "seedrandom": "3.0.5",
+    "three": "0.183.2"
   },
   "devDependencies": {
     "vite": "7.2.4"

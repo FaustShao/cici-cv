@@ -5,7 +5,7 @@ export default defineConfig({
     target: "esnext",
     outDir: "../../cecilia-world",
     emptyOutDir: true,
-    rollupOptions: { input: { portfolio: "index.html", hub: "hub.html" } },
+    rollupOptions: { input: { portfolio: "index.html", hub: "hub.html", haha: "haha-world.html" } },
   },
   server: { host: "0.0.0.0", port: 5174, fs: { allow: ["../.."] } },
 });

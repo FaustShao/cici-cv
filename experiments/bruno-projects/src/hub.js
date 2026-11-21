@@ -170,7 +170,7 @@ reader.addEventListener("cancel", (e) => {
 });
 function openCurrent() {
   if (place === "resume") openReader("个人简历", "resume.html?document=1&v=cv-slices-2&photo=1");
-  if (place === "other") openReader(notes[otherIndex].name);
+  if (place === "other") openReader(notes[otherIndex].name, notes[otherIndex].url || undefined);
   if (place === "contact") location.href = "mailto:wangyuxinqd2025@163.com";
 }
 function selectOther(index) {
@@ -499,7 +499,9 @@ try {
       colorNode: texture(cardTexture).rgb,
       hasWater: false,
     });
+  let labCoverVersion = 0;
   world.updateLab = (p) => {
+    const version = ++labCoverVersion;
     ctx.fillStyle = "#f9e8ce";
     ctx.fillRect(0, 0, 1400, 900);
     ctx.fillStyle = "#a65765";
@@ -516,6 +518,18 @@ try {
     ctx.fillText(p.tags.join(" · "), 100, 560);
     ctx.fillText("点击阅读项目记录 ↗", 100, 710);
     cardTexture.needsUpdate = true;
+    if (p.cover) {
+      const cover = new Image();
+      cover.onload = () => {
+        if (version !== labCoverVersion) return;
+        ctx.fillStyle = "#f3f4f2"; ctx.fillRect(0, 0, 1400, 900);
+        const scale = Math.min(1400 / cover.naturalWidth, 900 / cover.naturalHeight);
+        const width = cover.naturalWidth * scale, height = cover.naturalHeight * scale;
+        ctx.drawImage(cover, (1400 - width) / 2, (900 - height) / 2, width, height);
+        cardTexture.needsUpdate = true;
+      };
+      cover.src = new URL(p.cover, contentRoot).href;
+    }
   };
   world.updateLab(notes[0]);
   currentLook = pt(0, 2, 2);

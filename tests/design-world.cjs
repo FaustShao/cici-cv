@@ -169,12 +169,12 @@ const review = path.resolve(
     await page.evaluate(() => openWorldPlace("home"));
     await clickMap("other");
     await shot("other-station");
-    assert.equal(await page.locator("#other-position").innerText(), "1 / 2");
+    assert.equal(await page.locator("#other-position").innerText(), "1 / 3");
     await clickStation("other");
     assert.match(await page.locator(".details-sheet h3").innerText(), /TASA/);
     await page.locator("#close-reader").click();
     await page.getByRole("button", { name: "下一个项目" }).click();
-    assert.equal(await page.locator("#other-position").innerText(), "2 / 2");
+    assert.equal(await page.locator("#other-position").innerText(), "2 / 3");
     await clickStation("other");
     assert.match(
       await page.locator(".details-sheet h3").innerText(),

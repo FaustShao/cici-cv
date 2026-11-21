@@ -128,6 +128,15 @@ window.RESUME = {
         "Game Jam"
       ],
       "url": ""
+    },
+    {
+      "name": "哈哈世界 · VI 视觉识别系统",
+      "category": "品牌视觉设计 · 团队项目",
+      "description": "哈哈世界品牌视觉识别系统手册，包含品牌理念、标志与色彩规范、IP 形象及品牌应用。",
+      "details": [],
+      "tags": ["品牌 VI", "视觉识别", "应用设计"],
+      "url": "cecilia-world/haha-world.html",
+      "cover": "assets/haha-world/pages/01.webp"
     }
   ],
   "skills": [

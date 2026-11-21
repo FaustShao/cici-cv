@@ -14,6 +14,16 @@
 - 入口字形微调：中文进位进一步收紧至 49，“欣”的下行笔画改成直斜线；`/ CECILIA` 再放大 5%、纵向拉伸 13%，字母间距从 1 格收紧为 0.55 格。首页首帧成功显示后，地图牌和像素小手同步自动亮一次，随后恢复原状，原开关点击亮灯保留。`tests/landing-controls.cjs` 同时验证无点击开场亮灯与后续手动交互；真实截图为 `public/review/entry-map-intro.webp`。
 - SafePaw Family 宠爱守护为作品集第 4 项，入口 `safepaw.html`；五张 3488×1744 画板按 Figma 2.1—2.5 原坐标连续排版，桌面适应宽度、按钮放大，手机默认横向阅读并支持适应宽度。292 张上传 PNG 字节全部保留，补回原稿缺少的装饰圆点；`assets/safepaw-family/source-inventory.json` 记录原文件名、Figma 节点、几何和 SHA-256。图卡仅局部高亮，无新页面或点击放大弹窗；`tests/safepaw.cjs` 验证逐图几何、完整性、Figma 截图与阅读交互，`tests/safepaw-world.cjs` 验证 04/04 展架入口和返回。首页此次只加粗“欣”最后一捺，并单独收紧“王—钰”间距。
 
+## 哈哈世界 · 其他项目
+
+`/cecilia-world/haha-world.html` 为「其他项目」第 3 项，保留 TASA-ICoD 与 Cardinal 两项；实验室预览暂用 PDF 第 1 页。`resume.js` 的该项目 `cover` 字段可单独替换预览，不影响手册原封面。
+
+三份 PDF 按 part-1（9 页）、part-2（10 页）、part-3（11 页）连接。`assets/haha-world/manifest.json` 逐页记录来源、顺序、原始文本与横向 A4 比例；30 页完整渲染为 2400px WebP，不裁切或重排。仅增加空白内封底和使用原 Logo、品牌橙色的封底，以组成完整装订。`scripts/prepare-haha-world.py` 可从三份原 PDF 离线重建素材。
+
+阅读器以 Paper Mono 为视觉参考，使用其官方 OFL 字体；MIT LeafThrough 实现可弯曲的 Three.js 纸页，再加胶装书脊、分侧纸叠、粒纹、墨色光泽、投影、指针响应底纹与可拖动字母纸片。进入先展示合上的横版杂志，翻开后摆正并居中。点击、拖动和键盘可翻页，目录直接跳转，双击或「放大」查看单页原稿，点击空白关闭；支持全屏及 WebGL 失败时的平面阅读。素材只在本地与本站加载，不使用外部 PDF 服务；内部不添加加载遮罩。
+
+验证：`tests/haha-world.cjs` 检查原页顺序、尺寸、纸面内容、翻阅、目录、封底、放大和手机边界；`tests/haha-motion.cjs` 检查动态背景和真实鼠标手势；`tests/haha-integration.cjs` 检查原项目保留、第三项入口、嵌入与返回。
+
 ## 历史小岛实现（已不作为入口）
 
 以下保留旧版说明以便追溯，当前入口以上述统一场景为准；旧 `island-*` 文件不再被首页加载。

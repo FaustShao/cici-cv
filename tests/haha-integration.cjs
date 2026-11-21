@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict'),{chromium}=require('playwright');
+(async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});try{
+ const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'}),errors=[],bad=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400&&!r.url().endsWith('favicon.ico'))bad.push(r.url())});
+ await page.goto(new URL('cecilia-world/hub.html?webgl=1#other',process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/').href);
+ await page.waitForFunction(()=>window.designWorld&&document.body.dataset.ready,null,{timeout:90000});
+ assert.equal(await page.locator('#other-position').innerText(),'1 / 3');
+ assert.deepEqual(await page.evaluate(()=>RESUME.projects.filter(p=>p.collection!=='portfolio').map(p=>p.name)),['TASA-ICoD 国际设计工作坊','Cardinal 独立游戏设计项目','哈哈世界 · VI 视觉识别系统']);
+ await page.evaluate(()=>{designWorld.selectOther(1);designWorld.openCurrent()});
+ assert.match(await page.locator('.details-sheet h3').innerText(),/Cardinal/);
+ await page.locator('#close-reader').click();
+ await page.evaluate(()=>{designWorld.selectOther(2);designWorld.openCurrent();designWorld.world.renderer.setAnimationLoop(null)});
+ const frame=await (await page.locator('#frames iframe:visible').elementHandle()).contentFrame();
+ await frame.waitForFunction(()=>window.HAHA_READER?.state.ready,null,{timeout:90000});
+ assert.match(await page.locator('#reader-direct').getAttribute('href'),/cecilia-world\/haha-world.html$/);
+ assert.equal(await frame.evaluate(()=>HAHA_READER.manifest.pages.length),30);
+ assert.match(await page.evaluate(()=>RESUME.projects.find(p=>p.name.startsWith('哈哈世界')).cover),/pages\/01.webp$/);
+ await frame.evaluate(()=>HAHA_READER.pause());
+ await page.screenshot({path:'/tmp/haha-world-embedded.png',timeout:45000});
+ await frame.locator('#back-other').click();
+ assert.ok(!await page.locator('#reader').evaluate(d=>d.open));
+ assert.equal(await page.evaluate(()=>WORLD_STATE.place),'other');assert.equal(await page.evaluate(()=>WORLD_STATE.otherIndex),2);
+ assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
+ console.log('PASS: existing two projects retained; new third project uses PDF cover; scene model opens magazine iframe; return closes reader to the same selected project.');
+}finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});
