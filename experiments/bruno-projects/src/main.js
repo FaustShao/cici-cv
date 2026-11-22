@@ -1,3 +1,4 @@
+import { createWorldMap } from "./world-map.js";
 import { worldBaseURL, versionedURL } from "./world-base.js";
 import "../../../site-loader.js";
 import { getClickSound } from "./click-sound.js";
@@ -46,7 +47,16 @@ const assetURL = path => versionedURL(path, worldBaseURL());
 const contentRoot = import.meta.env.DEV
   ? new URL("http://127.0.0.1:8000/")
   : new URL("../", worldBaseURL());
-$("back-site").href = versionedURL("hub.html", worldBaseURL());
+const homeURL = versionedURL("hub.html", worldBaseURL());
+$("back-site").href = homeURL;
+$("reset-view").onclick = () => { location.href = homeURL; };
+document.body.dataset.place = "portfolio";
+const navigationMap = createWorldMap(destination => {
+  if (destination === "portfolio") return;
+  const url = new URL(homeURL);
+  if (destination !== "home") url.hash = destination;
+  location.href = url.href;
+});
 let updateProjectLabels = () => {};
 let selected = 0,
   reading = false,
@@ -144,7 +154,7 @@ function syncSelection() {
 $("previous").onclick = () => select((area?.navigation.index ?? selected) - 1);
 $("next").onclick = () => select((area?.navigation.index ?? selected) + 1);
 window.addEventListener("keydown", (e) => {
-  if (reading) return;
+  if (reading || navigationMap.dialog.open) return;
   if (e.key === "ArrowLeft") {
     e.preventDefault();
     select((area?.navigation.index ?? selected) - 1);
@@ -626,11 +636,6 @@ try {
     screenCenter = new T.Box3()
       .setFromObject(screen)
       .getCenter(new T.Vector3());
-  $("reset-view").onclick = () => {
-    targetYaw = 0;
-    targetPitch = 0;
-    targetZoom = 1;
-  };
   function resize() {
     camera.aspect = innerWidth / innerHeight;
     camera.fov = innerWidth < 700 ? 56 : 25;
@@ -784,7 +789,7 @@ try {
     ready = false;
   renderer.setAnimationLoop((time) => {
     try {
-      if (reading || document.hidden || time - lastFrame < 33) return;
+      if (reading || navigationMap.dialog.open || document.hidden || time - lastFrame < 33) return;
       lastFrame = time;
       clock.update();
       const delta = Math.min(clock.getDelta(), 0.05);

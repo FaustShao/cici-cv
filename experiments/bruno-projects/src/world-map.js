@@ -1,3 +1,4 @@
+import "./world-map.css";
 // The illustrated map is navigation, not another page or a second 3D world.
 export function createWorldMap(go) {
   const dialog = document.getElementById("world-map"), trigger = document.getElementById("map-trigger");
