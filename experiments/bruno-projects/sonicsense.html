@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
   <meta name="theme-color" content="#e5effb">
   <meta name="description" content="Sound Sensor in 2036：王钰欣的声学传感与服装材质验证概念探索，包含研究、触摸实验、原型迭代与个人反思。">
   <script>if(parent!==window)document.documentElement.dataset.embedded="true";</script>
@@ -15,23 +16,19 @@
     <button id="about-project" type="button">项目说明</button>
   </header>
   <main id="film-main">
-    <div class="project-line"><p>以触摸，验证真实。<span>声学传感 × 服装材质验证</span></p><div class="project-line-tools"><span class="edition">PERSONAL DOCUMENT / APR. 2026</span><button id="about-project-inline" type="button">项目说明</button></div></div>
+    <button id="about-project-inline" type="button">项目说明</button>
     <section id="film-stage" aria-label="连续胶片：滚动或拖动浏览，点击画面阅读原稿" tabindex="0">
-      <div class="stage-grid" aria-hidden="true"></div>
       <div id="film-track"></div>
-      <div class="edge-shade left" aria-hidden="true"></div><div class="edge-shade right" aria-hidden="true"></div>
       <p id="film-error" role="status" hidden>图片暂时未能载入，请重新打开项目。</p>
     </section>
-    <div class="frame-caption"><div><span id="frame-number" class="mono"></span><h1 id="frame-title">Sound Sensor in 2036</h1></div><p id="frame-description">2036 年声学传感概念探索 · 个人过程档案</p><span class="gesture">拖动 / 滚动浏览 · 点击阅读</span></div>
+    <div class="frame-caption"><div><span id="frame-number" class="mono"></span><h1 id="frame-title">Sound Sensor in 2036</h1></div><p id="frame-description" class="sr-only">2036 年声学传感概念探索 · 个人过程档案</p></div>
   </main>
   <footer class="film-footer">
-    <div class="footer-note"><span>YUXIN WANG</span><span>未来概念探索 · 团队项目</span></div>
     <nav id="reel-directory" aria-label="胶卷章节目录">
       <button id="reel-start" class="reel-control" type="button" aria-label="回到胶片起点"><svg class="spinning-reel" aria-hidden="true"><use href="#spool"/></svg></button>
       <div class="chapter-film"><div id="chapter-progress" aria-hidden="true"></div><div id="chapters"></div><input id="film-scrub" type="range" min="1" max="31" step=".01" value="1" aria-label="拖动胶片进度" aria-valuetext="第 1 页，共 31 页"></div>
       <button id="reel-overview" class="reel-control" type="button" aria-label="打开全部画面总览"><svg class="spinning-reel" aria-hidden="true"><use href="#spool"/></svg><span>总览</span></button>
     </nav>
-    <span class="footer-count mono">31 FRAMES / 6 CHAPTERS</span>
   </footer>
   <dialog id="page-viewer" aria-label="高清原稿阅读">
     <header class="dialog-bar"><div><span id="viewer-number" class="mono"></span><span id="viewer-title"></span></div><div><button id="zoom-page" type="button">放大细节</button><button id="close-page" type="button" aria-label="关闭原稿">关闭 ×</button></div></header>
@@ -39,7 +36,7 @@
     <footer class="viewer-caption"><div><p id="viewer-description"></p><div id="page-media"></div></div><div><button id="viewer-previous" type="button" aria-label="上一页">‹</button><span id="viewer-position" class="mono"></span><button id="viewer-next" type="button" aria-label="下一页">›</button></div></footer>
   </dialog>
   <dialog id="overview" aria-labelledby="overview-title"><header class="dialog-bar"><h2 id="overview-title">胶片总览</h2><button id="close-overview" type="button">关闭 ×</button></header><div id="overview-pages"></div></dialog>
-  <dialog id="project-info" aria-labelledby="info-title"><button id="close-info" class="info-close" type="button">关闭 ×</button><p class="mono info-kicker">DESIGN INNOVATION STUDIO 2 / GROUP 7</p><h2 id="info-title">Sound Sensor in 2036</h2><p>这份个人档案记录了一次声学传感概念探索：我们参考接触式声学研究，设想 2036 年人们通过指套触摸衣物、由腕部设备显示材料分析结果，核验“100% 羊毛”等商品声明。</p><p>研究中，我们比较了宠物、建筑、服装与盲盒等情境，讨论隐私、选择权和消费信任，再通过触摸实验、草图、原型和情境影片推进方案。</p><div class="role-note"><h3>我的参与</h3><p>人物绘制与定格动画视觉、拼贴影片的整套场景视觉、故事叙述，以及草图整理与原型探索。团队其他成员主要承担建模、逻辑框架、界面设计与剪辑。</p></div><p class="concept-note">2036 年世界观、指套系统和商家宣传单均属于概念推演与设计虚构。这里展示的是研究和设计过程，未将设想视为已经验证的产品能力。</p><p class="info-source">31 页原稿，按原文件顺序完整保留。原稿为英文，目录与阅读说明为中文。</p></dialog>
+  <dialog id="project-info" aria-labelledby="info-title"><button id="close-info" class="info-close" type="button">关闭 ×</button><h2 id="info-title">Sound Sensor in 2036</h2><p class="project-intro">当一件衣服标注“100% 羊毛”，消费者能否通过一次触摸，判断材料是否与标签一致？本项目以 2036 年的消费场景为背景，探索接触式声学传感如何成为日常材料验证工具，帮助人们在购买衣物时获得更直观的信息。</p><h3>研究问题与方向选择</h3><p>研究从 SonicSense 等接触式声学案例切入：物体受到触碰、敲击或抓握时产生的振动，可以提供与材料及内部状态有关的信息。项目结合弱信号研究、技术成熟度分析和十年趋势推演，对比了建筑安全、宠物健康、服装材料与盲盒等应用情境。服装材料核验具有明确的消费需求，也便于围绕具体物品讨论技术边界与使用流程，因此被选为后续设计重点。</p><h3>指套与腕部设备的配合</h3><p>方案由硅胶指套和腕部显示设备组成。指套负责在接触衣物时采集振动，腕部设备呈现信号捕捉、分析进度和材料识别结果，让使用者能够与商品标签进行对照。通过颜料触摸实验观察手指的接触分布，再比较戒指、半包裹手套和指套等形态，逐步调整佩戴位置、尺寸与操作方式；最终方案采用两枚指套，并结合腕部设备考虑收纳与充电。</p><h3>交互流程与成果</h3><p>界面围绕“触摸采集—信号分析—结果反馈”组织，将不可见的声学信息转化为波形与材料结果。项目通过手绘草图、形态原型、产品渲染和界面流程深化方案，并用定格动画、拼贴情境影片及未来商家的宣传单，呈现从发现材料问题到现场验证的完整购物情境。</p><p>项目进一步讨论了材料信息透明之后，消费者、品牌与监管之间的信任关系，以及检测能力的边界、验证结果的理解方式和技术进入日常消费后的影响。</p></dialog>
   <div id="announcements" class="sr-only" role="status" aria-live="polite"></div>
   <noscript><p>请启用 JavaScript 浏览交互胶片，或返回其他项目。</p></noscript>
   <script type="module" src="./src/sonicsense.js"></script>

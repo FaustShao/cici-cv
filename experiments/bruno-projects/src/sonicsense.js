@@ -1,5 +1,6 @@
 import { versionedURL } from './world-base.js';
 import './sonicsense.css';
+import { SpatialFilm } from './sonicsense-ribbon.js';
 const $=id=>document.getElementById(id);
 const root=new URL('../assets/sonicsense/',location.href);
 const asset=path=>versionedURL(path,root);
@@ -16,7 +17,7 @@ try {
 }
 const {pages,chapters}=manifest,stage=$('film-stage'),track=$('film-track');
 const state={index:0,offset:0,target:0,zoom:false};
-let width=0,frameWidth=0,frame=0,lastTime=0,drag=null,suppressClickUntil=0,viewerToken=0,disposed=false;
+let ribbon, width=0,frameWidth=0,frame=0,lastTime=0,floatTime=0,velocity=0,drag=null,suppressClickUntil=0,viewerToken=0,disposed=false;
 const clamp=n=>Math.max(0,Math.min((pages.length-1)*frameWidth,n));
 const chapterFor=index=>chapters.find(c=>c.id===pages[index].chapter);
 const number=index=>String(index+1).padStart(2,'0');
@@ -25,8 +26,8 @@ const cards=pages.map((page,index)=>{
   const button=document.createElement('button');button.type='button';button.className='frame-art';button.setAttribute('aria-label',`阅读第 ${index+1} 页：${page.title}`);
   const image=new Image();image.alt=page.title;image.width=1500;image.height=Math.round(1500*page.height/page.width);image.draggable=false;image.decoding='async';
   button.append(image);button.addEventListener('click',()=>{if(performance.now()<suppressClickUntil)return;go(index);openViewer(index)});
-  const mark=document.createElement('span');mark.className='frame-mark';mark.textContent=`SONIC SENSE / 2036 / ${number(index)}`;
-  article.append(button,mark);track.append(article);return {article,button,image};
+  image.addEventListener('load',schedule);
+  article.append(button);track.append(article);return {article,button,image};
 });
 const chapterButtons=chapters.map(chapter=>{
   const button=document.createElement('button');button.type='button';button.dataset.chapter=chapter.id;button.append(document.createTextNode(chapter.title));
@@ -38,9 +39,6 @@ function loadNear(){
   cards.forEach((card,index)=>{
     if(Math.abs(index-approximate)<3&&!card.image.getAttribute('src'))card.image.src=asset(pages[index].preview);
     card.button.tabIndex=index===state.index?0:-1;
-    // Bend only the distant frame edges; the central original stays flat and readable.
-    const distance=Math.max(-2,Math.min(2,index-approximate));
-    card.article.style.transform=`perspective(1800px) rotateY(${-distance*2}deg)`;
   });
 }
 function updateCaption(){
@@ -53,7 +51,7 @@ function updateCaption(){
   document.querySelectorAll('#overview-pages button').forEach((b,index)=>b.setAttribute('aria-current',String(index===state.index)));
 }
 function paint(){
-  track.style.transform=`translate3d(${width/2-frameWidth/2-state.offset}px,-50%,0)`;
+
   const progress=state.offset/((pages.length-1)*frameWidth)||0;
   // A shared physical displacement drives both the strip and the reel, in either direction.
   $('reel-directory').style.setProperty('--reel-angle',`${state.offset/2.8}deg`);
@@ -62,14 +60,16 @@ function paint(){
   const next=Math.max(0,Math.min(pages.length-1,Math.round(state.offset/frameWidth)));
   if(next!==state.index){state.index=next;updateCaption();}
   loadNear();
+  ribbon?.update(state.offset/frameWidth,floatTime,velocity,reduced.matches);
 }
 function animate(time){
   frame=0;if(disposed)return;
   const dt=lastTime?Math.min(48,time-lastTime):16;lastTime=time;
   const distance=state.target-state.offset;
   state.offset=reduced.matches||Math.abs(distance)<.3?state.target:state.offset+distance*(1-Math.exp(-dt/85));
-  paint();
-  if(state.offset!==state.target)frame=requestAnimationFrame(animate);else lastTime=0;
+  velocity=distance/frameWidth;floatTime+=dt/1000;
+  if(!document.hidden&&!document.querySelector('dialog[open]'))paint();
+  if(state.offset!==state.target||(!reduced.matches&&!document.querySelector('dialog[open]')))frame=requestAnimationFrame(animate);else lastTime=0;
 }
 function schedule(){if(!frame&&!disposed)frame=requestAnimationFrame(animate);}
 function go(index,instant=false){
@@ -79,11 +79,19 @@ function go(index,instant=false){
 function layout(){
   const old=frameWidth?state.offset/frameWidth:0,target=frameWidth?state.target/frameWidth:0;
   const bounds=stage.getBoundingClientRect();width=bounds.width;
-  const imageWidth=Math.min(width*(width<700?.88:.78),Math.max(100,bounds.height-80)*842/595);
-  frameWidth=imageWidth+30;stage.style.setProperty('--frame-width',`${frameWidth}px`);
+  ribbon?.resize();
+  frameWidth=ribbon?.pixelsPerFrame||width*.8;
   state.offset=old*frameWidth;state.target=target*frameWidth;paint();
 }
+try{ribbon=new SpatialFilm(stage,pages,cards.map(c=>c.image));document.body.dataset.spatial='true';}
+catch(error){document.body.dataset.spatial='false';$('film-error').hidden=false;$('film-error').textContent='当前设备无法显示空间胶片，可点击总览查看全部画面。';}
 const resize=new ResizeObserver(layout);resize.observe(stage);
+stage.addEventListener('click',event=>{
+  if(!ribbon||performance.now()<suppressClickUntil||event.target.closest('.frame-art'))return;
+  const index=ribbon.pick(event.clientX,event.clientY);if(index!==null)openViewer(index);
+});
+stage.addEventListener('pointermove',event=>{if(ribbon){const r=stage.getBoundingClientRect();ribbon.pointer.x=(event.clientX-r.left)/r.width-.5;ribbon.pointer.y=(event.clientY-r.top)/r.height-.5;}});
+stage.addEventListener('pointerleave',()=>{if(ribbon)ribbon.pointer={x:0,y:0}});
 function wheel(event){
   if(document.querySelector('dialog[open]')||event.ctrlKey)return;
   const delta=(Math.abs(event.deltaX)>Math.abs(event.deltaY)?event.deltaX:event.deltaY)*(event.deltaMode===1?18:event.deltaMode===2?stage.clientWidth:1);
@@ -150,15 +158,18 @@ document.addEventListener('keydown',event=>{
   if($('overview').open||$('project-info').open)return;
   if(event.key==='ArrowLeft'||event.key==='ArrowRight'){
     event.preventDefault();const index=state.index+(event.key==='ArrowRight'?1:-1);$('page-viewer').open?showPage(index):go(index);
+  }else if(event.key==='Enter'&&event.target===stage&&!document.querySelector('dialog[open]')){event.preventDefault();openViewer();
   }else if(!document.querySelector('dialog[open]')&&(event.key==='Home'||event.key==='End')){event.preventDefault();go(event.key==='Home'?0:pages.length-1);}
 });
 $('back-other').onclick=event=>{
   try{if(parent!==window&&parent.WORLD_STATE?.place==='other'){event.preventDefault();parent.document.getElementById('close-reader').click()}}catch{}
 };
-function dispose(){disposed=true;cancelAnimationFrame(frame);resize.disconnect();++viewerToken;}
+function dispose(){disposed=true;cancelAnimationFrame(frame);frame=0;lastTime=0;resize.disconnect();ribbon?.dispose();ribbon=null;++viewerToken;}
 addEventListener('pagehide',dispose);
-addEventListener('pageshow',event=>{if(event.persisted){disposed=false;resize.observe(stage);for(const d of document.querySelectorAll('dialog[open]'))d.close();go(0,true);layout();}});
+addEventListener('pageshow',event=>{if(event.persisted){disposed=false;ribbon=new SpatialFilm(stage,pages,cards.map(c=>c.image));resize.observe(stage);for(const d of document.querySelectorAll('dialog[open]'))d.close();go(0,true);layout();schedule();}});
 layout();updateCaption();cards[0].image.src=asset(pages[0].preview);
 try{await Promise.all([...cards.slice(0,2).map(card=>card.image.decode()),document.fonts.ready])}catch{$('film-error').hidden=false;}
-document.body.dataset.ready='true';paint();
-window.SONIC_FILM={state,manifest,go,openViewer,closeViewer,openOverview,dispose};
+document.body.dataset.ready='true';paint();schedule();
+for(const d of document.querySelectorAll('dialog'))d.addEventListener('close',schedule);
+addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
+window.SONIC_FILM={state,manifest,go,openViewer,closeViewer,openOverview,dispose,get ribbon(){return ribbon}};

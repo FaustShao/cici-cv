@@ -313,8 +313,8 @@ body:has(#reader[open]) #lab-navigation{visibility:hidden}
 
 /* The film reader shares one title bar with the scene, without a duplicate inner header. */
 @font-face{font-family:SensorUI;src:url('/fonts/sonicsense-ui.woff2');font-weight:400;font-display:swap}
-#reader[data-project="sonicsense"] .reader-bar{display:grid;grid-template-columns:1fr auto 1fr;background:#e5effb;border-color:#b9cce6;color:#20314d}
-#reader[data-project="sonicsense"] #reader-title{font:400 16px/1.5 SensorUI,Arial,sans-serif;text-align:center;max-width:calc(100vw - 270px)}
-#reader[data-project="sonicsense"] #close-reader{justify-self:start}
-#reader[data-project="sonicsense"] #reader-direct{justify-self:end}
-@media(max-width:700px){#reader[data-project="sonicsense"] #reader-title{font-size:12px;max-width:calc(100vw - 210px)}}
+#reader[data-project="sonicsense"] .reader-bar{position:absolute;top:22px;left:28px;right:28px;z-index:3;height:auto;display:flex;padding:0;background:transparent;border:0;pointer-events:none;color:#20314d}
+#reader[data-project="sonicsense"] #reader-title,#reader[data-project="sonicsense"] #reader-direct{display:none}
+#reader[data-project="sonicsense"] #close-reader{pointer-events:auto;font:400 14px/1.6 SensorUI,Arial,sans-serif;padding:7px 0}
+#reader[data-project="sonicsense"] #frames{height:100%}
+@media(max-width:700px){#reader[data-project="sonicsense"] .reader-bar{top:16px;left:18px;right:18px}#reader[data-project="sonicsense"] #close-reader{font-size:12px}}
