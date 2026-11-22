@@ -9,9 +9,14 @@ export async function prepareLabCovers(projects, contentRoot) {
         const cover = new Image(); cover.decoding = 'async'; cover.src = versionedURL(project.cover, contentRoot);
         await cover.decode();
         ctx.fillStyle = '#f3f4f2'; ctx.fillRect(0,0,1400,900);
-        const scale = Math.max(1400 / cover.naturalWidth,900 / cover.naturalHeight);
-        const width = cover.naturalWidth*scale, height = cover.naturalHeight*scale;
-        ctx.drawImage(cover,(1400-width)/2,(900-height)/2,width,height);
+        // Supplied page artwork can contain a photographed/printed border.
+        // Crop that border only in the display preview, then cover without stretching.
+        const [x,y,w,h] = project.coverCrop || [0,0,1,1];
+        const sx = x*cover.naturalWidth, sy = y*cover.naturalHeight;
+        const sw = w*cover.naturalWidth, sh = h*cover.naturalHeight;
+        const scale = Math.max(1400/sw,900/sh);
+        const width = sw*scale, height = sh*scale;
+        ctx.drawImage(cover,sx,sy,sw,sh,(1400-width)/2,(900-height)/2,width,height);
         card.dataset.source = project.cover;
         return [project,card];
       } catch (error) {

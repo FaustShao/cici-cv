@@ -158,7 +158,8 @@ window.RESUME = {
         "可穿戴概念"
       ],
       "url": "cecilia-world/sonicsense.html",
-      "cover": "assets/sonicsense/01-preview.webp"
+      "cover": "assets/sonicsense/01-preview.webp",
+      "coverCrop": [0.04, 0.08, 0.89, 0.84]
     }
   ],
   "skills": [
