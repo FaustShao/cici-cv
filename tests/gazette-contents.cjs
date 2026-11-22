@@ -43,7 +43,7 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8765/';
  await m.goto(new URL('gazette.html',root).href);await m.locator('#contents-toggle').tap();assert.equal(await m.locator('#contents-toggle').getAttribute('aria-expanded'),'true');
  await m.locator('.contents-chapter[data-page="20"]').tap();let mobilePage=await m.evaluate(()=>GAZETTE_BOOK.getPage());assert.equal(mobilePage,20);
  await m.waitForFunction(()=>{const im=document.querySelector('.paper[data-pdf-page=\"20\"] img');return im&&im.complete&&im.naturalWidth>0});await m.screenshot({path:'/workspace/checked-gazette/paper-contents-mobile.png'});
- await m.locator('#contents-toggle').tap();await m.locator('#research-tab-2').tap();assert.equal(await m.locator('#research-tab-2').getAttribute('aria-expanded'),'true');await m.locator('.research-open:visible').tap();assert(!await m.locator('#research-detail').isHidden());
+ await m.locator('#contents-toggle').tap();await m.locator('#research-tab-2').tap();assert.equal(await m.locator('#research-workspace').getAttribute('data-detail'),'2');assert(!await m.locator('#research-detail').isHidden());
  assert.equal(await m.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
  assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);await context.close();console.log('PASS: four bilingual chapter labels, 31 individual hover ticks, thumb previews until release, direct chapter/keyboard jumps, separate paper notes, fixed book position, mobile tap and no JS/network errors.');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});

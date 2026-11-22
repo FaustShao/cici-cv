@@ -60,13 +60,11 @@
   function hidePreview(){clearTimeout(timer);active=null;pinned=false;delete workspace.dataset.side;tabs.forEach(t=>t.setAttribute('aria-expanded','false'));previews.forEach(p=>p.hidden=true);}
   rails.forEach((rail,side)=>{
     for(let i=side*3;i<side*3+3;i++){
-      const tab=el('button','research-tab');tab.type='button';tab.dataset.number=String(i+1).padStart(2,'0');tab.style.setProperty('--note-index',i%3);tab.id='research-tab-'+(i+1);tab.setAttribute('aria-controls','research-preview-'+side);tab.setAttribute('aria-expanded','false');tab.append(el('span','tab-label',labels[i]));
+      const tab=el('button','research-tab');tab.type='button';tab.dataset.number=String(i+1).padStart(2,'0');tab.style.setProperty('--note-index',i%3);tab.id='research-tab-'+(i+1);tab.setAttribute('aria-controls','research-preview-'+side+' research-detail');tab.setAttribute('aria-haspopup','dialog');tab.setAttribute('aria-expanded','false');tab.append(el('span','tab-label',labels[i]));
       const badge=el('span','research-badge');badge.setAttribute('aria-hidden','true');tab.dataset.pin=pinAssets[i].split('.')[0];const pin=new Image();pin.src=window.CeciliaAssetURL('assets/gazette-desk/pins/'+pinAssets[i]);pin.alt='';pin.draggable=false;pin.className='research-pin';badge.append(pin);tab.prepend(badge);
       tab.addEventListener('pointerenter',()=>{if(hover.matches&&(!pinned||active===i))showPreview(i,pinned);});
       tab.addEventListener('focus',()=>{if(tab.matches(':focus-visible'))showPreview(i);});
-      tab.addEventListener('click',()=>{
-        showPreview(i,true);
-      });
+      tab.addEventListener('click',()=>openDetail(i,tab));
       rail.append(tab);tabs.push(tab);
     }
     const preview=el('div','research-preview');preview.id='research-preview-'+side;preview.hidden=true;workspace.append(preview);previews.push(preview);
