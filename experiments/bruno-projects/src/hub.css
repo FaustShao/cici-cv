@@ -231,3 +231,8 @@ body:has(#reader[open]) #lab-navigation{visibility:hidden}
 @media(max-width:700px){#reader[data-project="sonicsense"] .reader-bar{top:16px;left:18px;right:18px}#reader[data-project="sonicsense"] #close-reader{font-size:12px}}
 
 #reader[data-project="sonicsense"][data-image-open="true"] .reader-bar{visibility:hidden;pointer-events:none}
+
+/* Portfolio keeps its approved reader controls and typography inside the same world. */
+#controls[hidden] { display:none; }
+body[data-place="portfolio"] { font-family:Nunito,Xiaolai,"Preview Chinese",cursive; }
+body[data-place="portfolio"] footer > span:last-child { display:none; }

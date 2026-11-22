@@ -25,7 +25,7 @@
       aria-label="Cecilia 的设计世界，拖动观察，点击模型进入分类"
     ></canvas>
     <nav class="keyboard-nav" aria-label="分类导航">
-      <a href="#resume">01 个人简历</a><a href="./index.html">02 作品集</a
+      <a href="#resume">01 个人简历</a><a href="#portfolio">02 作品集</a
       ><a href="#other">03 其他项目</a><a href="#contact">04 联系方式</a>
     </nav>
     <header>
@@ -39,6 +39,12 @@
       <span id="scene-hint">拖动观察 · 滚轮缩放 · 点击装置进入</span
       ><span>CECILIA</span>
     </footer>
+    <div id="controls" hidden>
+      <button id="previous" aria-label="上一件作品">←</button>
+      <div><strong id="selection">01 / 04</strong><span id="project-name">Tideline Seaweed Tea</span><small>点击预览，完整阅读</small></div>
+      <button id="next" aria-label="下一件作品">→</button>
+    </div>
+    <button id="open-work" class="keyboard-open" hidden>打开当前作品 ↗</button>
     <section id="place-actions" aria-label="当前分类操作" hidden></section>
     <nav id="lab-navigation" aria-label="其他项目切换" hidden>
       <button id="lab-previous" type="button" aria-label="上一个项目"></button>
@@ -62,7 +68,7 @@
       <h2>暂时无法显示 3D 场景</h2>
       <p id="error-message"></p>
       <a href="../resume.html?document=1">个人简历 ↗</a
-      ><a href="./index.html">作品集 ↗</a
+      ><a href="../tideline.html">Tideline ↗</a><a href="../safepaw.html">SafePaw Family ↗</a><a href="../dream-sentinel.html">DREAM SENTINEL ↗</a><a href="../gazette.html">Future Gazette ↗</a
       ><a href="../other-projects.html">其他项目 ↗</a
       ><a href="mailto:wangyuxinqd2025@163.com">发邮件 ↗</a>
     </section>

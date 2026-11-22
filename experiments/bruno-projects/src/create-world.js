@@ -172,6 +172,11 @@ export async function createWorld(canvas, progress) {
       done();
     }),
   ]);
+  // Preserve immutable source transforms before placement and material adaptation.
+  // Both exhibit views share downloads, geometry, renderer and shader infrastructure.
+  const originalResources = Object.fromEntries(Object.entries(game.resources)
+    .filter(([,resource]) => resource.scene).map(([key,resource]) => [key,{scene:resource.scene.clone(true)}]));
+  const originalTerrainImage = game.resources.terrainTexture.image;
   // CPU copy of the same terrain mask sampled by the floor shader. Blue is
   // water/depth, red is the paved route, green is grass. Placement checks use
   // the entire fixture footprint, not just a guessed center height.
@@ -269,11 +274,12 @@ export async function createWorld(canvas, progress) {
   game.lighting.lightBounceMultiplier.value = 0.88;
   game.fog = new Fog();
   game.materials = new Materials();
+  const sharedSceneNodes = new Set(scene.children);
   Floor.prototype.setPhysical = noop;
   Floor.prototype.setBedRock = noop;
   Floor.prototype.update = function () {
-    this.mesh.position.x = Math.round(center.x / this.cellSize) * this.cellSize;
-    this.mesh.position.z = Math.round(center.z / this.cellSize) * this.cellSize;
+    this.mesh.position.x = Math.round(this.game.view.optimalArea.position.x / this.cellSize) * this.cellSize;
+    this.mesh.position.z = Math.round(this.game.view.optimalArea.position.z / this.cellSize) * this.cellSize;
   };
   Trees.prototype.setPhysical = noop;
   // Extend ground beyond the camera so this stays an open landscape, not a
@@ -469,6 +475,9 @@ export async function createWorld(canvas, progress) {
     chinese: new Font(chinese),
     textures,
     surface,
+    originalResources,
+    originalTerrainImage,
+    sharedSceneNodes,
     groundedLights,
   };
 }

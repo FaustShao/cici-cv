@@ -6,6 +6,8 @@ import { getClickSound } from "./click-sound.js";
 import { T, createWorld } from "./create-world.js";
 import { texture, uniform } from "three/tsl";
 import { createFixtures } from "./scene-fixtures.js";
+import { createPortfolioStation } from "./portfolio-station.js";
+import gsap from "gsap";
 import { createWorldMap } from "./world-map.js";
 import { referenceViews } from "./scene-views.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
@@ -17,16 +19,19 @@ const loadingScreen = window.CeciliaLoader.create(document.getElementById("loadi
 const $ = (id) => document.getElementById(id),
   profile = window.RESUME;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+gsap.ticker.lagSmoothing(0);
+if(reduced)gsap.globalTimeline.timeScale(1000);
 const contentRoot = import.meta.env.DEV
   ? new URL("http://127.0.0.1:8000/")
   : new URL("../", worldBaseURL());
-const portfolioURL = versionedURL("index.html", worldBaseURL());
 const notes = profile.projects.filter((p) => p.collection !== "portfolio");
 const reader = $("reader"),
   frames = new Map(),
   stations = new Map(),
   pickables = [];
 let world,
+  portfolio,
+  readerPaused=false,
   place = "home",
   reading = false,
   otherIndex = 0,
@@ -47,6 +52,7 @@ const state = (window.WORLD_STATE = { place, reading: false, otherIndex: 0 });
 const navigationMap = createWorldMap(go);
 const labels = {
   home: "首页",
+  portfolio: "作品集",
   resume: "个人简历",
   other: "其他项目",
   contact: "联系方式",
@@ -75,21 +81,17 @@ async function copyContact(value, label) {
 }
 function closeReader() {
   if (reader.open) reader.close();
-  frames.forEach((f, url) => {
-    try {
-      f.contentDocument
-        .querySelectorAll("video,audio")
-        .forEach((m) => m.pause());
-    } catch {}
-    if (["haha-world", "icod", "sonicsense"].includes(f.dataset.project)) {
-      try { f.contentWindow.HAHA_READER?.dispose(); f.contentWindow.SONIC_FILM?.dispose(); } catch {}
-      f.remove();
-      frames.delete(url);
-    }
+  frames.forEach(f=>{
+    try { f.contentDocument.querySelectorAll("video,audio").forEach(m=>m.pause());f.contentWindow.HAHA_READER?.dispose();f.contentWindow.SONIC_FILM?.dispose(); } catch {}
+    f.remove();
   });
+  frames.clear();
+  $("frames").replaceChildren();
+  if(readerPaused){gsap.globalTimeline.resume();readerPaused=false;}
   reading = state.reading = false;
 }
 function openReader(title, file) {
+  closeReader();
   const filename = file ? new URL(file, contentRoot).pathname.split("/").pop() : "";
   const project = filename === "haha-world.html" ? "haha-world" : filename === "icod.html" ? "icod" : filename === "sonicsense.html" ? "sonicsense" : "";
   reader.dataset.project = project;
@@ -109,11 +111,12 @@ function openReader(title, file) {
       frame.allow = "fullscreen";
       frame.addEventListener("load", () => {
         try {
+          if(!frame.isConnected||frames.get(url)!==frame)return;
           const doc = frame.contentDocument;
           clickSound.bind(doc);
           const style = doc.createElement("style");
           style.textContent =
-            "header.topbar{position:sticky}.topbar nav>a,.topbar .wordmark{display:none!important}";
+            place === "portfolio" ? "header.topbar,.collection-return{display:none!important}" : "header.topbar{position:sticky}.topbar nav>a,.topbar .wordmark{display:none!important}";
           doc.head.append(style);
           doc.addEventListener("click", (event) => {
             const a = event.target.closest("a");
@@ -139,9 +142,11 @@ function openReader(title, file) {
               ].includes(name)
             ) {
               event.preventDefault();
-              location.href = portfolioURL;
+              event.stopImmediatePropagation();
+              closeReader();
+              if(place !== "portfolio")go("portfolio");
             }
-          });
+          },true);
         } catch {}
       });
       frames.set(url, frame);
@@ -173,14 +178,18 @@ function openReader(title, file) {
     $("frames").append(sheet);
   }
   reading = state.reading = true;
+  if(place==="portfolio"){gsap.globalTimeline.pause();readerPaused=true;}
   reader.showModal();
 }
+const projectReaderBridge={close:closeReader};
+Object.defineProperty(window,"CeciliaProjectReader",{get:()=>place === "portfolio" ? projectReaderBridge : undefined});
 $("close-reader").onclick = closeReader;
 reader.addEventListener("cancel", (e) => {
   e.preventDefault();
   closeReader();
 });
 function openCurrent() {
+  if(place === "portfolio")openReader(portfolio.current.title,portfolio.current.url);
   if (place === "resume") openReader("个人简历", "resume.html?document=1&v=cv-slices-2&photo=1");
   if (place === "other") openReader(notes[otherIndex].name, notes[otherIndex].url || undefined);
   if (place === "contact") location.href = "mailto:wangyuxinqd2025@163.com";
@@ -193,12 +202,11 @@ function selectOther(index) {
 }
 function go(next, historyMode = "push") {
   navigationMap.close();
-  if (next === "portfolio") {
-    location.href = portfolioURL;
-    return;
-  }
   if (!labels[next]) next = "home";
   closeReader();
+  portfolio?.clearHover();
+  if(next === "portfolio" && place !== "portfolio" && portfolio?.selected !== 0)portfolio?.select(0);
+  if((next === "portfolio") !== (place === "portfolio"))portfolio?.activate(next === "portfolio");
   place = state.place = next;
   document.body.dataset.place = place;
   document.title =
@@ -206,7 +214,11 @@ function go(next, historyMode = "push") {
   $("back-home").hidden = place === "home";
   $("feedback").textContent = "";
   $("place-actions").replaceChildren();
-  $("place-actions").hidden = place === "home" || place === "resume" || place === "other";
+  $("place-actions").hidden = place !== "contact";
+  $("controls").hidden = place !== "portfolio";
+  $("open-work").hidden = place !== "portfolio";
+  $("reset-view").textContent = place === "portfolio" ? "返回主页" : "视角归位";
+  $("close-reader").textContent = place === "portfolio" ? "← 返回展示区" : "← 返回场景";
   $("lab-navigation").hidden = place !== "other";
   if (place === "other") selectOther(otherIndex);
   if (place === "contact") {
@@ -227,9 +239,12 @@ function go(next, historyMode = "push") {
   $("scene-hint").textContent =
     place === "home"
       ? "左键旋转 · 中键平移 · 滚轮缩放 · 点击设备试试亮灯"
+      : place === "portfolio" ? "拖动观察 · 滚轮缩放 · ← → 切换作品"
       : `${labels[place]} · 拖动观察 · 点击模型${place === "contact" ? "写邮件" : "完整阅读"} · Esc 返回首页`;
   if (world && targetLook) {
-    world.camera.fov = place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
+    if(place === "portfolio")Object.assign(stations.get("portfolio"),portfolio.pose());
+    world.camera.fov = place === "portfolio" ? portfolio.pose().fov : place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
+    world.camera.far=place === "portfolio" ? 200 : 250;
     world.camera.updateProjectionMatrix();
     const station = stations.get(place);
     targetLook.copy(station ? station.focus : landingView.focus);
@@ -247,7 +262,7 @@ function go(next, historyMode = "push") {
     history[historyMode === "replace" ? "replaceState" : "pushState"](
       { place },
       "",
-      place === "home" ? location.pathname + location.search : `#${place}`,
+      place === "home" ? location.pathname + location.search + (document.querySelector('meta[name="cecilia-initial-place"]')?.content === "portfolio" ? "#home" : "") : `#${place}`,
     );
 }
 window.openWorldPlace = go;
@@ -259,6 +274,7 @@ window.addEventListener("keydown", (e) => {
   if (reading || navigationMap.dialog.open) return;
   if (e.key === "Escape") go("home");
   if (e.key === "Enter" && e.target === document.body) openCurrent();
+  if (place === "portfolio" && ["ArrowLeft", "ArrowRight"].includes(e.key)){e.preventDefault();portfolio.select(portfolio.selected+(e.key === "ArrowRight" ? 1 : -1));}
   if (place === "other" && ["ArrowLeft", "ArrowRight"].includes(e.key)) {
     e.preventDefault();
     selectOther(otherIndex + (e.key === "ArrowRight" ? 1 : -1));
@@ -536,16 +552,23 @@ try {
     world.labCover = { name: project.name, source: prepared.dataset.source };
   };
   world.updateLab(notes[0]);
+  portfolio = await createPortfolioStation(world,openCurrent);
+  window.preview = {game,area:portfolio.area,renderer,select:index=>portfolio.select(index),readWork:openCurrent};
+  $("previous").onclick=()=>portfolio.select(portfolio.selected-1);
+  $("next").onclick=()=>portfolio.select(portfolio.selected+1);
+  $("open-work").onclick=openCurrent;
+  await portfolio.warm();
   currentLook = pt(0, 2, 2);
   targetLook = currentLook.clone();
   // Keep the approved initial render, including cheapDOF and bloom. The old
   // low-quality toggle removed DOF, so do not invoke it when removing controls.
   world.setTheme(false);
   try{localStorage.setItem("resume-theme","light");}catch{}
-  $("reset-view").onclick = () => go("home", "replace");
+  $("reset-view").onclick = () => go("home", place === "portfolio" ? "push" : "replace");
   const ray = new T.Raycaster(),
     pointer = new T.Vector2();
   function pick(x, y) {
+    if(place === "portfolio")return portfolio.pick(x,y);
     pointer.set((x / innerWidth) * 2 - 1, (-y / innerHeight) * 2 + 1);
     ray.setFromCamera(pointer, camera);
     if(place==="contact" && (ray.intersectObject(social.getObjectByName("mailbox-label"),false).length || ray.intersectObject(social.getObjectByName("mailbox-click-ring"),false).length))return "contact-mail";
@@ -576,7 +599,7 @@ try {
     pinched = false,
     pinch = 0;
   $("world").addEventListener("pointerdown", (e) => {
-    if (e.button !== 0 && e.button !== 1) return;
+    if (e.button !== 0 && (e.button !== 1 || place === "portfolio")) return;
     e.preventDefault();
     showMapHint(false);
     mouseButton=e.button;
@@ -598,13 +621,15 @@ try {
     if (pointers.size > 1) {
       const [a, b] = [...pointers.values()],
         d = Math.hypot(a.x - b.x, a.y - b.y);
-      targetDistance = T.MathUtils.clamp((targetDistance * pinch) / d, 10, 95);
+      targetDistance = place === "portfolio" ? T.MathUtils.clamp(targetDistance*pinch/Math.max(1,d),portfolio.pose().distance*.8,portfolio.pose().distance*2.2) : T.MathUtils.clamp((targetDistance * pinch) / d, 10, 95);
       pinch = d;
       return;
     }
     if (pointers.size && last) {
-      if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > 5) drag = true;
-      if(mouseButton===1) {
+      if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > (place === "portfolio" ? 7 : 5)) drag = true;
+      if(place === "portfolio") {
+        if(drag){const base=portfolio.pose();targetYaw=T.MathUtils.clamp(targetYaw-(e.clientX-last.x)*.003,base.yaw-.45,base.yaw+.45);targetPitch=T.MathUtils.clamp(targetPitch+(e.clientY-last.y)*.002,base.pitch-.15,base.pitch+.3);}
+      } else if(mouseButton===1) {
         const step=2*targetDistance*Math.tan(T.MathUtils.degToRad(camera.fov/2))/innerHeight;
         const right=new T.Vector3(Math.cos(targetYaw),0,-Math.sin(targetYaw));
         const forward=new T.Vector3(Math.sin(targetYaw),0,Math.cos(targetYaw));
@@ -617,6 +642,7 @@ try {
       last = { x: e.clientX, y: e.clientY };
     } else {
       const hit=pick(e.clientX,e.clientY);
+      if(place === "portfolio")portfolio.hover(hit);
       $("world").dataset.hover=String(!!hit);
       showMapHint(hit==="map");
     }
@@ -627,7 +653,8 @@ try {
     if (pointers.size) return;
     if (!drag && !pinched && pressed) {
       clickSound.play();
-      if (pressed === "map") {showMapHint(false);navigationMap.open();}
+      if(place === "portfolio"){pressed.onClick?.();portfolio.update();}
+      else if (pressed === "map") {showMapHint(false);navigationMap.open();}
       else if(pressed === "contact-mail")location.href=social.userData.mailto;
       else if(pressed === "lab-previous")selectOther(otherIndex-1);
       else if(pressed === "lab-next")selectOther(otherIndex+1);
@@ -647,22 +674,19 @@ try {
     (e) => {
       if (e.ctrlKey) return;
       e.preventDefault();
-      targetDistance = T.MathUtils.clamp(
-        targetDistance + e.deltaY * 0.025,
-        10,
-        95,
-      );
+      targetDistance = place === "portfolio" ? T.MathUtils.clamp(targetDistance+e.deltaY*.001*portfolio.pose().distance,portfolio.pose().distance*.8,portfolio.pose().distance*2.2) : T.MathUtils.clamp(targetDistance+e.deltaY*.025,10,95);
     },
     { passive: false },
   );
   function resize() {
     camera.aspect = innerWidth / innerHeight;
-    camera.fov = place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
+    camera.fov = place === "portfolio" ? portfolio.pose().fov : place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
     game.viewport.width = innerWidth;
     game.viewport.height = innerHeight;
     landingView = fitLanding();
+    if(place === "portfolio" && targetLook) { targetLook.copy(portfolio.pose().focus); }
     if (place === "other" && targetLook) targetDistance = innerWidth < 700 ? stations.get("other").mobileDistance : stations.get("other").distance;
     if (place === "home" && targetLook) {
       targetLook.copy(landingView.focus);
@@ -693,7 +717,7 @@ try {
       lastFrame = time;
       clock.update();
       const dt = Math.min(clock.getDelta(), 0.05),
-        blend = reduced ? 1 : 1 - Math.exp(-dt * 9);
+        blend = reduced ? 1 : 1 - Math.exp(-dt * (place === "portfolio" ? 12 : 9));
       game.ticker.delta = game.ticker.deltaScaled = reduced ? 0 : dt;
       game.ticker.elapsedScaled += game.ticker.deltaScaled;
       game.ticker.elapsedScaledUniform.value = game.ticker.elapsedScaled;
@@ -725,6 +749,7 @@ try {
       game.view.spherical.radius.current = currentDistance;
       game.view.focusPoint.position.copy(currentLook);
       game.ticker.events.trigger("tick");
+      portfolio.update();
       pipeline.render();
       world.renderCount=(world.renderCount||0)+1;
       document.body.dataset.ready = "true";
@@ -744,6 +769,7 @@ try {
   });
   window.designWorld = {
     world,
+    portfolio,
     stations,
     devices,
     kioskFace,

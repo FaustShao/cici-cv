@@ -9,36 +9,50 @@
     </script>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#b9869b" />
+    <meta
+      name="description"
+      content="Cecilia 王钰欣的设计世界：个人简历、作品集、其他项目与联系方式。"
+    />
     <title>王钰欣 · 作品集</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/hub.css" />
     <link rel="stylesheet" href="../../site-loader.css">
+  <meta name="cecilia-initial-place" content="portfolio">
   </head>
-  <body>
+  <body data-place="portfolio">
     <canvas
       id="world"
-      aria-label="作品展架，支持拖动观察、点击图片阅读"
+      aria-label="Cecilia 的设计世界，拖动观察，点击模型进入分类"
     ></canvas>
+    <nav class="keyboard-nav" aria-label="分类导航">
+      <a href="#resume">01 个人简历</a><a href="#portfolio">02 作品集</a
+      ><a href="#other">03 其他项目</a><a href="#contact">04 联系方式</a>
+    </nav>
     <header>
-      <a id="back-site" href="../index.html">← 返回首页</a>
+      <button id="back-home" hidden>← 返回首页</button>
       <div>
-        <button id="reset-view">返回主页</button>
+        <button id="reset-view">视角归位</button>
       </div>
     </header>
     <div id="loading" class="cecilia-loader" role="progressbar" aria-label="正在加载" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="cube-scene" aria-hidden="true"><div class="cube-origin"><div class="cube h1w1l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h1w1l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h1w1l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h1w2l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h1w2l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h1w2l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h1w3l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h1w3l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h1w3l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w1l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w1l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w1l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w2l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w2l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w2l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w3l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w3l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h2w3l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w1l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w1l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w1l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w2l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w2l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w2l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w3l1"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w3l2"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div><div class="cube h3w3l3"><div class="face top"></div><div class="face left"></div><div class="face right"></div></div></div></div><div class="pixel-percent" aria-hidden="true"><span class="pixel-digit" style="--columns:3"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="pixel-digit" style="--columns:5"><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i></i><i class="on"></i><i></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i></span></div></div>
-    <div id="controls">
+    <footer>
+      <span id="scene-hint">拖动观察 · 滚轮缩放 · 点击装置进入</span
+      ><span>CECILIA</span>
+    </footer>
+    <div id="controls" hidden>
       <button id="previous" aria-label="上一件作品">←</button>
-      <div>
-        <strong id="selection">01 / 04</strong
-        ><span id="project-name">Tideline Seaweed Tea</span
-        ><small>点击预览，完整阅读</small>
-      </div>
+      <div><strong id="selection">01 / 04</strong><span id="project-name">Tideline Seaweed Tea</span><small>点击预览，完整阅读</small></div>
       <button id="next" aria-label="下一件作品">→</button>
     </div>
-    <button id="open-work" class="keyboard-open">打开当前作品 ↗</button>
-    <footer>
-      <span>拖动观察 · 滚轮缩放 · ← → 切换作品</span>
-    </footer>
+    <button id="open-work" class="keyboard-open" hidden>打开当前作品 ↗</button>
+    <section id="place-actions" aria-label="当前分类操作" hidden></section>
+    <nav id="lab-navigation" aria-label="其他项目切换" hidden>
+      <button id="lab-previous" type="button" aria-label="上一个项目"></button>
+      <span id="other-position" class="screen-reader-only" aria-live="polite"></span>
+      <button id="lab-next" type="button" aria-label="下一个项目"></button>
+    </nav>
+    <p id="feedback" role="status"></p>
     <button id="map-trigger" aria-haspopup="dialog" aria-controls="world-map" aria-label="打开导航地图">
       <img src="/ui/cecilia-map.svg?v=contact-clearing" alt="" /><span>点击查看地图 <span aria-hidden="true">↗</span></span>
     </button>
@@ -52,22 +66,32 @@
       <p class="map-caption">点一个地点，去看看吧。 <span>M 打开／收起 · Esc 关闭</span></p>
     </dialog>
     <section id="fallback" hidden>
-      <h2 id="fallback-title">暂时无法显示 3D 场景</h2>
+      <h2>暂时无法显示 3D 场景</h2>
       <p id="error-message"></p>
-      <a href="../tideline.html">Tideline ↗</a
-      ><a href="../safepaw.html">SafePaw Family ↗</a
-      ><a href="../dream-sentinel.html">DREAM SENTINEL ↗</a
-      ><a href="../gazette.html">Future Gazette ↗</a>
+      <a href="../resume.html?document=1">个人简历 ↗</a
+      ><a href="../tideline.html">Tideline ↗</a><a href="../safepaw.html">SafePaw Family ↗</a><a href="../dream-sentinel.html">DREAM SENTINEL ↗</a><a href="../gazette.html">Future Gazette ↗</a
+      ><a href="../other-projects.html">其他项目 ↗</a
+      ><a href="mailto:wangyuxinqd2025@163.com">发邮件 ↗</a>
     </section>
     <dialog id="reader" aria-labelledby="reader-title">
       <div class="reader-bar">
-        <button id="close-reader">← 返回展示区</button>
+        <button id="close-reader">← 返回场景</button>
         <h2 id="reader-title"></h2>
         <a id="reader-direct" target="_blank" rel="noopener">独立打开 ↗</a>
       </div>
       <div id="frames"></div>
     </dialog>
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/hub.js"></script>
+    <noscript
+      ><style>
+        #fallback {
+          display: block !important;
+        }
+        #loading {
+          display: none;
+        }
+      </style></noscript
+    >
     <noscript><section style="position:fixed;inset:20% 8%;z-index:12;background:#f9efdf;color:#493143;padding:24px;overflow:auto"><h1>王钰欣 / CECILIA</h1><p>场景需要 JavaScript。也可以直接阅读：</p><p><a href="../resume.html?document=1">个人简历</a> · <a href="../other-projects.html">其他项目</a></p><p><a href="../tideline.html">海藻茶</a> · <a href="../safepaw.html">宠爱守护</a> · <a href="../dream-sentinel.html">梦境哨兵</a> · <a href="../gazette.html">Gazette</a></p></section></noscript>
   </body>
 </html>
