@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict'), fs = require('node:fs'), { execFileSync } = require('node:child_process');
 const { chromium } = require('playwright'), sharp = require('sharp');
-const base = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8765/';
+const base = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8770/cici-cv/';
 (async () => {
  const manifest = JSON.parse(fs.readFileSync('assets/haha-world/manifest.json'));
  assert.equal(manifest.pages.length,30);
@@ -25,8 +25,8 @@ assert f['OS/2'].usWeightClass==400`]);
   assert.equal(await page.evaluate(()=>HAHA_READER.state.mode),'webgl');assert.equal(await page.evaluate(()=>HAHA_READER.sources.length),32);
   assert.equal(await page.locator('#previous,#next,#close-book,#zoom-page,.book-tools,.credit').count(),0,'Removed the bottom controls and participant credits');
   assert.equal(await page.locator('.mag-footer button').count(),0);
-  assert.ok(await page.locator('.identity h1').evaluate(e=>getComputedStyle(e).fontFamily.includes('Magazine UI')));
-  assert.ok(await page.locator('.identity span').evaluate(e=>getComputedStyle(e).fontFamily.includes('Magazine UI')));
+  assert.equal(await page.locator('.identity').count(),0,'Remove the duplicate manual heading');
+  assert.ok(await page.evaluate(()=>HAHA_READER.bookGroup.position.y>=.06),'Manual sits slightly higher');
   async function point(x,y=0){return page.evaluate(([x,y])=>{const w=HAHA_READER,v=w.bookGroup.localToWorld(w.bookGroup.position.clone().set(x,y,.01)).project(w.camera);return{x:(v.x+1)*innerWidth/2,y:(1-v.y)*innerHeight/2}},[x,y]);}
   async function settled(pageIndex){await page.waitForFunction(n=>HAHA_READER.state.page===n&&!HAHA_READER.magazine.turning,pageIndex,{timeout:45000});}
   // Broad targets include the half-page interior and the margin outside the fore-edge.
@@ -49,7 +49,8 @@ assert f['OS/2'].usWeightClass==400`]);
   await page.evaluate(()=>HAHA_READER.pause());const image=await page.screenshot({path:'/tmp/haha-fixed-binding.png',timeout:45000});
   const raw=await sharp(image).removeAlpha().raw().toBuffer({resolveWithObject:true});
   function sample(x,y,w=16,h=12){const sum=[0,0,0];for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)for(let c=0;c<3;c++)sum[c]+=raw.data[(yy*raw.info.width+xx)*3+c];return sum.map(v=>v/(w*h));}
-  const white=sample(672,287,24,20),orange=sample(400,224,20,12);
+  const rise=await page.evaluate(()=>Math.round(.05/(HAHA_READER.camera.top-HAHA_READER.camera.bottom)*innerHeight));
+  const white=sample(672,287-rise,24,20),orange=sample(400,224-rise,20,12);
   console.log('Latter-spread white near hinge:',white,'brand orange:',orange);
   assert.ok(white.every(v=>v>235),'The bound hinge stays light, without an unrelated dark vertical slab');
   assert.ok(orange[0]>245&&Math.abs(orange[1]-141)<14&&orange[2]<28,'Printed brand colour stays close to the PDF instead of grey metallic shading');
@@ -59,7 +60,7 @@ assert f['OS/2'].usWeightClass==400`]);
   for(let y=290;y<580;y+=25)assert.ok(rgba.data[(y*rgba.info.width+720)*4+3]>245,'Continuous opaque attachment at the spine');
   // Removed toolbar does not remove detailed reading: double-click, then blank-space dismissal.
   p=await point(.6);await page.mouse.dblclick(p.x,p.y,{delay:60});await page.locator('#page-zoom img').evaluate(i=>i.decode());
-  assert.match(await page.locator('#page-zoom img').getAttribute('src'),/25.webp$/);assert.equal(await page.locator('#page-zoom img').evaluate(i=>getComputedStyle(i).filter),'none');
+  assert.match(new URL(await page.locator('#page-zoom img').getAttribute('src')).pathname,/25.webp$/);assert.equal(await page.locator('#page-zoom img').evaluate(i=>getComputedStyle(i).filter),'none');
   await page.locator('#page-zoom').click({position:{x:12,y:100}});assert.ok(!await page.locator('#page-zoom').evaluate(e=>e.open));
   await page.locator('#contents-trigger').click();await page.locator('[data-page="9"]').click();await page.evaluate(()=>HAHA_READER.resume());await settled(9);
   await page.evaluate(()=>HAHA_READER.goTo(31));await settled(31);assert.equal(await page.locator('#page-status').innerText(),'封底');

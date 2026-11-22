@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
-const base = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8765/';
+const base = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8770/cici-cv/';
 (async () => {
  const browser = await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
  try {
@@ -14,14 +14,14 @@ const base = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8765/';
    await frame.waitForFunction(()=>window.HAHA_READER?.state.ready,null,{timeout:90000});await frame.evaluate(()=>document.fonts.ready);return frame;
   }
   async function centered(frame) {
-   const title=await frame.locator('.identity').boundingBox(),width=await frame.evaluate(()=>innerWidth);
-   assert.ok(Math.abs(title.x+title.width/2-width/2)<1, 'Inner heading is centered against the full viewport');
+   assert.equal(await frame.locator('.identity').count(),0,'Inner duplicate heading is removed');
+   assert(await frame.locator('.header-tools').evaluate(el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth}));
   }
   let frame=await currentFrame();await page.evaluate(()=>document.fonts.ready);await centered(frame);
   const outer=await page.locator('#reader-title').evaluate(el=>({family:getComputedStyle(el).fontFamily,weight:getComputedStyle(el).fontWeight}));
   assert.ok(outer.family.includes('Magazine UI'));assert.equal(outer.weight,'400');
-  const inner=await frame.locator('.identity h1').evaluate(el=>getComputedStyle(el).fontFamily);
-  assert.equal(outer.family,inner,'Both reader layers use the same complete font');
+  const inner=await frame.locator('#return-cover').evaluate(el=>getComputedStyle(el).fontFamily);
+  assert.ok(inner.includes('Magazine UI'),'Remaining controls keep the consistent complete font');
   const titleBox=await page.locator('#reader-title').boundingBox();assert.ok(Math.abs(titleBox.x+titleBox.width/2-720)<1);
   await frame.evaluate(()=>{window.firstEntryMarker=true;HAHA_READER.goTo(23)});
   await frame.waitForFunction(()=>HAHA_READER.state.page===23);

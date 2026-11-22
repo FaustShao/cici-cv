@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { LeafThroughObject } from 'leafthrough';
 import { bindingDeform, makePaperEdges, fitPaperEdges } from './haha-binding.js';
 import { getClickSound } from './click-sound.js';
+import { createPageTurnSound } from './haha-page-sound.js';
 import './haha-world.css';
 
 const $ = id => document.getElementById(id);
@@ -16,6 +17,9 @@ sources.push({ src: versionedURL('pages/back.webp', assetRoot), alt: '哈哈世�
 const aspect = manifest.height / manifest.width;
 const state = { page: 0, visiblePages: [0], ready: false, zoomPage: 0, mode: 'webgl' };
 const clicks = getClickSound(); clicks.bind(document);
+const pageSound=createPageTurnSound();
+window.addEventListener('pagehide',()=>pageSound.reset());
+let paperBump;
 let magazine, renderer, scene, camera, frameID, lastTime = 0, paused = false, bookAssetsReady = false;
 let cameraWidth = 2, bookX = -.5, open = 0, sceneDirty = true, lastPaperSignature = '', bookFrames = 0;
 const loaded = new Set(), pointer = { x: innerWidth / 2, y: innerHeight / 2, active: false };
@@ -36,7 +40,7 @@ function updateControls() {
   document.body.dataset.open = state.page > 0 && state.page < sources.length - 1 ? 'true' : 'false';
   document.querySelectorAll('[data-page]').forEach(el => el.setAttribute('aria-current', String(state.visiblePages.includes(Number(el.dataset.page)))));
 }
-function changePage(detail) { Object.assign(state, { page: detail.page, visiblePages: [...detail.visiblePages] }); updateControls(); }
+function changePage(detail) { const previous=state.page;Object.assign(state, { page: detail.page, visiblePages: [...detail.visiblePages] }); updateControls();if(state.ready&&state.page!==previous)pageSound.play(); }
 function turn(forward) {
   if (magazine) forward ? magazine.next() : magazine.prev();
   else goTo(Math.max(0, Math.min(sources.length - 1, state.page + (forward ? 1 : -1))));
@@ -54,7 +58,7 @@ function returnToCover() {
 $('return-cover').onclick = returnToCover;
 $('zoom-return-cover').onclick = returnToCover;
 window.addEventListener('pageshow', event => {
-  if (event.persisted) { paused = false; sceneDirty = true; returnToCover(); }
+  if (event.persisted) { pageSound.reset();paused = false; sceneDirty = true; returnToCover(); }
 });
 $('fullscreen').onclick = async () => {
   try {
@@ -235,10 +239,14 @@ function setupBook() {
     motion: { speed: 1.1, dragDistance: .42, commitThreshold: .07, hoverLift: .018, curl: 1, jitter: true, reducedMotion: 'auto' },
     interaction: { drag: true, click: false, hold: false, hover: true, keyboard: 'global' }
   });
+  paperBump=new THREE.TextureLoader().load(versionedURL('paper-grain.png',assetRoot),()=>{sceneDirty=true});
+  paperBump.wrapS=paperBump.wrapT=THREE.RepeatWrapping;paperBump.repeat.set(2.4,2.4*aspect);
   // Keep printed RGB artwork neutral: a very low paper sheen must not wash orange ink with white light.
   magazine.traverse(mesh => {
     if (!mesh.isMesh) return;
     const material = mesh.material, compile = material.onBeforeCompile, key = material.customProgramCacheKey;
+    // Texture affects surface normals only; printed colours are not blended with noise.
+    material.bumpMap=paperBump;material.bumpScale=.00018;
     material.onBeforeCompile = function(program, renderer) {
       compile.call(this, program, renderer);
       mesh.userData.shapeUniforms = program.uniforms;
@@ -346,7 +354,7 @@ function render(now) {
   bindingOpen.value = open;
   const targetX = closedFront ? -.5 : closedBack ? .5 : 0;
   bookX += (targetX - bookX) * blend;
-  bookGroup.position.set(bookX, innerWidth < 760 ? .10 : .015, 0);
+  bookGroup.position.set(bookX, innerWidth < 760 ? .14 : .065, 0);
   const hoverX = !reduced && pointer.active && !magazine.turning && !isOpen ? (pointer.x / innerWidth - .5) * .035 : 0;
   const hoverY = !reduced && pointer.active && !magazine.turning && !isOpen ? (pointer.y / innerHeight - .5) * .025 : 0;
   bookGroup.rotation.set(-.22 * (1 - open) + hoverY, .07 * (1 - open) + hoverX, -.085 * (1 - open));
@@ -402,6 +410,6 @@ window.HAHA_READER = {
   manifest, sources, state, loaded, get magazine() { return magazine; }, get renderer() { return renderer; }, get scene() { return scene; }, get camera() { return camera; }, bookGroup,
   goTo, turn, openZoom, closeZoom, returnToCover, get backgroundFrame() { return backgroundFrame; },
   pause() { paused = true; }, resume() { paused = false; },
-  dispose() { paused = true; cancelAnimationFrame(frameID); magazine?.dispose(); renderer?.dispose(); },
+  dispose() { paused = true; cancelAnimationFrame(frameID);pageSound.dispose();paperBump?.dispose(); magazine?.dispose(); renderer?.dispose(); },
   snapshot() { return { ...state, originalPages: manifest.pages.length, ratio: 1 / aspect, bindingOpen: bindingOpen.value, bookFrames, gridCells: grid.activeCells, sheetGap: thickness / 16, backgroundFrame, loaded: [...loaded] }; }
 };
