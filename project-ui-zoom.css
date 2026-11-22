@@ -10,3 +10,12 @@
 .ui-zoom-trigger,.signal-hotspot.ui-zoom-trigger{cursor:zoom-in!important}
 body.ui-zoom-open{overflow:hidden}
 @media(max-width:600px){.project-ui-lightbox{padding:52px 12px 20px}.project-ui-lightbox img{max-width:94vw;max-height:calc(100dvh - 120px)}}
+.project-ui-lightbox .ui-zoom-previous,.project-ui-lightbox .ui-zoom-next{position:fixed;top:50%;transform:translateY(-50%);z-index:1;display:grid;place-items:center;width:44px;height:52px;padding:0;border:1px solid #ffffff50;border-radius:8px;background:#2229;color:#fff;font:38px/1 Arial,sans-serif;cursor:pointer}
+.project-ui-lightbox .ui-zoom-previous{left:12px}.project-ui-lightbox .ui-zoom-next{right:12px}
+.project-ui-lightbox .ui-zoom-previous:hover,.project-ui-lightbox .ui-zoom-next:hover{background:#ffffff30}
+.project-ui-lightbox .ui-zoom-previous:focus-visible,.project-ui-lightbox .ui-zoom-next:focus-visible{outline:2px solid white;outline-offset:3px}
+.project-ui-lightbox button:disabled{opacity:.2;cursor:default}.project-ui-lightbox img[hidden]{display:none!important}.project-ui-lightbox img{touch-action:pan-y pinch-zoom}
+@media(max-width:600px){.project-ui-lightbox .ui-zoom-previous,.project-ui-lightbox .ui-zoom-next{top:auto;bottom:12px;transform:none;width:44px;height:44px;border-radius:50%;font-size:32px}.project-ui-lightbox .ui-zoom-previous{left:14px}.project-ui-lightbox .ui-zoom-next{right:14px}.project-ui-lightbox figcaption{max-width:calc(100vw - 128px);margin-bottom:4px}}
+
+.project-ui-lightbox[data-project="safepaw"] img{height:calc(100dvh - 110px);width:auto}
+@media(max-width:600px){.project-ui-lightbox[data-project="safepaw"] img{height:calc(100dvh - 120px)}}
