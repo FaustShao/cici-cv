@@ -4,9 +4,11 @@ No historical UI, preview screenshots or alternate deployment paths are publishe
 from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlsplit,unquote,parse_qsl,urlencode
-import hashlib,html,json,posixpath,re,shutil
+import hashlib,html,json,os,posixpath,re,shutil
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'public'
+SITE_BASE_PATH=os.environ.get('SITE_BASE_PATH','/cici-cv/')
+if not re.fullmatch(r'/(?:[a-zA-Z0-9_-]+/)*',SITE_BASE_PATH):raise SystemExit('SITE_BASE_PATH must be / or a slash-delimited deployment prefix.')
 if OUT.exists():shutil.rmtree(OUT)
 OUT.mkdir()
 entries=['resume.html','tideline.html','safepaw.html','dream-sentinel.html','gazette.html']
@@ -70,7 +72,7 @@ for p in notes:
  details=''.join(f'<li>{html.escape(t)}</li>'for t in p.get('details',[]))
  items.append(f'<article><h2>{html.escape(p["name"])}</h2><p>{html.escape(p["description"])}</p><ul>{details}</ul>{link}</article>')
 (OUT/'other-projects.html').write_text('''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>其他项目 · 王钰欣</title><style>@font-face{font-family:Xiaolai;src:url('cecilia-world/fonts/world-xiaolai.woff2')}body{max-width:900px;margin:0 auto;padding:32px 24px;background:#f9efdf;color:#493143;font:16px/1.8 Xiaolai,sans-serif}h1{font-size:28px}h2{font-size:22px}article{border-top:1px solid #b9869b;padding:20px 0}a{color:inherit}</style></head><body><a href="index.html#other">返回设计世界</a><h1>其他项目</h1>'''+''.join(items)+'</body></html>')
-(OUT/'404.html').write_text('<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>页面未找到 · Cecilia</title></head><body style="background:#f9efdf;color:#493143;font:16px/1.8 sans-serif;padding:8vw"><h1>这个地址暂时没有内容</h1><a href="/cici-cv/">返回王钰欣的设计世界</a></body></html>')
+(OUT/'404.html').write_text('<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>页面未找到 · Cecilia</title></head><body style="background:#f9efdf;color:#493143;font:16px/1.8 sans-serif;padding:8vw"><h1>这个地址暂时没有内容</h1><a href="'+SITE_BASE_PATH+'">返回王钰欣的设计世界</a></body></html>')
 (OUT/'.nojekyll').touch()
 # One content-derived revision for all manually maintained entry resources.
 # Vite already fingerprints module imports; HTML/CSS font and document dependencies also need this.
@@ -83,7 +85,7 @@ for p in sorted(OUT.rglob('*')):
 revision=h.hexdigest()[:16]
 def version(value,parent):
  u=urlsplit(html.unescape(value))
- if value=='/cici-cv/':return value+'?build='+revision
+ if value==SITE_BASE_PATH:return value+'?build='+revision
  if not u.path or u.scheme or u.netloc or value.startswith(('#','/')):return value
  target=(parent/unquote(u.path)).resolve()
  if not target.is_relative_to(OUT) or not target.is_file():return value
