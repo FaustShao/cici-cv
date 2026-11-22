@@ -4,10 +4,10 @@ import * as T from 'three';
 // No per-card scale/rotation: shared coordinates stay joined while the ribbon moves.
 export const FILM_PITCH=3.02, FILM_HEIGHT=2.34, ART_WIDTH=2.84, ART_HEIGHT=ART_WIDTH*595/842;
 export function filmPoint(u,y,progress,time,motion=0){
-  const radius=7.8;
-  const twist=.20*Math.sin(u*.43+progress*.18+.45)+motion*.025;
+  const radius=13;
+  const twist=.085*Math.sin(u*.43+progress*.18+.45)+motion*.01;
   const theta=u/radius;
-  return [radius*Math.sin(theta),.28*Math.sin(u*.38+progress*.20)+y*Math.cos(twist),radius*(Math.cos(theta)-1)+y*Math.sin(twist)];
+  return [radius*Math.sin(theta),.12*Math.sin(u*.38+progress*.20)+y*Math.cos(twist),radius*(Math.cos(theta)-1)+y*Math.sin(twist)];
 }
 export class SpatialFilm {
   constructor(stage,pages,images){
@@ -43,15 +43,15 @@ export class SpatialFilm {
   resize(){
     const {width,height}=this.stage.getBoundingClientRect();this.width=width;this.height=height;
     this.renderer.setSize(width,height,false);this.camera.aspect=width/height;
-    const visibleHeight=Math.max(3.55,FILM_PITCH/(.88*this.camera.aspect));
+    const visibleHeight=Math.max(2.95,FILM_PITCH/(.98*this.camera.aspect));
     this.camera.position.set(0,.08,visibleHeight/(2*Math.tan(T.MathUtils.degToRad(19))));this.camera.lookAt(0,.04,0);this.camera.updateProjectionMatrix();
     this.pixelsPerFrame=FILM_PITCH*height/visibleHeight;
   }
   update(progress,time,motion=0,reduced=false){
     this.progress=progress;this.time=time;this.motion=motion;
     const offset=progress*FILM_PITCH,t=reduced?0:time;
-    this.group.rotation.set(.10*Math.cos(t*.33)+.08*Math.sin(progress*.23)+this.pointer.y*.025,.08*Math.sin(t*.24)+.10*Math.sin(progress*.18)+this.pointer.x*.035,.055+.045*Math.sin(t*.29)+.07*Math.sin(progress*.27));
-    this.group.position.y=reduced?0:.075*Math.sin(t*.65);
+    this.group.rotation.set(.035*Math.cos(t*.33)+.03*Math.sin(progress*.23)+this.pointer.y*.012,.035*Math.sin(t*.24)+.04*Math.sin(progress*.18)+this.pointer.x*.018,.018+.018*Math.sin(t*.29)+.025*Math.sin(progress*.27));
+    this.group.position.y=reduced?0:.045*Math.sin(t*.65);
     const low=Math.max(-this.limit,-FILM_PITCH/2-offset),high=Math.min(this.limit,(this.pages.length-.5)*FILM_PITCH-offset);
     const geo=this.backing.geometry,pos=geo.attributes.position,uv=geo.attributes.uv;
     for(let i=0;i<pos.count;i++){
@@ -69,7 +69,7 @@ export class SpatialFilm {
       for(let i=0;i<positions.count;i++){
         const u=original[i*3]+center,y=original[i*3+1];const p=filmPoint(u,y,progress,t,motion);
         // A single 0.004-unit normal offset keeps the image attached without z-fighting.
-        const twist=.20*Math.sin(u*.43+progress*.18+.45)+motion*.025;
+        const twist=.085*Math.sin(u*.43+progress*.18+.45)+motion*.01;
         p[1]-=.004*Math.sin(twist);p[2]+=.004*Math.cos(twist);positions.setXYZ(i,...p);
       }
       positions.needsUpdate=true;mesh.geometry.computeBoundingSphere();

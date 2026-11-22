@@ -41,10 +41,14 @@ const release=JSON.parse(fs.readFileSync('public/release.json'));
   const pagePoint=await p.evaluate(()=>SONIC_FILM.ribbon.pointOnPage(22));await p.mouse.click(pagePoint.x,pagePoint.y);await p.waitForFunction(()=>document.getElementById('page-viewer').open&&document.getElementById('full-page').complete);
   await p.waitForFunction(()=>document.getElementById('full-page').src.includes('/23.webp'));
   const fit=await p.locator('#full-page').evaluate(img=>{const i=img.getBoundingClientRect(),s=document.getElementById('page-scroll').getBoundingClientRect();return {fits:i.height<=s.height&&i.width<=s.width,ratio:i.width/i.height}});
-  assert.equal(fit.fits,true,'Full original fits the reader before zoom');assert.ok(Math.abs(fit.ratio-842/595)<.01);
+  assert.equal(fit.fits,true,'Full original fits the borderless reader');assert.ok(Math.abs(fit.ratio-842/595)<.01);
   await p.screenshot({path:`/tmp/sonicsense-detail-${viewport.width}.png`});
-  await p.locator('#zoom-page').click();assert.equal(await p.locator('#page-viewer').getAttribute('data-zoom'),'true');
-  await p.locator('#zoom-page').click();await p.locator('#viewer-next').click();await p.waitForFunction(()=>SONIC_FILM.state.index===23);
+  assert.equal(await p.locator('#zoom-page').count(),0,'Remove the separate detail-zoom control');
+  const fullSize=await p.locator('#full-page').boundingBox();
+  const maximumHeight=Math.min(viewport.height-8,(viewport.width-8)*595/842);assert.ok(fullSize.height>=maximumHeight*.97,'The original uses the available screen rather than losing space to toolbars');
+  assert.equal(await p.locator('#page-viewer .dialog-bar').evaluate(el=>getComputedStyle(el).position),'absolute');
+  assert.equal(await p.locator('#page-viewer .viewer-caption').evaluate(el=>getComputedStyle(el).position),'absolute');
+  await p.locator('#viewer-next').click();await p.waitForFunction(()=>SONIC_FILM.state.index===23);
   // Click actual blank space in the reader, not its image or toolbar.
   const blank=await p.locator('#page-scroll').boundingBox();await p.mouse.click(blank.x+3,blank.y+3);assert.equal(await p.locator('#page-viewer').evaluate(d=>d.open),false);
   assert.equal(await p.evaluate(()=>SONIC_FILM.state.index),23,'Closing retains the page being read');
@@ -58,7 +62,7 @@ const release=JSON.parse(fs.readFileSync('public/release.json'));
   await p.close();
  }
  assert.deepEqual(errors,[]);assert.deepEqual(bad,[]);
- console.log('PASS desktop/mobile: 31 original pages, six chapter targets, wheel/drag/reverse with synchronized reels, fractional scrubbing, overview, high-resolution fit/zoom, blank-space/Esc close, original video link, keyboard, actual spatial depth/idle float, removed small print and recruitment-oriented project summary.');
+ console.log('PASS desktop/mobile: 31 original pages, six chapter targets, wheel/drag/reverse with synchronized reels, fractional scrubbing, overview, borderless full-screen high-resolution fit, blank-space/Esc close, original video link, keyboard, actual spatial depth/idle float, removed small print and recruitment-oriented project summary.');
  const p=await browser.newPage({viewport:{width:1200,height:850},reducedMotion:'reduce'});p.on('pageerror',e=>errors.push(e.message));
  await p.goto(new URL('index.html?webgl=1#other',root).href,{waitUntil:'domcontentloaded'});
  await p.waitForFunction(()=>window.designWorld&&document.body.dataset.ready&&!document.documentElement.dataset.releaseState,null,{timeout:120000});

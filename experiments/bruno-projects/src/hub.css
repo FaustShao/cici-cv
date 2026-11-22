@@ -318,3 +318,5 @@ body:has(#reader[open]) #lab-navigation{visibility:hidden}
 #reader[data-project="sonicsense"] #close-reader{pointer-events:auto;font:400 14px/1.6 SensorUI,Arial,sans-serif;padding:7px 0}
 #reader[data-project="sonicsense"] #frames{height:100%}
 @media(max-width:700px){#reader[data-project="sonicsense"] .reader-bar{top:16px;left:18px;right:18px}#reader[data-project="sonicsense"] #close-reader{font-size:12px}}
+
+#reader[data-project="sonicsense"][data-image-open="true"] .reader-bar{visibility:hidden;pointer-events:none}

@@ -16,7 +16,7 @@ try {
   throw error;
 }
 const {pages,chapters}=manifest,stage=$('film-stage'),track=$('film-track');
-const state={index:0,offset:0,target:0,zoom:false};
+const state={index:0,offset:0,target:0};
 let ribbon, width=0,frameWidth=0,frame=0,lastTime=0,floatTime=0,velocity=0,drag=null,suppressClickUntil=0,viewerToken=0,disposed=false;
 const clamp=n=>Math.max(0,Math.min((pages.length-1)*frameWidth,n));
 const chapterFor=index=>chapters.find(c=>c.id===pages[index].chapter);
@@ -130,28 +130,28 @@ function openOverview(){
   updateCaption();$('overview').showModal();
 }
 $('reel-overview').onclick=openOverview;$('close-overview').onclick=()=>$('overview').close();
-function resetZoom(){state.zoom=false;$('page-viewer').dataset.zoom='false';$('zoom-page').textContent='放大细节';$('page-scroll').scrollTo(0,0);}
+function setReaderOpen(open){
+  try{if(parent!==window){const reader=parent.document.getElementById('reader');if(reader)reader.dataset.imageOpen=String(open)}}catch{}
+}
 function showPage(index){
-  go(index,true);resetZoom();const page=pages[state.index],token=++viewerToken;
+  go(index,true);$('page-scroll').scrollTo(0,0);const page=pages[state.index],token=++viewerToken;
   $('viewer-number').textContent=chapterFor(state.index).en;$('viewer-title').textContent=page.title;$('viewer-description').textContent=page.description;
   $('viewer-position').textContent=`${number(state.index)} / ${pages.length}`;
   $('page-media').replaceChildren();
   const links=state.index===24?[['播放拼贴影片','https://youtu.be/e8wFDxjReWE']]:state.index===8?[['情境影片 1','https://www.youtube.com/watch?v=9cn4zRSCnRI'],['情境影片 2','https://www.youtube.com/watch?v=S3Mz64pxB5Y'],['情境影片 3','https://www.youtube.com/watch?v=smpbphoSOnM']]:[];
   links.forEach(([label,url])=>{const a=document.createElement('a');a.href=url;a.textContent=label;a.target='_blank';a.rel='noopener noreferrer';$('page-media').append(a)});
   $('viewer-previous').disabled=state.index===0;$('viewer-next').disabled=state.index===pages.length-1;
-  const target=$('full-page');target.alt=page.title;target.src=asset(page.preview);target.style.setProperty('--zoom-width','2300px');
+  const target=$('full-page');target.alt=page.title;target.src=asset(page.preview);
   const high=new Image();high.src=asset(page.image);
   high.decode().then(()=>{if(token===viewerToken&&!disposed)target.src=high.src;}).catch(()=>{});
 }
-function openViewer(index=state.index){showPage(index);if(!$('page-viewer').open)$('page-viewer').showModal();}
+function openViewer(index=state.index){showPage(index);if(!$('page-viewer').open)$('page-viewer').showModal();setReaderOpen(true);}
 function closeViewer(){++viewerToken;$('page-viewer').close();$('full-page').removeAttribute('src');}
-function toggleZoom(){state.zoom=!state.zoom;$('page-viewer').dataset.zoom=String(state.zoom);$('zoom-page').textContent=state.zoom?'适应窗口':'放大细节';}
-$('close-page').onclick=closeViewer;$('zoom-page').onclick=toggleZoom;
-$('full-page').onclick=toggleZoom;
+$('close-page').onclick=closeViewer;
 $('viewer-previous').onclick=()=>showPage(state.index-1);$('viewer-next').onclick=()=>showPage(state.index+1);
 $('page-scroll').onclick=event=>{if(event.target===$('page-scroll'))closeViewer()};
 for(const id of ['overview','project-info','page-viewer'])$(id).addEventListener('click',event=>{if(event.target===$(id)){const rect=$(id).getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)$(id).close();}});
-$('page-viewer').addEventListener('close',()=>{++viewerToken;resetZoom();cards[state.index].button.focus({preventScroll:true})});
+$('page-viewer').addEventListener('close',()=>{++viewerToken;setReaderOpen(false);cards[state.index].button.focus({preventScroll:true})});
 $('about-project-inline').onclick=$('about-project').onclick=()=>$('project-info').showModal();$('close-info').onclick=()=>$('project-info').close();
 document.addEventListener('keydown',event=>{
   if(event.ctrlKey||event.metaKey||event.altKey||event.target.closest('input'))return;
@@ -164,7 +164,7 @@ document.addEventListener('keydown',event=>{
 $('back-other').onclick=event=>{
   try{if(parent!==window&&parent.WORLD_STATE?.place==='other'){event.preventDefault();parent.document.getElementById('close-reader').click()}}catch{}
 };
-function dispose(){disposed=true;cancelAnimationFrame(frame);frame=0;lastTime=0;resize.disconnect();ribbon?.dispose();ribbon=null;++viewerToken;}
+function dispose(){setReaderOpen(false);disposed=true;cancelAnimationFrame(frame);frame=0;lastTime=0;resize.disconnect();ribbon?.dispose();ribbon=null;++viewerToken;}
 addEventListener('pagehide',dispose);
 addEventListener('pageshow',event=>{if(event.persisted){disposed=false;ribbon=new SpatialFilm(stage,pages,cards.map(c=>c.image));resize.observe(stage);for(const d of document.querySelectorAll('dialog[open]'))d.close();go(0,true);layout();schedule();}});
 layout();updateCaption();cards[0].image.src=asset(pages[0].preview);
