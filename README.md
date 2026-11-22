@@ -62,7 +62,7 @@
 
 ## 发布包与入口检查
 
-唯一发布工作流为 `.github/workflows/pages.yml`，只上传 `scripts/assemble-site.py` 生成的 `public/`。已移除旧 Jekyll 通道；历史 `island-*`、`app.js`、旧共享列表页样式、音效试听页、`review` 截图及旧版封面不进入发布包。
+GitHub Pages 发布使用 `.github/workflows/pages.yml`；可选的腾讯云 COS 发布使用 `.github/workflows/cos.yml`。两者只上传 `scripts/assemble-site.py` 生成并经审计的 `public/`。已移除旧 Jekyll 通道；历史 `island-*`、`app.js`、旧共享列表页样式、音效试听页、`review` 截图及旧版封面不进入发布包。
 
 首页、作品集、其他项目与旧 `bruno-preview` 地址均生成当前应用 HTML；`world-base.js` 统一资源基址，支持仓库子路径和这些入口。保留旧 URL 的访问能力，同时不再显示跳转壳或旧界面。`other-projects.html` 是无 WebGL 时的当前项目阅读入口。
 
@@ -117,7 +117,9 @@ python -m http.server 8000 --bind 0.0.0.0 --directory public
 
 ## 部署
 
-推送 `main` 后，唯一工作流构建当前 Vite 应用、组装 `public/`、执行入口和依赖检查，再发布到 GitHub Pages。不得重新使用复制整个源码目录或手动拼接旧页面的命令。上线结果为工作流返回的 Pages 地址；可在 `release.json` 核对构建版本及发布范围。
+推送 `main` 后，GitHub Pages 工作流构建当前 Vite 应用、组装 `public/`、执行入口和依赖检查，再发布到 GitHub Pages。不得重新使用复制整个源码目录或手动拼接旧页面的命令。上线结果为工作流返回的 Pages 地址；可在 `release.json` 核对构建版本及发布范围。
+
+另提供可选的腾讯云 COS 自动发布：一次性配置存储桶、GitHub Variables 和 Secrets，设置 `COS_ENABLED=true` 后，每次推送 `main` 自动构建并上传，无需手动下载 Artifact。现有 GitHub Pages 发布继续运行。详细操作和最小权限策略见 [腾讯云 COS 部署指南](docs/tencent-cos.md)。
 
 ## 照片与动效
 
