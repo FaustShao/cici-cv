@@ -2,7 +2,7 @@
 from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlsplit,unquote,parse_qs
-import json,re,sys
+import hashlib,json,re,sys
 root=Path(sys.argv[1]if len(sys.argv)>1 else 'public').resolve()
 release=json.loads((root/'release.json').read_text());revision=release['revision'];errors=[]
 for name in ['island.css','island-ui.js','island-scene.js','island-models.js','app.js','styles.css','world-resume.css','site.js','site.css','click-sounds.html','cecilia-world/review','assets/vendor/three.module.min.js','assets/vendor/FontLoader.js','assets/vendor/TextGeometry.js','assets/vendor/RoundedBoxGeometry.js']:
@@ -29,5 +29,18 @@ for p in root.rglob('*.css'):
 for name in ['index.html','portfolio.html','works.html','bruno-preview/hub.html','bruno-preview/index.html']:
  text=(root/name).read_text()
  if 'name="cecilia-world-root"'not in text or 'id="world"'not in text:errors.append('Alias is not the current application: '+name)
+# The opt-in image map must never publish a missing or altered alternative.
+image_manifest=root/'assets/project-lossless/manifest.json'
+if image_manifest.exists():
+ for record in json.loads(image_manifest.read_text())['files']:
+  for key,expected in [('source',record['sourceSha256']),('target',record.get('sha256'))]:
+   if not expected:continue
+   path=(root/record[key]).resolve()
+   if not path.is_relative_to(root)or not path.is_file():
+    errors.append('Missing image source/alternative: '+record[key]);continue
+   with path.open('rb')as stream:actual=hashlib.file_digest(stream,'sha256').hexdigest()
+   if actual!=expected:errors.append('Image checksum differs from verified conversion: '+record[key])
+  if record['status']=='webp'and record['bytes']>=record['originalBytes']:
+   errors.append('Image alternative is not smaller: '+record['target'])
 if errors:raise SystemExit('\n'.join(sorted(set(errors))))
 print(f'PASS production revision {revision}: current entry documents, versioned runtime references, no legacy UI, all static HTML/CSS dependencies present.')

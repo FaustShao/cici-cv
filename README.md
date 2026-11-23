@@ -188,3 +188,11 @@ Gazette 每次实际切换书页播放一次轻柔的纸张翻动录音（Kenney
 主页与作品集由 `src/hub.js` 驱动同一个文档、Scene、相机、渲染器和渲染循环。`#portfolio` 通过站点镜头进入，地图与返回主页不会重新加载页面；`portfolio.html`、`cecilia-world/index.html` 和旧展架书签直接载入同一应用，以作品集为初始地点。`src/portfolio-station.js` 保留原 ProjectsArea 的展架、玻璃材质、文字、箭头、分页、悬停、动态机械和点击阅读。原主页和作品集各自的植物配置、地形纹理、雾效、阴影、桌面/手机镜头与操作范围作为同一场景的视图配置保留；只绘制当前配置，模型与纹理共用已下载资源。首次显示前准备当前封面并预编译两种视图，地点切换不再创建图形上下文。作品阅读框始终只保留一个文档，关闭即清理，作品内大图未作转换或调整。
 
 `tests/unified-portfolio.cjs` 验证五个地点来回切换始终保留文档/渲染器/相机/Scene、作品集原镜头和雾影参数、原模型箭头、键盘、拖动缩放、四种阅读器清理返回、地图键盘隔离、手机布局、浏览器历史与旧入口。
+
+## 项目图片的无损 WebP 备选
+
+Tideline、SafePaw 和 Dream Sentinel 的 PNG 原稿保留在原目录，未缩图、调色或重写文字。`scripts/prepare-project-webp.py` 生成同尺寸、RGBA 精确一致且更小的备选，`assets/project-lossless/manifest.json` 记录原件/备选 SHA-256、尺寸与体积；`project-image-formats.js` 在这三个阅读页内供统一资源函数选择。Gazette 及既有 WebP 保持原样。短资源名避免原稿超长中文文件名追加扩展名后超过文件系统上限。
+
+保真检查包含独立解码器和 Chromium 原尺寸/缩放、深浅背景透明叠加对照。`scripts/project-webp-preserve.json` 中的素材因浏览器呈现存在细小差异，继续使用原 PNG；超出 WebP 尺寸上限的长图也不转换。本次启用333张备选，其余290张沿用 PNG。对应 PNG 素材总体约311 MB，选用备选后约261 MB；这仅说明文件体积变化，不代表所有页面首屏或加载耗时按同比例下降。首屏/分区加载逻辑、画板尺寸和交互未调整。
+
+验证：`node tests/project-image-formats.cjs` 检查原件校验和、全部备选解码后的精确 RGBA、体积、URL 和版本映射、浏览器颜色/透明叠加、Tideline 八个页面与两个分层项目的全部画板和手机显示；`tests/project-ui-zoom.cjs` 验证原有高清放大和连续切换。发布审核会校验清单内所有原件与备选的哈希，阻止缺失或错误素材上线。

@@ -28,7 +28,7 @@ for name in entries:
    assert (ROOT/path).is_file(),f'Missing runtime dependency: {path}'
    files.add(path)
 for name in sorted(files):shutil.copyfile(ROOT/name,OUT/name)
-asset_dirs=['tideline','dream-sentinel','safepaw-family','gazette','gazette-research','gazette-desk','project-ui-details','haha-world','icod','resume','sonicsense']
+asset_dirs=['tideline','dream-sentinel','safepaw-family','gazette','gazette-research','gazette-desk','project-ui-details','haha-world','icod','resume','sonicsense','project-lossless']
 for name in asset_dirs:shutil.copytree(ROOT/'assets'/name,OUT/'assets'/name)
 shutil.copytree(ROOT/'assets/vendor/page-flip',OUT/'assets/vendor/page-flip')
 for directory,patterns in [('portfolio-covers',['*-v3.webp']),('fonts',['huiwen*'])]:

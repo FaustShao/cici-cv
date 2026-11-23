@@ -18,7 +18,7 @@ const review=path.join(repo,'experiments/bruno-projects/public/review');
    await p.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));await p.waitForLoadState('networkidle');
    const report=await p.evaluate(i=>{
     const layout=SAFEPAW_LAYOUT[i-1],b=document.getElementById('board-'+i),r=b.getBoundingClientRect();
-    return layout.layers.map(l=>{const n=b.querySelector('[data-node="'+l.id+'"]'),img=n.firstChild,a=img.getBoundingClientRect();return {id:l.id,loaded:img.dataset.ready==='true'&&img.href.baseVal.endsWith(l.file),geometryError:Math.max(Math.abs(a.x-r.x-l.x/3488*r.width),Math.abs(a.y-r.y-l.y/1744*r.height),Math.abs(a.width-l.w/3488*r.width),Math.abs(a.height-l.h/1744*r.height))}});
+    return layout.layers.map(l=>{const n=b.querySelector('[data-node="'+l.id+'"]'),img=n.firstChild,a=img.getBoundingClientRect();return {id:l.id,loaded:img.dataset.ready==='true'&&img.href.baseVal===CeciliaAssetURL('assets/safepaw-family/'+l.file),geometryError:Math.max(Math.abs(a.x-r.x-l.x/3488*r.width),Math.abs(a.y-r.y-l.y/1744*r.height),Math.abs(a.width-l.w/3488*r.width),Math.abs(a.height-l.h/1744*r.height))}});
    },i);
    assert.ok(report.every(r=>r.loaded&&r.geometryError<.1),'Every asset is decoded and matches its original Figma render geometry on page '+i);
    const png=await board.screenshot();await sharp(png).webp({quality:90}).toFile(path.join(review,'safepaw-'+i+'.webp'));

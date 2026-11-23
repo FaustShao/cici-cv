@@ -4,6 +4,8 @@
   root.dataset.pageBoot='pending';
   window.CeciliaAssetURL=value=>{
     const url=new URL(value,location.href),release=document.querySelector('meta[name="cecilia-release"]')?.content;
+    const optimized=url.origin===location.origin&&window.CeciliaImageFormats?.get(url.pathname);
+    if(optimized)url.pathname=optimized;
     if(release&&url.origin===location.origin)url.searchParams.set('build',release);
     return url.href;
   };
