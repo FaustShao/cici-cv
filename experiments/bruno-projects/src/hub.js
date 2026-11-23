@@ -123,6 +123,8 @@ function openReader(title, file) {
             if (!a || a.target === "_blank") return;
             const url = new URL(a.href);
             if (url.origin !== contentRoot.origin) return;
+            // Let the project handle navigation within its current document.
+            if (url.pathname === doc.location.pathname && url.search === doc.location.search) return;
             const name = url.pathname.split("/").pop();
             if (place === "other" && name === "works.html" && url.hash === "#other") {
               event.preventDefault();
