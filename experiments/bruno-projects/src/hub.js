@@ -124,6 +124,11 @@ function openReader(title, file) {
             const url = new URL(a.href);
             if (url.origin !== contentRoot.origin) return;
             const name = url.pathname.split("/").pop();
+            if (place === "other" && name === "works.html" && url.hash === "#other") {
+              event.preventDefault();
+              closeReader();
+              return;
+            }
             if (
               name === "index.html" &&
               !url.pathname.endsWith("cecilia-world/index.html")

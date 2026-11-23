@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CARDINAL · 游戏界面手记</title>
+  <link rel="stylesheet" href="cardinal.css"><script defer src="cardinal.js"></script>
+</head>
+<body>
+<header class="mast"><a class="back" href="works.html#other">← 其他项目</a><b>CARDINAL</b><a href="#table">组件桌 ↘</a></header>
+<main>
+  <section class="intro" aria-labelledby="title">
+    <div class="theatre">
+      <img src="assets/cardinal/menu.webp" width="1920" height="1080" alt="CARDINAL 开始菜单，章鱼和纸片角色围绕中央的菜单牌">
+      <nav aria-label="开始菜单">
+        <a href="#screens" aria-label="START · 浏览界面"></a>
+        <a href="#table" aria-label="SETTING · 探索组件"></a>
+        <a class="back" href="works.html#other" aria-label="QUIT · 返回其他项目"></a>
+      </nav>
+    </div>
+    <div class="intro-note"><span lang="en">MORAY GAME JAM</span><h1 id="title">CARDINAL</h1><h2>纸上卡组冒险</h2><p>48 小时，围绕「位置」设计的一款放置式卡组构建游戏。我负责界面与手绘美术，把棋盘、卡牌和路线图画成同一张桌上的物件。</p><a href="#screens">翻看界面 ↓</a></div>
+  </section>
+  <section id="screens" class="spread">
+    <header class="section-head"><h2>界面原稿</h2><p>从棋盘到地图，翻看四种游戏场景。</p></header>
+    <nav id="screen-choices" class="tabs" aria-label="切换界面"></nav>
+    <div class="picture"><button id="enlarge" aria-label="放大当前界面原稿"><img id="screen" src="assets/cardinal/battle-preview.webp" width="1920" height="1080" alt="战斗界面"></button><div id="pins"></div></div>
+    <div class="caption"><p id="screen-note" aria-live="polite"></p><button id="zoom">查看高清 ↗</button></div>
+  </section>
+  <section id="table" class="table-section"><header class="section-head"><h2>组件桌</h2><p>拖开纸片，看下方的手绘组件。轻点可查看名称，也可以用方向键移动。</p></header>
+    <div class="board"><div class="under"><img src="assets/cardinal/stall.webp" alt=""><span>地图上的商店</span></div><div id="pieces"></div></div>
+    <div class="caption"><output id="piece-name" aria-live="polite">卡牌、钱袋与印章</output><button id="reset">重新摆放 ↺</button></div>
+  </section>
+  <section class="cast"><header class="section-head"><h2>角色与动效</h2><p>点选纸偶，查看它的循环动作。</p></header><div id="characters"></div></section>
+  <section class="studies"><header class="section-head"><h2>同一块棋盘的两种画法</h2><p>两份战斗界面方案并排对照。</p></header>
+    <div class="pair"><figure><img loading="lazy" src="assets/cardinal/pencil.webp" alt="浅色战斗界面方案"><figcaption>铅笔排线划出左侧角色区，九格棋盘由纸色方块拼成。</figcaption></figure><figure><img loading="lazy" src="assets/cardinal/battle-preview.webp" alt="UI Mockup 战斗界面"><figcaption>在 UI Mockup 中，章鱼纸片、红色数值签与深色棋格区分了角色和操作区。</figcaption></figure></div>
+  </section>
+</main><footer><b>CARDINAL</b><a class="back" href="works.html#other">返回其他项目 ↗</a></footer>
+<dialog id="viewer"><div class="viewer-bar"><strong id="viewer-name"></strong><button id="actual">原始尺寸</button><button id="dismiss">关闭 ×</button></div><div class="viewport"><img id="full" alt=""></div></dialog>
+</body></html>

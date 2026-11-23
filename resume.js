@@ -115,7 +115,7 @@ window.RESUME = {
       "cover": "assets/icod/final/01-preview.webp"
     },
     {
-      "name": "Cardinal 独立游戏设计项目",
+      "name": "CARDINAL",
       "boardTags": ["独立游戏", "界面设计", "手绘美术"],
       "category": "04 / 游戏UI设计 · 2026.03",
       "description": "Moray Game Jam 团队项目；负责 UI 与游戏美术相关设计。",
@@ -130,7 +130,8 @@ window.RESUME = {
         "手绘美术",
         "Game Jam"
       ],
-      "url": ""
+      "url": "cardinal.html",
+      "cover": "assets/cardinal/cover.webp"
     },
     {
       "name": "哈哈世界 · VI 视觉识别系统",
