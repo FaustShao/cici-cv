@@ -9,7 +9,7 @@ assert.equal(await p.evaluate(()=>ICOD_ARCHIVE.manifest.sections[0].pages.length
 assert.equal(await p.evaluate(()=>ICOD_ARCHIVE.manifest.sections[1].pages.length),21);
 await p.waitForFunction(()=>[...document.querySelectorAll('.archive-card img')].every(i=>i.complete&&i.naturalWidth>0));
 await p.screenshot({path:'/tmp/icod-desktop.png'});
-const cover=await p.locator('.archive-card[data-active=true]').boundingBox();assert.ok(cover.width>850,'Large previews dominate the frame');assert.ok(Math.abs(cover.x+cover.width/2-720)<1,'Initial artwork is centered');assert.ok(cover.y>150&&cover.y+cover.height<1000,'Initial artwork is not cropped');
+const cover=await p.locator('.archive-card[data-active=true]').boundingBox();assert.ok(cover.width>850,'Large previews dominate the frame');assert.ok(Math.abs(cover.x+cover.width/2-720)<1,'Initial artwork is centered');assert.ok(cover.y>55&&cover.y+cover.height<1000,'Initial artwork is not cropped');
 await p.locator('#next').click();assert.equal(await p.evaluate(()=>ICOD_ARCHIVE.state.index),1);
 await p.keyboard.press('ArrowRight');assert.equal(await p.evaluate(()=>ICOD_ARCHIVE.state.index),2);
 await p.waitForTimeout(700);
@@ -21,14 +21,14 @@ await p.locator('#zoom-toggle').click();assert.equal(await p.locator('#image-vie
 await p.locator('#viewer-next').click();assert.equal(await p.evaluate(()=>ICOD_ARCHIVE.state.index),4);
 await p.keyboard.press('Escape');assert.ok(!await p.locator('#image-viewer').evaluate(e=>e.open));
 await p.locator('[data-section=mid]').click();assert.equal(await p.locator('.archive-card').count(),21);
-await p.locator('[data-view=grid]').click();assert.equal(await p.locator('.grid-card').count(),21);
-await p.locator('.grid-card').nth(12).click();assert.equal(await p.evaluate(()=>ICOD_ARCHIVE.state.index),12);
+await p.locator('[data-view=grid]').click();assert.equal(await p.locator('.grid-card').count(),6);
+await p.locator('#grid-next').click();await p.locator('#grid-next').click();await p.locator('.grid-card').first().click();assert.equal(await p.evaluate(()=>ICOD_ARCHIVE.state.index),12);
 await p.locator('#image-scroll').click({position:{x:10,y:10}});assert.ok(!await p.locator('#image-viewer').evaluate(e=>e.open),'Click outside artwork dismisses');
 await p.screenshot({path:'/tmp/icod-grid.png'});
 await p.locator('[data-section=certificate]').click();assert.ok(await p.locator('#certificate-view').isVisible());assert.ok(await p.locator('[data-view=grid]').isDisabled());
-assert.match(await p.locator('#certificate-art img').getAttribute('src'),/certificate-preview.webp$/);
+assert.ok(new URL(await p.locator('#certificate-art img').getAttribute('src')).pathname.endsWith('certificate-preview.webp'));
 await p.locator('#certificate-art button').click();await p.waitForFunction(()=>document.querySelector('#full-image').complete&&document.querySelector('#full-image').naturalWidth===1810);
-assert.match(await p.locator('#full-image').getAttribute('src'),/certificate.jpg$/);assert.ok(!await p.locator('#viewer-next').isVisible());
+assert.ok(new URL(await p.locator('#full-image').getAttribute('src')).pathname.endsWith('certificate.jpg'));assert.ok(!await p.locator('#viewer-next').isVisible());
 await p.locator('#zoom-toggle').click();assert.equal(await p.locator('#image-viewer').getAttribute('data-zoom'),'true');await p.keyboard.press('Escape');
 await p.screenshot({path:'/tmp/icod-certificate.png'});
 await p.locator('[data-section=final]').click();await p.locator('[data-view=space]').click();

@@ -15,7 +15,7 @@ const image = (src, label, lazy = false) => {
   const img = new Image(); img.src = asset(src); img.alt = label; img.draggable = false;
   img.decoding = 'async'; img.loading = lazy ? 'lazy' : 'eager'; return img;
 };
-let wheelDistance = 0, wheelTime = 0, lastWheel = 0, gesture = null, suppressedClick = false, gridBuilt = '';
+let wheelDistance = 0, wheelTime = 0, lastWheel = 0, gesture = null, suppressedClick = false, gridBuilt = '', gridPage = 0;
 const indexes = new Map();
 for (const section of [...sections, { id: 'certificate', title: '参与证书', pages: [] }]) {
   const button = document.createElement('button'); button.type = 'button'; button.dataset.section = section.id;
@@ -34,18 +34,18 @@ function selectSection(id) {
   $('section-description').textContent = current()?.subtitle || '参与记录 · TASA–ICoD 暑期国际设计教育工作坊';
   document.querySelectorAll('[data-section]').forEach(b => b.setAttribute('aria-current', String(b.dataset.section === id)));
   document.querySelectorAll('[data-view]').forEach(b => b.disabled = certificate);
-  if (!certificate) { buildCards(); if (state.view === 'grid') buildGrid(); }
+  if (!certificate) { buildCards(); if (state.view === 'grid') { gridPage=Math.floor(state.index/gridSize());buildGrid(); } }
   announce();
 }
 function selectView(view) {
   if (state.section === 'certificate') return;
   state.view = view; $('space-view').hidden = view !== 'space'; $('grid-view').hidden = view !== 'grid';
   document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
-  if (view === 'grid') buildGrid(); else { updateCards(); $('timeline').querySelector('[aria-current=true]')?.scrollIntoView({block:'nearest',inline:'center'}); }
+  if (view === 'grid') { gridPage=Math.floor(state.index/gridSize());buildGrid(); } else { updateCards(); $('timeline').querySelector('[aria-current=true]')?.scrollIntoView({block:'nearest',inline:'center'}); }
 }
 function selectIndex(index) {
   const next = Math.max(0, Math.min(pages().length - 1, index)); if (next === state.index) return;
-  state.index = next; indexes.set(state.section, next); updateCards(); announce();
+  state.index = next; indexes.set(state.section, next); updateCards(); if(state.view==='grid'){gridPage=Math.floor(state.index/gridSize());buildGrid();} announce();
   $('timeline').querySelector('[aria-current=true]')?.scrollIntoView({block:'nearest',inline:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
 }
 function buildCards() {
@@ -66,7 +66,9 @@ function buildCards() {
 }
 function updateCards(dragOffset = 0) {
   const stage = $('stage'), width = stage.clientWidth;
-  const cardWidth = Math.min(width * (width <= 600 ? .9 : width <= 900 ? .84 : .72), width <= 600 ? Infinity : (innerHeight - 280) * 16/9, 1240);
+  const cardWidth = Math.min(width * (width <= 600 ? .9 : width <= 900 ? .84 : .72), Math.max(1,stage.clientHeight-24)*16/9, 1240);
+  stage.style.setProperty('--card-w',cardWidth+'px');
+  $('space-view').style.setProperty('--caption-width',cardWidth+'px');
   const distance = cardWidth * .88;
   [...$('cards').children].forEach((card, index) => {
     const delta = index - state.index, visible = Math.abs(delta) <= 3, x = delta * distance + dragOffset;
@@ -83,17 +85,34 @@ function updateCards(dragOffset = 0) {
   $('previous').disabled = state.index === 0; $('next').disabled = state.index === pages().length-1;
   [...$('timeline').children].forEach((tick,index) => tick.setAttribute('aria-current',String(index === state.index)));
 }
+function gridShape(){
+  const width=$('grid-items').clientWidth;
+  const columns=width>=1050?3:width>=600?2:1;
+  const rows=$('grid-items').clientHeight>=420?2:1;
+  return {columns,rows};
+}
+function gridSize(){const {columns,rows}=gridShape();return columns*rows;}
 function buildGrid() {
-  if (gridBuilt === state.section) return;
-  $('grid-view').replaceChildren();
-  pages().forEach((page,index) => {
-    const card = document.createElement('button'); card.className = 'grid-card'; card.type = 'button';
-    card.append(image(page.preview, page.label, true));
+  if(state.section==='certificate'||state.view!=='grid')return;
+  const {columns,rows}=gridShape(),size=columns*rows,total=Math.ceil(pages().length/size);
+  gridPage=Math.max(0,Math.min(gridPage,total-1));
+  $('grid-items').style.setProperty('--grid-columns',columns);$('grid-items').style.setProperty('--grid-rows',rows);
+  const key=`${state.section}:${gridPage}:${size}`;if(gridBuilt===key)return;
+  $('grid-items').replaceChildren();
+  pages().slice(gridPage*size,(gridPage+1)*size).forEach((page,offset) => {
+    const index=gridPage*size+offset;
+    const card = document.createElement('button'); card.className = 'grid-card'; card.type = 'button';card.dataset.index=index;
+    card.append(image(page.preview, page.label));
     const caption = document.createElement('span'), number = document.createElement('small'); number.textContent = String(page.number).padStart(2,'0');
     caption.append(number,document.createTextNode(page.label)); card.append(caption);
-    card.onclick = () => { selectIndex(index); openViewer(); }; $('grid-view').append(card);
-  }); gridBuilt = state.section;
+    card.onclick = () => { selectIndex(index); openViewer(); }; $('grid-items').append(card);
+  });
+  $('grid-position').textContent=`${gridPage+1} / ${total}`;
+  $('grid-previous').disabled=gridPage===0;$('grid-next').disabled=gridPage===total-1;
+  gridBuilt=key;
 }
+function turnGrid(step){gridPage+=step;buildGrid();}
+$('grid-previous').onclick=()=>turnGrid(-1);$('grid-next').onclick=()=>turnGrid(1);
 // Pointer capture starts only once a deliberate horizontal drag has crossed the tap threshold.
 $('stage').addEventListener('pointerdown',event => {
   if (event.button !== 0) return;
@@ -152,13 +171,12 @@ document.addEventListener('keydown',event => {
   if (state.section === 'certificate') return;
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     event.preventDefault(); const step = event.key === 'ArrowRight' ? 1 : -1;
-    $('image-viewer').open ? turnViewer(step) : selectIndex(state.index+step);
+    $('image-viewer').open ? turnViewer(step) : state.view==='grid' ? turnGrid(step) : selectIndex(state.index+step);
   }
 });
-$('back-other').onclick = event => {
-  try { if(parent!==window && parent.WORLD_STATE?.place==='other') { event.preventDefault(); parent.document.getElementById('close-reader').click(); } } catch {}
-};
-window.addEventListener('resize',() => { if(state.section!=='certificate') updateCards(); });
+window.addEventListener('resize',() => { if(state.section!=='certificate') { if(state.view==='space')updateCards();else buildGrid(); } });
+new ResizeObserver(()=>{if(state.section!=='certificate'&&state.view==='space')updateCards();}).observe($('stage'));
+new ResizeObserver(()=>{if(state.view==='grid'&&!$('grid-view').hidden)buildGrid();}).observe($('grid-items'));
 if (manifest.certificate) {
   $('archive-count').textContent='37 张 / 2 份档案 + 参与证书';
   const button = document.createElement('button'); button.type = 'button'; button.setAttribute('aria-label','放大参与证书');

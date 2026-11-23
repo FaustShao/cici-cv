@@ -7,18 +7,15 @@
   <title>2050 / Prot-mask · 王钰欣</title>
 </head>
 <body>
-  <header class="archive-header">
-    <a id="back-other" class="text-control" href="./hub.html#other">返回其他项目</a>
-    <h1>2050 / PROT-MASK<span>TASA–ICoD · 2024</span></h1>
-    <div class="layout-controls" role="group" aria-label="浏览方式">
-      <button type="button" data-view="space" aria-pressed="true">空间</button>
-      <button type="button" data-view="grid" aria-pressed="false">总览</button>
-    </div>
-  </header>
   <main>
     <div class="archive-context">
       <nav id="sections" aria-label="项目分区"></nav>
       <p id="section-description"></p>
+    <div class="layout-controls" role="group" aria-label="浏览方式">
+      <button type="button" data-view="space" aria-pressed="true">空间</button>
+      <button type="button" data-view="grid" aria-pressed="false">总览</button>
+    </div>
+
     </div>
     <section id="space-view" aria-label="横向图片档案">
       <div id="stage" aria-label="拖动或滚动切换图片，点击中央图片放大"><div id="cards"></div></div>
@@ -29,7 +26,10 @@
         <button id="next" type="button" aria-label="下一张"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m13 8 8 8-8 8"/></svg></button>
       </div>
     </section>
-    <section id="grid-view" aria-label="图片总览" hidden></section>
+    <section id="grid-view" aria-label="图片总览" hidden>
+      <div id="grid-items"></div>
+      <nav class="grid-pagination" aria-label="总览分页"><button id="grid-previous" type="button">上一组</button><span id="grid-position" aria-live="polite"></span><button id="grid-next" type="button">下一组</button></nav>
+    </section>
     <section id="certificate-view" aria-labelledby="certificate-title" hidden>
       <div class="certificate-meta"><p>TASA–ICoD / 2024</p><h2 id="certificate-title">参与证书</h2><p>2024 TASA–ICoD 暑期国际设计教育工作坊</p><p>清华青岛艺术与科学创新研究院<br>国际设计联合会</p><p>2024.08.05 — 2024.09.06</p></div>
       <div id="certificate-art"></div>
