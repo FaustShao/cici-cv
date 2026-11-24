@@ -54,6 +54,9 @@ const root = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8770/cici-cv/';
       assert.equal(await reader.locator('iframe').count(), 1);
     }
 
+    assert.deepEqual(await page.evaluate(() => designWorld.identity.children
+      .filter(mesh => mesh.visible)
+      .flatMap(group => group.children.map(mesh => mesh.name))), ['王钰欣', '/ CECILIA']);
     await tapModel('physicalFixed003');
     await page.locator('#world-map[open]').waitFor();
     await page.evaluate(() => history.back());

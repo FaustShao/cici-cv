@@ -401,12 +401,42 @@ export function createFixtures(world) {
       points.forEach(([x,y],i)=>mesh.setMatrixAt(i,matrix.makeTranslation(x*size+xOffset-centerX,(y+yOffset+.5)*size*yStretch,0)));
       mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();root.add(mesh);return mesh;
     }
-    blocks(pixels,chineseCell,"voxel-name-blocks",0,-minY);
-    blocks(caption,captionCell,"voxel-name-caption",captionStart,0,captionStretch);
+    const voxelName = blocks(pixels,chineseCell,"voxel-name-blocks",0,-minY);
+    const voxelCaption = blocks(caption,captionCell,"voxel-name-caption",captionStart,0,captionStretch);
     root.rotation.y = Math.PI / 7.2;
     const localWidth=captionRight-minX;
     parcel(root, 43, 42.5, 1, { plaza: true, radius: 1, prepared: true,
       precise:true,oriented:{angle:root.rotation.y,width:localWidth,depth:.27*1.15*overallScale} });
+    // On a phone each stroke spans only a few screen pixels. Build solid
+    // strokes from the bundled typefaces and retain the sculpture's footprint.
+    let solidLetters;
+    function solidText(text, font, bounds, depth) {
+      const geometry = new T.ExtrudeGeometry(font.generateShapes(text, 1), {
+        depth, bevelEnabled: false, curveSegments: 8,
+      });
+      geometry.computeBoundingBox();
+      const box = geometry.boundingBox;
+      const size = box.getSize(new T.Vector3());
+      const target = bounds.getSize(new T.Vector3());
+      geometry.translate(-box.min.x, -box.min.y, -box.max.z);
+      geometry.scale(target.x / size.x, target.y / size.y, 1);
+      geometry.translate(bounds.min.x, bounds.min.y, bounds.max.z);
+      const mesh = new T.Mesh(geometry, [front, materials.purple]);
+      mesh.name = text;
+      mesh.castShadow = true;
+      return mesh;
+    }
+    root.setPhoneLettering = enabled => {
+      if (enabled && !solidLetters) {
+        solidLetters = new T.Group();
+        solidLetters.name = "solid-owner-name";
+        solidLetters.add(solidText("王钰欣", world.chinese, voxelName.boundingBox, .13));
+        solidLetters.add(solidText("/ CECILIA", world.english, voxelCaption.boundingBox, .08));
+        root.add(solidLetters);
+      }
+      if (solidLetters) solidLetters.visible = enabled;
+      voxelName.visible = voxelCaption.visible = !enabled;
+    };
     root.userData.text = "王钰欣 / CECILIA";
     root.userData.blockCount = chineseCount+caption.length;
     root.userData.glyphResolution=56;

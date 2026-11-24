@@ -17,7 +17,7 @@
     Promise.all(pending).then(results=>section.dataset.loaded=results.every(Boolean)?'true':'error');
   };
   const observer='IntersectionObserver' in window?new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){loadBoard(entry.target);observer.unobserve(entry.target);}}),{rootMargin:'1000px 0px'}):null;
-  let enlarged=false,fitOnMobile=false;
+  let enlarged=false;
   const generic=/^(Group |Rectangle |Frame |Mask group|image |Ellipse |Arrow|Union|Vector|Guts\s*\/|Highlight|Misc_|Paper Tape|Underline|Polygon)/;
   const cardIds=new Set(['54:187','54:217','54:246','54:2512','54:957','54:1091','54:1241','54:1312','54:1468','54:1604','54:1717','54:1819','54:1935','54:2051','54:2137']);
   const cardNames={'54:187':'用户画像：王女士','54:217':'用户画像：张先生','54:246':'用户画像：李先生','54:2512':'儿童与宠物犬互动插画'};
@@ -72,15 +72,14 @@
   }
   function resize(){
     const mobile=innerWidth<=900;
-    const reading=mobile?!fitOnMobile:enlarged;
-    for(const {section,stage,board} of views){
-      const width=Math.max(section.clientWidth,reading?(mobile?1800:2400):0),scale=width/3488;
-      stage.style.width=`${width}px`;stage.style.height=`${1744*scale}px`;
+    for(const {section,stage} of views){
+      const width=Math.max(section.clientWidth,enlarged?(mobile?1800:2400):0);
+      stage.style.width=`${width}px`;stage.style.height=`${width/2}px`;
       section.classList.toggle('can-scroll',width>section.clientWidth);
     }
-    document.body.classList.toggle('reading-mode',reading);readingButton.setAttribute('aria-pressed',String(reading));readingButton.textContent=reading?'适应宽度':'放大阅读';
+    document.body.classList.toggle('reading-mode',enlarged);readingButton.setAttribute('aria-pressed',String(enlarged));readingButton.textContent=enlarged?'适应宽度':'放大阅读';
   }
-  readingButton.addEventListener('click',()=>{if(innerWidth<=900)fitOnMobile=!fitOnMobile;else enlarged=!enlarged;resize();});
+  readingButton.addEventListener('click',()=>{enlarged=!enlarged;resize();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')resetCards();});
   new ResizeObserver(resize).observe(main);resize();
   window.SAFEPAW_READER={views,resize};

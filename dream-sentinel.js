@@ -67,21 +67,19 @@
   });
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){controls.forEach(c=>c.reset());if(board.contains(document.activeElement))document.activeElement.blur();}});
   board.addEventListener('click',e=>{if(!e.target.closest('.signal-hotspot'))controls.forEach(c=>c.reset());});
-  let fitOnMobile=false,enlarged=false;
+  let enlarged=false;
   function resize(){
-    const mobile=viewport.clientWidth<=900;
-    const reading=(mobile&&!fitOnMobile)||enlarged;
-    const width=Math.max(viewport.clientWidth,reading?1800:0);
+    const width=Math.max(viewport.clientWidth,enlarged?1800:0);
     const scale=width/3488;
     stage.style.width=`${width}px`;stage.style.height=`${1744*scale}px`;board.style.transform=`scale(${scale})`;
-    document.body.classList.toggle('reading-mode',reading);
+    document.body.classList.toggle('reading-mode',enlarged);
     viewport.classList.toggle('can-scroll',width>viewport.clientWidth);
-    readingButton.setAttribute('aria-pressed',String(reading));readingButton.textContent=reading?'适应宽度':'放大阅读';
+    readingButton.setAttribute('aria-pressed',String(enlarged));readingButton.textContent=enlarged?'适应宽度':'放大阅读';
     document.dispatchEvent(new CustomEvent('sentinel-reading-change'));
   }
   new ResizeObserver(resize).observe(viewport);resize();
   readingButton.addEventListener('click',()=>{
-    if(viewport.clientWidth<=900){fitOnMobile=!fitOnMobile;enlarged=false;}else enlarged=!enlarged;
+    enlarged=!enlarged;
     resize();
   });
   let dragging=null;

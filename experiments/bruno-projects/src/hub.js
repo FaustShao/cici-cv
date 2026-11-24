@@ -643,6 +643,7 @@ try {
   function updatePhoneViews() {
     document.body.toggleAttribute("data-phone-layout", phone.matches);
     updateReadAction();
+    identity.setPhoneLettering(phone.matches);
     if (!phone.matches) return;
     for (const [key, objects] of subjects) {
       if (!phoneCorners.has(key)) phoneCorners.set(key, subjectCorners(objects));

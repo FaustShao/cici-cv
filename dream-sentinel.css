@@ -15,7 +15,7 @@ body{margin:0;background:#f0f2f1;color:#18231f;font-family:Arial,"PingFang SC","
 .board-viewport{width:100%;overflow:auto;overscroll-behavior-x:contain;scrollbar-color:#8dbfb0 #e5eee9;scrollbar-width:thin;touch-action:pan-x pan-y}
 .board-viewport.can-scroll{cursor:grab}
 .board-viewport.dragging{cursor:grabbing;user-select:none}
-.board-stage{position:relative;background:white}
+.board-stage{position:relative;background:white;overflow:hidden}
 .design-board{position:absolute;left:0;top:0;width:3488px;height:1744px;overflow:hidden;transform-origin:0 0;background:#fff;isolation:isolate}
 .design-layer{position:absolute;display:block;margin:0;pointer-events:none}
 .design-layer img{display:block;width:100%;height:100%;user-select:none;-webkit-user-drag:none}
