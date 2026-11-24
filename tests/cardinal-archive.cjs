@@ -27,9 +27,12 @@ const walk = dir => fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry => {
       const all = [...data.characters,...data.sections.flatMap(s=>s.items)];
       const versions = all.flatMap(i=>[i,...(i.layers || []),...(i.motions || [])]);
       const inputs = path.join(project,'InKore');
-      assert.deepEqual(new Set(versions.flatMap(v=>v.sources)),new Set(walk(inputs).map(f=>path.relative(inputs,f))));
+      const artwork = walk(inputs).map(f=>path.relative(inputs,f))
+        .filter(f=>!f.startsWith('UI References/') && f!=='reference.pur');
+      assert.deepEqual(new Set(versions.flatMap(v=>v.sources)),new Set(artwork));
+      assert.equal(await page.locator('#archive-tabs').getByRole('button',{name:'参考资料'}).count(),0);
       for (const item of versions) {
-        for (const key of ['full','thumb','sheet','download']) {
+        for (const key of ['full','thumb','sheet']) {
           if (item[key]) assert.ok(fs.existsSync(path.join(project,'assets/cardinal/archive',item[key])));
         }
       }

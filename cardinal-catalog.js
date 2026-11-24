@@ -2779,68 +2779,6 @@ const cardinalCatalog = {
      ]
     }
    ]
-  },
-  {
-   "title": "参考资料",
-   "items": [
-    {
-     "title": "棋盘布局草图",
-     "thumb": "9abb30011251fbf3-sm.webp",
-     "full": "9abb30011251fbf3.webp",
-     "sources": [
-      "UI References/UI Sketch.jpg"
-     ]
-    },
-    {
-     "title": "molukas",
-     "thumb": "9349b37963f2e174-sm.webp",
-     "full": "9349b37963f2e174.webp",
-     "sources": [
-      "UI References/molukas.png"
-     ]
-    },
-    {
-     "title": "wild city 1",
-     "thumb": "448ccc32474e98e7-sm.webp",
-     "full": "448ccc32474e98e7.webp",
-     "sources": [
-      "UI References/wild city 1.png"
-     ]
-    },
-    {
-     "title": "wild city 2",
-     "thumb": "a95c54d77331448e-sm.webp",
-     "full": "a95c54d77331448e.webp",
-     "sources": [
-      "UI References/wild city 2.png"
-     ]
-    },
-    {
-     "title": "wildfrost screenshot-1",
-     "thumb": "75b75ba252784688-sm.webp",
-     "full": "75b75ba252784688.webp",
-     "sources": [
-      "UI References/wildfrost screenshot-1.jpg"
-     ]
-    },
-    {
-     "title": "wildfrost screenshot-2",
-     "thumb": "d8edc143e29da179-sm.webp",
-     "full": "d8edc143e29da179.webp",
-     "sources": [
-      "UI References/wildfrost screenshot-2.jpg"
-     ]
-    },
-    {
-     "title": "PureRef 参考板",
-     "thumb": "74c73395535185ff.webp",
-     "full": "74c73395535185ff.webp",
-     "sources": [
-      "reference.pur"
-     ],
-     "download": "reference.pur"
-    }
-   ]
   }
  ]
 };

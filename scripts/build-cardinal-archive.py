@@ -2,7 +2,6 @@
 Source paths are recorded so new material cannot silently disappear from the archive.
 """
 from pathlib import Path
-from io import BytesIO
 import hashlib
 import json
 import math
@@ -17,7 +16,8 @@ SOURCE = ROOT / 'InKore'
 OUT = ROOT / 'assets/cardinal/archive'
 OUT.mkdir(parents=True, exist_ok=True)
 FILES = sorted(p.relative_to(SOURCE).as_posix() for p in SOURCE.rglob('*')
-               if p.is_file() and not p.name.startswith('.'))
+               if p.is_file() and not p.name.startswith('.')
+               and not p.is_relative_to(SOURCE / 'UI References') and p != SOURCE / 'reference.pur')
 covered = set()
 characters = []
 sections = {}
@@ -146,7 +146,6 @@ ui = '界面组件'
 materials = '纸纹与胶带'
 menu = '开始菜单'
 icons = '地图与图标'
-references = '参考资料'
 design_names = {
     'Book UI.ai':['书本界面 · 九宫格线框'],
     'Main Game UI.ai':['界面图形与按钮','彩色卡牌布局','棋盘与操作区布局'],
@@ -201,7 +200,7 @@ for role, title in [('Archer','弓箭手'),('Necromancer','死灵法师'),('Recr
     add(concept,entry)
 
 names = {
-    'UI Sketch':'棋盘布局草图','8307d4371b68cbb0':'绿色角色设定','Recruiter':'招募者剪影',
+    '8307d4371b68cbb0':'绿色角色设定','Recruiter':'招募者剪影',
     'book backgroud':'书页背景','Dog':'犬角色','dog':'犬角色设定','wolf':'狼角色设定','recruit':'招募者设定',
     'Desk':'桌面','Arrowpng':'指示箭头','common':'普通卡底','mythic':'红色卡底','rare':'黄色卡底',
     'Button Selection':'菜单选中标记','Menu Tab':'菜单纸牌','Start Menu Background':'开始画面背景',
@@ -218,19 +217,12 @@ for path in FILES:
     p = Path(path)
     title = names.get(p.stem,p.stem)
     if path.startswith('UI Mockup/'): group = 'UI Mockup'
-    elif path.startswith('UI References/') or p.suffix == '.pur': group = references
     elif 'Start Menu/' in path: group = menu
     elif path.startswith('Ppaer') or '/Tape/' in path or p.stem.endswith('_bg'): group = materials
     elif path.startswith('icon/') or '/Map Icon/' in path: group = icons
     elif path.startswith(('角色/','Character Book ver/')): group = concept
     else: group = ui
-    if p.suffix == '.pur':
-        raw = (SOURCE/path).read_bytes()
-        preview = Image.open(BytesIO(raw[raw.index(b'\xff\xd8\xff'):]))
-        entry = still('PureRef 参考板',[path],preview)
-        shutil.copyfile(SOURCE/path,OUT/'reference.pur')
-        entry['download'] = 'reference.pur'
-    elif p.suffix == '.svg':
+    if p.suffix == '.svg':
         # The PNG and SVG depict the same move icon. Keep the actual vector available.
         raster = next(e for e in sections[icons] if e['sources'] == ['icon/move.png'])
         entry = dict(title='move · 矢量图', thumb=raster['thumb'], sources=register([path]))
@@ -258,7 +250,7 @@ for items in sections.values():
         title = item['title']
         item['title'] = archive_labels.get(title, title.replace('Tape (','胶带 ').rstrip(')').replace('树精 · 树精','树精 · '))
 assert covered == set(FILES), sorted(set(FILES)-covered)
-order = [process, 'UI Mockup', menu, ui, icons, materials, concept, boss, references]
+order = [process, 'UI Mockup', menu, ui, icons, materials, concept, boss]
 catalog = dict(characters=characters, sections=[dict(title=s,items=sections[s]) for s in order])
 (ROOT/'cardinal-catalog.js').write_text('const cardinalCatalog = '+json.dumps(catalog,ensure_ascii=False,indent=1)+';\n')
 print(f'{len(covered)} source files, {len(characters)} character portraits;', [(s,len(sections[s])) for s in order])

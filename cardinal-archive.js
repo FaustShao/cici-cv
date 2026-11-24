@@ -136,7 +136,6 @@
     '低保真与界面方案':'线框稿记录九宫格和操作区的位置。彩色卡牌、书本和彩铅方案保留了各自的画板。',
     '角色与卡牌设定':'弓箭手、死灵法师、招募者和剑士的卡面可以切换合成图、背景和人物分层。',
     'Boss 与特效':'查看小幽灵、树精、烟雾与章鱼的不同状态，以及伤口笔画。带动作的条目支持逐帧查看。',
-    '参考资料':'此处收录项目调研时保存的草图及游戏参考图。PureRef 参考板可以下载后查看。',
     '界面组件':'棋盘、纸框、卡底和按钮的拆分原件。牌堆卡边与状态条笔画均按原导出展示。'
   };
   function chooseSection(index) {
@@ -196,9 +195,6 @@
     }
     if (options.length>1) options.forEach((v,i)=>variants.append(button(v.name,()=>select(i))));
     select(entry.motions && !characters.includes(entry) ? 1 : 0);
-    const download = byId('archive-download');
-    download.hidden = !entry.download;
-    if (entry.download) download.href = file(entry.download);
     byId('item-prev').disabled = selected === 0;
     byId('item-next').disabled = selected === collection.length - 1;
     dialog.querySelector('.archive-body').scrollTop = 0;

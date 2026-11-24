@@ -270,7 +270,7 @@ footer b { font: italic 20px Georgia,serif }
 .album-heading p, #archive-caption { font-size: clamp(14px,1.15vw,19px) }
 .page-ink { bottom: 4%; left: 3% }
 .page-ink + .page-ink { right: 3% }
-.album-link, .art-details, #archive-download { text-decoration: underline; text-underline-offset: .25em }
+.album-link, .art-details { text-decoration: underline; text-underline-offset: .25em }
 .album-link { display: inline-block; margin-top: .4em }
 .character-action, .art-details { display: block; width: 100%; color: inherit; background: none; border: 0; padding: 0; text-align: left; font: inherit }
 .character-action[aria-pressed=true] small { color: var(--red) }
@@ -304,7 +304,7 @@ footer b { font: italic 20px Georgia,serif }
 .archive-body { min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 12px clamp(12px,3vw,36px) }
 #archive-stage .art-stage { height: min(54dvh,530px); aspect-ratio: auto }
 .archive-controls { font-size: clamp(14px,1.2vw,18px); margin-top: .55em }
-.archive-controls[hidden], #archive-download[hidden] { display: none }
+.archive-controls[hidden] { display: none }
 .archive-pages { flex: none; justify-content: space-between; margin: 0; padding: .3em .8em; border-top: 1px solid #ae9682 }
 .archive-controls :disabled { opacity: .4; cursor: default }
 #frame-number { font-variant-numeric: tabular-nums; margin-inline-start: auto }
