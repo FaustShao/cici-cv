@@ -12,13 +12,16 @@ const screens = [
   {id:'shop', label:'商店', note:'商品卡按行陈列，圆形价签贴在卡角；下方另列道具与移除卡牌的位置。'}
 ];
 const eventPins = [[70,21,30,22,'上方事件纸条'],[70,48,30,22,'中间事件纸条'],[70,77,30,22,'下方事件纸条']];
-let current;
-function selectScreen(screen) {
-  current = screen;
-  byId('screen').src = asset(screen.id+'-preview.webp');
-  byId('screen').alt = screen.label+'界面原稿';
+const viewer = byId('viewer');
+const viewport = viewer.querySelector('.viewport');
+
+function openFull(screen) {
+  byId('viewer-name').textContent = screen.label + ' · 1920 × 1080';
+  byId('full').src = asset(screen.id + '.webp');
+  byId('full').alt = screen.label + '界面原稿';
+  viewport.classList.remove('actual');
+  byId('actual').textContent = '原始尺寸';
   byId('screen-note').textContent = screen.note;
-  for (const button of byId('screen-choices').children) button.setAttribute('aria-pressed',button.dataset.id===screen.id);
   const pins = byId('pins');
   pins.replaceChildren();
   for (const [x,y,w,h,label] of screen.pins || (screen.id.startsWith('event') ? eventPins : [])) {
@@ -30,46 +33,102 @@ function selectScreen(screen) {
     pin.setAttribute('aria-pressed',false);
     pin.onclick = () => {
       for (const button of pins.children) button.setAttribute('aria-pressed',button===pin);
-      byId('screen-note').textContent = '已选中 · '+label;
+      byId('screen-note').textContent = label;
     };
     pins.append(pin);
   }
+  viewer.showModal();
+  viewport.scrollTo(0,0);
 }
 for (const screen of screens) {
   const button = document.createElement('button');
-  button.textContent = screen.label;
-  button.dataset.id = screen.id;
-  button.onclick = () => selectScreen(screen);
-  byId('screen-choices').append(button);
+  button.className = 'print';
+  const image = new Image();
+  image.src = asset(screen.id + '-preview.webp');
+  image.alt = screen.label + '界面';
+  image.loading = 'lazy';
+  image.width = 1920;
+  image.height = 1080;
+  const caption = document.createElement('span');
+  const action = document.createElement('small');
+  action.textContent = '查看高清 ↗';
+  caption.append(screen.label, action);
+  button.append(image, caption);
+  button.onclick = () => openFull(screen);
+  byId('prints').append(button);
 }
-selectScreen(screens[0]);
-const viewer = byId('viewer');
-const viewport = viewer.querySelector('.viewport');
-function openFull() {
-  byId('viewer-name').textContent = current.label+' · 1920 × 1080';
-  byId('full').src = asset(current.id+'.webp');
-  byId('full').alt = current.label+'高清原稿';
-  viewport.classList.remove('actual');
-  byId('actual').textContent = '原始尺寸';
-  viewer.showModal();
-}
-byId('enlarge').onclick = byId('zoom').onclick = openFull;
 byId('actual').onclick = () => {
   const actual = viewport.classList.toggle('actual');
   byId('actual').textContent = actual ? '适应窗口' : '原始尺寸';
 };
 byId('dismiss').onclick = () => viewer.close();
 
+// The same three slips start on the lower page and stay with the scrolling prints.
+const stack = document.querySelector('.paper-stack');
+const slips = [...stack.children];
+const indexPage = byId('index');
+const castSection = byId('cast');
+const lastLeaf = document.querySelector('.last-leaf');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const clampUnit = value => Math.max(0, Math.min(1, value));
+function smoothStep(value) {
+  const t = clampUnit(value);
+  return t*t*(3-2*t);
+}
+let queued = false;
+function alignSlips() {
+  queued = false;
+  if (reducedMotion.matches) {
+    slips.forEach(slip => slip.removeAttribute('style'));
+    board.style.removeProperty('--approach');
+    return;
+  }
+  const dock = stack.getBoundingClientRect();
+  const page = indexPage.getBoundingClientRect();
+  const focusY = dock.top + dock.height / 2;
+  const gather = smoothStep((focusY - page.top - page.height * .51) / (page.height * .54));
+  const matTop = board.getBoundingClientRect().top;
+  board.style.setProperty('--approach',smoothStep((matTop / innerHeight - .36) / .63));
+  const chapter = [
+    smoothStep((focusY - castSection.getBoundingClientRect().top + dock.height) / (dock.height * 2)),
+    smoothStep((focusY - lastLeaf.getBoundingClientRect().top + dock.height) / (dock.height * 2))
+  ];
+  const spread = [[-.54,.01,-8],[.50,-.12,8],[.04,.68,3]];
+  slips.forEach((slip,i) => {
+    const [x,y,angle] = spread[i];
+    const turn = i === 2 ? 0 : chapter[i];
+    const flick = Math.sin(Math.PI * turn);
+    slip.style.setProperty('--dx', (x*(1-gather) + (i-1)*.025*gather - flick*.62)*dock.width + 'px');
+    slip.style.setProperty('--dy', (y*(1-gather) + (i-1)*.025*gather - flick*.17)*dock.height + 'px');
+    slip.style.setProperty('--turn', (angle*(1-gather) + (i-1)*3*gather - flick*10) + 'deg');
+    slip.style.zIndex = gather < .52 ? String(i+1) : String(turn > .5 ? i+1 : 5-i);
+  });
+}
+function queueSlips() {
+  if (!queued) {
+    queued = true;
+    requestAnimationFrame(alignSlips);
+  }
+}
+window.addEventListener('scroll',queueSlips,{passive:true});
+window.addEventListener('resize',queueSlips);
+reducedMotion.addEventListener('change',queueSlips);
+new ResizeObserver(queueSlips).observe(document.querySelector('.sequence'));
+queueSlips();
+
 const board = document.querySelector('.board');
 const pieces = [
-  ['warrior-card','战士 · 红色卡牌',30,50,-9],
-  ['pupil-card','学徒 · 黄色卡牌',46,49,6],
-  ['coins','钱袋与金币',65,39,5],
-  ['seal','蜡封按钮',73,72,-7]
+  ['warrior-card','战士 · 红色卡牌',34,42,-9,18],
+  ['pupil-card','学徒 · 黄色卡牌',45,46,6,18],
+  ['coins','钱袋与金币',69,30,5,17],
+  ['deck','卡组底板',22,75,-7,17],
+  ['map-preview','地图原稿',45,82,4,20],
+  ['battle-preview','战斗原稿',85,58,-6,18],
+  ['seal','蜡封按钮',73,73,-7,11]
 ];
 let layer = 1;
 const bound = (value,min,max) => Math.min(max,Math.max(min,value));
-function addPiece([file,label,startX,startY,angle]) {
+function addPiece([file,label,startX,startY,angle,size]) {
   const piece = document.createElement('button');
   const img = new Image();
   img.src = asset(file+'.webp');
@@ -77,9 +136,15 @@ function addPiece([file,label,startX,startY,angle]) {
   img.draggable = false;
   piece.append(img);
   piece.className = 'piece';
+  const proof = screens.find(screen => file === screen.id + '-preview');
+  if (proof) {
+    piece.classList.add('proof');
+    piece.style.setProperty('--fly-x', startX < 50 ? '-13%' : '8%');
+  }
   piece.title = label;
   piece.setAttribute('aria-label',label);
   piece.style.setProperty('--angle',angle+'deg');
+  piece.style.setProperty('--size',size+'%');
   let x=startX, y=startY, grip;
   function position() {
     piece.style.setProperty('--x',x+'%');
@@ -95,17 +160,34 @@ function addPiece([file,label,startX,startY,angle]) {
     piece.style.zIndex=++layer;
     byId('piece-name').textContent=label;
   }
-  piece.onclick=select;
+  let dragged = false;
+  piece.onclick = e => {
+    select();
+    if (proof && (!dragged || e.detail === 0)) openFull(proof);
+  };
+  function settle() {
+    if (!proof || piece.hasAttribute('data-placed')) return;
+    const rect = piece.getBoundingClientRect();
+    const area = board.getBoundingClientRect();
+    x = (rect.left + rect.width/2 - area.left) / area.width * 100;
+    y = (rect.top + rect.height/2 - area.top) / area.height * 100;
+    piece.dataset.placed = '';
+    position();
+  }
   piece.onpointerdown = e => {
     if (grip || e.button!==0) return;
     select();
+    settle();
+    dragged=false;
     const rect=board.getBoundingClientRect();
-    grip={id:e.pointerId,x:e.clientX-rect.left-x*board.clientWidth/100,y:e.clientY-rect.top-y*board.clientHeight/100};
+    grip={id:e.pointerId, startX:e.clientX, startY:e.clientY,x:e.clientX-rect.left-x*board.clientWidth/100,y:e.clientY-rect.top-y*board.clientHeight/100};
     piece.setPointerCapture(e.pointerId);
     piece.dataset.lift='';
   };
   piece.onpointermove = e => {
     if (e.pointerId!==grip?.id) return;
+    if (Math.hypot(e.clientX-grip.startX,e.clientY-grip.startY)>4) dragged=true;
+    if (!dragged) return;
     const rect=board.getBoundingClientRect();
     move(e.clientX-rect.left-grip.x,e.clientY-rect.top-grip.y);
   };
@@ -115,11 +197,12 @@ function addPiece([file,label,startX,startY,angle]) {
     if (!delta) return;
     e.preventDefault();
     select();
+    settle();
     move(x*board.clientWidth/100+delta[0],y*board.clientHeight/100+delta[1]);
   };
   position();
   byId('pieces').append(piece);
-  return () => { x=startX; y=startY; piece.style.zIndex=''; position(); };
+  return () => { x=startX; y=startY; piece.style.zIndex=''; delete piece.dataset.placed; position(); };
 }
 const resets = pieces.map(addPiece);
 byId('reset').onclick = () => {
@@ -140,7 +223,10 @@ for (const [file,label,motion] of cast) {
   img.alt='';
   const action=document.createElement('small');
   action.textContent='播放动作 ▷';
-  button.append(img,label,action);
+  const caption=document.createElement('span');
+  caption.className='character-caption';
+  caption.append(label,action);
+  button.append(img,caption);
   button.setAttribute('aria-pressed',false);
   button.onclick=()=>{
     const wasPlaying=button.getAttribute('aria-pressed')==='true';
@@ -157,4 +243,14 @@ for (const [file,label,motion] of cast) {
     };
   };
   byId('characters').append(button);
+}
+
+// Keep in-reader chapter jumps out of the parent station's Back history.
+if (window.parent !== window) {
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    location.replace(link.hash);
+  });
 }

@@ -3,39 +3,72 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>CARDINAL · 游戏界面手记</title>
-  <link rel="stylesheet" href="cardinal.css"><script defer src="cardinal.js"></script>
-<link rel="stylesheet" href="project-info.css"><script defer src="project-info.js"></script>
+  <link rel="stylesheet" href="project-info.css">
+  <link rel="stylesheet" href="cardinal.css">
+  <script defer src="cardinal.js"></script><script defer src="project-info.js"></script>
 </head>
 <body>
-<header class="mast"><a class="back" href="works.html#other">← 其他项目</a><b>CARDINAL</b><div><button type="button" data-open-info>项目说明</button>　<a href="#table">组件桌 ↘</a></div></header>
+<header class="mast" aria-label="项目导航">
+  <a class="mark icon-swords" href="works.html#other">← 其他项目</a>
+  <button type="button" class="mark icon-guard" data-open-info>项目说明</button>
+  <a class="mark icon-stall" href="#table">组件桌 ↘</a>
+</header>
 <main>
-  <section class="intro" aria-labelledby="title">
-    <div class="theatre">
-      <img src="assets/cardinal/menu.webp" width="1920" height="1080" alt="CARDINAL 开始菜单，章鱼和纸片角色围绕中央的菜单牌">
-      <nav aria-label="开始菜单">
-        <a href="#screens" aria-label="START · 浏览界面"></a>
-        <a href="#table" aria-label="SETTING · 探索组件"></a>
-        <a class="back" href="works.html#other" aria-label="QUIT · 返回其他项目"></a>
+  <div class="desk">
+    <section class="book-cover book-top" aria-label="CARDINAL 原版开始菜单">
+      <div class="page ruled">
+        <div class="folio"><h1>CARDINAL</h1><span>Moray Game Jam</span></div>
+        <div class="menu-print">
+          <img src="assets/cardinal/menu.webp" width="1920" height="1080" alt="CARDINAL 原版开始菜单，章鱼和纸偶围着中央菜单牌" fetchpriority="high">
+          <nav aria-label="开始菜单">
+            <a class="mark icon-swords" href="#screens" aria-label="START · 浏览界面"></a>
+            <a class="mark icon-stall" href="#table" aria-label="SETTING · 探索组件"></a>
+            <a class="mark icon-skull" href="works.html#other" aria-label="QUIT · 返回其他项目"></a>
+          </nav>
+        </div>
+        <div class="folio bottom-folio"><span>游戏界面与手绘美术</span><a href="#index">翻阅手记 ↓</a></div>
+      </div>
+      <span class="ribbon" aria-hidden="true"></span>
+      <i class="margin-ink icon-guard left-ink" aria-hidden="true"></i>
+      <i class="margin-ink icon-swords right-ink" aria-hidden="true"></i>
+    </section>
+    <div class="sequence">
+      <div class="book-cover book-bottom" id="index">
+        <div class="page contents-page">
+          <h2>手记目录</h2>
+          <p>48 小时游戏创作 · 主题「位置」</p>
+          <i class="page-ink icon-mage" aria-hidden="true"></i>
+          <i class="page-ink icon-stall" aria-hidden="true"></i>
+        </div>
+      </div>
+      <nav class="paper-stack" aria-label="手记目录">
+        <a href="#screens" class="slip lines"><span>游戏界面</span><small>UI Mockup</small></a>
+        <a href="#cast" class="slip squares"><span>角色与动效</span><small>Character</small></a>
+        <a href="#table" class="slip plain"><span>手绘组件</span><small>Game assets</small></a>
       </nav>
+      <section id="screens" class="gallery" aria-label="游戏界面原稿"><div id="prints" class="wings"></div></section>
+      <section id="cast" class="gallery" aria-label="角色与动效"><div id="characters" class="wings"></div></section>
+      <div class="last-leaf"><i class="icon-swords" aria-hidden="true"></i></div>
     </div>
-    <div class="intro-note"><span lang="en">MORAY GAME JAM</span><h1 id="title">CARDINAL</h1><h2>纸上卡组冒险</h2><p>48 小时，围绕「位置」设计的一款放置式卡组构建游戏。我负责界面与手绘美术，把棋盘、卡牌和路线图画成同一张桌上的物件。</p><a href="#screens">翻看界面 ↓</a></div>
+  </div>
+  <section id="table" aria-labelledby="board-title">
+    <div class="mat">
+      <header class="mat-heading"><div><h2 id="board-title">手绘组件</h2><p>拖动纸片可以叠放，移开卡牌可看到下面的商店。</p></div><button id="reset">重新摆放 ↺</button></header>
+      <div class="board"><div class="under"><img src="assets/cardinal/stall.webp" alt=""><span>地图上的商店</span></div><div id="pieces"></div></div>
+      <output id="piece-name" aria-live="polite">卡牌、钱袋与印章</output>
+    </div>
   </section>
-  <section id="screens" class="spread">
-    <header class="section-head"><h2>界面原稿</h2><p>从棋盘到地图，翻看四种游戏场景。</p></header>
-    <nav id="screen-choices" class="tabs" aria-label="切换界面"></nav>
-    <div class="picture"><button id="enlarge" aria-label="放大当前界面原稿"><img id="screen" src="assets/cardinal/battle-preview.webp" width="1920" height="1080" alt="战斗界面"></button><div id="pins"></div></div>
-    <div class="caption"><p id="screen-note" aria-live="polite"></p><button id="zoom">查看高清 ↗</button></div>
+  <section class="studies" aria-labelledby="study-title">
+    <h2 id="study-title">战斗界面方案对照</h2>
+    <div class="pair"><figure><img loading="lazy" src="assets/cardinal/pencil.webp" alt="浅色战斗界面方案"><figcaption>铅笔排线划出角色区，九格棋盘由纸色方块拼成。</figcaption></figure><figure><img loading="lazy" src="assets/cardinal/battle-preview.webp" alt="UI Mockup 战斗界面"><figcaption>章鱼纸片、红色数值签与深色棋格区分角色和操作区。</figcaption></figure></div>
   </section>
-  <section id="table" class="table-section"><header class="section-head"><h2>组件桌</h2><p>拖开纸片，看下方的手绘组件。轻点可查看名称，也可以用方向键移动。</p></header>
-    <div class="board"><div class="under"><img src="assets/cardinal/stall.webp" alt=""><span>地图上的商店</span></div><div id="pieces"></div></div>
-    <div class="caption"><output id="piece-name" aria-live="polite">卡牌、钱袋与印章</output><button id="reset">重新摆放 ↺</button></div>
-  </section>
-  <section class="cast"><header class="section-head"><h2>角色与动效</h2><p>点选纸偶，查看它的循环动作。</p></header><div id="characters"></div></section>
-  <section class="studies"><header class="section-head"><h2>同一块棋盘的两种画法</h2><p>两份战斗界面方案并排对照。</p></header>
-    <div class="pair"><figure><img loading="lazy" src="assets/cardinal/pencil.webp" alt="浅色战斗界面方案"><figcaption>铅笔排线划出左侧角色区，九格棋盘由纸色方块拼成。</figcaption></figure><figure><img loading="lazy" src="assets/cardinal/battle-preview.webp" alt="UI Mockup 战斗界面"><figcaption>在 UI Mockup 中，章鱼纸片、红色数值签与深色棋格区分了角色和操作区。</figcaption></figure></div>
-  </section>
-</main><footer><b>CARDINAL</b><a class="back" href="works.html#other">返回其他项目 ↗</a></footer>
-<dialog id="viewer"><div class="viewer-bar"><strong id="viewer-name"></strong><button id="actual">原始尺寸</button><button id="dismiss">关闭 ×</button></div><div class="viewport"><img id="full" alt=""></div></dialog>
+</main>
+<footer><b>CARDINAL</b><a href="works.html#other">返回其他项目 ↗</a></footer>
+<dialog id="viewer" aria-labelledby="viewer-name">
+  <div class="viewer-bar"><strong id="viewer-name"></strong><button id="actual">原始尺寸</button><button id="dismiss">关闭 ×</button></div>
+  <div class="viewport"><div class="image-stage"><img id="full" width="1920" height="1080" alt=""><div id="pins"></div></div></div>
+  <p id="screen-note" aria-live="polite"></p>
+</dialog>
 <dialog class="project-info-dialog" id="project-info" aria-labelledby="project-info-title">
   <div class="project-info-heading"><h2 id="project-info-title">CARDINAL</h2><button class="project-info-close" type="button" data-close-info>关闭 ×</button></div>
   <div class="project-info-body"><p>CARDINAL 是 Moray Game Jam 的团队项目。团队在 48 小时内围绕「位置」主题，探索放置玩法与肉鸽卡组构建相结合的游戏 DEMO。我负责界面与游戏美术设计。</p><h3>手绘桌面与游戏界面</h3><p>项目把卡牌、棋盘、路线图、钱币和按钮设计成桌面上的手绘纸片。战斗、地图、事件与商店界面分别组织对手状态、路线选择、事件选项和商品信息。</p><h3>角色与动效</h3><p>我完成了 15 张卡牌和 3 个 Boss 的动画绘制。页面以 UI Mockup、角色动效和拆分组件展示设计成果；交互用于探索这些界面元素。</p></div>
