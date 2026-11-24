@@ -48,6 +48,13 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8770/cici-cv/';
   await p.locator('#fullscreen-book').click();await p.waitForFunction(()=>document.fullscreenElement||document.getElementById('gazette-reader').classList.contains('is-expanded'));await pageTwo();
   await p.locator('#research-tab-6').focus();await p.locator('#research-tab-6').press('Enter');await p.locator('#research-close-detail').click();await pageTwo();await p.locator('#fullscreen-book').click();
   assert.equal(await p.locator('.cecilia-loader').count(),0);
+  await p.setViewportSize({width:390,height:800});
+  for (const tab of await p.locator('.research-tab').all()) {
+    await tab.hover();
+    assert.equal(await p.locator('.research-preview:visible').count(),0,'Compact research controls stay clear for mouse users');
+    await tab.click();
+    await p.locator('#research-close-detail').click();
+  }
   const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});const m=await mobile.newPage();m.on('pageerror',e=>errors.push(e.message));m.on('response',r=>{if(r.status()>=400)failed.push(r.url())});
   await m.goto(new URL('gazette.html',root).href);await m.waitForFunction(()=>document.querySelector('.paper[data-pdf-page="1"]'));
   for(let i=1;i<=6;i++){

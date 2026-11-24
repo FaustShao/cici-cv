@@ -42,7 +42,8 @@
   }
   function announce(message){status.textContent=message;}
   function showPreview(index, lock=false) {
-    if(detailId!==null)return;
+    // The compact two-row layout opens details directly, like the touch layout.
+    if(detailId!==null || mobile.matches)return;
     clearTimeout(timer);if(active===index){pinned=lock;return;}active=index;pinned=lock;
     const side=index<3?0:1;
     workspace.dataset.side=side===0?'left':'right';
