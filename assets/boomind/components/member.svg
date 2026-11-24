@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 123 40" data-design="member">
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="123" height="40" viewBox="0 0 123 40" x="0" y="0" data-component="1:2784" overflow="visible">
+    <defs>
+      <clipPath id="uid-member-1-2784-clip0">
+        <rect width="38.71" height="38.71"/>
+      </clipPath>
+      <mask id="uid-member-1-2784-mask2" mask-type="alpha" maskUnits="userSpaceOnUse" x="-200%" y="-200%" width="500%" height="500%">
+        <g data-layer="1:2789" data-name="Mask">
+          <path d="M32.92 16.46C32.92 25.55 25.55 32.92 16.46 32.92C7.37 32.92 0 25.55 0 16.46C0 7.37 7.37 0 16.46 0C25.55 0 32.92 7.37 32.92 16.46Z" fill="#D1E5FF"/>
+        </g>
+      </mask>
+      <pattern id="uid-member-1-2784-img2" patternUnits="userSpaceOnUse" width="32.919765" height="32.919765">
+        <image href="bitmaps/a668e41734ff6709e23f91971c6c037ac01880b5.webp" width="512" height="512" preserveAspectRatio="none" transform="matrix(0.064296 0 0 0.064296 0 0)"/>
+      </pattern>
+      <pattern id="uid-member-1-2784-img3" patternUnits="userSpaceOnUse" width="32.919765" height="32.919765">
+        <image href="bitmaps/a668e41734ff6709e23f91971c6c037ac01880b5.webp" width="512" height="512" preserveAspectRatio="none" transform="matrix(0.064296 0 0 0.064296 0 0)"/>
+      </pattern>
+      <mask id="uid-member-1-2784-mask5" mask-type="alpha" maskUnits="userSpaceOnUse" x="-200%" y="-200%" width="500%" height="500%">
+        <g data-layer="1:2791" data-name="Mask Copy">
+          <g transform="translate(3.29, 3.29)">
+            <path d="M32.92 16.46C32.92 25.55 25.55 32.92 16.46 32.92C7.37 32.92 0 25.55 0 16.46C0 7.37 7.37 0 16.46 0C25.55 0 32.92 7.37 32.92 16.46Z" fill="url(#uid-member-1-2784-img3)"/>
+          </g>
+        </g>
+      </mask>
+      <path id="uid-member-1-2784-letter0" d="M0.284 0.768L0.425 0.768L0.704 0L0.598 0L0.525 0.207L0.184 0.207L0.11 0L0.005 0L0.284 0.768ZM0.493 0.296L0.354 0.688L0.215 0.296L0.493 0.296Z"/>
+      <path id="uid-member-1-2784-letter1" d="M0.026 0.768L0.13 0.768L0.28 0.072L0.435 0.768L0.582 0.768L0.738 0.07L0.887 0.768L0.989 0.768L0.82 0L0.661 0L0.509 0.686L0.356 0L0.196 0L0.026 0.768Z"/>
+      <path id="uid-member-1-2784-letter2" d="M0.346 -0.016Q0.209 -0.016 0.123 0.045Q0.037 0.106 0.012 0.209L0.115 0.238Q0.131 0.163 0.187 0.119Q0.244 0.076 0.346 0.076Q0.436 0.076 0.485 0.114Q0.534 0.152 0.534 0.214Q0.534 0.272 0.494 0.298Q0.455 0.325 0.362 0.338L0.285 0.349Q0.152 0.368 0.094 0.421Q0.037 0.475 0.037 0.561Q0.037 0.623 0.072 0.673Q0.107 0.723 0.171 0.752Q0.236 0.782 0.32 0.782Q0.434 0.782 0.513 0.729Q0.592 0.676 0.622 0.584L0.527 0.557Q0.504 0.621 0.451 0.656Q0.399 0.691 0.314 0.691Q0.224 0.691 0.18 0.653Q0.136 0.616 0.136 0.565Q0.136 0.531 0.15 0.508Q0.164 0.485 0.2 0.469Q0.236 0.453 0.302 0.443L0.382 0.431Q0.507 0.412 0.57 0.36Q0.633 0.308 0.633 0.217Q0.633 0.149 0.598 0.096Q0.563 0.043 0.498 0.013Q0.433 -0.016 0.346 -0.016Z"/>
+      <path id="uid-member-1-2784-letter3" d="M0.385 -0.016Q0.281 -0.016 0.201 0.032Q0.122 0.081 0.078 0.172Q0.034 0.263 0.034 0.384Q0.034 0.506 0.078 0.596Q0.122 0.687 0.201 0.735Q0.281 0.784 0.385 0.784Q0.489 0.784 0.568 0.735Q0.647 0.687 0.691 0.596Q0.736 0.506 0.736 0.384Q0.736 0.263 0.691 0.172Q0.647 0.081 0.568 0.032Q0.489 -0.016 0.385 -0.016ZM0.135 0.384Q0.135 0.24 0.2 0.159Q0.266 0.078 0.385 0.078Q0.503 0.078 0.569 0.159Q0.635 0.24 0.635 0.384Q0.635 0.529 0.569 0.609Q0.504 0.69 0.385 0.69Q0.266 0.69 0.2 0.609Q0.135 0.529 0.135 0.384Z"/>
+      <path id="uid-member-1-2784-letter4" d="M0.062 0.768L0.227 0.768L0.451 0.088L0.676 0.768L0.838 0.768L0.838 0L0.741 0L0.741 0.679L0.517 0L0.384 0L0.159 0.679L0.159 0L0.062 0L0.062 0.768Z"/>
+      <path id="uid-member-1-2784-letter5" d="M0.585 0.679L0.162 0.679L0.162 0.448L0.556 0.448L0.556 0.359L0.162 0.359L0.162 0.09L0.595 0.09L0.595 0L0.062 0L0.062 0.768L0.585 0.768L0.585 0.679Z"/>
+      <path id="uid-member-1-2784-letter6" d="M0.08 0.514L0.08 0.768L0.178 0.768L0.178 0.514L0.159 0.214L0.098 0.214L0.08 0.514ZM0.062 0.056Q0.062 0.085 0.081 0.103Q0.101 0.121 0.129 0.121Q0.157 0.121 0.176 0.103Q0.195 0.085 0.195 0.056Q0.195 0.028 0.176 0.009Q0.157 -0.01 0.129 -0.01Q0.101 -0.01 0.081 0.009Q0.062 0.028 0.062 0.056Z"/>
+    </defs>
+    <g data-layer="1:2784" data-name="Property 1=Frame 1000000841">
+      <g>
+        <g data-layer="1:2785" data-name="Ellipse 1138">
+          <path d="M20 0C8.95 0 0 8.95 0 20C0 31.05 8.95 40 20 40L103 40C114.05 40 123 31.05 123 20C123 8.95 114.05 0 103 0L20 0Z" fill="#1F2128"/>
+        </g>
+        <g data-layer="1:2786" data-name="avatar 1">
+          <g clip-path="url(#uid-member-1-2784-clip0)">
+            <g data-layer="1:2787" data-name="Mask">
+              <g transform="translate(3.29, 3.29)">
+                <path d="M32.92 16.46C32.92 25.55 25.55 32.92 16.46 32.92C7.37 32.92 0 25.55 0 16.46C0 7.37 7.37 0 16.46 0C25.55 0 32.92 7.37 32.92 16.46Z" fill="#E7FAFF"/>
+              </g>
+            </g>
+            <g data-layer="1:2788" data-name="Object">
+              <g transform="translate(3.29, 3.29)">
+                <g mask="url(#uid-member-1-2784-mask2)"/>
+              </g>
+            </g>
+            <g data-layer="1:2790" data-name="Mask Copy">
+              <g transform="translate(3.29, 3.29)">
+                <path d="M32.92 16.46C32.92 25.55 25.55 32.92 16.46 32.92C7.37 32.92 0 25.55 0 16.46C0 7.37 7.37 0 16.46 0C25.55 0 32.92 7.37 32.92 16.46Z" fill="url(#uid-member-1-2784-img2)"/>
+              </g>
+            </g>
+            <g mask="url(#uid-member-1-2784-mask5)"/>
+          </g>
+        </g>
+        <g data-layer="1:2792" data-name="AWSOME!!!" aria-label="AWSOME!!!">
+          <g transform="translate(45, 12)">
+            <g fill="#FFFFFF">
+              <use href="#uid-member-1-2784-letter0" transform="translate(0.2266 12.108) scale(12 -12)"/>
+              <use href="#uid-member-1-2784-letter1" transform="translate(7.9375 12.108) scale(12 -12)"/>
+              <use href="#uid-member-1-2784-letter2" transform="translate(20.0313 12.108) scale(12 -12)"/>
+              <use href="#uid-member-1-2784-letter3" transform="translate(27.918 12.108) scale(12 -12)"/>
+              <use href="#uid-member-1-2784-letter4" transform="translate(37.1523 12.108) scale(12 -12)"/>
+              <use href="#uid-member-1-2784-letter5" transform="translate(47.957 12.108) scale(12 -12)"/>
+              <use href="#uid-member-1-2784-letter6" transform="translate(55.5273 12.108) scale(12 -12)"/>
+              <use href="#uid-member-1-2784-letter6" transform="translate(58.6094 12.108) scale(12 -12)"/>
+              <use href="#uid-member-1-2784-letter6" transform="translate(61.6914 12.108) scale(12 -12)"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+</svg>

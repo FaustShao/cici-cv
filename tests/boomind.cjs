@@ -28,13 +28,33 @@ async function current(page, key) {
   const stage = page.locator('#stage');
   assert.equal(await stage.getAttribute('data-screen'), key);
   if (entries[key]) assert.equal(await stage.getAttribute('data-figma'), '1:' + entries[key][1]);
-  const art = stage.locator('img.scene-art').first();
-  await art.evaluate((i) => i.decode());
-  assert.equal(
-    await art.evaluate((i) => new URL(i.src).pathname.split('/').pop()),
-    'screen-' + key + '.webp',
-  );
+  const art = stage.locator('.slice > .design-art[data-ready="' + key + '"] > svg').first();
+  await art.waitFor();
+  assert.ok(await art.locator('[data-component]').count() >= 1);
+  assert.ok(await stage.locator('.slice > .design-art [data-layer]').count() > 3);
+  assert.equal(await stage.locator('img.scene-art, .hot').count(), 0);
 }
+async function checkControlShape(page) {
+  const control = page.locator('#stage [data-layer="0:2359"][data-action="new-event"]');
+  await control.scrollIntoViewIfNeeded();
+  // The corner and adjacent banner share the visual background. Neither
+  // belongs to the rounded New Schedule button, including after zooming.
+  const hits = await control.evaluate((group) => {
+    const path = group.querySelector('path');
+    const rect = path.getBBox();
+    const matrix = path.getScreenCTM();
+    return [[0.5, 0.5], [0.002, 0.002], [-0.04, 0.5]].map(([u, v]) => {
+      const point = new DOMPoint(rect.x + u * rect.width, rect.y + v * rect.height).matrixTransform(matrix);
+      return document.elementFromPoint(point.x, point.y)?.closest('[data-action]')?.dataset.action || null;
+    });
+  });
+  assert.deepEqual(hits, ['new-event', null, null]);
+  await control.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await page.locator('#popup-title').innerText(), 'New Schedule');
+  await action(page, 'close').click();
+}
+
 async function nav(page, mobile) {
   if (mobile) await action(page, 'navigate').click();
   return page.locator(mobile ? '#popup .original-nav' : '#stage .original-nav');
@@ -73,7 +93,7 @@ async function matrix(page, mobile) {
     await menu.getByRole('button', { name: 'Notifications', exact: true }).click();
     const overlay = page.locator('#popup[open]');
     assert.equal(await overlay.getAttribute('data-kind'), 'notifications');
-    await overlay.locator('img').evaluate((i) => i.decode());
+    await overlay.locator('[data-ready=notifications] [data-action]').first().waitFor();
     assert.equal(await page.locator('#crumb').innerText(), 'Notifications');
     if (!mobile) await active(page.locator('#stage nav'), 'notifications');
     await close();
@@ -115,7 +135,8 @@ async function check(browser, width) {
       'comments',
     ].entries()) {
       await page.locator('#stage .nav-link[data-action="notifications"]').click();
-      await page.locator('#popup .notification-art button').nth(i).click();
+      const row = ['0:2709','0:2580','0:2607','0:2634','0:2661','0:2685','0:2736'][i];
+      await page.locator('#popup [data-layer="' + row + '"]').click();
       await current(page, target);
       await active(page.locator('#stage nav'), target);
     }
@@ -124,6 +145,12 @@ async function check(browser, width) {
   await page.getByRole('button', { name: 'Check settings', exact: true }).click();
   await current(page, 'profile');
   await navigate('calendar');
+  await checkControlShape(page);
+  if (!mobile) {
+    await action(page, 'zoom').click();
+    await checkControlShape(page);
+    await action(page, 'zoom').click();
+  }
   await action(page, 'event:0').click();
   assert.match(await page.locator('#popup-title').innerText(), /Project 101/);
   await action(page, 'close').click();
@@ -203,7 +230,7 @@ async function check(browser, width) {
 (async () => {
   const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', args: ['--no-sandbox'] });
   try {
-    for (const width of [1440, 390, 320]) await check(browser, width);
+    await Promise.all([1440, 390, 320].map((width) => check(browser, width)));
   } finally {
     await browser.close();
   }

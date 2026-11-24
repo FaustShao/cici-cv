@@ -1,0 +1,349 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1194 849" data-design="canvas">
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1194" height="963" viewBox="0 0 1194 963" x="0" y="0" data-component="1:2214" overflow="visible">
+    <g data-layer="1:2214" data-name="Rectangle 1135">
+      <rect width="1194" height="963" fill="#FFFFFF"/>
+    </g>
+  </svg>
+  <svg viewBox="0 0 335 158" x="859" y="0" width="335" height="158" data-component="edge-1">
+    <image href="bitmaps/edge-1.webp" x="0" y="0" width="335" height="158" preserveAspectRatio="none"/>
+    <defs>
+      <path id="uid-canvas-1-2277-letter0" d="M0.242 -0.015Q0.166 -0.015 0.131 0.022Q0.096 0.059 0.096 0.128L0.096 0.448L0.008 0.448L0.008 0.527L0.096 0.527L0.096 0.72L0.19 0.72L0.19 0.527L0.324 0.527L0.324 0.448L0.19 0.448L0.19 0.142Q0.19 0.1 0.207 0.082Q0.224 0.065 0.261 0.065Q0.302 0.065 0.334 0.081L0.334 0Q0.296 -0.015 0.242 -0.015Z"/>
+      <path id="uid-canvas-1-2277-letter1" d="M0.052 0.768L0.147 0.768L0.147 0.44Q0.177 0.486 0.225 0.514Q0.273 0.543 0.331 0.543Q0.423 0.543 0.469 0.487Q0.515 0.431 0.515 0.333L0.515 0L0.421 0L0.421 0.313Q0.421 0.387 0.395 0.423Q0.369 0.459 0.309 0.459Q0.27 0.459 0.234 0.437Q0.198 0.416 0.177 0.379Q0.162 0.352 0.154 0.315Q0.147 0.279 0.147 0.22L0.147 0L0.052 0L0.052 0.768Z"/>
+      <path id="uid-canvas-1-2277-letter2" d="M0.147 0L0.052 0L0.052 0.527L0.147 0.527L0.147 0ZM0.038 0.717Q0.038 0.744 0.055 0.761Q0.072 0.778 0.1 0.778Q0.128 0.778 0.145 0.761Q0.162 0.744 0.162 0.717Q0.162 0.689 0.145 0.672Q0.128 0.656 0.1 0.656Q0.072 0.656 0.055 0.672Q0.038 0.689 0.038 0.717Z"/>
+      <path id="uid-canvas-1-2277-letter3" d="M0.052 0.527L0.142 0.527L0.142 0.433Q0.172 0.483 0.221 0.513Q0.27 0.543 0.331 0.543Q0.423 0.543 0.469 0.487Q0.515 0.431 0.515 0.333L0.515 0L0.421 0L0.421 0.313Q0.421 0.387 0.395 0.423Q0.369 0.459 0.309 0.459Q0.271 0.459 0.235 0.437Q0.2 0.416 0.177 0.379Q0.162 0.352 0.154 0.315Q0.147 0.279 0.147 0.219L0.147 0L0.052 0L0.052 0.527Z"/>
+      <path id="uid-canvas-1-2277-letter4" d="M0.272 -0.219Q0.177 -0.219 0.117 -0.18Q0.057 -0.142 0.035 -0.081L0.127 -0.047Q0.138 -0.086 0.175 -0.113Q0.212 -0.14 0.274 -0.14Q0.348 -0.14 0.389 -0.101Q0.431 -0.063 0.431 0.022L0.431 0.091Q0.4 0.048 0.354 0.026Q0.308 0.004 0.25 0.004Q0.186 0.004 0.135 0.036Q0.084 0.068 0.055 0.129Q0.026 0.191 0.026 0.274Q0.026 0.356 0.054 0.417Q0.083 0.478 0.134 0.51Q0.185 0.543 0.249 0.543Q0.309 0.543 0.356 0.519Q0.404 0.496 0.434 0.451L0.434 0.527L0.525 0.527L0.525 0.021Q0.525 -0.096 0.456 -0.157Q0.388 -0.219 0.272 -0.219ZM0.12 0.274Q0.12 0.185 0.159 0.136Q0.199 0.087 0.272 0.087Q0.348 0.087 0.392 0.137Q0.436 0.188 0.436 0.274Q0.436 0.359 0.392 0.409Q0.348 0.46 0.272 0.46Q0.199 0.46 0.159 0.411Q0.12 0.362 0.12 0.274Z"/>
+      <path id="uid-canvas-1-2277-letter5" d="M0.255 -0.016Q0.154 -0.016 0.092 0.029Q0.03 0.074 0.013 0.147L0.106 0.17Q0.117 0.124 0.153 0.094Q0.19 0.064 0.255 0.064Q0.312 0.064 0.342 0.087Q0.373 0.111 0.373 0.147Q0.373 0.183 0.349 0.199Q0.325 0.215 0.266 0.223L0.212 0.231Q0.113 0.245 0.07 0.283Q0.028 0.321 0.028 0.383Q0.028 0.428 0.054 0.464Q0.08 0.501 0.127 0.522Q0.174 0.544 0.236 0.544Q0.322 0.544 0.379 0.504Q0.437 0.465 0.458 0.398L0.37 0.377Q0.355 0.416 0.322 0.44Q0.289 0.464 0.232 0.464Q0.176 0.464 0.148 0.442Q0.121 0.42 0.121 0.389Q0.121 0.358 0.143 0.341Q0.166 0.324 0.224 0.315L0.281 0.307Q0.375 0.292 0.42 0.254Q0.466 0.217 0.466 0.151Q0.466 0.076 0.409 0.03Q0.352 -0.016 0.255 -0.016Z"/>
+    </defs>
+  </svg>
+  <svg viewBox="0 0 86 302" x="0" y="178" width="86" height="302" data-component="edge-3">
+    <image href="bitmaps/edge-3.webp" x="0" y="0" width="86" height="302" preserveAspectRatio="none"/>
+    <defs/>
+    <g transform="translate(-23 23)">
+      <g data-layer="1:2280" data-name="things" aria-label="things">
+        <g transform="translate(0, 112)">
+          <g fill="#FFFFFF">
+            <use href="#uid-canvas-1-2277-letter0" transform="translate(0.1289 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter1" transform="translate(8.5195 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter2" transform="translate(22.0898 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter3" transform="translate(26.8711 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter4" transform="translate(40.3711 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter5" transform="translate(54.2227 24.216) scale(24 -24)"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+  <svg viewBox="0 0 97 203" x="1097" y="183" width="97" height="203" data-component="edge-6">
+    <image href="bitmaps/edge-6.webp" x="0" y="0" width="97" height="203" preserveAspectRatio="none"/>
+    <defs/>
+    <g transform="translate(-1120 18)">
+      <g data-layer="1:2285" data-name="things" aria-label="things">
+        <g transform="translate(1169, 66)">
+          <g fill="#FFFFFF">
+            <use href="#uid-canvas-1-2277-letter0" transform="translate(0.1289 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter1" transform="translate(8.5195 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter2" transform="translate(22.0898 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter3" transform="translate(26.8711 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter4" transform="translate(40.3711 24.216) scale(24 -24)"/>
+            <use href="#uid-canvas-1-2277-letter5" transform="translate(54.2227 24.216) scale(24 -24)"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+  <svg viewBox="0 0 277 317" x="0" y="532" width="277" height="317" data-component="edge-11">
+    <image href="bitmaps/edge-11.webp" x="0" y="0" width="277" height="317" preserveAspectRatio="none"/>
+    <defs/>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1125" height="97" viewBox="0 0 1125 97" x="35" y="29" data-component="1:2237" overflow="visible">
+    <defs>
+      <clipPath id="uid-canvas-1-2237-clip0">
+        <rect width="28" height="28"/>
+      </clipPath>
+      <clipPath id="uid-canvas-1-2237-clip1">
+        <rect width="463" height="50.99"/>
+      </clipPath>
+      <clipPath id="uid-canvas-1-2237-clip2">
+        <rect width="64.37" height="40.79"/>
+      </clipPath>
+      <path id="uid-canvas-1-2237-letter0" d="M0.14134 0L0.02486 0L0.28658 0.72727L0.41335 0.72727L0.67507 0L0.55859 0L0.35298 0.59517L0.3473 0.59517L0.14134 0ZM0.16087 0.2848L0.53871 0.2848L0.53871 0.19247L0.16087 0.19247L0.16087 0.2848Z"/>
+      <path id="uid-canvas-1-2237-letter1" d="M0.54759 0.72727L0.65767 0.72727L0.65767 0.24893Q0.65767 0.17259 0.6218 0.11364Q0.58594 0.05504 0.52095 0.02131Q0.45597 -0.01207 0.36861 -0.01207Q0.28161 -0.01207 0.21662 0.02131Q0.15163 0.05504 0.11577 0.11364Q0.0799 0.17259 0.0799 0.24893L0.0799 0.72727L0.18963 0.72727L0.18963 0.25781Q0.18963 0.20845 0.21129 0.1701Q0.23331 0.13175 0.27344 0.10973Q0.31357 0.08807 0.36861 0.08807Q0.42401 0.08807 0.46413 0.10973Q0.50462 0.13175 0.52592 0.1701Q0.54759 0.20845 0.54759 0.25781L0.54759 0.72727Z"/>
+      <path id="uid-canvas-1-2237-letter2" d="M0.14347 0.72727L0.34588 0.13494L0.35405 0.13494L0.55646 0.72727L0.67507 0.72727L0.41335 0L0.28658 0L0.02486 0.72727L0.14347 0.72727Z"/>
+      <clipPath id="uid-canvas-1-2237-clip3">
+        <rect width="80.46" height="50.99"/>
+      </clipPath>
+      <path id="uid-canvas-1-2237-letter3" d="M0.6669 0.72727L0.6669 0L0.56605 0L0.19638 0.53338L0.18963 0.53338L0.18963 0L0.0799 0L0.0799 0.72727L0.18146 0.72727L0.55149 0.19318L0.55824 0.19318L0.55824 0.72727L0.6669 0.72727Z"/>
+      <path id="uid-canvas-1-2237-letter4" d="M0.71165 0.36364Q0.71165 0.24716 0.66903 0.16335Q0.62642 0.0799 0.5522 0.0348Q0.47834 -0.00994 0.38423 -0.00994Q0.28977 -0.00994 0.21555 0.0348Q0.14169 0.0799 0.09908 0.16371Q0.05646 0.24751 0.05646 0.36364Q0.05646 0.48011 0.09908 0.56357Q0.14169 0.64737 0.21555 0.69212Q0.28977 0.73722 0.38423 0.73722Q0.47834 0.73722 0.5522 0.69212Q0.62642 0.64737 0.66903 0.56357Q0.71165 0.48011 0.71165 0.36364ZM0.60298 0.36364Q0.60298 0.45241 0.57422 0.51314Q0.54581 0.57422 0.49609 0.60547Q0.44673 0.63707 0.38423 0.63707Q0.32138 0.63707 0.27202 0.60547Q0.22266 0.57422 0.19389 0.51314Q0.16548 0.45241 0.16548 0.36364Q0.16548 0.27486 0.19389 0.21378Q0.22266 0.15305 0.27202 0.12145Q0.32138 0.0902 0.38423 0.0902Q0.44673 0.0902 0.49609 0.12145Q0.54581 0.15305 0.57422 0.21378Q0.60298 0.27486 0.60298 0.36364Z"/>
+      <path id="uid-canvas-1-2237-letter5" d="M0.04403 0.63281L0.04403 0.72727L0.60689 0.72727L0.60689 0.63281L0.37997 0.63281L0.37997 0L0.2706 0L0.2706 0.63281L0.04403 0.63281Z"/>
+      <path id="uid-canvas-1-2237-letter6" d="M0.2223 0L0.0206 0.72727L0.13601 0.72727L0.2777 0.16406L0.28445 0.16406L0.43182 0.72727L0.54616 0.72727L0.69354 0.16371L0.70028 0.16371L0.84162 0.72727L0.95739 0.72727L0.75533 0L0.64489 0L0.49183 0.54474L0.48615 0.54474L0.3331 0L0.2223 0Z"/>
+      <path id="uid-canvas-1-2237-letter7" d="M0.02379 0.72727L0.14844 0.72727L0.33842 0.39666L0.34624 0.39666L0.53622 0.72727L0.66087 0.72727L0.39702 0.28551L0.39702 0L0.28764 0L0.28764 0.28551L0.02379 0.72727Z"/>
+      <path id="uid-canvas-1-2237-letter8" d="M0.15625 0.72727L0.33026 0.44283L0.33594 0.44283L0.50994 0.72727L0.63707 0.72727L0.41051 0.36364L0.63849 0L0.51065 0L0.33594 0.28054L0.33026 0.28054L0.15554 0L0.0277 0L0.25959 0.36364L0.02912 0.72727L0.15625 0.72727Z"/>
+      <clipPath id="uid-canvas-1-2237-clip4">
+        <rect width="80" height="50.7"/>
+      </clipPath>
+      <clipPath id="uid-canvas-1-2237-clip5">
+        <rect width="80" height="50.7"/>
+      </clipPath>
+      <path id="uid-canvas-1-2237-letter9" d="M0.47656 0.53622Q0.47088 0.58665 0.42969 0.61435Q0.38849 0.6424 0.32599 0.6424Q0.28125 0.6424 0.24858 0.6282Q0.21591 0.61435 0.1978 0.58984Q0.18004 0.5657 0.18004 0.5348Q0.18004 0.50888 0.19212 0.49006Q0.20455 0.47124 0.22443 0.45845Q0.24467 0.44602 0.26776 0.4375Q0.29084 0.42933 0.31214 0.42401L0.38317 0.40554Q0.41797 0.39702 0.45455 0.38246Q0.49112 0.3679 0.52237 0.34411Q0.55362 0.32031 0.5728 0.28516Q0.59233 0.25 0.59233 0.20099Q0.59233 0.1392 0.56037 0.09126Q0.52876 0.04332 0.46839 0.01563Q0.40838 -0.01207 0.32315 -0.01207Q0.24148 -0.01207 0.18182 0.01385Q0.12216 0.03977 0.08842 0.08736Q0.05469 0.1353 0.05114 0.20099L0.16122 0.20099Q0.16442 0.16158 0.18679 0.1353Q0.20952 0.10938 0.24467 0.09659Q0.28018 0.08416 0.32244 0.08416Q0.36896 0.08416 0.40518 0.09872Q0.44176 0.11364 0.46271 0.13991Q0.48366 0.16655 0.48366 0.20206Q0.48366 0.23438 0.4652 0.25497Q0.44709 0.27557 0.41584 0.28906Q0.38494 0.30256 0.34588 0.31286L0.25994 0.33629Q0.17259 0.36009 0.12145 0.40625Q0.07067 0.45241 0.07067 0.52841Q0.07067 0.59126 0.10476 0.63814Q0.13885 0.68501 0.19709 0.71094Q0.25533 0.73722 0.32848 0.73722Q0.40234 0.73722 0.45881 0.71129Q0.51563 0.68537 0.5483 0.63991Q0.58097 0.59482 0.58239 0.53622L0.47656 0.53622Z"/>
+      <path id="uid-canvas-1-2237-letter10" d="M0.0799 0L0.0799 0.72727L0.18963 0.72727L0.18963 0.41122L0.5522 0.41122L0.5522 0.72727L0.66229 0.72727L0.66229 0L0.5522 0L0.5522 0.31712L0.18963 0.31712L0.18963 0L0.0799 0Z"/>
+      <clipPath id="uid-canvas-1-2237-clip6">
+        <rect width="64.37" height="40.79"/>
+      </clipPath>
+      <clipPath id="uid-canvas-1-2237-clip7">
+        <rect width="64.37" height="40.79"/>
+      </clipPath>
+      <path id="uid-canvas-1-2237-letter11" d="M0.0799 0L0.0799 0.72727L0.18963 0.72727L0.18963 0.09446L0.51918 0.09446L0.51918 0L0.0799 0Z"/>
+      <clipPath id="uid-canvas-1-2237-clip8">
+        <rect width="64.37" height="40.79"/>
+      </clipPath>
+      <path id="uid-canvas-1-2237-letter12" d="M0.0799 0L0.0799 0.72727L0.34624 0.72727Q0.42365 0.72727 0.47443 0.7017Q0.52521 0.67649 0.55043 0.63317Q0.57564 0.5902 0.57564 0.53622Q0.57564 0.49077 0.55895 0.45952Q0.54226 0.42862 0.5142 0.4098Q0.48651 0.39134 0.45313 0.38281L0.45313 0.37571Q0.48935 0.37393 0.52379 0.35227Q0.55859 0.33097 0.58132 0.29155Q0.60405 0.25213 0.60405 0.19567Q0.60405 0.13991 0.57777 0.09553Q0.55185 0.05149 0.49751 0.02557Q0.44318 0 0.35866 0L0.0799 0ZM0.18963 0.09411L0.34801 0.09411Q0.42685 0.09411 0.46094 0.12464Q0.49503 0.15518 0.49503 0.20099Q0.49503 0.23544 0.47763 0.2642Q0.46023 0.29297 0.42791 0.31001Q0.39595 0.32706 0.35192 0.32706L0.18963 0.32706L0.18963 0.09411ZM0.18963 0.41264L0.33665 0.41264Q0.37358 0.41264 0.40305 0.42685Q0.43288 0.44105 0.45028 0.46662Q0.46804 0.49254 0.46804 0.5277Q0.46804 0.5728 0.43643 0.60334Q0.40483 0.63388 0.33949 0.63388L0.18963 0.63388L0.18963 0.41264Z"/>
+      <path id="uid-canvas-1-2237-letter13" d="M0.0799 0L0.0799 0.72727L0.53587 0.72727L0.53587 0.63281L0.18963 0.63281L0.18963 0.41122L0.51207 0.41122L0.51207 0.31712L0.18963 0.31712L0.18963 0.09446L0.54013 0.09446L0.54013 0L0.0799 0Z"/>
+      <clipPath id="uid-canvas-1-2237-clip9">
+        <rect width="64.37" height="40.79"/>
+      </clipPath>
+      <linearGradient id="uid-canvas-1-2237-grad10" x1="0" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox" gradientTransform="matrix(1 0 0 3.25198 0 -1.12599)">
+        <stop offset="0%" stop-color="#1E1D26" stop-opacity="0"/>
+        <stop offset="25.79%" stop-color="#191826" stop-opacity="0.53"/>
+        <stop offset="48.53%" stop-color="#1F2128"/>
+      </linearGradient>
+      <linearGradient id="uid-canvas-1-2237-grad11" x1="0" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox" gradientTransform="matrix(1 0 0 3.25198 0 -1.12599)">
+        <stop offset="0%" stop-color="#524899" stop-opacity="0"/>
+        <stop offset="25.79%" stop-color="#272357" stop-opacity="0.53"/>
+        <stop offset="48.53%" stop-color="#1F2128"/>
+      </linearGradient>
+    </defs>
+    <g data-layer="1:2237" data-name="Frame 1000000836">
+      <g>
+        <g data-layer="1:2238" data-name="Rectangle 1139">
+          <rect width="1125" height="97" rx="48.5" ry="48.5" fill="#1F2128"/>
+        </g>
+        <g data-layer="1:2239" data-name="Frame" aria-label="Return to board" data-center="77.00 78.00" data-action="board" role="button" tabindex="0">
+          <g transform="translate(28, 35) translate(28, 0) scale(-1, 1) rotate(180, 14, 14)">
+            <g clip-path="url(#uid-canvas-1-2237-clip0)">
+              <g data-layer="1:2240" data-name="Vector">
+                <g transform="translate(6.56, 0.23)">
+                  <path d="M13.79 27.58C14.09 27.58 14.4 27.46 14.63 27.23C15.1 26.77 15.1 26.01 14.63 25.55L2.87 13.79L14.63 2.03C15.1 1.57 15.1 0.81 14.63 0.35C14.17 -0.12 13.41 -0.12 12.95 0.35L0.35 12.95C0.13 13.17 0 13.47 0 13.79C0 14.11 0.13 14.41 0.35 14.63L12.95 27.23C13.18 27.46 13.49 27.58 13.79 27.58Z" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+                  <path d="M13.79 27.58L13.79 28.08L13.79 27.58ZM14.63 25.55L14.28 25.9L14.28 25.9L14.63 25.55ZM2.87 13.79L2.52 13.44L2.16 13.79L2.52 14.14L2.87 13.79ZM14.63 2.03L14.28 1.68L14.28 1.68L14.63 2.03ZM14.63 0.35L14.28 0.7L14.28 0.7L14.63 0.35ZM12.95 0.35L13.3 0.7L13.3 0.7L12.95 0.35ZM0.35 12.95L-0.01 12.6L-0.01 12.6L0.35 12.95ZM0 13.79L0.5 13.79L0 13.79ZM0.35 14.63L-0.01 14.99L-0.01 14.99L0.35 14.63ZM12.95 27.23L13.3 26.88L13.3 26.88L12.95 27.23ZM13.79 27.58L13.79 28.08C14.22 28.08 14.66 27.92 14.99 27.59L14.63 27.23L14.28 26.88C14.14 27.01 13.97 27.08 13.79 27.08L13.79 27.58ZM14.63 27.23L14.99 27.59C15.64 26.93 15.65 25.86 14.99 25.2L14.63 25.55L14.28 25.9C14.55 26.17 14.55 26.61 14.28 26.88L14.63 27.23ZM14.63 25.55L14.99 25.2L3.23 13.44L2.87 13.79L2.52 14.14L14.28 25.9L14.63 25.55ZM2.87 13.79L3.23 14.14L14.99 2.38L14.63 2.03L14.28 1.68L2.52 13.44L2.87 13.79ZM14.63 2.03L14.99 2.38C15.65 1.72 15.65 0.65 14.99 -0.01L14.63 0.35L14.28 0.7C14.55 0.97 14.55 1.41 14.28 1.68L14.63 2.03ZM14.63 0.35L14.99 -0.01C14.33 -0.66 13.26 -0.66 12.6 -0.01L12.95 0.35L13.3 0.7C13.57 0.43 14.01 0.43 14.28 0.7L14.63 0.35ZM12.95 0.35L12.6 -0.01L-0.01 12.6L0.35 12.95L0.7 13.3L13.3 0.7L12.95 0.35ZM0.35 12.95L-0.01 12.6C-0.32 12.91 -0.5 13.34 -0.5 13.79L0 13.79L0.5 13.79C0.5 13.61 0.57 13.43 0.7 13.3L0.35 12.95ZM0 13.79L-0.5 13.79C-0.5 14.24 -0.32 14.67 -0.01 14.99L0.35 14.63L0.7 14.28C0.57 14.15 0.5 13.97 0.5 13.79L0 13.79ZM0.35 14.63L-0.01 14.99L12.6 27.59L12.95 27.23L13.3 26.88L0.7 14.28L0.35 14.63ZM12.95 27.23L12.6 27.59C12.93 27.92 13.36 28.08 13.79 28.08L13.79 27.58L13.79 27.08C13.61 27.08 13.44 27.01 13.3 26.88L12.95 27.23Z" fill="#FFFFFF" stroke="none"/>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g data-layer="1:2241" data-name="Frame 1000000835">
+          <g transform="translate(72, 21)">
+            <g data-layer="1:2242" data-name="Frame 1000000832">
+              <g transform="translate(279, 3)">
+                <g clip-path="url(#uid-canvas-1-2237-clip1)">
+                  <g data-layer="1:2243" data-name="tab item/hover" aria-label="AUV" data-center="418.20 78.50" data-action="member:AUV" role="button" tabindex="0">
+                    <g transform="translate(0, 5.1)">
+                      <rect width="64.40" height="40.80" fill="transparent" rx="0"/>
+                      <g clip-path="url(#uid-canvas-1-2237-clip2)">
+                        <g data-layer="1:2244" data-name="bound copy 4">
+                          <g transform="translate(0, 0)"/>
+                        </g>
+                        <g data-layer="1:2245" data-name="hover">
+                          <g transform="translate(0, 2.62)">
+                            <path d="M52.13 0C56.41 0 58.56 0 60.19 0.83A7.65 7.65 0 0 1 63.54 4.18C64.37 5.81 64.37 7.95 64.37 12.24L64.37 23.46C64.37 27.74 64.37 29.88 63.54 31.52A7.65 7.65 0 0 1 60.19 34.86C58.56 35.69 56.41 35.69 52.13 35.69L12.24 35.69C7.95 35.69 5.81 35.69 4.18 34.86A7.65 7.65 0 0 1 0.83 31.52C0 29.88 0 27.74 0 23.46L0 12.24C0 7.95 0 5.81 0.83 4.18A7.65 7.65 0 0 1 4.18 0.83C5.81 0 7.95 0 12.24 0Z" fill="#524899"/>
+                          </g>
+                        </g>
+                        <g data-layer="1:2246" data-name="Popular" aria-label="AUV">
+                          <g transform="translate(24.04, 15.61)">
+                            <g fill="#FFFFFF">
+                              <use href="#uid-canvas-1-2237-letter0" transform="translate(0.3246 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter1" transform="translate(5.6802 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter2" transform="translate(11.3198 7.8806) scale(7.6488 -7.6488)"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <g data-layer="1:2247" data-name="tab item/hover" aria-label="NOTWYX" data-center="496.65 78.50" data-action="member:NOTWYX" role="button" tabindex="0">
+                    <g transform="translate(70.4, 0)">
+                      <rect width="80.50" height="51.00" fill="transparent" rx="0"/>
+                      <g clip-path="url(#uid-canvas-1-2237-clip3)">
+                        <g data-layer="1:2249" data-name="hover">
+                          <g transform="translate(0, 3.19)">
+                            <path d="M65.16 0C70.52 0 73.2 0 75.24 1.04A9.56 9.56 0 0 1 79.42 5.22C80.46 7.27 80.46 9.94 80.46 15.3L80.46 29.32C80.46 34.68 80.46 37.35 79.42 39.4A9.56 9.56 0 0 1 75.24 43.58C73.2 44.62 70.52 44.62 65.16 44.62L15.3 44.62C9.94 44.62 7.27 44.62 5.22 43.58A9.56 9.56 0 0 1 1.04 39.4C0 37.35 0 34.68 0 29.32L0 15.3C0 9.94 0 7.27 1.04 5.22A9.56 9.56 0 0 1 5.22 1.04C7.27 0 9.94 0 15.3 0Z" fill="#EA00FF"/>
+                          </g>
+                        </g>
+                        <g data-layer="1:2250" data-name="Popular" aria-label="NOTWYX">
+                          <g transform="translate(18.09, 19.51)">
+                            <g fill="#FFFFFF">
+                              <use href="#uid-canvas-1-2237-letter3" transform="translate(0.1604 9.8508) scale(9.5611 -9.5611)"/>
+                              <use href="#uid-canvas-1-2237-letter4" transform="translate(7.3031 9.8508) scale(9.5611 -9.5611)"/>
+                              <use href="#uid-canvas-1-2237-letter5" transform="translate(14.3526 9.8508) scale(9.5611 -9.5611)"/>
+                              <use href="#uid-canvas-1-2237-letter6" transform="translate(20.5803 9.8508) scale(9.5611 -9.5611)"/>
+                              <use href="#uid-canvas-1-2237-letter7" transform="translate(29.9266 9.8508) scale(9.5611 -9.5611)"/>
+                              <use href="#uid-canvas-1-2237-letter8" transform="translate(36.4718 9.8508) scale(9.5611 -9.5611)"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <g data-layer="1:2251" data-name="tab item/hover" aria-label="TXT" data-center="582.90 78.45" data-action="member:TXT" role="button" tabindex="0">
+                    <g transform="translate(156.9, 0.15)">
+                      <rect width="80.00" height="50.70" fill="transparent" rx="0"/>
+                      <g clip-path="url(#uid-canvas-1-2237-clip4)">
+                        <g data-layer="1:2252" data-name="bound copy 4">
+                          <g transform="translate(0, 0)"/>
+                        </g>
+                        <g data-layer="1:2253" data-name="hover">
+                          <g transform="translate(0, 3.25)">
+                            <path d="M64.79 0C70.11 0 72.78 0 74.81 1.04A9.51 9.51 0 0 1 78.96 5.19C80 7.22 80 9.89 80 15.21L80 29.15C80 34.48 80 37.14 78.96 39.17A9.51 9.51 0 0 1 74.81 43.33C72.78 44.36 70.11 44.36 64.79 44.36L15.21 44.36C9.89 44.36 7.22 44.36 5.19 43.33A9.51 9.51 0 0 1 1.04 39.17C0 37.14 0 34.48 0 29.15L0 15.21C0 9.89 0 7.22 1.04 5.19A9.51 9.51 0 0 1 5.19 1.04C7.22 0 9.89 0 15.21 0Z" fill="#92E5FE"/>
+                          </g>
+                        </g>
+                        <g data-layer="1:2254" data-name="Popular" aria-label="TXT">
+                          <g transform="translate(29.38, 19.4)">
+                            <g fill="#000000">
+                              <use href="#uid-canvas-1-2237-letter5" transform="translate(0.1423 9.7943) scale(9.5063 -9.5063)"/>
+                              <use href="#uid-canvas-1-2237-letter8" transform="translate(6.3343 9.7943) scale(9.5063 -9.5063)"/>
+                              <use href="#uid-canvas-1-2237-letter5" transform="translate(12.6657 9.7943) scale(9.5063 -9.5063)"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <g data-layer="1:2255" data-name="tab item/hover" aria-label="SHUA" data-center="668.90 78.45" data-action="member:SHUA" role="button" tabindex="0">
+                    <g transform="translate(242.93, 0.15)">
+                      <rect width="80.00" height="50.70" fill="transparent" rx="0"/>
+                      <g clip-path="url(#uid-canvas-1-2237-clip5)">
+                        <g data-layer="1:2256" data-name="bound copy 4">
+                          <g transform="translate(0, 0)"/>
+                        </g>
+                        <g data-layer="1:2257" data-name="hover">
+                          <g transform="translate(0, 3.25)">
+                            <path d="M64.79 0C70.11 0 72.78 0 74.81 1.04A9.51 9.51 0 0 1 78.96 5.19C80 7.22 80 9.89 80 15.21L80 29.15C80 34.48 80 37.14 78.96 39.17A9.51 9.51 0 0 1 74.81 43.33C72.78 44.36 70.11 44.36 64.79 44.36L15.21 44.36C9.89 44.36 7.22 44.36 5.19 43.33A9.51 9.51 0 0 1 1.04 39.17C0 37.14 0 34.48 0 29.15L0 15.21C0 9.89 0 7.22 1.04 5.19A9.51 9.51 0 0 1 5.19 1.04C7.22 0 9.89 0 15.21 0Z" fill="#FFCE73"/>
+                          </g>
+                        </g>
+                        <g data-layer="1:2258" data-name="Popular" aria-label="SHUA">
+                          <g transform="translate(25.38, 19.4)">
+                            <g fill="#000000">
+                              <use href="#uid-canvas-1-2237-letter9" transform="translate(0.0808 9.7943) scale(9.5063 -9.5063)"/>
+                              <use href="#uid-canvas-1-2237-letter10" transform="translate(6.1986 9.7943) scale(9.5063 -9.5063)"/>
+                              <use href="#uid-canvas-1-2237-letter1" transform="translate(13.254 9.7943) scale(9.5063 -9.5063)"/>
+                              <use href="#uid-canvas-1-2237-letter0" transform="translate(20.263 9.7943) scale(9.5063 -9.5063)"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <g data-layer="1:2259" data-name="tab item/hover" aria-label="AUV" data-center="747.15 78.50" data-action="member:AUV" role="button" tabindex="0">
+                    <g transform="translate(328.97, 5.1)">
+                      <rect width="64.30" height="40.80" fill="transparent" rx="0"/>
+                      <g clip-path="url(#uid-canvas-1-2237-clip6)">
+                        <g data-layer="1:2260" data-name="bound copy 4">
+                          <g transform="translate(0, 0)"/>
+                        </g>
+                        <g data-layer="1:2261" data-name="hover">
+                          <g transform="translate(0, 2.62)">
+                            <path d="M52.13 0C56.41 0 58.56 0 60.19 0.83A7.65 7.65 0 0 1 63.54 4.18C64.37 5.81 64.37 7.95 64.37 12.24L64.37 23.46C64.37 27.74 64.37 29.88 63.54 31.52A7.65 7.65 0 0 1 60.19 34.86C58.56 35.69 56.41 35.69 52.13 35.69L12.24 35.69C7.95 35.69 5.81 35.69 4.18 34.86A7.65 7.65 0 0 1 0.83 31.52C0 29.88 0 27.74 0 23.46L0 12.24C0 7.95 0 5.81 0.83 4.18A7.65 7.65 0 0 1 4.18 0.83C5.81 0 7.95 0 12.24 0Z" fill="#524899"/>
+                          </g>
+                        </g>
+                        <g data-layer="1:2262" data-name="Popular" aria-label="AUV">
+                          <g transform="translate(24.04, 15.61)">
+                            <g fill="#FFFFFF">
+                              <use href="#uid-canvas-1-2237-letter0" transform="translate(0.3246 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter1" transform="translate(5.6802 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter2" transform="translate(11.3198 7.8806) scale(7.6488 -7.6488)"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <g data-layer="1:2263" data-name="tab item/hover" aria-label="HALU" data-center="817.55 78.50" data-action="member:HALU" role="button" tabindex="0">
+                    <g transform="translate(399.37, 5.1)">
+                      <rect width="64.30" height="40.80" fill="transparent" rx="0"/>
+                      <g clip-path="url(#uid-canvas-1-2237-clip7)">
+                        <g data-layer="1:2264" data-name="bound copy 4">
+                          <g transform="translate(0, 0)"/>
+                        </g>
+                        <g data-layer="1:2265" data-name="hover">
+                          <g transform="translate(0, 2.62)">
+                            <path d="M52.13 0C56.41 0 58.56 0 60.19 0.83A7.65 7.65 0 0 1 63.54 4.18C64.37 5.81 64.37 7.95 64.37 12.24L64.37 23.46C64.37 27.74 64.37 29.88 63.54 31.52A7.65 7.65 0 0 1 60.19 34.86C58.56 35.69 56.41 35.69 52.13 35.69L12.24 35.69C7.95 35.69 5.81 35.69 4.18 34.86A7.65 7.65 0 0 1 0.83 31.52C0 29.88 0 27.74 0 23.46L0 12.24C0 7.95 0 5.81 0.83 4.18A7.65 7.65 0 0 1 4.18 0.83C5.81 0 7.95 0 12.24 0Z" fill="#524899"/>
+                          </g>
+                        </g>
+                        <g data-layer="1:2266" data-name="Popular" aria-label="HALU">
+                          <g transform="translate(22.04, 15.61)">
+                            <g fill="#FFFFFF">
+                              <use href="#uid-canvas-1-2237-letter10" transform="translate(0.0053 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter0" transform="translate(5.6821 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter11" transform="translate(11.0378 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter1" transform="translate(15.3552 7.8806) scale(7.6488 -7.6488)"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <g data-layer="1:2267" data-name="tab item/hover">
+                    <g transform="translate(469.78, 5.1)">
+                      <g clip-path="url(#uid-canvas-1-2237-clip8)">
+                        <g data-layer="1:2268" data-name="bound copy 4">
+                          <g transform="translate(0, 0)"/>
+                        </g>
+                        <g data-layer="1:2269" data-name="hover">
+                          <g transform="translate(0, 2.62)">
+                            <path d="M52.13 0C56.41 0 58.56 0 60.19 0.83A7.65 7.65 0 0 1 63.54 4.18C64.37 5.81 64.37 7.95 64.37 12.24L64.37 23.46C64.37 27.74 64.37 29.88 63.54 31.52A7.65 7.65 0 0 1 60.19 34.86C58.56 35.69 56.41 35.69 52.13 35.69L12.24 35.69C7.95 35.69 5.81 35.69 4.18 34.86A7.65 7.65 0 0 1 0.83 31.52C0 29.88 0 27.74 0 23.46L0 12.24C0 7.95 0 5.81 0.83 4.18A7.65 7.65 0 0 1 4.18 0.83C5.81 0 7.95 0 12.24 0Z" fill="#524899"/>
+                          </g>
+                        </g>
+                        <g data-layer="1:2270" data-name="Popular" aria-label="BEEN">
+                          <g transform="translate(22.04, 15.61)">
+                            <g fill="#FFFFFF">
+                              <use href="#uid-canvas-1-2237-letter12" transform="translate(0.0319 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter13" transform="translate(5.0365 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter13" transform="translate(9.6452 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter3" transform="translate(14.2539 7.8806) scale(7.6488 -7.6488)"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <g data-layer="1:2271" data-name="tab item/hover">
+                    <g transform="translate(540.18, 5.1)">
+                      <g clip-path="url(#uid-canvas-1-2237-clip9)">
+                        <g data-layer="1:2272" data-name="bound copy 4">
+                          <g transform="translate(0, 0)"/>
+                        </g>
+                        <g data-layer="1:2273" data-name="hover">
+                          <g transform="translate(0, 2.62)">
+                            <path d="M52.13 0C56.41 0 58.56 0 60.19 0.83A7.65 7.65 0 0 1 63.54 4.18C64.37 5.81 64.37 7.95 64.37 12.24L64.37 23.46C64.37 27.74 64.37 29.88 63.54 31.52A7.65 7.65 0 0 1 60.19 34.86C58.56 35.69 56.41 35.69 52.13 35.69L12.24 35.69C7.95 35.69 5.81 35.69 4.18 34.86A7.65 7.65 0 0 1 0.83 31.52C0 29.88 0 27.74 0 23.46L0 12.24C0 7.95 0 5.81 0.83 4.18A7.65 7.65 0 0 1 4.18 0.83C5.81 0 7.95 0 12.24 0Z" fill="#524899"/>
+                          </g>
+                        </g>
+                        <g data-layer="1:2274" data-name="Popular" aria-label="SHUA">
+                          <g transform="translate(21.04, 15.61)">
+                            <g fill="#FFFFFF">
+                              <use href="#uid-canvas-1-2237-letter9" transform="translate(0.2027 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter10" transform="translate(5.1252 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter1" transform="translate(10.8021 7.8806) scale(7.6488 -7.6488)"/>
+                              <use href="#uid-canvas-1-2237-letter0" transform="translate(16.4416 7.8806) scale(7.6488 -7.6488)"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+            <g data-layer="1:2275" data-name="hover">
+              <g transform="translate(248, -18) rotate(180, 32, 46.5)">
+                <path d="M51.76 0C56.05 0 58.19 0 59.82 0.83A7.65 7.65 0 0 1 63.17 4.18C64 5.81 64 7.95 64 12.24L64 80.76C64 85.05 64 87.19 63.17 88.82A7.65 7.65 0 0 1 59.82 92.17C58.19 93 56.05 93 51.76 93L12.24 93C7.95 93 5.81 93 4.18 92.17A7.65 7.65 0 0 1 0.83 88.82C0 87.19 0 85.05 0 80.76L0 12.24C0 7.95 0 5.81 0.83 4.18A7.65 7.65 0 0 1 4.18 0.83C5.81 0 7.95 0 12.24 0Z" fill="url(#uid-canvas-1-2237-grad10)"/>
+              </g>
+            </g>
+            <g data-layer="1:2276" data-name="hover">
+              <g transform="translate(707, 10) rotate(0, 32, 18.5)">
+                <path d="M51.76 0C56.05 0 58.19 0 59.82 0.83A7.65 7.65 0 0 1 63.17 4.18C64 5.81 64 7.95 64 12.24L64 24.76C64 29.05 64 31.19 63.17 32.82A7.65 7.65 0 0 1 59.82 36.17C58.19 37 56.05 37 51.76 37L12.24 37C7.95 37 5.81 37 4.18 36.17A7.65 7.65 0 0 1 0.83 32.82C0 31.19 0 29.05 0 24.76L0 12.24C0 7.95 0 5.81 0.83 4.18A7.65 7.65 0 0 1 4.18 0.83C5.81 0 7.95 0 12.24 0Z" fill="url(#uid-canvas-1-2237-grad11)"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+</svg>

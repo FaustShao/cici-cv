@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20.61" height="20.25" viewBox="0 0 20.61 20.25">
+  <g data-layer="0:3073" data-name="&#127822;Icon">
+    <g data-layer="0:3074" data-name="Discovery">
+      <g transform="translate(1.72, 1.69)">
+        <g data-layer="0:3075" data-name="Path_33947">
+          <g transform="translate(5.39, 5.29)">
+            <path d="M0 5.64L1.37 1.34L5.74 0L4.37 4.29L0 5.64Z" fill="none" stroke="#FFFFFF" stroke-width="1.21" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M0 5.64L-0.58 5.45C-0.65 5.67 -0.59 5.9 -0.43 6.06C-0.27 6.23 -0.04 6.28 0.18 6.22L0 5.64ZM1.37 1.34L1.19 0.76C1 0.82 0.85 0.97 0.79 1.16L1.37 1.34ZM5.74 0L6.32 0.18C6.39 -0.03 6.33 -0.27 6.17 -0.43C6.01 -0.59 5.78 -0.65 5.56 -0.58L5.74 0ZM4.37 4.29L4.55 4.87C4.74 4.82 4.89 4.67 4.95 4.48L4.37 4.29ZM0 5.64L0.58 5.82L1.95 1.53L1.37 1.34L0.79 1.16L-0.58 5.45L0 5.64ZM1.37 1.34L1.55 1.92L5.92 0.58L5.74 0L5.56 -0.58L1.19 0.76L1.37 1.34ZM5.74 0L5.16 -0.18L3.79 4.11L4.37 4.29L4.95 4.48L6.32 0.18L5.74 0ZM4.37 4.29L4.19 3.71L-0.18 5.06L0 5.64L0.18 6.22L4.55 4.87L4.37 4.29Z" fill="#FFFFFF" stroke="none"/>
+          </g>
+        </g>
+        <g data-layer="0:3076" data-name="Ellipse_738">
+          <g transform="translate(0, 0)">
+            <ellipse cx="8.25" cy="8.11" rx="8.25" ry="8.11" fill="none" stroke="#FFFFFF" stroke-width="1.21" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -54,12 +54,12 @@
     ['Collab', 'Round cake', 'TXT', '8 Apr 2024', 'Project Supernova', '1h 24m'],
   ];
   const originalBubbles = [
-    ['yellow', 699, 159, 157, 278],
-    ['blue-member', 396, 243, 190, 172],
-    ['lilac', 292, 399, 141, 113],
-    ['blue', 542, 473, 190, 152],
-    ['violet', 958, 487, 75, 87],
-    ['pink', 907, 648, 155, 140],
+    ['yellow', 699, 159, 156, 277],
+    ['blue-member', 397, 244, 189, 170],
+    ['lilac', 293, 400, 139, 112],
+    ['blue', 543, 474, 188, 150],
+    ['violet', 959, 488, 73, 85],
+    ['pink', 908, 649, 153, 138],
   ];
   function newBoard(name) {
     return {
@@ -132,7 +132,12 @@
   function navigation(compact = false) {
     const nav = el('nav', 'original-nav');
     nav.setAttribute('aria-label', 'Workspace sections');
-    nav.append(picture('nav-logo', 'BOOMIND', 'nav-logo'));
+    if (!compact) {
+      const brand = el('span', 'nav-logo');
+      brand.setAttribute('aria-label', 'BOOMIND');
+      mountDesign(brand, 'nav-brand');
+      nav.append(brand);
+    }
     menu.forEach(([id, label, count], i) => {
       if (i === 0) nav.append(el('span', 'group-label', 'Admin tools'));
       if (i === 7) nav.append(el('span', 'nav-divider'), el('span', 'group-label insights', 'Insights'));
@@ -146,7 +151,7 @@
             ? 16.6 + i * 5.48
             : 65.35 + (i - 7) * 5.5) + '%';
       const icon = el('i', 'nav-icon');
-      icon.style.setProperty('--row', i);
+      icon.style.maskImage = 'url("' + designURL('nav-' + (id === 'home' ? 'overview' : id)) + '")';
       icon.setAttribute('aria-hidden', 'true');
       b.append(icon, el('span', '', label));
       b.setAttribute('aria-label', label);
@@ -159,9 +164,12 @@
       if (id === section()) b.setAttribute('aria-current', 'page');
       nav.append(b);
     });
-    const user = button('', 'profile', 'nav-user');
-    user.append(picture('nav-profile', 'My profile'));
-    nav.append(user);
+    if (!compact) {
+      const user = button('', 'profile', 'nav-user');
+      user.setAttribute('aria-label', 'My profile');
+      mountDesign(user, 'nav-user');
+      nav.append(user);
+    }
     return nav;
   }
   function openDialog(title, children, type = '') {
@@ -259,17 +267,80 @@
       [a, b, width, height] = box;
     return x + w / 2 >= a && y + h / 2 >= b && x + w / 2 <= a + width && y + h / 2 <= b + height;
   }
-  function hotspot(slice, box, label, action, rect) {
-    if (!inside(box, rect)) return;
-    const b = button('', action, 'hot');
-    if (action === 'statement') {
-      b.disabled = true;
-      b.setAttribute('aria-disabled', 'true');
+  // Each SVG contains separately positioned Figma components, their original
+  // paths, glyphs, masks and control groups. Only the current artboard is loaded.
+  const designSource = new Map();
+  let mountId = 0;
+  const buildQuery = revision ? '?build=' + encodeURIComponent(revision) : '';
+  const designURL = (name) => 'assets/boomind/components/' + name + '.svg' + buildQuery;
+  function loadDesign(name) {
+    if (!designSource.has(name)) {
+      const request = fetch(designURL(name)).then((response) => {
+        if (!response.ok) throw new Error('Component unavailable: ' + name);
+        return response.text();
+      }).catch((error) => {
+        designSource.delete(name);
+        throw error;
+      });
+      designSource.set(name, request);
     }
-    b.title = label;
-    b.append(el('span', '', label));
-    bounds(b, box, rect);
-    slice.append(b);
+    return designSource.get(name);
+  }
+  function mountDesign(host, name, box) {
+    const layer = el('div', 'design-art');
+    host.append(layer);
+    const instance = 'fig' + (++mountId) + '-';
+    async function populate() {
+      try {
+        const source = await loadDesign(name);
+        if (!layer.isConnected) return;
+        // A component can appear twice in adjacent mobile sections. Isolate
+        // its clip paths, image patterns and glyph references in each instance.
+        const svg = new DOMParser().parseFromString(source.replaceAll('uid-', instance), 'image/svg+xml').documentElement;
+        if (svg.localName !== 'svg') throw new Error('Invalid component: ' + name);
+        if (box) {
+          const [x, y, w, h] = box;
+          svg.setAttribute('viewBox', box.join(' '));
+          for (const item of [...svg.children]) {
+            if (!item.hasAttribute('data-component')) continue;
+            const rect = ['x', 'y', 'width', 'height'].map((key) => Number(item.getAttribute(key)));
+            const [left, top, width, height] = rect;
+            if (left >= x + w || top >= y + h || left + width <= x || top + height <= y) item.remove();
+          }
+          for (const control of svg.querySelectorAll('[data-center]')) {
+            const [cx, cy] = control.dataset.center.split(' ').map(Number);
+            if (cx < x || cx > x + w || cy < y || cy > y + h) {
+              control.removeAttribute('tabindex');
+              control.removeAttribute('data-action');
+              control.removeAttribute('role');
+            }
+          }
+        }
+        const sourceURL = new URL(designURL(name), document.baseURI);
+        for (const image of svg.querySelectorAll('image[href]')) {
+          const href = image.getAttribute('href');
+          if (href.startsWith('bitmaps/')) image.setAttribute('href', new URL(href + buildQuery, sourceURL).href);
+        }
+        layer.replaceChildren(document.importNode(svg, true));
+        layer.dataset.ready = name;
+      } catch {
+        if (!layer.isConnected) return;
+        const retry = el('button', 'art-retry', 'Reload artwork');
+        retry.onclick = (event) => {
+          event.stopPropagation();
+          populate();
+        };
+        layer.replaceChildren(retry);
+      }
+    }
+    populate();
+    return layer;
+  }
+  function overlayDesign(name, label) {
+    const figure = el('div', 'authored-overlay overlay-' + name);
+    figure.setAttribute('aria-label', label);
+    mountDesign(figure, name);
+    return figure;
   }
   function originalInput(slice, box, rect, label, value, save) {
     if (!inside(box, rect)) return;
@@ -317,7 +388,7 @@
       const b = button('', 'bubble:' + i, 'bubble');
       b.dataset.bubble = i;
       b.setAttribute('aria-label', n.text || 'Idea ' + (i + 1));
-      b.append(picture('bubble-' + n.art, ''));
+      mountDesign(b, 'idea-' + n.art);
       if (n.text) b.append(el('strong', '', n.text));
       if (selection === i) b.classList.add('selected');
       bounds(b, full, [n.x, n.y, n.w, n.h]);
@@ -327,14 +398,13 @@
   function sliceView(box, fullView) {
     const slice = el('div', 'slice');
     slice.style.aspectRatio = box[2] + '/' + box[3];
-    const img = picture('screen-' + page, frames[page].title, 'scene-art');
-    bounds(img, box, full);
-    slice.append(img);
-    for (const [label, action, x, y, w, h] of frames[page].controls) {
-      if (dashboards.has(page) && x < 213) continue; // The mounted sidebar owns these controls and its active state.
-      if (page === 'profile' && action.startsWith('field:') && w > 200) continue;
-      if (page === 'conversation' && label === 'Reply to message') continue;
-      hotspot(slice, box, label, action, [x, y, w, h]);
+    if (page === 'welcome') {
+      const enter = button('', 'home', 'welcome-entry');
+      enter.setAttribute('aria-label', 'Enter workspace');
+      enter.append(picture('welcome-animation', 'Welcome'));
+      slice.append(enter);
+    } else {
+      mountDesign(slice, page, box);
     }
     if (fullView && dashboards.has(page)) slice.append(navigation());
     if (page === 'canvas') drawCanvas(slice);
@@ -348,17 +418,18 @@
     }
     if (['board', 'map'].includes(page)) {
       const voice = button('', 'voice', 'voice-control');
-      voice.append(picture('screen-voice', 'Connected device status'));
+      voice.setAttribute('aria-label', 'Connected device status');
+      mountDesign(voice, 'voice');
       bounds(voice, box, [600, 110, 222, 52]);
       slice.append(voice);
     }
     if (page === 'profile') {
       for (const [key, x, y, w, h] of [
-        ['Full name', 295, 441, 396, 45],
-        ['Display name', 717, 441, 394, 45],
-        ['Role', 295, 530, 396, 45],
-        ['Team', 717, 530, 394, 45],
-        ['Bio', 295, 619, 817, 132],
+        ['Full name', 293.4, 439.8, 398, 47.9],
+        ['Display name', 715, 439.8, 398, 47.9],
+        ['Role', 293.4, 528.4, 398, 47.9],
+        ['Team', 715, 528.4, 398, 47.9],
+        ['Bio', 293.4, 620.8, 820.4, 134.3],
       ]) {
         originalInput(slice, box, [x, y, w, h], key, profile[key], (v) => (profile[key] = v));
       }
@@ -641,24 +712,7 @@
         notify(saved.has(arg) ? 'Saved to file library' : 'Removed from library');
         break;
       case 'notifications': {
-        const list = el('div', 'notification-art');
-        list.append(picture('screen-notifications', 'Recent notifications', 'overlay-art'));
-        const items = [
-          ['Sarah Saunders · Comment on Collab Design', 'comments'],
-          ['Glenn Green · Comment on Sapiens Illustration', 'comments'],
-          ['Sarah Saunders · Comment on Collab Design', 'comments'],
-          ['Purchased Folio Designer', 'market'],
-          ['Read message', 'inbox'],
-          ['Liked Folio Agency', 'files'],
-          ['See all incoming activity', 'comments'],
-        ];
-        items.forEach(([label, target], i) => {
-          const b = button('', target, 'hot');
-          b.append(el('span', '', label));
-          b.title = label;
-          bounds(b, [0, 0, 340, 552], i === 6 ? [68, 425, 214, 48] : [60, 97 + i * 52, 224, 52]);
-          list.append(b);
-        });
+        const list = overlayDesign('notifications', 'Recent notifications');
         openDialog('Notifications', [list], 'notifications');
         break;
       }
@@ -793,7 +847,7 @@
         break;
       case 'member':
         openDialog(arg, [
-          picture('screen-member', 'Contributor', 'overlay-art'),
+          overlayDesign('member', 'Contributor'),
           controls([['Focus on canvas', 'member-focus']]),
         ]);
         break;
@@ -802,7 +856,7 @@
         break;
       case 'board-tools':
         openDialog('Board tools', [
-          picture('screen-tools', 'Radial board tools', 'overlay-art'),
+          overlayDesign('tools', 'Radial board tools'),
           controls([
             ['Team canvas', 'canvas'],
             ['Add idea', 'add-idea'],
@@ -886,6 +940,12 @@
       }
     });
   document.addEventListener('keydown', (e) => {
+    const control = e.target.closest('svg [role="button"][data-action]');
+    if (control && (e.key === ' ' || e.key === 'Enter')) {
+      e.preventDefault();
+      if (!e.repeat) run(control.dataset.action);
+      return;
+    }
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       search();

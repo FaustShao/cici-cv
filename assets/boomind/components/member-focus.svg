@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1194 849" data-design="member-focus">
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1194" height="963" viewBox="0 0 1194 963" x="0" y="0" data-component="1:2174" overflow="visible">
+    <g data-layer="1:2174" data-name="Rectangle 1135">
+      <rect width="1194" height="963" fill="#FFFFFF"/>
+    </g>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="320.47" height="264.16" viewBox="0 0 320.47 264.16" x="1053" y="151" data-component="1:2175" overflow="visible">
+    <defs>
+      <pattern id="uid-member-focus-1-2175-img0" patternUnits="userSpaceOnUse" width="294" height="229">
+        <image href="bitmaps/6663a31f64585f905a5117f2b4e81008a5b4b618.webp" width="720" height="371" preserveAspectRatio="none" transform="matrix(0.617251 0 0 0.617251 -75.210243 0)"/>
+      </pattern>
+    </defs>
+    <g data-layer="1:2175" data-name="image 3">
+      <g transform="translate(13.23, 17.58) rotate(172.78, 147, 114.5)">
+        <rect width="294" height="229" fill="url(#uid-member-focus-1-2175-img0)"/>
+      </g>
+    </g>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="293.99" height="157" viewBox="0 0 293.99 157" x="755.13" y="599.34" data-component="1:2176" overflow="visible">
+    <defs>
+      <pattern id="uid-member-focus-1-2176-img0" patternUnits="userSpaceOnUse" width="293.985046" height="157.000534">
+        <image href="bitmaps/6663a31f64585f905a5117f2b4e81008a5b4b618.webp" width="720" height="371" preserveAspectRatio="none" transform="matrix(0.423182 0 0 0.423182 -5.353009 0)"/>
+      </pattern>
+    </defs>
+    <g data-layer="1:2176" data-name="image 4">
+      <rect width="293.99" height="157" fill="url(#uid-member-focus-1-2176-img0)"/>
+    </g>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="94.76" height="162.28" viewBox="0 0 94.76 162.28" x="946.63" y="451.49" data-component="1:2177" overflow="visible">
+    <defs>
+      <pattern id="uid-member-focus-1-2177-img0" patternUnits="userSpaceOnUse" width="156.641907" height="83.653442">
+        <image href="bitmaps/6663a31f64585f905a5117f2b4e81008a5b4b618.webp" width="720" height="371" preserveAspectRatio="none" transform="matrix(0.225481 0 0 0.225481 -2.852198 0)"/>
+      </pattern>
+    </defs>
+    <g data-layer="1:2177" data-name="image 5">
+      <g transform="translate(-30.94, 39.31) rotate(-85.85, 78.32, 41.83)">
+        <rect width="156.64" height="83.65" fill="url(#uid-member-focus-1-2177-img0)"/>
+      </g>
+    </g>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="545" height="545" viewBox="0 0 545 545" x="-155" y="405" data-component="1:2178" overflow="visible">
+    <g data-layer="1:2178">
+      <image href="bitmaps/layer-2178.webp" x="0" y="0" width="545" height="545" preserveAspectRatio="none"/>
+    </g>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="695" height="436" viewBox="0 0 695 436" x="515" y="268" data-component="1:2189" overflow="visible">
+    <defs>
+      <path id="uid-member-focus-1-2189-letter0" d="M0.242 -0.015Q0.166 -0.015 0.131 0.022Q0.096 0.059 0.096 0.128L0.096 0.448L0.008 0.448L0.008 0.527L0.096 0.527L0.096 0.72L0.19 0.72L0.19 0.527L0.324 0.527L0.324 0.448L0.19 0.448L0.19 0.142Q0.19 0.1 0.207 0.082Q0.224 0.065 0.261 0.065Q0.302 0.065 0.334 0.081L0.334 0Q0.296 -0.015 0.242 -0.015Z"/>
+      <path id="uid-member-focus-1-2189-letter1" d="M0.052 0.768L0.147 0.768L0.147 0.44Q0.177 0.486 0.225 0.514Q0.273 0.543 0.331 0.543Q0.423 0.543 0.469 0.487Q0.515 0.431 0.515 0.333L0.515 0L0.421 0L0.421 0.313Q0.421 0.387 0.395 0.423Q0.369 0.459 0.309 0.459Q0.27 0.459 0.234 0.437Q0.198 0.416 0.177 0.379Q0.162 0.352 0.154 0.315Q0.147 0.279 0.147 0.22L0.147 0L0.052 0L0.052 0.768Z"/>
+      <path id="uid-member-focus-1-2189-letter2" d="M0.147 0L0.052 0L0.052 0.527L0.147 0.527L0.147 0ZM0.038 0.717Q0.038 0.744 0.055 0.761Q0.072 0.778 0.1 0.778Q0.128 0.778 0.145 0.761Q0.162 0.744 0.162 0.717Q0.162 0.689 0.145 0.672Q0.128 0.656 0.1 0.656Q0.072 0.656 0.055 0.672Q0.038 0.689 0.038 0.717Z"/>
+      <path id="uid-member-focus-1-2189-letter3" d="M0.052 0.527L0.142 0.527L0.142 0.433Q0.172 0.483 0.221 0.513Q0.27 0.543 0.331 0.543Q0.423 0.543 0.469 0.487Q0.515 0.431 0.515 0.333L0.515 0L0.421 0L0.421 0.313Q0.421 0.387 0.395 0.423Q0.369 0.459 0.309 0.459Q0.271 0.459 0.235 0.437Q0.2 0.416 0.177 0.379Q0.162 0.352 0.154 0.315Q0.147 0.279 0.147 0.219L0.147 0L0.052 0L0.052 0.527Z"/>
+      <path id="uid-member-focus-1-2189-letter4" d="M0.272 -0.219Q0.177 -0.219 0.117 -0.18Q0.057 -0.142 0.035 -0.081L0.127 -0.047Q0.138 -0.086 0.175 -0.113Q0.212 -0.14 0.274 -0.14Q0.348 -0.14 0.389 -0.101Q0.431 -0.063 0.431 0.022L0.431 0.091Q0.4 0.048 0.354 0.026Q0.308 0.004 0.25 0.004Q0.186 0.004 0.135 0.036Q0.084 0.068 0.055 0.129Q0.026 0.191 0.026 0.274Q0.026 0.356 0.054 0.417Q0.083 0.478 0.134 0.51Q0.185 0.543 0.249 0.543Q0.309 0.543 0.356 0.519Q0.404 0.496 0.434 0.451L0.434 0.527L0.525 0.527L0.525 0.021Q0.525 -0.096 0.456 -0.157Q0.388 -0.219 0.272 -0.219ZM0.12 0.274Q0.12 0.185 0.159 0.136Q0.199 0.087 0.272 0.087Q0.348 0.087 0.392 0.137Q0.436 0.188 0.436 0.274Q0.436 0.359 0.392 0.409Q0.348 0.46 0.272 0.46Q0.199 0.46 0.159 0.411Q0.12 0.362 0.12 0.274Z"/>
+      <path id="uid-member-focus-1-2189-letter5" d="M0.255 -0.016Q0.154 -0.016 0.092 0.029Q0.03 0.074 0.013 0.147L0.106 0.17Q0.117 0.124 0.153 0.094Q0.19 0.064 0.255 0.064Q0.312 0.064 0.342 0.087Q0.373 0.111 0.373 0.147Q0.373 0.183 0.349 0.199Q0.325 0.215 0.266 0.223L0.212 0.231Q0.113 0.245 0.07 0.283Q0.028 0.321 0.028 0.383Q0.028 0.428 0.054 0.464Q0.08 0.501 0.127 0.522Q0.174 0.544 0.236 0.544Q0.322 0.544 0.379 0.504Q0.437 0.465 0.458 0.398L0.37 0.377Q0.355 0.416 0.322 0.44Q0.289 0.464 0.232 0.464Q0.176 0.464 0.148 0.442Q0.121 0.42 0.121 0.389Q0.121 0.358 0.143 0.341Q0.166 0.324 0.224 0.315L0.281 0.307Q0.375 0.292 0.42 0.254Q0.466 0.217 0.466 0.151Q0.466 0.076 0.409 0.03Q0.352 -0.016 0.255 -0.016Z"/>
+    </defs>
+    <g data-layer="1:2189" data-name="Frame 1000000845">
+      <g>
+        <g data-layer="1:2190" data-name="things" aria-label="things">
+          <g transform="translate(0, 107)">
+            <g fill="#FFFFFF">
+              <use href="#uid-member-focus-1-2189-letter0" transform="translate(0.1289 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter1" transform="translate(8.5195 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter2" transform="translate(22.0898 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter3" transform="translate(26.8711 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter4" transform="translate(40.3711 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter5" transform="translate(54.2227 24.216) scale(24 -24)"/>
+            </g>
+          </g>
+        </g>
+        <g data-layer="1:2191" data-name="things" aria-label="things">
+          <g transform="translate(93, 303)">
+            <g fill="#FFFFFF">
+              <use href="#uid-member-focus-1-2189-letter0" transform="translate(0.1289 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter1" transform="translate(8.5195 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter2" transform="translate(22.0898 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter3" transform="translate(26.8711 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter4" transform="translate(40.3711 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter5" transform="translate(54.2227 24.216) scale(24 -24)"/>
+            </g>
+          </g>
+        </g>
+        <g data-layer="1:2192" data-name="things" aria-label="things">
+          <g transform="translate(629, 0)">
+            <g fill="#FFFFFF">
+              <use href="#uid-member-focus-1-2189-letter0" transform="translate(0.1289 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter1" transform="translate(8.5195 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter2" transform="translate(22.0898 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter3" transform="translate(26.8711 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter4" transform="translate(40.3711 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter5" transform="translate(54.2227 24.216) scale(24 -24)"/>
+            </g>
+          </g>
+        </g>
+        <g data-layer="1:2193" data-name="things" aria-label="things">
+          <g transform="translate(457, 245)">
+            <g fill="#FFFFFF">
+              <use href="#uid-member-focus-1-2189-letter0" transform="translate(0.0859 16.144) scale(16 -16)"/>
+              <use href="#uid-member-focus-1-2189-letter1" transform="translate(5.6797 16.144) scale(16 -16)"/>
+              <use href="#uid-member-focus-1-2189-letter2" transform="translate(14.7266 16.144) scale(16 -16)"/>
+              <use href="#uid-member-focus-1-2189-letter3" transform="translate(17.9141 16.144) scale(16 -16)"/>
+              <use href="#uid-member-focus-1-2189-letter4" transform="translate(26.9141 16.144) scale(16 -16)"/>
+              <use href="#uid-member-focus-1-2189-letter5" transform="translate(36.1484 16.144) scale(16 -16)"/>
+            </g>
+          </g>
+        </g>
+        <g data-layer="1:2194" data-name="things" aria-label="things">
+          <g transform="translate(366, 406)">
+            <g fill="#FFFFFF">
+              <use href="#uid-member-focus-1-2189-letter0" transform="translate(0.1289 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter1" transform="translate(8.5195 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter2" transform="translate(22.0898 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter3" transform="translate(26.8711 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter4" transform="translate(40.3711 24.216) scale(24 -24)"/>
+              <use href="#uid-member-focus-1-2189-letter5" transform="translate(54.2227 24.216) scale(24 -24)"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="545" height="545" viewBox="0 0 545 545" x="-155" y="405" data-component="1:2195" overflow="visible">
+    <g data-layer="1:2195">
+      <image href="bitmaps/layer-2195.webp" x="0" y="0" width="545" height="545" preserveAspectRatio="none"/>
+    </g>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="97" height="97" viewBox="0 0 97 97" x="1049" y="29" data-component="1:2204" overflow="visible">
+    <defs>
+      <filter id="uid-member-focus-1-2204-fx0" x="-2" y="0" width="105" height="105" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feOffset in="hardAlpha" dx="2" dy="4" result="fx0_offset1"/>
+        <feGaussianBlur in="fx0_offset1" stdDeviation="2" result="fx0_blur2"/>
+        <feComposite in="fx0_blur2" in2="hardAlpha" operator="out" result="fx0_knockout3"/>
+        <feFlood flood-color="#000000" flood-opacity="0.25" result="fx0_color5"/>
+        <feComposite in="fx0_color5" in2="fx0_knockout3" operator="in" result="fx0_dropShadow4"/>
+        <feBlend mode="normal" in="fx0_dropShadow4" in2="BackgroundImageFix" result="fx0_dropShadowBlend6"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="fx0_dropShadowBlend6" result="fx0_shape7"/>
+      </filter>
+    </defs>
+    <g data-layer="1:2204" data-name="Rectangle 1139" aria-label="Back to focused board" data-center="1097.50 77.50" data-action="board-focus" role="button" tabindex="0">
+      <g filter="url(#uid-member-focus-1-2204-fx0)">
+        <rect width="97" height="97" rx="48.5" ry="48.5" fill="#1F2128"/>
+      </g>
+    </g>
+  </svg>
+  <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="28" viewBox="0 0 28 28" x="63" y="64" data-component="1:2205" overflow="visible">
+    <defs>
+      <clipPath id="uid-member-focus-1-2205-clip0">
+        <rect width="28" height="28"/>
+      </clipPath>
+    </defs>
+    <g data-layer="1:2205" data-name="Frame" aria-label="Return to board" data-center="77.00 78.00" data-action="board" role="button" tabindex="0">
+      <g transform="translate(28, 0) scale(-1, 1) rotate(180, 14, 14)">
+        <g clip-path="url(#uid-member-focus-1-2205-clip0)">
+          <g data-layer="1:2206" data-name="Vector">
+            <g transform="translate(6.56, 0.23)">
+              <path d="M13.79 27.58C14.09 27.58 14.4 27.46 14.63 27.23C15.1 26.77 15.1 26.01 14.63 25.55L2.87 13.79L14.63 2.03C15.1 1.57 15.1 0.81 14.63 0.35C14.17 -0.12 13.41 -0.12 12.95 0.35L0.35 12.95C0.13 13.17 0 13.47 0 13.79C0 14.11 0.13 14.41 0.35 14.63L12.95 27.23C13.18 27.46 13.49 27.58 13.79 27.58Z" fill="#000000" stroke="none" stroke-width="1"/>
+              <path d="M13.79 27.58L13.79 28.08L13.79 27.58ZM14.63 25.55L14.28 25.9L14.28 25.9L14.63 25.55ZM2.87 13.79L2.52 13.44L2.16 13.79L2.52 14.14L2.87 13.79ZM14.63 2.03L14.28 1.68L14.28 1.68L14.63 2.03ZM14.63 0.35L14.28 0.7L14.28 0.7L14.63 0.35ZM12.95 0.35L13.3 0.7L13.3 0.7L12.95 0.35ZM0.35 12.95L-0.01 12.6L-0.01 12.6L0.35 12.95ZM0 13.79L0.5 13.79L0 13.79ZM0.35 14.63L-0.01 14.99L-0.01 14.99L0.35 14.63ZM12.95 27.23L13.3 26.88L13.3 26.88L12.95 27.23ZM13.79 27.58L13.79 28.08C14.22 28.08 14.66 27.92 14.99 27.59L14.63 27.23L14.28 26.88C14.14 27.01 13.97 27.08 13.79 27.08L13.79 27.58ZM14.63 27.23L14.99 27.59C15.64 26.93 15.65 25.86 14.99 25.2L14.63 25.55L14.28 25.9C14.55 26.17 14.55 26.61 14.28 26.88L14.63 27.23ZM14.63 25.55L14.99 25.2L3.23 13.44L2.87 13.79L2.52 14.14L14.28 25.9L14.63 25.55ZM2.87 13.79L3.23 14.14L14.99 2.38L14.63 2.03L14.28 1.68L2.52 13.44L2.87 13.79ZM14.63 2.03L14.99 2.38C15.65 1.72 15.65 0.65 14.99 -0.01L14.63 0.35L14.28 0.7C14.55 0.97 14.55 1.41 14.28 1.68L14.63 2.03ZM14.63 0.35L14.99 -0.01C14.33 -0.66 13.26 -0.66 12.6 -0.01L12.95 0.35L13.3 0.7C13.57 0.43 14.01 0.43 14.28 0.7L14.63 0.35ZM12.95 0.35L12.6 -0.01L-0.01 12.6L0.35 12.95L0.7 13.3L13.3 0.7L12.95 0.35ZM0.35 12.95L-0.01 12.6C-0.32 12.91 -0.5 13.34 -0.5 13.79L0 13.79L0.5 13.79C0.5 13.61 0.57 13.43 0.7 13.3L0.35 12.95ZM0 13.79L-0.5 13.79C-0.5 14.24 -0.32 14.67 -0.01 14.99L0.35 14.63L0.7 14.28C0.57 14.15 0.5 13.97 0.5 13.79L0 13.79ZM0.35 14.63L-0.01 14.99L12.6 27.59L12.95 27.23L13.3 26.88L0.7 14.28L0.35 14.63ZM12.95 27.23L12.6 27.59C12.93 27.92 13.36 28.08 13.79 28.08L13.79 27.58L13.79 27.08C13.61 27.08 13.44 27.01 13.3 26.88L12.95 27.23Z" fill="#000000" stroke="none"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+</svg>
