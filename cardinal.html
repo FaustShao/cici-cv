@@ -5,7 +5,8 @@
   <title>CARDINAL · 游戏界面手记</title>
   <link rel="stylesheet" href="project-info.css">
   <link rel="stylesheet" href="cardinal.css">
-  <script defer src="cardinal.js"></script><script defer src="project-info.js"></script>
+  <script defer src="cardinal.js"></script>
+  <script defer src="cardinal-catalog.js"></script><script defer src="cardinal-archive.js"></script><script defer src="project-info.js"></script>
 </head>
 <body>
 <header class="mast" aria-label="项目导航">
@@ -47,7 +48,7 @@
         <a href="#table" class="slip plain"><span>手绘组件</span><small>Game assets</small></a>
       </nav>
       <section id="screens" class="gallery" aria-label="游戏界面原稿"><div id="prints" class="wings"></div></section>
-      <section id="cast" class="gallery" aria-label="角色与动效"><div id="characters" class="wings"></div></section>
+      <section id="cast" class="gallery" aria-label="角色与动效"><header class="album-heading"><h2>角色与动效</h2><p>点选角色播放动作，打开原画可以逐帧查看。</p></header><div id="characters" class="wings"></div><div id="roster" class="roster"></div></section>
       <div class="last-leaf"><i class="icon-swords" aria-hidden="true"></i></div>
     </div>
   </div>
@@ -55,14 +56,33 @@
     <div class="mat">
       <header class="mat-heading"><div><h2 id="board-title">手绘组件</h2><p>拖动纸片可以叠放，移开卡牌可看到下面的商店。</p></div><button id="reset">重新摆放 ↺</button></header>
       <div class="board"><div class="under"><img src="assets/cardinal/stall.webp" alt=""><span>地图上的商店</span></div><div id="pieces"></div></div>
-      <output id="piece-name" aria-live="polite">卡牌、钱袋与印章</output>
+      <output id="piece-name" aria-live="polite">卡牌、钱袋与印章</output><a class="album-link" href="#archive">翻阅素材册 ↘</a>
     </div>
   </section>
   <section class="studies" aria-labelledby="study-title">
     <h2 id="study-title">战斗界面方案对照</h2>
     <div class="pair"><figure><img loading="lazy" src="assets/cardinal/pencil.webp" alt="浅色战斗界面方案"><figcaption>铅笔排线划出角色区，九格棋盘由纸色方块拼成。</figcaption></figure><figure><img loading="lazy" src="assets/cardinal/battle-preview.webp" alt="UI Mockup 战斗界面"><figcaption>章鱼纸片、红色数值签与深色棋格区分角色和操作区。</figcaption></figure></div>
   </section>
+  <section id="archive" class="studies" aria-labelledby="archive-title">
+    <header class="album-heading"><h2 id="archive-title">制作素材册</h2></header>
+    <nav id="archive-tabs" aria-label="素材分类"></nav>
+    <p id="archive-caption"></p>
+    <div id="archive-grid" aria-live="polite"></div>
+  </section>
 </main>
+<dialog id="archive-view" aria-labelledby="archive-name">
+  <header class="viewer-bar"><strong id="archive-name"></strong><button type="button" id="archive-zoom">放大细看</button><button type="button" id="archive-close">关闭 ×</button></header>
+  <div class="archive-body">
+    <div id="archive-stage"></div>
+    <div id="archive-versions" class="archive-controls"></div>
+    <div id="archive-playback" class="archive-controls" hidden>
+      <button id="frame-prev" type="button">上一帧</button><button id="frame-play" type="button">播放动作</button>
+      <button id="frame-next" type="button">下一帧</button><output id="frame-number"></output>
+    </div>
+    <p id="archive-source"></p><a id="archive-download" hidden download>下载 PureRef 参考板</a>
+  </div>
+  <nav class="archive-controls archive-pages" aria-label="浏览同组素材"><button id="item-prev">← 上一件</button><button id="item-next">下一件 →</button></nav>
+</dialog>
 <footer><b>CARDINAL</b><a href="works.html#other">返回其他项目 ↗</a></footer>
 <dialog id="viewer" aria-labelledby="viewer-name">
   <div class="viewer-bar"><strong id="viewer-name"></strong><button id="actual">原始尺寸</button><button id="dismiss">关闭 ×</button></div>

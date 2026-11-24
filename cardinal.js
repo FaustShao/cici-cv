@@ -121,7 +121,7 @@ const pieces = [
   ['warrior-card','战士 · 红色卡牌',34,42,-9,18],
   ['pupil-card','学徒 · 黄色卡牌',45,46,6,18],
   ['coins','钱袋与金币',69,30,5,17],
-  ['deck','卡组底板',22,75,-7,17],
+  ['scout-card','斥候 · 黄色卡牌',22,75,-7,17],
   ['map-preview','地图原稿',45,82,4,20],
   ['battle-preview','战斗原稿',85,58,-6,18],
   ['seal','蜡封按钮',73,73,-7,11]
@@ -209,42 +209,6 @@ byId('reset').onclick = () => {
   resets.forEach(reset=>reset());
   byId('piece-name').textContent='卡牌、钱袋与印章';
 };
-const cast = [
-  ['guard','盾卫','guard.gif'],['mage','火球法师','mage.gif'],
-  ['ranger','游侠','ranger.gif'],['octopus','章鱼 Boss','octopus-motion.webp']
-];
-let stopMotion;
-for (const [file,label,motion] of cast) {
-  const button=document.createElement('button');
-  button.className='character';
-  const img=new Image();
-  img.loading='lazy';
-  img.src=asset(file+'.webp');
-  img.alt='';
-  const action=document.createElement('small');
-  action.textContent='播放动作 ▷';
-  const caption=document.createElement('span');
-  caption.className='character-caption';
-  caption.append(label,action);
-  button.append(img,caption);
-  button.setAttribute('aria-pressed',false);
-  button.onclick=()=>{
-    const wasPlaying=button.getAttribute('aria-pressed')==='true';
-    stopMotion?.();
-    if (wasPlaying) return;
-    img.src=asset(motion);
-    button.setAttribute('aria-pressed',true);
-    action.textContent='停止动作 □';
-    stopMotion=()=>{
-      img.src=asset(file+'.webp');
-      button.setAttribute('aria-pressed',false);
-      action.textContent='播放动作 ▷';
-      stopMotion=null;
-    };
-  };
-  byId('characters').append(button);
-}
-
 // Keep in-reader chapter jumps out of the parent station's Back history.
 if (window.parent !== window) {
   document.addEventListener('click', event => {

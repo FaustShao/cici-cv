@@ -264,3 +264,60 @@ footer b { font: italic 20px Georgia,serif }
 @media (max-width: 700px) {
   #prints::after { display: none }
 }
+
+.album-heading { margin-bottom: 1.1rem }
+.album-heading h2 { margin: 0; font-size: clamp(22px,2.6vw,40px); font-weight: normal }
+.album-heading p, #archive-caption { font-size: clamp(14px,1.15vw,19px) }
+.page-ink { bottom: 4%; left: 3% }
+.page-ink + .page-ink { right: 3% }
+.album-link, .art-details, #archive-download { text-decoration: underline; text-underline-offset: .25em }
+.album-link { display: inline-block; margin-top: .4em }
+.character-action, .art-details { display: block; width: 100%; color: inherit; background: none; border: 0; padding: 0; text-align: left; font: inherit }
+.character-action[aria-pressed=true] small { color: var(--red) }
+.art-details { font-size: 13px; min-height: 32px; color: #6d493a }
+.art-stage { position: relative; display: block; width: 100%; aspect-ratio: 1; min-width: 0; min-height: 0 }
+.art-stage img, .art-stage canvas { display: block; width: 100%; height: 100%; max-width: 100%; object-fit: contain; position: absolute; inset: 0; pointer-events: none }
+.art-stage.show-motion img { visibility: hidden }
+.art-stage canvas { position: absolute; inset: 0 }
+.character .art-stage { height: clamp(120px,15vw,265px); aspect-ratio: auto }
+.character .art-stage img { height: 100%; min-height: 0 }
+.character-caption { flex-wrap: wrap; line-height: 1.4 }
+.roster { display: grid; grid-template-columns: 1fr 1fr minmax(120px,22vw) 1fr 1fr; gap: clamp(12px,1.3vw,24px); margin-top: 4vw; align-items: start }
+.roster .character { width: 100%; margin: 0; padding: .55em; --tilt: -1deg }
+.roster .character:nth-child(4n + 3) { grid-column: 4 }
+.roster .art-stage { height: auto; aspect-ratio: 1 }
+.roster .character-caption { display: grid; font-size: clamp(15px,1.18vw,23px) }
+#archive { scroll-margin-top: 2rem }
+#archive-tabs,.archive-controls { display: flex; flex-wrap: wrap; gap: .45em .8em; align-items: center }
+#archive-tabs button,.archive-controls button { color: inherit; background: none; font: inherit; padding: .35em .45em; border: 1px solid transparent }
+#archive-tabs button[aria-pressed=true], .archive-controls button[aria-pressed=true] { border-color: currentColor; border-radius: 46% 53% 40% 45% }
+#archive-caption { margin: .8em 0 }
+#archive-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(180px,100%),1fr)); gap: clamp(10px,1.4vw,22px) }
+#archive-grid button { min-width: 0; font: inherit; border: none; color: var(--ink); background: var(--cream) url("assets/cardinal/cream-grain.webp") center/300px; text-align: left; padding: .65em; box-shadow: 1px 2px 3px #130c08aa }
+#archive-grid .art-stage { aspect-ratio: 4/3; margin-bottom: .45em }
+#archive-grid button > span:last-of-type { overflow-wrap: anywhere }
+#archive-grid small { display: block; color: var(--red) }
+#archive-view { width: min(940px,96vw); max-height: 93dvh; padding: 0; color: var(--ink); background: var(--cream) url("assets/cardinal/cream-grain.webp") center/300px; border: 2px solid #a84539 }
+#archive-view[open] { display: flex; flex-direction: column }
+#archive-view::backdrop { background: #191516df }
+#archive-view .viewer-bar { border-bottom: 1px solid #ae9682; flex: none }
+.archive-body { min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 12px clamp(12px,3vw,36px) }
+#archive-stage .art-stage { height: min(54dvh,530px); aspect-ratio: auto }
+.archive-controls { font-size: clamp(14px,1.2vw,18px); margin-top: .55em }
+.archive-controls[hidden], #archive-download[hidden] { display: none }
+.archive-pages { flex: none; justify-content: space-between; margin: 0; padding: .3em .8em; border-top: 1px solid #ae9682 }
+.archive-controls :disabled { opacity: .4; cursor: default }
+#frame-number { font-variant-numeric: tabular-nums; margin-inline-start: auto }
+#archive-source { font-size: .85em; overflow-wrap: anywhere; color: #6d493a; margin-top: .5em }
+@media(max-width: 700px) {
+  .roster { grid-template-columns: repeat(2,minmax(0,1fr)); margin-top: 28px; gap: 12px }
+  .roster .character:nth-child(4n + 3) { grid-column: auto }
+  .character .art-stage { height: 160px }
+  .roster .art-stage { height: auto }
+  #archive-grid { grid-template-columns: repeat(2,minmax(0,1fr)) }
+  .archive-controls button,.art-details { min-height: 40px }
+  #archive-stage .art-stage { height: min(45dvh,440px) }
+}
+#archive-stage.magnified { overflow: auto; max-height: 56dvh; overscroll-behavior: contain }
+#archive-stage.magnified .art-stage { width: max(100%,var(--source-width)); height: auto; display: block }
+#archive-stage.magnified img { position: static; height: auto }
