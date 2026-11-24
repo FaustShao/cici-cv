@@ -892,12 +892,12 @@ try {
     social.animateCue(effectTime,reduced);
     const age=effectTime-mapFlashAt;
     kioskRoot.userData.flashActive=age>=0&&age<.7;
-    const cycle = .5 + .5 * Math.cos(2 * Math.PI * timeMs / 2400);
+    const cycle = .5 + .5 * Math.cos(2 * Math.PI * timeMs / 1600);
     const flash = kioskRoot.userData.flashActive ? Math.sin(Math.PI * age / .7) : 0;
     const level = Math.max(cycle, flash);
-    mapBrightness.value = reduced ? .98 + .14 * level : .94 + .60 * level;
+    mapBrightness.value = reduced ? .98 + .22 * level : .96 + 1.16 * level;
     // The hand already shares the map light; give its cream face a stronger highlight.
-    handPulse.value = reduced ? .94 + .28 * level : .62 + 1.12 * level;
+    handPulse.value = reduced ? .94 + .36 * level : .58 + 1.45 * level;
   }
   let lastFrame = 0;
   renderer.setAnimationLoop((time) => {

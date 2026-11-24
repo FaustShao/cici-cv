@@ -31,15 +31,15 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
     assert.ok(await page.evaluate(()=>{
       const w=designWorld,start=w.kioskRoot.userData.entryFlashAt;
       if(!Number.isFinite(start)||w.devices.roots.some(r=>r.userData.interactions))return false;
-      w.updateEffects(Math.max(0,start+.35-w.effectTime),1200);
+      w.updateEffects(Math.max(0,start+.35-w.effectTime),800);
       return w.mapBrightness.value>1.10&&w.kioskRoot.userData.flashActive;
     }),"Entry automatically lights the map/hand uniform without clicking any device");
     await shot("entry-map-intro");
-    const levels=await page.evaluate(()=>[0,1200,2400].map(time=>{
+    const levels=await page.evaluate(()=>[0,800,1600].map(time=>{
       designWorld.updateEffects(1,time);
       return designWorld.mapBrightness.value;
     }));
-    assert.ok(levels[0]>levels[1] && levels[1]>=.97 && levels[0]===levels[2], "Map pulses gently every 2.4 seconds with reduced motion");
+    assert.ok(levels[0]>levels[1] && levels[1]>=.97 && levels[0]===levels[2], "Map pulses gently every 1.6 seconds with reduced motion");
     assert.ok(await page.evaluate(()=>{const n=designWorld.identity;return n.userData.chineseAdvance===49&&n.userData.angularGlyph==='欣'&&n.userData.captionStretch>1&&n.userData.captionLetterGap<1;}));
     async function clickDevice(index){
       const p=await page.evaluate(index=>{
@@ -54,9 +54,9 @@ const root=process.env.PREVIEW_ROOT||"http://127.0.0.1:8000/",review=path.resolv
     await shot("entry-name-lit");
     await clickDevice(0);assert.equal(await page.evaluate(()=>designWorld.identity.userData.lightOn),false);
     await clickDevice(1);
-    assert.ok(await page.evaluate(()=>{designWorld.updateEffects(.3,1200);return designWorld.mapBrightness.value>1.07;}));
+    assert.ok(await page.evaluate(()=>{designWorld.updateEffects(.3,800);return designWorld.mapBrightness.value>1.07;}));
     await shot("entry-map-flash");
-    assert.equal(await page.evaluate(()=>{designWorld.updateEffects(.8,1200);return designWorld.mapBrightness.value;}),levels[1]);
+    assert.equal(await page.evaluate(()=>{designWorld.updateEffects(.8,800);return designWorld.mapBrightness.value;}),levels[1]);
     const counts=await page.evaluate(()=>designWorld.devices.roots.map(r=>r.userData.interactions||0));
     await page.mouse.move(700,700);await page.mouse.down({button:"middle"});await page.mouse.move(820,725,{steps:8});await page.mouse.up({button:"middle"});
     const pan=await page.evaluate(()=>designWorld.viewState());assert.notDeepEqual(pan.target,initial.target);assert.equal(pan.yaw,initial.yaw);assert.equal(pan.pitch,initial.pitch);

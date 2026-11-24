@@ -589,8 +589,11 @@ export function createFixtures(world) {
     const active=new Set(),outline=new Set(),cell=.045;
     pattern.forEach((row,y)=>[...row].forEach((v,x)=>{if(v==="1")active.add(`${x},${y}`);}));
     for(const key of active){const[x,y]=key.split(",").map(Number);for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)outline.add(`${x+dx},${y+dy}`);}
-    const front=lightPower?material({colorNode:color(colors.cream).mul(lightPower),hasWater:false}):materials.cream;
-    for(const[points,mat,z,depth]of[[outline,materials.edge,0,.07],[active,front,.04,.08]]) {
+    const front=material({colorNode:color(colors.cream).mul(lightPower),hasWater:false});
+    // At the peak the cream face reaches white. Lift the rim as well so the
+    // highlight remains visible even on the small phone rendering.
+    const rim=material({colorNode:color(colors.edge).mul(lightPower.max(1)),hasWater:false});
+    for(const[points,mat,z,depth]of[[outline,rim,0,.07],[active,front,.04,.08]]) {
       const mesh=new T.InstancedMesh(new T.BoxGeometry(cell*.97,cell*.97,depth),mat,points.size),matrix=new T.Matrix4();
       [...points].forEach((key,i)=>{const[x,y]=key.split(",").map(Number);mesh.setMatrixAt(i,matrix.makeTranslation((x-4)*cell,(5-y)*cell,z));});
       mesh.instanceMatrix.needsUpdate=true;mesh.castShadow=true;root.add(mesh);
