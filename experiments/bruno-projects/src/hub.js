@@ -9,6 +9,7 @@ import { createFixtures } from "./scene-fixtures.js";
 import { createPortfolioStation } from "./portfolio-station.js";
 import gsap from "gsap";
 import { createWorldMap } from "./world-map.js";
+import { subjectCorners, phonePose } from "./phone-framing.js";
 import { referenceViews } from "./scene-views.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 import "../../../resume.js";
@@ -18,6 +19,9 @@ clickSound.bind(document);
 const loadingScreen = window.CeciliaLoader.create(document.getElementById("loading"));
 const $ = (id) => document.getElementById(id),
   profile = window.RESUME;
+const phone = matchMedia("(pointer: coarse) and (max-width: 767px), (pointer: coarse) and (max-width: 1024px) and (max-height: 600px)");
+const phoneViews = new Map();
+const initialPlace = () => document.querySelector('meta[name="cecilia-initial-place"]')?.content || "home";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 gsap.ticker.lagSmoothing(0);
 if(reduced)gsap.globalTimeline.timeScale(1000);
@@ -49,7 +53,23 @@ let yaw = 0.5,
   targetPitch = 0.85,
   pointers = new Map();
 const state = (window.WORLD_STATE = { place, reading: false, otherIndex: 0 });
-const navigationMap = createWorldMap(go);
+const navigationMap = createWorldMap(go, () => recordOverlay("map"), () => returnFromOverlay("map"));
+function stationEntry() {
+  return { place, otherIndex, portfolioIndex: portfolio?.selected ?? 0 };
+}
+function recordOverlay(overlay) {
+  if (!phone.matches || !portfolio || history.state?.overlay === overlay) return;
+  const station = stationEntry();
+  history.replaceState(station, "");
+  history.pushState({ ...station, overlay, stationKey: window.navigation?.currentEntry?.key }, "");
+}
+function returnFromOverlay(overlay) {
+  const entry = history.state;
+  if (entry?.overlay !== overlay) return;
+  if (entry.stationKey && window.navigation?.entries().some(e => e.key === entry.stationKey)) {
+    window.navigation.traverseTo(entry.stationKey);
+  } else history.back();
+}
 const labels = {
   home: "首页",
   portfolio: "作品集",
@@ -80,6 +100,10 @@ async function copyContact(value, label) {
   }
 }
 function closeReader() {
+  clearReader();
+  returnFromOverlay("reader");
+}
+function clearReader() {
   if (reader.open) reader.close();
   frames.forEach(f=>{
     try { f.contentDocument.querySelectorAll("video,audio").forEach(m=>m.pause());f.contentWindow.HAHA_READER?.dispose();f.contentWindow.SONIC_FILM?.dispose(); } catch {}
@@ -91,7 +115,8 @@ function closeReader() {
   reading = state.reading = false;
 }
 function openReader(title, file) {
-  closeReader();
+  clearReader();
+  recordOverlay("reader");
   const filename = file ? new URL(file, contentRoot).pathname.split("/").pop() : "";
   const project = filename === "haha-world.html" ? "haha-world" : filename === "icod.html" ? "icod" : filename === "sonicsense.html" ? "sonicsense" : "";
   reader.dataset.project = project;
@@ -136,7 +161,6 @@ function openReader(title, file) {
               !url.pathname.endsWith("cecilia-world/index.html")
             ) {
               event.preventDefault();
-              closeReader();
               go("home");
             }
             if (
@@ -150,8 +174,8 @@ function openReader(title, file) {
             ) {
               event.preventDefault();
               event.stopImmediatePropagation();
-              closeReader();
               if(place !== "portfolio")go("portfolio");
+              else closeReader();
             }
           },true);
         } catch {}
@@ -207,10 +231,26 @@ function selectOther(index) {
   $("other-position") &&
     ($("other-position").textContent = `${otherIndex + 1} / ${notes.length}`);
 }
+function updateReadAction() {
+  const button = $("open-work");
+  button.hidden = place !== "portfolio" && !(phone.matches && ["resume", "other"].includes(place));
+  button.textContent = place === "resume" ? "阅读简历 ↗" : phone.matches ? "阅读当前项目 ↗" : "打开当前作品 ↗";
+}
 function go(next, historyMode = "push") {
+  if (historyMode === "push" && history.state?.overlay) {
+    if (place === next) {
+      navigationMap.close();
+      clearReader();
+      returnFromOverlay(history.state.overlay);
+      return;
+    }
+    historyMode = "replace";
+  } else if (phone.matches && historyMode === "push") {
+    history.replaceState(stationEntry(), "");
+  }
   navigationMap.close();
   if (!labels[next]) next = "home";
-  closeReader();
+  clearReader();
   portfolio?.clearHover();
   if(next === "portfolio" && place !== "portfolio" && portfolio?.selected !== 0)portfolio?.select(0);
   if((next === "portfolio") !== (place === "portfolio"))portfolio?.activate(next === "portfolio");
@@ -223,7 +263,7 @@ function go(next, historyMode = "push") {
   $("place-actions").replaceChildren();
   $("place-actions").hidden = place !== "contact";
   $("controls").hidden = place !== "portfolio";
-  $("open-work").hidden = place !== "portfolio";
+  updateReadAction();
   $("reset-view").textContent = place === "portfolio" ? "返回主页" : "视角归位";
   $("close-reader").textContent = place === "portfolio" ? "← 返回展示区" : "← 返回场景";
   $("lab-navigation").hidden = place !== "other";
@@ -248,17 +288,24 @@ function go(next, historyMode = "push") {
       ? "左键旋转 · 中键平移 · 滚轮缩放 · 点击设备试试亮灯"
       : place === "portfolio" ? "拖动观察 · 滚轮缩放 · ← → 切换作品"
       : `${labels[place]} · 拖动观察 · 点击模型${place === "contact" ? "写邮件" : "完整阅读"} · Esc 返回首页`;
+  if (phone.matches) {
+    $("scene-hint").textContent = place === "home" ? "轻点地图选择地点 · 双指缩放" :
+      place === "portfolio" || place === "other" ? "轻点封面阅读 · 箭头切换项目" :
+      place === "resume" ? "轻点简历阅读" : "轻点邮箱写邮件";
+  }
   if (world && targetLook) {
     if(place === "portfolio")Object.assign(stations.get("portfolio"),portfolio.pose());
-    world.camera.fov = place === "portfolio" ? portfolio.pose().fov : place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
+    const fitted = phone.matches ? phoneViews.get(place) : null;
+    const station = stations.get(place);
+    const view = fitted || station || landingView;
+    world.camera.fov = fitted?.fov ?? (place === "portfolio" ? station.fov : place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : station.fov || 36));
     world.camera.far=place === "portfolio" ? 200 : 250;
     world.camera.updateProjectionMatrix();
-    const station = stations.get(place);
-    targetLook.copy(station ? station.focus : landingView.focus);
-    targetDistance = station ? (innerWidth < 700 ? station.mobileDistance || station.distance : station.distance) : landingView.distance;
-    targetYaw = station ? station.yaw : landingView.yaw;
-    targetPitch = station ? station.pitch : landingView.pitch;
-    if (reduced) {
+    targetLook.copy(view.focus);
+    targetDistance = (!fitted && innerWidth < 700 ? view.mobileDistance : null) ?? view.distance;
+    targetYaw = view.yaw;
+    targetPitch = view.pitch;
+    if (reduced || phone.matches) {
       currentLook.copy(targetLook);
       currentDistance = targetDistance;
       yaw = targetYaw;
@@ -267,16 +314,34 @@ function go(next, historyMode = "push") {
   }
   if (historyMode !== "none")
     history[historyMode === "replace" ? "replaceState" : "pushState"](
-      { place },
+      phone.matches ? stationEntry() : { place },
       "",
-      place === "home" ? location.pathname + location.search + (document.querySelector('meta[name="cecilia-initial-place"]')?.content === "portfolio" ? "#home" : "") : `#${place}`,
+      place === "home" ? location.pathname + location.search + ((phone.matches ? initialPlace() !== "home" : initialPlace() === "portfolio") ? "#home" : "") : `#${place}`,
     );
+}
+function restoreSelection(entry) {
+  if (place === "other" && Number.isInteger(entry?.otherIndex)) selectOther(entry.otherIndex);
+  if (place === "portfolio" && Number.isInteger(entry?.portfolioIndex) && portfolio.selected !== entry.portfolioIndex) {
+    portfolio.select(entry.portfolioIndex);
+  }
+}
+function restoreOverlay(entry) {
+  if (entry?.overlay === "reader") openCurrent();
+  if (entry?.overlay === "map") navigationMap.open();
 }
 window.openWorldPlace = go;
 $("back-home").onclick = () => go("home");
-window.addEventListener("popstate", () =>
-  go(location.hash.slice(1) || "home", "none"),
-);
+window.addEventListener("popstate", event => {
+  if (!world || !portfolio) return;
+  const entry = event.state;
+  if (phone.matches || entry?.overlay) {
+    const next = entry?.place || location.hash.slice(1) || initialPlace();
+    if (next !== place) go(next, "none");
+    else { clearReader(); navigationMap.close(); }
+    restoreSelection(entry);
+    restoreOverlay(entry);
+  } else go(location.hash.slice(1) || "home", "none");
+});
 window.addEventListener("keydown", (e) => {
   if (reading || navigationMap.dialog.open) return;
   if (e.key === "Escape") go("home");
@@ -565,22 +630,63 @@ try {
   $("next").onclick=()=>portfolio.select(portfolio.selected+1);
   $("open-work").onclick=openCurrent;
   await portfolio.warm();
+  const subjects = new Map([
+    ["home", [identity, kioskRoot, ...devices.roots]],
+    ["resume", [resumePreview, resumeCorner, stations.get("resume").label]],
+    ["other", [labScreen, ...labArrows.map(([mesh]) => mesh), chalkboard.lettering]],
+    ["contact", [social, stations.get("contact").label]],
+    ["portfolio", [portfolio.area.images.mesh, portfolio.area.title.inner, portfolio.area.url.inner,
+      ...["arrowPreviousImage","arrowNextImage"].map(key => portfolio.area.references.items.get(key)[0])]],
+  ]);
+  // Cache geometry separately from poses so rotation only repeats the projection.
+  const phoneCorners = new Map();
+  function updatePhoneViews() {
+    document.body.toggleAttribute("data-phone-layout", phone.matches);
+    updateReadAction();
+    if (!phone.matches) return;
+    for (const [key, objects] of subjects) {
+      if (!phoneCorners.has(key)) phoneCorners.set(key, subjectCorners(objects));
+      const base = key === "home" ? landingView : key === "portfolio" ? portfolio.pose() : stations.get(key);
+      const fov = key === "home" ? 40 : key === "portfolio" ? 56 : 50;
+      phoneViews.set(key, phonePose(base, phoneCorners.get(key), innerWidth, innerHeight, fov));
+    }
+  }
   currentLook = pt(0, 2, 2);
   targetLook = currentLook.clone();
   // Keep the approved initial render, including cheapDOF and bloom. The old
   // low-quality toggle removed DOF, so do not invoke it when removing controls.
   world.setTheme(false);
   try{localStorage.setItem("resume-theme","light");}catch{}
-  $("reset-view").onclick = () => go("home", place === "portfolio" ? "push" : "replace");
+  $("reset-view").onclick = () => go(phone.matches && place !== "portfolio" ? place : "home", place === "portfolio" ? "push" : "replace");
   const ray = new T.Raycaster(),
     pointer = new T.Vector2();
+  const phoneHomeTargets = new Map([
+    ...pickables.map(({ root, key }) => [root, key]),
+    ...devices.roots.map(root => [root, root]),
+    [resumePreview, "resume"], [kioskRoot, "map"],
+  ]);
+  const phoneHomeRoots = [...phoneHomeTargets.keys()];
   function pick(x, y) {
-    if(place === "portfolio")return portfolio.pick(x,y);
+    if(place === "portfolio")return portfolio.pick(x, y, phone.matches ? 22 : 0);
     pointer.set((x / innerWidth) * 2 - 1, (-y / innerHeight) * 2 + 1);
     ray.setFromCamera(pointer, camera);
     if(place==="contact" && (ray.intersectObject(social.getObjectByName("mailbox-label"),false).length || ray.intersectObject(social.getObjectByName("mailbox-click-ring"),false).length))return "contact-mail";
+    if (phone.matches && place === "contact") {
+      return ray.intersectObjects(social.mailTargets, false).length ? "contact-mail" : undefined;
+    }
     if (place === "other") {
       for (const [arrow,,step] of labArrows) if (arrow && ray.intersectObject(arrow, false).length) return step < 0 ? "lab-previous" : "lab-next";
+    }
+    if (phone.matches && place === "home") {
+      // The frame and face both open the map. Resolve overlapping models front to back.
+      for (const hit of ray.intersectObjects(phoneHomeRoots, true)) {
+        let node = hit.object;
+        while (node?.visible) {
+          if (phoneHomeTargets.has(node)) return phoneHomeTargets.get(node);
+          node = node.parent;
+        }
+      }
+      return;
     }
     if(place === "resume" && resumePreview && ray.intersectObject(resumePreview,true).length)return "resume-preview";
     if (place === "home") {
@@ -590,7 +696,8 @@ try {
       if (hits[0]) return hits[0].root;
       if (kioskFace && (ray.intersectObject(kioskFace, false).length || ray.intersectObject(pixelHand,true).length)) return "map";
     }
-    const hits = pickables.flatMap((p) =>
+    const targets = phone.matches && place !== "home" ? pickables.filter(p => p.key === place) : pickables;
+    const hits = targets.flatMap((p) =>
       ray
         .intersectObject(p.root, true)
         .filter((h) => h.object.visible)
@@ -628,12 +735,16 @@ try {
     if (pointers.size > 1) {
       const [a, b] = [...pointers.values()],
         d = Math.hypot(a.x - b.x, a.y - b.y);
-      targetDistance = place === "portfolio" ? T.MathUtils.clamp(targetDistance*pinch/Math.max(1,d),portfolio.pose().distance*.8,portfolio.pose().distance*2.2) : T.MathUtils.clamp((targetDistance * pinch) / d, 10, 95);
+      if (phone.matches) {
+        const base = phoneViews.get(place).distance;
+        if (pinch > 0 && d > 0) targetDistance = T.MathUtils.clamp(targetDistance * pinch / d, base * .65, base * 2.2);
+      } else targetDistance = place === "portfolio" ? T.MathUtils.clamp(targetDistance*pinch/Math.max(1,d),portfolio.pose().distance*.8,portfolio.pose().distance*2.2) : T.MathUtils.clamp((targetDistance * pinch) / d, 10, 95);
       pinch = d;
       return;
     }
     if (pointers.size && last) {
-      if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > (place === "portfolio" ? 7 : 5)) drag = true;
+      if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > (phone.matches ? 10 : place === "portfolio" ? 7 : 5)) drag = true;
+      if (phone.matches && !drag) return;
       if(place === "portfolio") {
         if(drag){const base=portfolio.pose();targetYaw=T.MathUtils.clamp(targetYaw-(e.clientX-last.x)*.003,base.yaw-.45,base.yaw+.45);targetPitch=T.MathUtils.clamp(targetPitch+(e.clientY-last.y)*.002,base.pitch-.15,base.pitch+.3);}
       } else if(mouseButton===1) {
@@ -656,8 +767,12 @@ try {
   });
   $("world").addEventListener("auxclick",e=>{if(e.button===1)e.preventDefault();});
   $("world").addEventListener("pointerup", (e) => {
-    pointers.delete(e.pointerId);
-    if (pointers.size) return;
+    if (!pointers.delete(e.pointerId)) return;
+    if (pointers.size) {
+      if (phone.matches) last = start = [...pointers.values()][0];
+      return;
+    }
+    if (phone.matches && start && (Math.hypot(e.clientX-start.x,e.clientY-start.y)>10 || (!drag && pressed !== pick(e.clientX,e.clientY)))) pressed=null;
     if (!drag && !pinched && pressed) {
       clickSound.play();
       if(place === "portfolio"){pressed.onClick?.();portfolio.update();}
@@ -672,10 +787,12 @@ try {
     }
     start = last = pressed = null;
   });
-  $("world").addEventListener("pointercancel", () => {
+  function cancelGesture() {
     pointers.clear();
     start = last = pressed = null;
-  });
+  }
+  $("world").addEventListener("pointercancel", cancelGesture);
+  $("world").addEventListener("lostpointercapture", e => { if (phone.matches && pointers.has(e.pointerId)) cancelGesture(); });
   $("world").addEventListener(
     "wheel",
     (e) => {
@@ -686,6 +803,7 @@ try {
     { passive: false },
   );
   function resize() {
+    if (phone.matches) cancelGesture();
     camera.aspect = innerWidth / innerHeight;
     camera.fov = place === "portfolio" ? portfolio.pose().fov : place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
     camera.updateProjectionMatrix();
@@ -699,10 +817,22 @@ try {
       targetLook.copy(landingView.focus);
       targetDistance = landingView.distance;
     }
+    updatePhoneViews();
+    if (phone.matches && targetLook) {
+      const view = phoneViews.get(place);
+      camera.fov = view.fov;
+      camera.updateProjectionMatrix();
+      targetLook.copy(view.focus);
+      currentLook.copy(targetLook);
+      currentDistance = targetDistance = view.distance;
+    }
   }
   window.addEventListener("resize", resize);
   resize();
-  go(location.hash.slice(1) || document.querySelector('meta[name="cecilia-initial-place"]')?.content || "home", "replace");
+  const savedEntry = phone.matches ? history.state : null;
+  const initial = location.hash.slice(1) || initialPlace();
+  go(initial, savedEntry?.place === initial ? "none" : "replace");
+  if (savedEntry?.place === initial) restoreSelection(savedEntry);
   currentLook.copy(targetLook);
   currentDistance = targetDistance;
   yaw = targetYaw;
@@ -763,6 +893,7 @@ try {
       loadingScreen.finish();
       if(entryFlashPending){
         entryFlashPending=false;
+        if (savedEntry?.place === place && history.state?.overlay === savedEntry?.overlay) restoreOverlay(savedEntry);
         if(place==="home"){
           // Reveal first, then cue the map and its hand together exactly once.
           mapFlashAt=effectTime+.18;

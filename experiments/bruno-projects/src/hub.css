@@ -251,3 +251,56 @@ body[data-place="portfolio"] footer > span:last-child { display:none; }
   body[data-place="contact"] #place-actions :is(a, button) { font-size: clamp(18px, min(1.5vw, 2.8dvh), 30px); }
   body[data-place="contact"] #place-actions small { font-size: clamp(14px, min(1.12vw, 2.1dvh), 20px); }
 }
+
+/* Keep touch navigation in the bottom strip, clear of the projected models. */
+body[data-phone-layout] { --phone-bottom: max(24px, env(safe-area-inset-bottom)); }
+body[data-phone-layout][data-place] #map-trigger {
+  left: max(12px, env(safe-area-inset-left));
+  bottom: var(--phone-bottom);
+  width: auto;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+}
+body[data-phone-layout] #map-trigger img { width: 36px; height: 29px; }
+body[data-phone-layout] #map-trigger > span { margin: 0; font-size: 13px; }
+body[data-phone-layout] #open-work:not([hidden]) {
+  left: auto;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: var(--phone-bottom);
+  transform: none;
+  min-height: 44px;
+  background: #51374bee;
+}
+body[data-phone-layout] #controls { bottom: calc(var(--phone-bottom) + 50px); gap: 8px; }
+body[data-phone-layout] #controls > div { min-width: min(44vw, 180px); }
+body[data-phone-layout] #controls button { width: 44px; height: 44px; }
+body[data-phone-layout][data-place="contact"] #place-actions {
+  bottom: calc(var(--phone-bottom) + 52px);
+  width: max-content;
+  max-width: calc(100% - 24px);
+  padding: 6px;
+}
+body[data-phone-layout][data-place="contact"] #feedback { bottom: calc(var(--phone-bottom) + 130px); }
+body[data-phone-layout][data-place="portfolio"] #reset-view { display: none; }
+body[data-phone-layout] footer { bottom: 3px; pointer-events: none; }
+body[data-phone-layout] .map-sheet { aspect-ratio: 1200 / 780; }
+@media (orientation: landscape) {
+  body[data-phone-layout] { --phone-bottom: max(8px, env(safe-area-inset-bottom)); }
+  body[data-phone-layout] #controls { bottom: var(--phone-bottom); }
+  body[data-phone-layout] footer, body[data-phone-layout] #controls small { display: none; }
+  body[data-phone-layout] #world-map { width: min(90vw, calc((100dvh - 96px) * 1.54)); padding: 6px 8px; max-height: 98dvh; }
+  body[data-phone-layout] .map-bar { margin: 0 0 4px; }
+  body[data-phone-layout] .map-bar p, body[data-phone-layout] .map-caption { display: none; }
+  body[data-phone-layout] .map-bar h2 { font-size: 22px; }
+  body[data-phone-layout] .map-location { min-width: 44px; padding: 2px; transform: translate(-50%, -60%); }
+  body[data-phone-layout] .map-location svg { width: 32px; height: 32px; }
+  body[data-phone-layout] .map-location span { padding: 2px 6px; font-size: 14px; }
+  body[data-phone-layout][data-place="contact"] #place-actions { bottom: var(--phone-bottom); left: auto; right: 12px; transform: none; }
+  body[data-phone-layout][data-place="contact"] #place-actions :is(a,button) { font-size: 14px; padding: 5px 8px; }
+  body[data-phone-layout][data-place="contact"] #place-actions small { font-size: 11px; }
+}
+body[data-phone-layout] > header button,
+body[data-phone-layout] #reader .reader-bar :is(button, a) { min-height: 44px; }

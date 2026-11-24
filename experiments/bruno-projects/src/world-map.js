@@ -1,6 +1,6 @@
 import "./world-map.css";
 // The illustrated map is navigation, not another page or a second 3D world.
-export function createWorldMap(go) {
+export function createWorldMap(go, onOpen, onDismiss) {
   const dialog = document.getElementById("world-map"), trigger = document.getElementById("map-trigger");
   const content = document.getElementById("map-locations");
   const paths = {
@@ -28,16 +28,20 @@ export function createWorldMap(go) {
     content.querySelectorAll("button").forEach(b => b.setAttribute("aria-current", String(document.body.dataset.place === b.dataset.destination)));
     const you = dialog.querySelector(".map-you");
     you.innerHTML = '<span>◆</span><b>姓名入口' + (document.body.dataset.place === "home" ? ' · 你在这里' : '') + '</b>';
+    if (dialog.open) return;
+    onOpen();
     dialog.showModal();
   }
   function close() { if (dialog.open) dialog.close(); }
+  function dismiss() { close(); onDismiss(); }
+  dialog.addEventListener("cancel", event => { event.preventDefault(); dismiss(); });
   trigger.onclick = open;
   dialog.querySelector(".map-you").onclick=()=>{close();go("home");};
-  document.getElementById("close-map").onclick = close;
-  dialog.addEventListener("click", e => { if (e.target === dialog) close(); });
+  document.getElementById("close-map").onclick = dismiss;
+  dialog.addEventListener("click", e => { if (e.target === dialog) dismiss(); });
   window.addEventListener("keydown", e => {
     if (e.code === "KeyM" && !e.ctrlKey && !e.metaKey && !document.getElementById("reader").open && !/input|textarea/i.test(e.target.tagName)) {
-      e.preventDefault(); dialog.open ? close() : open();
+      e.preventDefault(); dialog.open ? dismiss() : open();
     }
   });
   return { open, close, dialog, sites };

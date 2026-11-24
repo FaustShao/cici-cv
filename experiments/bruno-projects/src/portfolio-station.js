@@ -299,7 +299,7 @@ export async function createPortfolioStation(world,readWork) {
   const spherical=new T.Spherical().setFromVector3(offset);
   function pose(){return{focus:(innerWidth<700?screenCenter:area.cinematic.target).clone(),distance:spherical.radius,yaw:spherical.theta,pitch:spherical.phi,fov:innerWidth<700?56:25};}
   const ray=new T.Raycaster(),pointer=new T.Vector2(),screenTarget={onClick:readWork};
-  function pick(x,y) {
+  function pick(x,y, touchRadius = 0) {
     pointer.set(
       (x / innerWidth) * 2 - 1,
       (-y / innerHeight) * 2 + 1,
@@ -333,6 +333,17 @@ export async function createPortfolioStation(world,readWork) {
         const d = ray.ray.origin.distanceToSquared(point);
         if (d < distance) { nearest = hit; distance = d; }
       }
+    }
+    if (nearest || !touchRadius) return nearest;
+    // Allow a fingertip just outside a small model arrow; exact screen and
+    // pagination hits above keep priority over this extra touch area.
+    let closest = touchRadius;
+    for (const { mesh, hit } of modelButtons) {
+      if (!hit.active || !mesh.visible) continue;
+      const point = modelButtonBounds.setFromObject(mesh).getCenter(modelButtonPoint).project(camera);
+      if (point.z < -1 || point.z > 1) continue;
+      const delta = Math.hypot((point.x + 1) * innerWidth / 2 - x, (1 - point.y) * innerHeight / 2 - y);
+      if (delta < closest) { closest = delta; nearest = hit; }
     }
     return nearest;
   }

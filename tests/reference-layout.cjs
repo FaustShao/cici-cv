@@ -43,7 +43,7 @@ const marks={
   console.log('Physical intersections:',JSON.stringify(contacts));assert.ok(contacts.every(p=>p.contacts.length===0));
   const layout=await page.evaluate(()=>{
    const w=designWorld,board=w.world.scene.getObjectByName('resume-preview-board'),sign=w.stations.get('resume').label;
-   return{independent:board.parent===w.world.scene,board:board.userData.parcel,sign:sign.userData.parcel,insertion:board.userData.insertionDepth,contactSign:w.stations.get('contact').label.userData.parcel,contact:w.stations.get('contact').root.userData.parcel};
+   return{independent:board.parent===w.portfolio.hubPresentation && !w.stations.get('resume').root.getObjectById(board.id),board:board.userData.parcel,sign:sign.userData.parcel,insertion:board.userData.insertionDepth,contactSign:w.stations.get('contact').label.userData.parcel,contact:w.stations.get('contact').root.userData.parcel};
   });
   assert.ok(layout.independent&&layout.insertion>0);assert.ok(Math.abs(layout.board.groundedY+layout.insertion)<1e-6);assert.ok(layout.sign.z>layout.board.z+2);assert.ok(layout.contactSign.x>layout.contact.x);
   const point=await page.evaluate(()=>{

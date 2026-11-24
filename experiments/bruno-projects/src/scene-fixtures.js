@@ -292,6 +292,7 @@ export function createFixtures(world) {
     letter.name="mailbox-label";
     letter.position.set(-0.65, 1.45, 0.385);
     root.add(letter);
+    root.mailTargets = [...root.children];
     box(root, [1.45, 0.15, 0.85], [0.95, 0.9, 0.03]);
     for (const x of [0.35, 1.55])
       box(root, [0.12, 0.9, 0.12], [x, 0.45, 0.03], "edge");
