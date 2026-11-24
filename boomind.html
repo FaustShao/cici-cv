@@ -1,20 +1,21 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0c0c10" />
-    <title>BOOMIND · 团队头脑风暴工作台</title>
+    <title>BOOMIND · Team brainstorming workspace</title>
     <link rel="stylesheet" href="boomind.css" />
+    <script defer src="boomind-frames.js"></script>
     <script defer src="boomind.js"></script>
   </head>
   <body>
     <header class="site-head">
       <div class="head-inner">
-        <a href="works.html#other" class="return">← 其他项目</a>
+        <a href="works.html#other" class="return">← Other projects</a>
         <a href="#top" class="brand"><img src="assets/boomind/mark.webp" alt="" />BOOMIND</a>
-        <nav aria-label="项目导航">
-          <a href="#workspace">工作台</a><button data-action="about">项目说明</button>
+        <nav aria-label="Project navigation">
+          <a href="#workspace">Workspace</a><button data-action="about">About</button>
         </nav>
       </div>
     </header>
@@ -22,11 +23,11 @@
       <section class="hero shell" aria-labelledby="hero-title">
         <div class="hero-copy">
           <h1 id="hero-title">BOOMIND</h1>
-          <h2>团队头脑风暴工作台</h2>
-          <p>在同一张画布上整理想法、连接观点，和团队一起安排接下来的工作。</p>
+          <h2>Team brainstorming workspace</h2>
+          <p>Collect ideas on a shared canvas, connect them and plan your team’s next session.</p>
           <div class="hero-links">
-            <a class="primary" href="#workspace">体验工作台 <span>↘</span></a
-            ><button data-action="open-board">探索思维画布 <span>↗</span></button>
+            <a class="primary" href="#workspace">Open workspace <span>↘</span></a
+            ><button data-action="canvas">Explore the canvas <span>↗</span></button>
           </div>
         </div>
         <div class="sculpture" aria-hidden="true">
@@ -37,43 +38,35 @@
           /><img class="hero-loop" src="assets/boomind/loop.webp" alt="" />
         </div>
       </section>
-      <section id="workspace" class="shell" aria-label="可操作的 BOOMIND 工作台">
+      <section id="workspace" class="shell" aria-label="Interactive BOOMIND workspace">
         <div class="window">
           <header class="window-head">
             <div>
-              <button
-                class="mobile-menu"
-                data-action="menu"
-                aria-controls="sidebar"
-                aria-expanded="false"
-                aria-label="展开导航"
+              <button data-action="navigate" aria-haspopup="dialog">Navigate</button>
+              <span class="window-path"
+                >BOOMIND <b>/</b> <span id="crumb" aria-live="polite">Overview</span></span
               >
-                ☰</button
-              ><span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span
-              ><span class="window-path">BOOMIND <b>/</b> <span id="crumb">Overview</span></span>
             </div>
             <div>
-              <button id="go-back" data-action="back" hidden>← 上一步</button
-              ><button class="search-trigger" data-action="search">搜索 <kbd>⌘ / Ctrl K</kbd></button>
+              <button id="go-back" data-action="back" hidden>← Back</button>
+              <button id="zoom" data-action="zoom" aria-pressed="false">Zoom</button>
             </div>
           </header>
-          <div class="workspace-body">
-            <aside id="sidebar" aria-label="工作台导航"></aside>
-            <div class="workspace-panel" id="panel" tabindex="-1"></div>
-          </div>
+          <div id="viewport"><div id="stage" tabindex="-1"></div></div>
+          <div id="extras" hidden></div>
         </div>
       </section>
       <section class="feature shell" aria-labelledby="features-title">
-        <h2 id="features-title">工作台里的设计</h2>
+        <h2 id="features-title">Inside the workspace</h2>
         <div class="features">
-          <button class="feature-piece canvas-feature" data-action="open-board">
-            <span class="overline">Work board</span><strong>思维画布</strong
-            ><span>调整节点位置，把相关的想法连起来。 ↗</span
+          <button class="feature-piece canvas-feature" data-action="canvas">
+            <span class="overline">Work board</span><strong>Team canvas</strong
+            ><span>Move ideas and connect related thoughts. ↗</span
             ><span class="tiny-map" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           </button>
-          <button class="feature-piece devices-feature" data-action="open-devices">
-            <span class="overline">Connected products</span><strong>设备与项目</strong
-            ><span>查看设备的负责人、关联项目和连接时长。 ↗</span
+          <button class="feature-piece devices-feature" data-action="products">
+            <span class="overline">Products</span><strong>Connected products</strong
+            ><span>Explore devices, owners and project connections. ↗</span
             ><img src="assets/boomind/prism.webp" alt="" loading="lazy" /><img
               src="assets/boomind/ring.webp"
               alt=""
@@ -82,18 +75,14 @@
           </button>
         </div>
       </section>
-      <section class="originals shell" aria-labelledby="original-title">
-        <h2 id="original-title">界面原稿</h2>
-        <div id="screen-gallery"></div>
-      </section>
     </main>
     <footer class="shell">
-      <span class="brand">BOOMIND</span><a href="works.html#other">返回其他项目 ↗</a>
+      <span class="brand">BOOMIND</span><a href="works.html#other">Other projects ↗</a>
     </footer>
     <dialog id="popup" aria-labelledby="popup-title">
       <header>
         <h2 id="popup-title"></h2>
-        <button data-action="close" aria-label="关闭弹窗">×</button>
+        <button data-action="close" aria-label="Close">×</button>
       </header>
       <div id="popup-content"></div>
     </dialog>

@@ -1,953 +1,910 @@
 (() => {
   'use strict';
-  const $ = (id) => document.getElementById(id);
-  const esc = (s) =>
-    String(s).replace(
-      /[&<>"']/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-    );
+  const frames = window.BOOMIND_FRAMES;
+  const byId = (id) => document.getElementById(id);
+  const stage = byId('stage'),
+    popup = byId('popup'),
+    content = byId('popup-content');
+  const mobile = matchMedia('(max-width: 740px)');
   const revision = document.querySelector('meta[name="cecilia-release"]')?.content;
-  const art = (name, cls = '', alt = '') =>
-    '<img class="' +
-    cls +
-    '" src="assets/boomind/' +
-    name +
-    '.webp' +
-    (revision ? '?build=' + encodeURIComponent(revision) : '') +
-    '" alt="' +
-    esc(alt) +
-    '" draggable="false">';
-  const paths = {
-    overview: 'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
-    board: 'M6 7l11 5M6 18l11-6 M3 4h5v5H3z M16 9h5v5h-5z M3 16h5v5H3z',
-    files: 'M3 6h6l2 2h10v11H3z',
-    devices: 'M4 4h16v13H4z M8 21h8m-4-4v4',
-    schedule: 'M3 6h18v15H3z M7 3v5m10-5v5M3 11h18',
-    market: 'M3 9l2-5h14l2 5v3H3z M5 12v8h14v-8',
-    inbox: 'M3 7l4-3h10l4 3v13H3z M3 9l9 6 9-6',
-    activity: 'M3 4h18v13H9l-5 4v-4H3z',
-    settings: 'M4 7h16M4 17h16 M9 4v6m7 4v6',
-    bell: 'M5 17h14l-2-3V9a5 5 0 00-10 0v5z M10 20h4',
-  };
-  const icon = (id) =>
-    '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linejoin="round" stroke-linecap="round"><path d="' +
-    paths[id] +
-    '"/></svg>';
-  const routes = {
-    overview: ['Overview', '工作概览'],
-    board: ['Work board', '思维画布'],
-    files: ['File library', '文件库'],
-    devices: ['Products', '连接设备'],
-    schedule: ['Schedules', '项目日程'],
-    market: ['Material market', '素材市场'],
-    inbox: ['Inbox', '收件箱'],
-    activity: ['Comments', '团队动态'],
-    settings: ['Settings', '个人设置'],
-  };
-  const templates = [
-    [
-      'Basic mind map',
-      '基础思维导图',
-      'mind-map',
-      ['设计主题', '使用场景', '关键问题', '初步想法', '下一步'],
-    ],
-    ['Course outline', '课程大纲', 'outline', ['课程主题', '学习目标', '内容单元', '练习', '复盘']],
-    ['Plan ideas', '方案构思', 'idea', ['项目方向', '用户需求', '设计机会', '备选方案', '行动计划']],
+  const asset = (name) =>
+    'assets/boomind/' + name + '.webp' + (revision ? '?build=' + encodeURIComponent(revision) : '');
+  const full = [0, 0, 1194, 849];
+  const menu = [
+    ['home', 'Overview'],
+    ['products', 'Products'],
+    ['files', 'File library'],
+    ['calendar', 'Schedules'],
+    ['market', 'Material market'],
+    ['statement', 'Statement'],
+    ['profile', 'Settings'],
+    ['inbox', 'Inbox', 18],
+    ['notifications', 'Notifications', 2],
+    ['comments', 'Comments', 20],
   ];
-  const products = [
-    ['Cube', 'cube', 'NOTWYX', 'owner', '2024.06.11', 'Project 2250 · Project 101', '12h 45m'],
-    ['Triangular prism', 'prism', 'IF', 'member', '2024.05.23', 'Project Yeah', '5h 15m'],
-    ['Round cake', 'ring', 'TXT', 'mentor', '2024.04.08', 'Project Supernova', '1h 24m'],
+  const dashboards = new Set([
+    'home',
+    'products',
+    'files',
+    'calendar',
+    'market',
+    'profile',
+    'inbox',
+    'conversation',
+    'comments',
+  ]);
+  const boardPages = new Set([
+    'board',
+    'board-focus',
+    'canvas',
+    'map',
+    'map-branches',
+    'layers',
+    'member-focus',
+  ]);
+  const schedules = [
+    ['Project 101', 'UI Design', 'Mon 20', '10:00'],
+    ['Project 3D', 'Environment Design', 'Tue 21', '11:30'],
+    ['Essay outline', 'Ergonomics', 'Wed 22', '12:00'],
+    ['Project 2020', 'AI Design', 'Thu 23', '14:30'],
   ];
-  const materials = [
-    ['Spiral', 'spiral'],
-    ['Orbit', 'orbit'],
-    ['Ripple', 'ripple'],
-    ['Prism', 'pyramid'],
-    ['Star', 'star'],
-    ['Sphere', 'sphere'],
+  const devices = [
+    ['qwerrt', 'Cube', 'NOTWYX', '11 Jun 2024', 'Project 2250 · Project 101', '12h 45m'],
+    ['Sapiens', 'Triangular prism', 'IF', '23 May 2024', 'Project Yeah', '5h 15m'],
+    ['Collab', 'Round cake', 'TXT', '8 Apr 2024', 'Project Supernova', '1h 24m'],
   ];
-  const screens = [
-    ['home', '首页', 'overview'],
-    ['wireframe', '首页线框', 'overview'],
-    ['canvas', '团队构思', 'board'],
-    ['layers', '图层进度', 'board'],
-    ['products', '连接设备', 'devices'],
-    ['calendar', '项目日程', 'schedule'],
-    ['market', '素材市场', 'market'],
-    ['login', '登录入口', 'login'],
+  const originalBubbles = [
+    ['yellow', 699, 159, 157, 278],
+    ['blue-member', 396, 243, 190, 172],
+    ['lilac', 292, 399, 141, 113],
+    ['blue', 542, 473, 190, 152],
+    ['violet', 958, 487, 75, 87],
+    ['pink', 907, 648, 155, 140],
   ];
-  const progressSteps = [20, 40, 50, 60, 54, 70, 100];
-  const scheduled = [
-    ['Mon', '19', '08:00', 'UI Design', 'Project 101'],
-    ['Wed', '21', '11:30', 'Environment Design', 'Project 3D'],
-    ['Thu', '22', '14:30', 'Ergonomics', 'Project 2020'],
-  ];
-  const state = {
-    page: 'overview',
-    trail: [],
-    current: 0,
-    boards: [],
-    profile: 'NOTWYX',
-    saved: new Set(),
-    zoom: 1,
-    link: null,
-    unread: true,
-    archived: false,
-    reply: [],
-    archiveTab: false,
-    notifications: true,
-  };
-  function makeBoard(name, t, progress = 20) {
-    const points = [
-      [45, 50],
-      [24, 27],
-      [70, 25],
-      [71, 68],
-      [28, 76],
-    ];
+  function newBoard(name) {
     return {
       name,
-      template: t,
-      nodes: templates[t][3].map((text, i) => ({ id: i, text, x: points[i][0], y: points[i][1] })),
-      edges: [
-        [0, 1],
-        [0, 2],
-        [0, 3],
-        [0, 4],
-      ],
-      next: 5,
-      layer: 0,
-      progress,
+      progress: 54,
+      bubbles: originalBubbles.map(([art, x, y, w, h]) => ({ art, x, y, w, h, text: '' })),
+      edges: [],
     };
   }
-  state.boards.push(
-    makeBoard('Basic mind map', 0, 100),
-    makeBoard('Course outline', 1, 40),
-    makeBoard('Plan ideas', 2, 50),
-  );
-  const board = () => state.boards[state.current];
-  const btn = (label, action, value = '', cls = '') =>
-    '<button type="button" class="' +
-    cls +
-    '" data-action="' +
-    action +
-    '" data-value="' +
-    esc(value) +
-    '">' +
-    label +
-    '</button>';
-  const routeButton = (page, label) => btn(label, 'route', page);
-  const panelHead = (name, cn, action = '') =>
-    '<header class="panel-heading"><div><small>' +
-    esc(cn) +
-    '</small><h2>' +
-    esc(name) +
-    '</h2></div>' +
-    action +
-    '</header>';
-  const dlg = $('popup'),
-    body = $('popup-content');
-  let noticeTimer, focusReturn;
-  function tell(msg) {
-    $('notice').textContent = msg;
-    $('notice').classList.add('visible');
-    clearTimeout(noticeTimer);
-    noticeTimer = setTimeout(() => $('notice').classList.remove('visible'), 2200);
+  const boards = [newBoard('Project Supernova')],
+    history = [];
+  const profile = {
+    'Full name': 'Yuxin,Wang',
+    'Display name': 'NOTWYX',
+    Role: 'Lead Visual Designer',
+    Team: '123',
+    Bio: 'Lead Visual Designer at @123',
+  };
+  const saved = new Set(),
+    replies = [],
+    events = [];
+  let page = 'home',
+    current = 0,
+    zoomed = false,
+    selection = null,
+    gesture,
+    focusReturn,
+    dialogType = '',
+    transition;
+  let avatar = null,
+    hiddenAvatar = false,
+    dismissed = false,
+    folder = 'Your inbox',
+    messageFolder = 'Your inbox',
+    notificationOn = true;
+  const login = { email: false, password: false, remember: false };
+  const board = () => boards[current];
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
   }
-  function modal(title, html) {
-    if (!dlg.open) focusReturn = document.activeElement;
-    dlg.classList.remove('screen-dialog');
-    $('popup-title').textContent = title;
-    body.innerHTML = html;
-    if (!dlg.open) dlg.showModal();
-    body.querySelector('[autofocus]')?.focus();
+  function button(label, action, cls) {
+    const b = el('button', cls, label);
+    b.type = 'button';
+    b.dataset.action = action;
+    return b;
   }
-  function close() {
-    if (dlg.open) dlg.close();
+  function picture(name, alt, cls) {
+    const i = el('img', cls);
+    i.src = asset(name);
+    i.alt = alt;
+    i.draggable = false;
+    return i;
   }
-  dlg.addEventListener('close', () => {
+  function section() {
+    if (dialogType === 'notifications' && popup.open) return 'notifications';
+    if (boardPages.has(page)) return 'files';
+    return page === 'conversation' ? 'inbox' : page;
+  }
+  function markSelection() {
+    byId('crumb').textContent =
+      dialogType === 'notifications' && popup.open ? 'Notifications' : frames[page].title;
+    document.querySelectorAll('.nav-link').forEach((b) => {
+      if (b.dataset.action === section()) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
+  }
+  function navigation(compact = false) {
+    const nav = el('nav', 'original-nav');
+    nav.setAttribute('aria-label', 'Workspace sections');
+    nav.append(picture('nav-logo', 'BOOMIND', 'nav-logo'));
+    menu.forEach(([id, label, count], i) => {
+      if (i === 0) nav.append(el('span', 'group-label', 'Admin tools'));
+      if (i === 7) nav.append(el('span', 'nav-divider'), el('span', 'group-label insights', 'Insights'));
+      const b = button('', id, 'nav-link');
+      b.style.top =
+        (compact
+          ? i < 7
+            ? 6 + i * 8.2
+            : 68 + (i - 7) * 8.2
+          : i < 7
+            ? 16.6 + i * 5.48
+            : 65.35 + (i - 7) * 5.5) + '%';
+      const icon = el('i', 'nav-icon');
+      icon.style.setProperty('--row', i);
+      icon.setAttribute('aria-hidden', 'true');
+      b.append(icon, el('span', '', label));
+      b.setAttribute('aria-label', label);
+      if (count) b.append(el('b', '', count));
+      if (id === 'statement') {
+        b.disabled = true;
+        b.setAttribute('aria-disabled', 'true');
+        b.title = 'Statement is not available in this prototype';
+      }
+      if (id === section()) b.setAttribute('aria-current', 'page');
+      nav.append(b);
+    });
+    const user = button('', 'profile', 'nav-user');
+    user.append(picture('nav-profile', 'My profile'));
+    nav.append(user);
+    return nav;
+  }
+  function openDialog(title, children, type = '') {
+    if (!popup.open) focusReturn = document.activeElement;
+    dialogType = type;
+    popup.dataset.kind = type;
+    popup.classList.toggle('nav-dialog', type === 'navigate');
+    byId('popup-title').textContent = title;
+    content.replaceChildren(...children);
+    if (!popup.open) popup.showModal();
+    markSelection();
+  }
+  function closeDialog() {
+    if (popup.open) popup.close();
+    dialogType = '';
+    markSelection();
+  }
+  popup.addEventListener('close', () => {
+    if (popup.open) return;
+    dialogType = '';
+    markSelection();
     if (focusReturn?.isConnected) focusReturn.focus({ preventScroll: true });
   });
-  dlg.addEventListener('click', (e) => {
-    if (e.target === dlg) {
-      const r = dlg.getBoundingClientRect();
-      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close();
-    }
+  popup.addEventListener('click', (e) => {
+    if (e.target !== popup) return;
+    const r = popup.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeDialog();
   });
-  function menu(open) {
-    $('workspace').classList.toggle('menu-open', open);
-    document.querySelector('.mobile-menu').setAttribute('aria-expanded', String(open));
+  function controls(items) {
+    const div = el('div', 'overlay-actions');
+    items.forEach(([label, target]) => div.append(button(label, target)));
+    return div;
   }
-  function locate() {
-    $('workspace').scrollIntoView({ block: 'start', behavior: 'instant' });
+  function form(title, label, value, submit, onSubmit, options = {}) {
+    const f = el('form'),
+      l = el('label', '', label),
+      input = el(options.multiline ? 'textarea' : 'input');
+    input.required = true;
+    input.maxLength = 240;
+    input.value = value;
+    l.append(input);
+    f.append(l);
+    if (options.selector) f.append(options.selector);
+    const save = el('button', 'accent', submit);
+    save.type = 'submit';
+    f.append(save);
+    f.onsubmit = (e) => {
+      e.preventDefault();
+      if (input.value.trim()) onSubmit(input.value.trim());
+    };
+    openDialog(title, [f, ...(options.more || [])]);
+    input.focus();
   }
-  function go(page, item = state.current, remember = true) {
-    close();
-    menu(false);
-    if (remember && (state.page !== page || (page === 'board' && state.current !== item)))
-      state.trail.push([state.page, state.current]);
-    state.page = page;
-    state.current = item;
-    state.link = null;
-    state.zoom = 1;
+  function notify(text) {
+    const n = byId('notice');
+    n.textContent = text;
+    n.classList.add('visible');
+    clearTimeout(notify.timer);
+    notify.timer = setTimeout(() => n.classList.remove('visible'), 2100);
+  }
+  function go(next, record = true, index = current) {
+    if (!frames[next]) return;
+    if (record && (page !== next || current !== index)) history.push([page, current]);
+    closeDialog();
+    clearTimeout(transition);
+    page = next;
+    current = index;
+    selection = null;
+    gesture = null;
+    zoomed = false;
     render();
-    locate();
-    $('panel').focus({ preventScroll: true });
+    byId('viewport').scrollLeft = 0;
+    byId('workspace').scrollIntoView({ block: 'start' });
+    stage.focus({ preventScroll: true });
+    if (next === 'welcome')
+      transition = setTimeout(() => {
+        if (page === 'welcome') go('home', false);
+      }, 1300);
   }
-  function sidebar() {
-    const links = (ids) =>
-      ids
-        .map(
-          (id) =>
-            '<button data-action="route" data-value="' +
-            id +
-            '" ' +
-            (state.page === id ? 'aria-current="page"' : '') +
-            '>' +
-            icon(id) +
-            '<span>' +
-            routes[id][0] +
-            '</span></button>',
-        )
-        .join('');
-    $('sidebar').innerHTML =
-      '<div class="side-brand">' +
-      art('mark') +
-      ' BOOMIND</div><nav aria-label="项目功能">' +
-      links(['overview', 'board', 'files', 'devices', 'schedule', 'market']) +
-      '<hr>' +
-      links(['inbox', 'activity', 'settings']) +
-      '</nav>' +
-      btn(
-        art('profile') + '<span><b>' + esc(state.profile) + '</b><small>TXT’s Team</small></span>',
-        'route',
-        'settings',
-        'profile',
-      );
+  function back() {
+    const last = history.pop();
+    if (last) go(last[0], false, last[1]);
   }
-  function projectProgress() {
-    return ['Folio Agency', 'Folio Designer', 'Unity Comps']
-      .map(
-        (label, i) =>
-          '<button class="progress-row" data-action="progress" data-value="' +
-          i +
-          '">' +
-          art(['spiral', 'sphere', 'orbit'][i]) +
-          '<span>' +
-          label +
-          '<i><em style="width:' +
-          [75, 62, 2][i] +
-          '%"></em></i></span><b>' +
-          [75, 62, 2][i] +
-          '%</b></button>',
-      )
-      .join('');
+  function bounds(node, box, [x, y, w, h]) {
+    const [a, b, width, height] = box;
+    Object.assign(node.style, {
+      left: ((x - a) / width) * 100 + '%',
+      top: ((y - b) / height) * 100 + '%',
+      width: (w / width) * 100 + '%',
+      height: (h / height) * 100 + '%',
+    });
   }
-  const chart =
-    '<svg class="chart" viewBox="0 0 260 72" preserveAspectRatio="none" aria-label="近期工作时间变化" role="img"><path fill="none" stroke="#bdabff" stroke-width="3" d="M0 53C14 53 15 28 33 30S53 60 74 47 92 4 112 15 135 60 158 40 186 6 201 16 225 44 242 20 255 9 260 8"/><path fill="none" stroke="#6899ce" stroke-width="1.7" d="M0 62C23 65 29 42 49 45S75 64 95 51 121 25 145 39 174 57 198 43 226 24 260 30"/></svg>';
-  function overview() {
-    return (
-      panelHead(
-        'Welcome back',
-        'Hi ' + state.profile + ',',
-        btn(icon('bell') + (state.unread ? '<i class="unread"></i>' : ''), 'notifications', '', 'bell'),
-      ) +
-      '<div class="dash-grid"><div class="dash-main"><article class="welcome"><div><small>Work board</small><h3>Create a new<br>brainstorming task.</h3>' +
-      btn('新建构思任务 →', 'create', '', 'light') +
-      '</div>' +
-      art('orbit', 'welcome-orbit') +
-      art('mark', 'welcome-mark') +
-      '</article><div class="dash-bottom"><article class="tile"><h3>Template type</h3>' +
-      templates
-        .map((t, i) =>
-          btn(
-            art(t[2]) + '<span>' + t[0] + '<small>' + t[1] + '</small></span><b>↗</b>',
-            'template',
-            i,
-            'template-row',
-          ),
-        )
-        .join('') +
-      '</article><article class="tile last-open"><h3>Last opened</h3><p>' +
-      esc(board().name) +
-      '</p>' +
-      art('map-sheet', 'map-preview') +
-      btn('继续编辑 ↗', 'route', 'board', 'text-btn') +
-      '</article></div></div><div class="dash-right"><article class="tile hours"><h3>Working hours</h3><p><strong>47.9</strong> h</p>' +
-      chart +
-      btn('查看本周日程 ↗', 'route', 'schedule', 'text-btn') +
-      '</article><article class="tile"><h3>Project progress</h3>' +
-      projectProgress() +
-      '</article></div></div>'
-    );
+  function inside(box, rect) {
+    const [x, y, w, h] = rect,
+      [a, b, width, height] = box;
+    return x + w / 2 >= a && y + h / 2 >= b && x + w / 2 <= a + width && y + h / 2 <= b + height;
   }
-  function boardView() {
-    const b = board();
-    return (
-      panelHead(b.name, 'Work board', btn('＋ 节点', 'add-node', '', 'accent')) +
-      '<div class="board-toolbar">' +
-      btn('文件库', 'route', 'files') +
-      btn('关联节点', 'link', '', 'link-control') +
-      '<label>图层 <select id="layer" aria-label="选择图层">' +
-      ['全部', '主题', '分支']
-        .map(
-          (x, i) => '<option value="' + i + '" ' + (i === b.layer ? 'selected' : '') + '>' + x + '</option>',
-        )
-        .join('') +
-      '</select></label><span></span>' +
-      btn('−', 'zoom', '-0.2') +
-      '<output id="scale">' +
-      Math.round(state.zoom * 100) +
-      '%</output>' +
-      btn('＋', 'zoom', '0.2') +
-      '</div>' +
-      '<div class="map-view"><div id="map-stage"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><div id="map-nodes"></div></div></div><div class="board-status"><label>Layer Progress <select id="progress-level" aria-label="构思进度">' +
-      progressSteps
-        .map(
-          (v) =>
-            '<option value="' +
-            v +
-            '" ' +
-            (v === b.progress ? 'selected' : '') +
-            '>' +
-            (v === 100 ? 'Done' : v + '%') +
-            '</option>',
-        )
-        .join('') +
-      '</select></label><p class="board-help" id="board-help">拖动节点调整位置，点选节点编辑想法。</p></div>'
-    );
+  function hotspot(slice, box, label, action, rect) {
+    if (!inside(box, rect)) return;
+    const b = button('', action, 'hot');
+    if (action === 'statement') {
+      b.disabled = true;
+      b.setAttribute('aria-disabled', 'true');
+    }
+    b.title = label;
+    b.append(el('span', '', label));
+    bounds(b, box, rect);
+    slice.append(b);
   }
-  function paintMap() {
-    const b = board(),
-      nodes = b.nodes.filter((n) => b.layer === 0 || (b.layer === 1 ? n.id === 0 : n.id !== 0));
-    const map = new Map(nodes.map((n) => [n.id, n]));
-    $('map-stage').style.width = state.zoom * 100 + '%';
-    $('map-stage').style.height = state.zoom * 100 + '%';
-    $('map-stage').querySelector('svg').innerHTML = b.edges
-      .filter(([a, c]) => map.has(a) && map.has(c))
-      .map(
-        ([a, c]) =>
-          '<line x1="' +
-          map.get(a).x +
-          '" y1="' +
-          map.get(a).y +
-          '" x2="' +
-          map.get(c).x +
-          '" y2="' +
-          map.get(c).y +
-          '" />',
-      )
-      .join('');
-    $('map-nodes').innerHTML = nodes
-      .map(
-        (n) =>
-          '<button class="map-node ' +
-          (n.id === 0 ? 'central ' : '') +
-          (state.link === n.id ? 'selected' : '') +
-          '" style="left:' +
-          n.x +
-          '%;top:' +
-          n.y +
-          '%" data-color="' +
-          (n.id % 4) +
-          '" data-node="' +
-          n.id +
-          '">' +
-          esc(n.text) +
-          '</button>',
-      )
-      .join('');
-    document.querySelector('.link-control').setAttribute('aria-pressed', String(state.link !== null));
-    $('board-help').textContent =
-      state.link === null
-        ? '拖动节点调整位置，点选节点编辑想法。'
-        : state.link === -1
-          ? '点选起点，再点选要关联的节点。'
-          : '现在点选关联的另一个节点。';
-    $('scale').textContent = Math.round(state.zoom * 100) + '%';
+  function originalInput(slice, box, rect, label, value, save) {
+    if (!inside(box, rect)) return;
+    const input = el(label === 'Bio' ? 'textarea' : 'input', 'live-field');
+    input.value = value;
+    input.maxLength = 240;
+    input.setAttribute('aria-label', label);
+    input.addEventListener('input', () => save(input.value));
+    bounds(input, box, rect);
+    slice.append(input);
   }
-  function fileView() {
-    return (
-      panelHead('File library', '文件库', btn('＋ 新建画布', 'create', '', 'accent')) +
-      '<div class="file-grid">' +
-      state.boards
-        .map((b, i) =>
-          btn(
-            '<div class="file-art">' +
-              art(templates[b.template][2]) +
-              '</div><strong>' +
-              esc(b.name) +
-              '</strong><small>' +
-              b.nodes.length +
-              ' 个节点 · ' +
-              b.edges.length +
-              ' 条关联 · ' +
-              (b.progress === 100 ? 'Done' : b.progress + '%') +
-              '</small>',
-            'open-file',
-            i,
-            'file-card',
-          ),
-        )
-        .join('') +
-      [...state.saved]
-        .map((i) =>
-          btn(
-            art(materials[i][1]) + '<strong>' + materials[i][0] + '</strong><small>已收藏素材</small>',
-            'material',
-            i,
-            'file-card',
-          ),
-        )
-        .join('') +
-      '</div>'
-    );
+  function note(slice, box, rect, text, cls = 'original-note') {
+    if (!inside(box, rect)) return;
+    const n = el('div', cls, text);
+    bounds(n, box, rect);
+    slice.append(n);
+    return n;
   }
-  function deviceView() {
-    return (
-      panelHead('Your products', '已连接设备', routeButton('settings', '检查设置')) +
-      '<p class="intro-text">查看工作台关联的设备和项目记录。</p><div class="product-list">' +
-      products
-        .map((p, i) =>
-          btn(
-            art(p[1]) +
-              '<span><b>' +
-              p[0] +
-              '</b><small>' +
-              p[5] +
-              '</small></span><span class="person">' +
-              art(p[3]) +
-              p[2] +
-              '</span><strong>' +
-              p[6] +
-              ' ↗</strong>',
-            'product',
-            i,
-            'product-row',
-          ),
-        )
-        .join('') +
-      '</div>'
-    );
+  function lines(surface) {
+    const svg = surface.querySelector('.edges');
+    if (!svg) return;
+    svg.replaceChildren();
+    for (const [a, b] of board().edges) {
+      const p = board().bubbles[a],
+        q = board().bubbles[b];
+      if (!p || !q) continue;
+      const line = document.createElementNS(svg.namespaceURI, 'line');
+      for (const [k, v] of Object.entries({
+        x1: p.x + p.w / 2,
+        y1: p.y + p.h / 2,
+        x2: q.x + q.w / 2,
+        y2: q.y + q.h / 2,
+      }))
+        line.setAttribute(k, v);
+      svg.append(line);
+    }
   }
-  function scheduleView() {
-    return (
-      panelHead('Schedules', '项目日程') +
-      '<div class="schedule"><h3>August <small>2024</small></h3><div class="calendar">' +
-      ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((x) => '<b>' + x + '</b>').join('') +
-      '<i></i><i></i><i></i>' +
-      Array.from({ length: 31 }, (_, i) => {
-        const match = scheduled.findIndex((row) => row[1] === String(i + 1));
-        return match < 0 ? '<span>' + (i + 1) + '</span>' : btn(String(i + 1), 'event', match, 'event-day');
-      }).join('') +
-      '</div></div><div class="agenda">' +
-      scheduled
-        .map((s, i) =>
-          btn('<time>Aug ' + s[1] + ' · ' + s[2] + '</time><b>' + s[3] + '</b><span>↗</span>', 'event', i),
-        )
-        .join('') +
-      '</div>'
-    );
+  function drawCanvas(slice) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.classList.add('edges');
+    svg.setAttribute('viewBox', '0 0 1194 849');
+    slice.append(svg);
+    lines(slice);
+    board().bubbles.forEach((n, i) => {
+      const b = button('', 'bubble:' + i, 'bubble');
+      b.dataset.bubble = i;
+      b.setAttribute('aria-label', n.text || 'Idea ' + (i + 1));
+      b.append(picture('bubble-' + n.art, ''));
+      if (n.text) b.append(el('strong', '', n.text));
+      if (selection === i) b.classList.add('selected');
+      bounds(b, full, [n.x, n.y, n.w, n.h]);
+      slice.append(b);
+    });
   }
-  function marketView() {
-    return (
-      panelHead('Material market', '素材市场') +
-      '<div class="file-grid market">' +
-      materials
-        .map((m, i) =>
-          btn(
-            art(m[1]) +
-              '<strong>' +
-              m[0] +
-              '</strong><small>' +
-              (state.saved.has(i) ? '已收藏' : '查看素材 ↗') +
-              '</small>',
-            'material',
-            i,
-            'file-card',
-          ),
-        )
-        .join('') +
-      '</div>'
-    );
+  function sliceView(box, fullView) {
+    const slice = el('div', 'slice');
+    slice.style.aspectRatio = box[2] + '/' + box[3];
+    const img = picture('screen-' + page, frames[page].title, 'scene-art');
+    bounds(img, box, full);
+    slice.append(img);
+    for (const [label, action, x, y, w, h] of frames[page].controls) {
+      if (dashboards.has(page) && x < 213) continue; // The mounted sidebar owns these controls and its active state.
+      if (page === 'profile' && action.startsWith('field:') && w > 200) continue;
+      if (page === 'conversation' && label === 'Reply to message') continue;
+      hotspot(slice, box, label, action, [x, y, w, h]);
+    }
+    if (fullView && dashboards.has(page)) slice.append(navigation());
+    if (page === 'canvas') drawCanvas(slice);
+    if (board().progress !== 54 && ['board', 'map', 'board-focus', 'map-branches', 'layers'].includes(page)) {
+      const rect = ['board', 'map'].includes(page) ? [506, 24, 640, 62] : [485, 47, 640, 62];
+      const n = note(slice, box, rect, 'Layer Progress · ' + board().progress + '%');
+      if (n) {
+        n.classList.add('progress-control');
+        n.replaceChildren(button('Layer Progress · ' + board().progress + '%', 'progress'));
+      }
+    }
+    if (['board', 'map'].includes(page)) {
+      const voice = button('', 'voice', 'voice-control');
+      voice.append(picture('screen-voice', 'Connected device status'));
+      bounds(voice, box, [600, 110, 222, 52]);
+      slice.append(voice);
+    }
+    if (page === 'profile') {
+      for (const [key, x, y, w, h] of [
+        ['Full name', 295, 441, 396, 45],
+        ['Display name', 717, 441, 394, 45],
+        ['Role', 295, 530, 396, 45],
+        ['Team', 717, 530, 394, 45],
+        ['Bio', 295, 619, 817, 132],
+      ]) {
+        originalInput(slice, box, [x, y, w, h], key, profile[key], (v) => (profile[key] = v));
+      }
+      if ((avatar || hiddenAvatar) && inside(box, [310, 303, 55, 55])) {
+        const n = avatar ? el('img', 'profile-avatar') : el('div', 'original-note');
+        if (avatar) n.src = avatar;
+        bounds(n, box, [310, 303, 55, 55]);
+        slice.append(n);
+      }
+    }
+    if (page === 'home' && dismissed) {
+      const n = note(slice, box, [266, 162, 521, 288], '');
+      if (n) n.append(button('Create a brainstorming task', 'create'));
+    }
+    if (page === 'login') {
+      if (login.email) note(slice, box, [83, 451, 420, 37], 'guest@boomind.demo');
+      if (login.password) note(slice, box, [83, 556, 374, 38], '••••••••');
+      if (login.remember) note(slice, box, [74, 616, 19, 19], '✓');
+    }
+    if (['inbox', 'conversation'].includes(page)) {
+      if (folder !== messageFolder) {
+        const n = note(
+          slice,
+          box,
+          [266, 281, 384, 528],
+          'No messages in ' + folder + '.',
+          'original-note mail-folder',
+        );
+        note(slice, box, [757, 159, 388, 633], 'Select a message to read it.');
+      } else if (page === 'conversation') {
+        originalInput(slice, box, [779, 606, 345, 82], 'Message', draft, (v) => (draft = v));
+      }
+    }
+    return slice;
   }
-  function inboxView() {
-    const show = state.archiveTab === state.archived;
-    return (
-      panelHead('Your inbox', '团队消息') +
-      '<div class="board-toolbar">' +
-      btn('收件箱', 'mail-tab', 'current') +
-      btn('已归档', 'mail-tab', 'archived') +
-      '</div><div class="tile mail"><h3>' +
-      (state.archiveTab ? '已归档' : '收件箱') +
-      '</h3>' +
-      (show
-        ? btn(
-            art('profile') +
-              '<span><b>Joel Becker</b><small>When is the Sketch version available for download?</small></span>',
-            'thread',
-            '',
-            'product-row',
-          )
-        : '<p>此处暂无消息。</p>') +
-      '</div>'
-    );
-  }
-  function activityView() {
-    return (
-      panelHead('Your activity', '团队动态') +
-      '<div class="tile">' +
-      ['Donald Franklin', 'Ollie White']
-        .map((name, i) =>
-          btn(
-            art(i ? 'member' : 'owner') +
-              '<span><b>' +
-              name +
-              '</b><small>' +
-              ['评论了团队项目', '分享了对插画的反馈'][i] +
-              '</small></span><b>↗</b>',
-            'comment',
-            i,
-            'product-row',
-          ),
-        )
-        .join('') +
-      '</div>'
-    );
-  }
-  function settingsView() {
-    return (
-      panelHead('Profile', '个人设置') +
-      '<form class="tile settings-form" id="profile-form">' +
-      art('profile') +
-      '<label>演示昵称<input name="name" required maxlength="30" value="' +
-      esc(state.profile) +
-      '"></label><label class="check"><input type="checkbox" name="notifications" ' +
-      (state.notifications ? 'checked' : '') +
-      '> 展示团队通知</label><div><button class="accent">保存设置</button> ' +
-      btn('登录界面', 'login') +
-      '</div></form>'
-    );
-  }
-  const views = {
-    overview,
-    board: boardView,
-    files: fileView,
-    devices: deviceView,
-    schedule: scheduleView,
-    market: marketView,
-    inbox: inboxView,
-    activity: activityView,
-    settings: settingsView,
-  };
+  let draft = '';
   function render() {
-    sidebar();
-    $('crumb').textContent = routes[state.page][0];
-    $('go-back').hidden = !state.trail.length;
-    $('panel').innerHTML = views[state.page]();
-    if (state.page === 'board') paintMap();
+    const split = mobile.matches && !zoomed && frames[page].mobile.length > 0;
+    stage.dataset.screen = page;
+    stage.dataset.figma = frames[page].figma;
+    stage.classList.toggle('reflow', !!split);
+    stage.classList.toggle('zoomed', zoomed);
+    stage.setAttribute('aria-label', frames[page].title);
+    stage.replaceChildren(...(split ? frames[page].mobile : [full]).map((b) => sliceView(b, !split)));
+    byId('crumb').textContent = frames[page].title;
+    byId('go-back').hidden = !history.length;
+    byId('zoom').setAttribute('aria-pressed', String(zoomed));
+    byId('zoom').textContent = zoomed ? 'Fit' : 'Zoom';
+    const extra = byId('extras');
+    extra.replaceChildren();
+    const actions = [];
+    if (boardPages.has(page)) {
+      extra.append(el('b', '', board().name));
+      actions.push(
+        ['Team canvas', 'canvas'],
+        ['Mind map', 'map'],
+        ['Layers', 'layers'],
+        ['Add idea', 'add-idea'],
+        [selection === null ? 'Connect ideas' : 'Choose two ideas', 'connect'],
+      );
+    }
+    if (page === 'files') {
+      for (const [i, b] of boards.entries()) if (i) actions.push([b.name, 'file:' + i]);
+      for (const m of saved) actions.push([m, 'material:' + m]);
+      actions.push(['New task', 'create']);
+    }
+    if (page === 'calendar')
+      events.forEach((e, i) => actions.push([e[0] + ' · ' + e[3], 'event:' + (i + 4)]));
+    if (page === 'conversation' && replies.length && folder === messageFolder)
+      for (const r of replies) extra.append(el('p', '', r));
+    if (mobile.matches && dashboards.has(page))
+      actions.push(['Search', 'search'], ['Notifications', 'notifications']);
+    for (const [label, target] of actions) extra.append(button(label, target));
+    extra.hidden = !extra.children.length;
   }
-  function create(t = 0) {
-    modal(
-      '新建构思任务',
-      '<form id="create-form"><label>任务名称<input name="title" maxlength="45" required autofocus placeholder="为这次讨论命名"></label><label>画布模板<select name="template">' +
-        templates
-          .map(
-            (v, i) =>
-              '<option value="' +
-              i +
-              '" ' +
-              (i === t ? 'selected' : '') +
-              '>' +
-              v[1] +
-              ' · ' +
-              v[0] +
-              '</option>',
-          )
-          .join('') +
-        '</select></label><button class="accent">创建并进入画布 →</button></form>',
+  const details = (title, text, items = []) => openDialog(title, [el('p', '', text), controls(items)]);
+  function createTask(template) {
+    const l = el('label', '', 'Template'),
+      select = el('select');
+    for (const t of ['Basic mind map', 'Course Outline', 'Plan ideas']) select.add(new Option(t, t));
+    select.value = template || 'Basic mind map';
+    l.append(select);
+    form(
+      'New brainstorming task',
+      'Task name',
+      '',
+      'Create task',
+      (name) => {
+        boards.push(newBoard(name));
+        go(select.value === 'Basic mind map' ? 'map' : 'canvas', true, boards.length - 1);
+      },
+      { selector: l },
     );
   }
-  function editNode(id) {
-    const b = board(),
-      n = b.nodes.find((n) => n.id === id);
-    if (state.link !== null) {
-      if (state.link === -1) {
-        state.link = id;
-        paintMap();
+  function newEvent() {
+    const l = el('label', '', 'Start time'),
+      time = el('input');
+    time.type = 'time';
+    time.required = true;
+    time.value = '10:00';
+    l.append(time);
+    form(
+      'New Schedule',
+      'Project or task',
+      '',
+      'Add to schedule',
+      (title) => {
+        events.push([title, 'Team session', 'This session', time.value]);
+        closeDialog();
+        render();
+        notify('Schedule added');
+      },
+      { selector: l },
+    );
+  }
+  function editBubble(i) {
+    if (selection !== null) {
+      if (selection === -1) {
+        selection = i;
+        render();
+        notify('Select the second idea');
         return;
       }
-      if (
-        state.link !== id &&
-        !b.edges.some(([a, c]) => (a === id && c === state.link) || (a === state.link && c === id))
-      )
-        b.edges.push([state.link, id]);
-      state.link = null;
-      paintMap();
+      if (i !== selection && !board().edges.some((pair) => pair.includes(i) && pair.includes(selection)))
+        board().edges.push([selection, i]);
+      selection = null;
+      render();
       return;
     }
-    modal(
-      '编辑想法',
-      '<form id="node-form" data-id="' +
-        id +
-        '"><label>节点文字<input name="text" maxlength="40" required autofocus value="' +
-        esc(n.text) +
-        '"></label><div class="form-actions"><button class="accent">保存</button>' +
-        btn('添加关联想法', 'child', id) +
-        (id === 0 ? '' : btn('删除节点', 'delete-node', id)) +
-        '</div></form>',
+    const n = board().bubbles[i];
+    form(
+      'Edit idea',
+      'Idea',
+      n.text || 'things',
+      'Save idea',
+      (text) => {
+        n.text = text;
+        closeDialog();
+        render();
+      },
+      {
+        more: [
+          controls([
+            ['Connect to another idea', 'link-from:' + i],
+            ['Add idea', 'add-idea'],
+          ]),
+        ],
+      },
     );
   }
-  function addNode(parent = 0) {
-    modal(
-      '添加想法',
-      '<form id="add-form" data-parent="' +
-        parent +
-        '"><label>节点文字<input name="text" maxlength="40" required autofocus placeholder="写下一个想法"></label><button class="accent">添加到画布</button></form>',
-    );
+  function search(messages = false) {
+    const input = el('input');
+    input.type = 'search';
+    input.placeholder = messages ? 'Search messages' : 'Search screens and boards';
+    input.setAttribute('aria-label', input.placeholder);
+    const list = el('div', 'action-list');
+    function update() {
+      const entries = messages
+        ? [['Joel Becker', 'thread']]
+        : [
+            ...menu.filter((m) => m[0] !== 'statement').map(([a, l]) => [l, a]),
+            ['Work board', 'board'],
+            ['Team canvas', 'canvas'],
+            ['Login', 'login'],
+            ...boards.map((b, i) => [b.name, 'file:' + i]),
+          ];
+      list.replaceChildren(
+        ...entries
+          .filter(([l]) => l.toLowerCase().includes(input.value.toLowerCase()))
+          .map(([l, a]) => button(l, a)),
+      );
+      if (!list.children.length) list.textContent = 'No results';
+    }
+    input.oninput = update;
+    update();
+    openDialog('Search', [input, list]);
+    input.focus();
   }
-  function searchResults(query) {
-    const matches = (s) => s.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase());
-    const pages = Object.keys(routes)
-      .filter((k) => matches(routes[k].join(' ')))
-      .map((k) => routeButton(k, routes[k][0] + ' · ' + routes[k][1]));
-    const files = state.boards.flatMap((b, i) =>
-      matches(b.name) ? [btn('画布 · ' + esc(b.name), 'open-file', i)] : [],
-    );
-    $('results').innerHTML = [...pages, ...files].join('') || '<p>未找到匹配项。</p>';
-  }
-  function thread() {
-    modal(
-      'Joel Becker',
-      '<article class="message"><b>Joel Becker</b><p>When is the Sketch version available for download?</p></article>' +
-        state.reply
-          .map(
-            (r) =>
-              '<article class="message"><b>' + esc(state.profile) + '</b><p>' + esc(r) + '</p></article>',
-          )
-          .join('') +
-        '<form id="reply-form"><label>演示回复<input name="reply" required maxlength="250"></label><div class="form-actions"><button class="accent">添加回复</button>' +
-        btn(state.archived ? '移回收件箱' : '归档会话', 'archive-mail') +
-        '</div></form>',
-    );
-  }
-  function showScreen(index) {
-    const [asset, title, page] = screens[index];
-    modal(
-      title,
-      '<div class="screen-viewport">' +
-        art('screen-' + asset, '', title + '设计稿') +
-        '</div><div class="screen-controls">' +
-        btn('← 上一张', 'screen', (index + screens.length - 1) % screens.length) +
-        '<span>' +
-        (index + 1) +
-        ' / ' +
-        screens.length +
-        '</span>' +
-        btn('下一张 →', 'screen', (index + 1) % screens.length) +
-        btn('放大', 'screen-zoom', '', 'zoom-screen') +
-        btn('体验此界面 ↗', page === 'login' ? 'login' : 'route', page, 'accent') +
-        '</div>',
-    );
-    dlg.classList.add('screen-dialog');
-  }
-  const actions = {
-    screen: (v) => showScreen(Number(v)),
-    'screen-zoom'() {
-      const view = dlg.querySelector('.screen-viewport');
-      const zoomed = view.classList.toggle('enlarged');
-      dlg.querySelector('.zoom-screen').textContent = zoomed ? '适应宽度' : '放大';
-    },
-    about() {
-      modal(
-        '项目说明',
-        '<p>BOOMIND 是一个围绕团队头脑风暴设计的工作台。首页提供课程大纲、基础思维导图和方案构思三种模板，团队可以用节点记录想法，以连线表达关联。</p><p>文件库存放画布，设备页显示负责人、关联项目与连接时长，日程页把设计任务放进具体时段。页面使用原 Figma 文件中的标志、几何体、头像与模板图标制作。</p><p class="fine">交互演示中的编辑保留在本次打开的工作台内。</p>',
-      );
-    },
-    close,
-    menu() {
-      menu(!$('workspace').classList.contains('menu-open'));
-    },
-    back() {
-      const prev = state.trail.pop();
-      if (prev) go(prev[0], prev[1], false);
-    },
-    route: (k) => go(k),
-    'open-board': () => go('board'),
-    'open-devices': () => go('devices'),
-    'open-file': (v) => go('board', Number(v)),
-    create: () => create(),
-    template: (v) => create(Number(v)),
-    'add-node': () => addNode(),
-    child: (v) => addNode(Number(v)),
-    link() {
-      state.link = state.link === null ? -1 : null;
-      paintMap();
-    },
-    zoom: (v) => {
-      state.zoom = Math.min(1.8, Math.max(0.8, Math.round((state.zoom + Number(v)) * 10) / 10));
-      paintMap();
-    },
-    'delete-node': (v) => {
-      const b = board(),
-        id = Number(v);
-      b.nodes = b.nodes.filter((n) => n.id !== id);
-      b.edges = b.edges.filter((e) => !e.includes(id));
-      close();
-      paintMap();
-    },
-    search() {
-      modal(
-        '搜索工作台',
-        '<label>页面或画布名称<input type="search" id="query" autofocus placeholder="例如：日程、Basic mind map"></label><div id="results" class="search-results"></div>',
-      );
-      searchResults('');
-    },
-    notifications() {
-      state.unread = false;
-      render();
-      modal(
-        '团队通知',
-        state.notifications
-          ? '<div class="search-results">' +
-              btn('Joel Becker · 收件箱有一条消息 ↗', 'thread') +
-              routeButton('activity', '查看团队动态 ↗') +
-              '</div>'
-          : '<p>团队通知已关闭。</p>' + routeButton('settings', '前往设置'),
-      );
-    },
-    progress: (v) => {
-      const i = Number(v);
-      modal(
-        ['Folio Agency', 'Folio Designer', 'Unity Comps'][i],
-        '<p>项目进度 ' +
-          [75, 62, 2][i] +
-          '%</p><div class="form-actions">' +
-          routeButton('schedule', '查看日程 →') +
-          routeButton('files', '打开文件库') +
-          '</div>',
-      );
-    },
-    product: (v) => {
-      const p = products[Number(v)];
-      modal(
-        p[0],
-        art(p[1], 'detail-art') +
-          '<dl><dt>负责人</dt><dd>' +
-          p[2] +
-          '</dd><dt>连接日期</dt><dd>' +
-          p[4] +
-          '</dd><dt>关联项目</dt><dd>' +
-          p[5] +
-          '</dd><dt>连接时长</dt><dd>' +
-          p[6] +
-          '</dd></dl>' +
-          routeButton('schedule', '查看工作日程 →'),
-      );
-    },
-    event: (v) => {
-      const e = scheduled[Number(v)];
-      modal(
-        e[3],
-        '<p>2024 年 8 月 ' +
-          e[1] +
-          ' 日 · ' +
-          e[2] +
-          '</p><p>' +
-          e[4] +
-          '</p>' +
-          routeButton('files', '打开项目文件库 →'),
-      );
-    },
-    material: (v) => {
-      const i = Number(v);
-      modal(
-        materials[i][0],
-        art(materials[i][1], 'detail-art') +
-          btn(state.saved.has(i) ? '移出文件库' : '收藏到文件库', 'save-material', i, 'accent'),
-      );
-    },
-    'save-material': (v) => {
-      const i = Number(v);
-      if (state.saved.has(i)) state.saved.delete(i);
-      else state.saved.add(i);
-      close();
-      render();
-      tell(state.saved.has(i) ? '已收藏到文件库' : '已移出文件库');
-    },
-    'mail-tab': (v) => {
-      state.archiveTab = v === 'archived';
-      render();
-    },
-    thread,
-    'archive-mail': () => {
-      state.archived = !state.archived;
-      close();
-      render();
-      tell(state.archived ? '会话已归档' : '已移回收件箱');
-    },
-    comment: (v) =>
-      modal(
-        '团队评论',
-        '<p>' +
+  function run(action) {
+    const [id, ...rest] = action.split(':');
+    const arg = rest.join(':');
+    if (frames[id]) {
+      if (id === 'home' && page === 'welcome') go(id, false);
+      else go(id);
+      return;
+    }
+    switch (id) {
+      case 'close':
+        closeDialog();
+        break;
+      case 'back':
+        back();
+        break;
+      case 'zoom':
+        zoomed = !zoomed;
+        render();
+        break;
+      case 'navigate':
+        openDialog(
+          'Navigate',
           [
-            'Donald Franklin · 对按钮文字的对齐方式提出了问题。',
-            'Ollie White · “Love this so much! What tools do you use to create your 3d illustrations?”',
-          ][Number(v)] +
-          '</p>' +
-          routeButton('market', '查看素材市场 →'),
-      ),
-    login() {
-      modal(
-        'Login now',
-        art('mark', 'login-mark') +
-          '<p>以演示成员身份进入 BOOMIND。</p>' +
-          btn('以 ' + esc(state.profile) + ' 进入 →', 'route', 'overview', 'accent'),
-      );
-    },
-  };
+            navigation(true),
+            controls([
+              ['Work board', 'board'],
+              ['Login', 'login'],
+            ]),
+          ],
+          'navigate',
+        );
+        break;
+      case 'about':
+        details(
+          'About BOOMIND',
+          'BOOMIND is a workspace for team brainstorming. Choose a template, explore ideas on the canvas and plan design sessions with the shared project timeline. Changes in this prototype last for this visit.',
+        );
+        break;
+      case 'search':
+        search();
+        break;
+      case 'message-search':
+        search(true);
+        break;
+      case 'recent':
+        go('canvas');
+        break;
+      case 'dismiss':
+        dismissed = true;
+        render();
+        break;
+      case 'create':
+        createTask(arg);
+        break;
+      case 'file':
+        go('canvas', true, Number(arg));
+        break;
+      case 'new-event':
+        newEvent();
+        break;
+      case 'event': {
+        const e = [...schedules, ...events][Number(arg)];
+        details(e[0], e.slice(1).join(' · '), [['Open file library', 'files']]);
+        break;
+      }
+      case 'day': {
+        const matches = schedules.map((e, i) => [e, i]).filter(([e]) => e[2].startsWith(arg.slice(0, 3)));
+        details(
+          arg,
+          matches.length ? 'Scheduled projects' : 'No scheduled projects.',
+          matches.map(([e, i]) => [e[0] + ' · ' + e[3], 'event:' + i]),
+        );
+        break;
+      }
+      case 'targets':
+        details('Project targets', 'August project dashboard · Achieved and target totals.', [
+          ['Open file library', 'files'],
+        ]);
+        break;
+      case 'device': {
+        const d = devices[Number(arg)];
+        details(d[0] + ' · ' + d[1], d.slice(2).join(' · '), [
+          ['Involved projects', 'files'],
+          ['Check settings', 'profile'],
+        ]);
+        break;
+      }
+      case 'device-filter':
+        openDialog('Products', [controls(devices.map((d, i) => [d[0] + ' · ' + d[1], 'device:' + i]))]);
+        break;
+      case 'material':
+        details(arg, 'Material market · BOOMIND', [
+          [saved.has(arg) ? 'Remove from library' : 'Save to library', 'save:' + arg],
+          ['File library', 'files'],
+        ]);
+        break;
+      case 'save':
+        if (saved.has(arg)) saved.delete(arg);
+        else saved.add(arg);
+        closeDialog();
+        render();
+        notify(saved.has(arg) ? 'Saved to file library' : 'Removed from library');
+        break;
+      case 'notifications': {
+        const list = el('div', 'notification-art');
+        list.append(picture('screen-notifications', 'Recent notifications', 'overlay-art'));
+        const items = [
+          ['Sarah Saunders · Comment on Collab Design', 'comments'],
+          ['Glenn Green · Comment on Sapiens Illustration', 'comments'],
+          ['Sarah Saunders · Comment on Collab Design', 'comments'],
+          ['Purchased Folio Designer', 'market'],
+          ['Read message', 'inbox'],
+          ['Liked Folio Agency', 'files'],
+          ['See all incoming activity', 'comments'],
+        ];
+        items.forEach(([label, target], i) => {
+          const b = button('', target, 'hot');
+          b.append(el('span', '', label));
+          b.title = label;
+          bounds(b, [0, 0, 340, 552], i === 6 ? [68, 425, 214, 48] : [60, 97 + i * 52, 224, 52]);
+          list.append(b);
+        });
+        openDialog('Notifications', [list], 'notifications');
+        break;
+      }
+      case 'field':
+        form('Profile', arg, profile[arg], 'Save', (v) => {
+          profile[arg] = v;
+          closeDialog();
+          render();
+        });
+        break;
+      case 'preferences':
+        openDialog('Settings', [
+          controls([
+            [notificationOn ? 'Mute notifications' : 'Enable notifications', 'toggle-notices'],
+            ['Login screen', 'login'],
+          ]),
+        ]);
+        break;
+      case 'toggle-notices':
+        notificationOn = !notificationOn;
+        run('preferences');
+        break;
+      case 'account':
+        details(arg, 'Account credentials are not required for this prototype.', [
+          ['Open login screen', 'login'],
+        ]);
+        break;
+      case 'upload': {
+        const input = el('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.setAttribute('aria-label', 'Upload a profile image');
+        input.onchange = () => {
+          const f = input.files[0];
+          if (!f || !f.type.startsWith('image/')) return;
+          if (avatar) URL.revokeObjectURL(avatar);
+          avatar = URL.createObjectURL(f);
+          hiddenAvatar = false;
+          closeDialog();
+          render();
+        };
+        openDialog('Upload avatar', [input]);
+        break;
+      }
+      case 'clear-avatar':
+        if (avatar) URL.revokeObjectURL(avatar);
+        avatar = null;
+        hiddenAvatar = true;
+        render();
+        break;
+      case 'remember':
+        login.remember = !login.remember;
+        render();
+        break;
+      case 'login-email':
+      case 'login-password':
+        login[id.slice(6)] = true;
+        render();
+        break;
+      case 'demo-login':
+        details('Demo account', 'Explore BOOMIND as a guest.', [['Enter workspace', 'welcome']]);
+        break;
+      case 'thread':
+        folder = messageFolder;
+        go('conversation');
+        break;
+      case 'reply':
+        if (page !== 'conversation') {
+          go('conversation');
+          stage.querySelector('[aria-label="Message"]')?.focus();
+        } else if (draft.trim()) {
+          replies.push(draft.trim());
+          draft = '';
+          render();
+          notify('Reply added');
+        } else stage.querySelector('[aria-label="Message"]')?.focus();
+        break;
+      case 'folder':
+        folder = arg;
+        go('inbox');
+        break;
+      case 'mail-options':
+        openDialog('Message options', [
+          controls([
+            ['Mark as done', 'move-mail:Done'],
+            ['Save message', 'move-mail:Saved'],
+            ['Archive', 'archive'],
+          ]),
+        ]);
+        break;
+      case 'move-mail':
+        messageFolder = arg;
+        folder = arg;
+        go('inbox');
+        notify('Moved to ' + arg);
+        break;
+      case 'remove-mail':
+      case 'archive':
+        messageFolder = id === 'archive' ? 'Archives' : 'Deleted';
+        folder = 'Your inbox';
+        go('inbox');
+        notify(id === 'archive' ? 'Message archived' : 'Message removed');
+        break;
+      case 'attachment':
+        details('Attachment.PNG', '3.6 MB · Joel Becker', [['Open conversation', 'thread']]);
+        break;
+      case 'comment':
+        details(arg, arg === 'Donald Franklin' ? 'Comment on Collab.' : 'Comment on Sapiens.', [
+          ['Open inbox', 'inbox'],
+          ['Material market', 'market'],
+        ]);
+        break;
+      case 'author':
+        if (arg === 'NOTWYX') go('board-focus');
+        else if (arg === 'TXT') go('layers');
+        else {
+          go('canvas');
+          run('member:' + arg);
+        }
+        break;
+      case 'progress':
+        openDialog('Layer Progress', [
+          controls(
+            [20, 40, 50, 54, 60, 70, 100].map((v) => [v === 100 ? 'Done' : v + '%', 'set-progress:' + v]),
+          ),
+        ]);
+        break;
+      case 'set-progress':
+        board().progress = Number(arg);
+        closeDialog();
+        render();
+        break;
+      case 'member':
+        openDialog(arg, [
+          picture('screen-member', 'Contributor', 'overlay-art'),
+          controls([['Focus on canvas', 'member-focus']]),
+        ]);
+        break;
+      case 'voice':
+        details('Connected device', 'Notwyx’s BOOM · 75%', [['Open products', 'products']]);
+        break;
+      case 'board-tools':
+        openDialog('Board tools', [
+          picture('screen-tools', 'Radial board tools', 'overlay-art'),
+          controls([
+            ['Team canvas', 'canvas'],
+            ['Add idea', 'add-idea'],
+            ['Mind map', 'map'],
+          ]),
+        ]);
+        break;
+      case 'add-idea':
+        form('Add idea', 'Idea', '', 'Add to canvas', (text) => {
+          board().bubbles.push({
+            art: 'lilac',
+            x: 480 + (board().bubbles.length % 4) * 45,
+            y: 290,
+            w: 141,
+            h: 113,
+            text,
+          });
+          go('canvas');
+        });
+        break;
+      case 'bubble':
+        editBubble(Number(arg));
+        break;
+      case 'link-from':
+        closeDialog();
+        selection = Number(arg);
+        render();
+        notify('Select the second idea');
+        break;
+      case 'connect':
+        if (page !== 'canvas') go('canvas');
+        selection = selection === null ? -1 : null;
+        render();
+        if (selection !== null) notify('Select the first idea');
+        break;
+    }
+  }
   document.addEventListener('click', (e) => {
-    const a = e.target.closest('[data-action]');
-    if (a && actions[a.dataset.action]) actions[a.dataset.action](a.dataset.value);
-    if (e.target.closest('#panel') && $('workspace').classList.contains('menu-open')) menu(false);
+    const b = e.target.closest('[data-action]');
+    if (!b || b.disabled) return;
+    if (b.dataset.bubble !== undefined && b.dataset.handled && e.detail !== 0) return;
+    run(b.dataset.action);
   });
-  document.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const f = e.target,
-      data = new FormData(f),
-      val = (k) => (data.get(k) || '').trim();
-    if (f.id === 'create-form' && val('title')) {
-      state.boards.push(makeBoard(val('title'), Number(val('template'))));
-      go('board', state.boards.length - 1);
-    }
-    if (f.id === 'node-form' && val('text')) {
-      board().nodes.find((n) => n.id === Number(f.dataset.id)).text = val('text');
-      close();
-      paintMap();
-    }
-    if (f.id === 'add-form' && val('text')) {
-      const b = board(),
-        p = b.nodes.find((n) => n.id === Number(f.dataset.parent)),
-        id = b.next++;
-      b.nodes.push({
-        id,
-        text: val('text'),
-        x: Math.min(86, Math.max(14, p.x + (id % 2 ? 19 : -19))),
-        y: Math.min(83, Math.max(17, p.y + ((id % 3) - 1) * 20 + 8)),
-      });
-      b.edges.push([p.id, id]);
-      b.layer = 0;
-      state.link = null;
-      close();
-      render();
-    }
-    if (f.id === 'profile-form' && val('name')) {
-      state.profile = val('name');
-      state.notifications = data.has('notifications');
-      render();
-      tell('本次演示的设置已保存');
-    }
-    if (f.id === 'reply-form' && val('reply')) {
-      state.reply.push(val('reply'));
-      thread();
-    }
+  stage.addEventListener('pointerdown', (e) => {
+    const b = e.target.closest('[data-bubble]');
+    if (!b || e.button !== 0 || gesture) return;
+    const i = Number(b.dataset.bubble),
+      n = board().bubbles[i];
+    delete b.dataset.handled;
+    gesture = { i, b, id: e.pointerId, cx: e.clientX, cy: e.clientY, x: n.x, y: n.y, moved: false };
+    b.setPointerCapture(e.pointerId);
   });
-  document.addEventListener('input', (e) => {
-    if (e.target.id === 'query') searchResults(e.target.value);
+  stage.addEventListener('pointermove', (e) => {
+    if (!gesture || gesture.id !== e.pointerId) return;
+    const g = gesture,
+      dx = e.clientX - g.cx,
+      dy = e.clientY - g.cy;
+    if (!g.moved && Math.hypot(dx, dy) < 5) return;
+    const r = g.b.parentElement.getBoundingClientRect(),
+      n = board().bubbles[g.i];
+    g.moved = true;
+    g.b.classList.add('dragging');
+    n.x = Math.max(0, Math.min(1194 - n.w, g.x + (dx * 1194) / r.width));
+    n.y = Math.max(115, Math.min(849 - n.h, g.y + (dy * 849) / r.height));
+    bounds(g.b, full, [n.x, n.y, n.w, n.h]);
+    lines(g.b.parentElement);
   });
-  document.addEventListener('change', (e) => {
-    if (e.target.id === 'progress-level') board().progress = Number(e.target.value);
-    if (e.target.id === 'layer') {
-      board().layer = Number(e.target.value);
-      state.link = null;
-      paintMap();
-    }
+  stage.addEventListener('pointerup', (e) => {
+    if (!gesture || gesture.id !== e.pointerId) return;
+    const g = gesture;
+    gesture = null;
+    g.b.dataset.handled = '1';
+    g.b.classList.remove('dragging');
+    if (!g.moved) editBubble(g.i);
   });
+  for (const event of ['pointercancel', 'lostpointercapture'])
+    stage.addEventListener(event, (e) => {
+      if (gesture?.id === e.pointerId) {
+        gesture.b.classList.remove('dragging');
+        gesture = null;
+      }
+    });
   document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
-      actions.search();
+      search();
     }
-    if (e.key === 'Escape' && !dlg.open) menu(false);
   });
-  let grip;
-  $('panel').addEventListener('pointerdown', (e) => {
-    const node = e.target.closest('[data-node]');
-    if (!node || e.button !== 0 || grip) return;
-    delete node.dataset.handled;
-    const n = board().nodes.find((n) => n.id === Number(node.dataset.node));
-    grip = { pointer: e.pointerId, node, n, x: n.x, y: n.y, cx: e.clientX, cy: e.clientY, moved: false };
-    node.setPointerCapture(e.pointerId);
-  });
-  $('panel').addEventListener('pointermove', (e) => {
-    if (grip?.pointer !== e.pointerId) return;
-    const { n, cx, cy, node } = grip,
-      dx = e.clientX - cx,
-      dy = e.clientY - cy;
-    if (!grip.moved && Math.hypot(dx, dy) < 5) return;
-    grip.moved = true;
-    const r = $('map-stage').getBoundingClientRect();
-    n.x = Math.max(12, Math.min(88, grip.x + (100 * dx) / r.width));
-    n.y = Math.max(14, Math.min(86, grip.y + (100 * dy) / r.height));
-    node.style.left = n.x + '%';
-    node.style.top = n.y + '%';
-    const boardNodes = new Map(board().nodes.map((x) => [x.id, x]));
-    const visible = board().edges.filter((pair) =>
-      pair.every((id) => $('map-nodes').querySelector('[data-node="' + id + '"]')),
-    );
-    $('map-stage')
-      .querySelectorAll('line')
-      .forEach((line, i) => {
-        const [a, b] = visible[i].map((id) => boardNodes.get(id));
-        for (const [k, v] of Object.entries({ x1: a.x, y1: a.y, x2: b.x, y2: b.y })) line.setAttribute(k, v);
-      });
-  });
-  $('panel').addEventListener('pointerup', (event) => {
-    if (grip?.pointer !== event.pointerId) return;
-    const {node, n, moved} = grip;
-    grip = null;
-    node.dataset.handled = 'true';
-    if (!moved) editNode(n.id);
-  });
-  function cancelGesture(event) {
-    if (grip?.pointer === event.pointerId) grip = null;
-  }
-  $('panel').addEventListener('pointercancel', cancelGesture);
-  $('panel').addEventListener('lostpointercapture', cancelGesture);
-  $('panel').addEventListener('click', (event) => {
-    const node = event.target.closest('[data-node]');
-    if (node && (event.detail === 0 || !node.dataset.handled)) editNode(Number(node.dataset.node));
-  });
-  // Internal jumps in a scene reader must not add joint history entries.
   if (parent !== window)
     document.addEventListener('click', (e) => {
       const a = e.target.closest('a[href^="#"]');
-      if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-      e.preventDefault();
-      document.querySelector(a.hash)?.scrollIntoView();
+      if (a && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        document.querySelector(a.hash)?.scrollIntoView();
+      }
     });
-  $('screen-gallery').innerHTML = screens
-    .map(([name, label], i) =>
-      btn(
-        '<img src="assets/boomind/screen-' +
-          name +
-          '.webp' +
-          (revision ? '?build=' + encodeURIComponent(revision) : '') +
-          '" loading="lazy" alt=""><span>' +
-          label +
-          ' ↗</span>',
-        'screen',
-        i,
-        'screen-card',
-      ),
-    )
-    .join('');
+  mobile.addEventListener('change', () => {
+    zoomed = false;
+    render();
+  });
   render();
-  // Bind the exhibit's return link as soon as the controls are interactive.
   try {
     window.frameElement?.dispatchEvent(new Event('cecilia-project-ready'));
-  } catch {
-    // A cross-origin embed can still use the standalone navigation.
-  }
+  } catch {}
 })();
