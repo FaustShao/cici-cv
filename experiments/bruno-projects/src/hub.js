@@ -888,13 +888,16 @@ try {
   const clock = new T.Timer();
   function updateEffects(dt, timeMs = performance.now()) {
     effectTime+=dt;
-    const wave = Math.cos(2 * Math.PI * timeMs / 3000);
-    handPulse.value = reduced ? 1 + .12 * wave : 1.15 + .65 * wave;
     devices.update(effectTime,reduced);
     social.animateCue(effectTime,reduced);
     const age=effectTime-mapFlashAt;
-    mapBrightness.value=age>=0&&age<.7 ? 1+2*Math.sin(Math.PI*age/.7) : 1;
     kioskRoot.userData.flashActive=age>=0&&age<.7;
+    const cycle = .5 + .5 * Math.cos(2 * Math.PI * timeMs / 2400);
+    const flash = kioskRoot.userData.flashActive ? Math.sin(Math.PI * age / .7) : 0;
+    const level = Math.max(cycle, flash);
+    mapBrightness.value = reduced ? .98 + .14 * level : .94 + .60 * level;
+    // The hand already shares the map light; give its cream face a stronger highlight.
+    handPulse.value = reduced ? .94 + .28 * level : .62 + 1.12 * level;
   }
   let lastFrame = 0;
   renderer.setAnimationLoop((time) => {
