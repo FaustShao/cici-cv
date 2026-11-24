@@ -9,6 +9,8 @@ const root = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8770/cici-cv/';
     const page = await browser.newPage({viewport: {width: 390, height: 752}, deviceScaleFactor: 3,
       hasTouch: true, isMobile: true, reducedMotion: 'reduce'});
     page.setDefaultTimeout(60000);
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
     await page.goto(new URL('portfolio.html', root).href, {waitUntil: 'domcontentloaded'});
     await page.waitForFunction(() => window.designWorld && document.body.dataset.ready, null, {timeout: 150000});
     assert.ok(await page.evaluate(() => designWorld.world.renderer.backend.isWebGLBackend));
@@ -32,6 +34,20 @@ const root = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8770/cici-cv/';
     await page.waitForFunction(() => !document.querySelector('#reader').open && !history.state?.overlay);
     await page.unroute('**/assets/project-mobile/**');
     await Promise.all(images.map(r => r.abort().catch(() => {})));
+
+    // Repeatedly enter books with their own GPU contexts and resume the island.
+    await page.evaluate(() => designWorld.go('other'));
+    for (const index of [2, 3, 2, 3]) {
+      await page.evaluate(index => designWorld.selectOther(index), index);
+      await page.locator('#open-work').tap();
+      await frame.locator('body[data-ready="true"]').waitFor();
+      await page.locator('#close-reader').tap();
+      await page.waitForFunction(() => !history.state?.overlay && !document.querySelector('#frames iframe'));
+      const count = await page.evaluate(() => designWorld.world.renderCount);
+      await page.waitForFunction(previous => designWorld.world.renderCount > previous, count);
+    }
+    assert.deepEqual(errors, []);
+    await page.evaluate(() => {designWorld.go('portfolio'); preview.select(2);});
 
     // Complete another visit, upgrade the visible art, and lose the background
     // context while reading. The open document and its return control stay usable.

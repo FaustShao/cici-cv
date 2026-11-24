@@ -7,6 +7,7 @@ import { createPageTurnSound } from './haha-page-sound.js';
 import './haha-world.css';
 
 const $ = id => document.getElementById(id);
+const touch = matchMedia('(pointer: coarse)').matches;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const assetRoot = new URL('../assets/haha-world/', location.href);
 const manifest = await (await fetch(versionedURL('manifest.json', assetRoot))).json();
@@ -220,7 +221,6 @@ function getPagePoint(x, y) {
 let pageBlocks = [], spine, gutter, thickness = .052, readCount = 0;
 const bindingOpen = { value: 0 };
 function setupBook() {
-  const touch = matchMedia('(pointer: coarse)').matches;
   renderer = new THREE.WebGLRenderer({ canvas: $('magazine-canvas'), alpha: true, antialias: !touch });
   renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.setPixelRatio(Math.min(devicePixelRatio, touch ? 1.5 : 2));
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.shadowMap.autoUpdate = false;
