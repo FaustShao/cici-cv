@@ -65,7 +65,7 @@ function buildCards() {
 }
 function updateCards(dragOffset = 0) {
   const stage = $('stage'), width = stage.clientWidth;
-  const cardWidth = Math.min(width * (width <= 600 ? .9 : width <= 900 ? .84 : .72), Math.max(1,stage.clientHeight-24)*16/9, 1240);
+  const cardWidth = Math.min(width * (width <= 600 ? .9 : width <= 900 ? .84 : .72), Math.max(1,stage.clientHeight-24)*16/9, 1920);
   stage.style.setProperty('--card-w',cardWidth+'px');
   $('space-view').style.setProperty('--caption-width',cardWidth+'px');
   const distance = cardWidth * .88;

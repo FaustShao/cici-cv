@@ -91,3 +91,14 @@
   .map-caption > span { display:none; }
   .map-you { font-size:12px; }
 }
+
+@media (min-width: 701px) {
+  #map-trigger { width: clamp(145px, min(12vw, 22dvh), 244px); }
+  #map-trigger img { height: auto; aspect-ratio: 1.95; }
+  #map-trigger > span { font-size: clamp(15px, 1.2vw, 22px); }
+  #world-map { width: min(84vw, calc((100dvh - 150px) * 1.54), 1440px); }
+  .map-sheet { container-type: inline-size; }
+  .map-location svg { width: clamp(40px, 8cqw, 100px); height: auto; aspect-ratio: 70/72; }
+  .map-location span { font-size: clamp(14px, 2.35cqw, 27px); }
+  .map-bar { position: sticky; top: 0; z-index: 1; background: #f5e9c8; }
+}

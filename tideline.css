@@ -66,3 +66,8 @@
 @media(hover:hover) and (pointer:fine){.tea-card:hover .tea-back{opacity:1}}
 @media(max-width:640px){.teas-shell{height:auto!important}.teas-canvas{position:relative;width:100%;height:auto!important;transform:none!important}.teas-canvas .navigator{display:none}.tea-grid{position:relative;left:auto;top:auto;width:auto;margin:20px;grid-template-columns:minmax(0,1fr);gap:20px}.tea-grid>img,.tea-card{width:100%;height:auto;aspect-ratio:382/539}}
 @media(prefers-reduced-motion:reduce){.tea-card img{transition:none}}
+
+@media (min-width: 641px) {
+  .portfolio-bar { font-size: clamp(14px, min(1.12vw, 2dvh), 22px); }
+  .portfolio-bar span { font-size: .85em; }
+}

@@ -336,3 +336,27 @@ dialog::backdrop {
 #frames iframe[hidden]{display:none!important}
 
 body:not([data-ready="true"]):not([data-failed="true"]) #world{visibility:hidden}
+
+@media (min-width: 701px) {
+  :root {
+    --world-control-font: clamp(14px, min(1.12vw, 2dvh), 22px);
+    --reader-bar-height: clamp(50px, min(4vw, 6.6dvh), 76px);
+  }
+  header button, header > a, .reader-bar button, .reader-bar a {
+    font-size: var(--world-control-font);
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .reader-bar { height: var(--reader-bar-height); padding-inline: clamp(20px, 1.65vw, 44px); }
+  .reader-bar h2, #project-name { font-size: clamp(22px, min(1.75vw, 3.2dvh), 34px); }
+  #frames { height: calc(100% - var(--reader-bar-height)); }
+  #controls { gap: clamp(18px, 1.7vw, 38px); }
+  #controls button {
+    width: clamp(44px, min(3.6vw, 6dvh), 70px);
+    height: auto;
+    aspect-ratio: 1;
+    font-size: clamp(24px, 1.8vw, 32px);
+  }
+  #controls strong, #controls small, footer { font-size: var(--world-control-font); }
+}

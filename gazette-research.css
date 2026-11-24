@@ -131,3 +131,23 @@
 }
 
 .gazette-page .project-info-dialog{font-family:Huiwen,serif}
+
+@media (min-width: 761px) {
+  .reader-toolbar, .research-tab { font-size: clamp(14px, min(1.15vw, 2.2dvh), 21px); }
+  .research-badge { width: clamp(68px, min(7.8vw, 13dvh), 148px); height: auto; aspect-ratio: 1; }
+  .desk-sticky {
+    width: clamp(108px, min(10vw, 18dvh), 200px);
+    height: auto;
+    min-height: 4em;
+    padding: .8em;
+    font-size: clamp(16px, min(1.35vw, 2.6dvh), 26px);
+  }
+  .desk-sticky span { font-size: .76em; margin-top: .4em; }
+}
+@media (min-width: 761px) {
+  .research-preview { width: clamp(270px, min(22vw, 43dvh), 440px); max-height: min(68dvh, calc(100% - 24px)); }
+  .research-paper { width: min(100%, clamp(900px, 76vw, 1570px)); }
+  .preview-caption, .research-detail-toolbar, .research-detail-controls button {
+    font-size: clamp(14px, min(1.1vw, 2dvh), 20px);
+  }
+}

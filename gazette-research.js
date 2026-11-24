@@ -49,13 +49,18 @@
     tabs.forEach((tab,i)=>tab.setAttribute('aria-expanded',String(i===index)));
     previews.forEach((preview,i)=>{preview.hidden=i!==side;});
     const preview=previews[side];preview.replaceChildren();
-    const r=tabs[index].getBoundingClientRect(),w=workspace.getBoundingClientRect();
-    const width=Math.min(285,w.width-32);
-    preview.style.setProperty('--preview-x',Math.max(12,Math.min(w.width-width-12,side===0?r.right-w.left+8:r.left-w.left-width-8))+'px');
-    preview.style.setProperty('--preview-y',Math.max(12,Math.min(w.height-440,r.top-w.top-65))+'px');
     const open=el('button','research-open');open.type='button';open.setAttribute('aria-label','详细查看'+labels[index]);
     open.append(artwork(data.cards[index]),el('span','preview-caption','查看完整研究 ↗'));open.addEventListener('click',()=>openDetail(index,open));
     preview.append(open);
+    positionPreview();
+  }
+  function positionPreview(){
+    if(active===null)return;
+    const left=active<3, preview=previews[left?0:1];
+    const tab=tabs[active].getBoundingClientRect(), desk=workspace.getBoundingClientRect();
+    const x=left?tab.right-desk.left+8:tab.left-desk.left-preview.offsetWidth-8;
+    preview.style.setProperty('--preview-x',Math.max(12,Math.min(x,desk.width-preview.offsetWidth-12))+'px');
+    preview.style.setProperty('--preview-y',Math.max(12,Math.min(tab.top-desk.top-65,desk.height-preview.offsetHeight-12))+'px');
   }
   function hidePreview(){clearTimeout(timer);active=null;pinned=false;delete workspace.dataset.side;tabs.forEach(t=>t.setAttribute('aria-expanded','false'));previews.forEach(p=>p.hidden=true);}
   rails.forEach((rail,side)=>{
@@ -75,6 +80,8 @@
     rail.addEventListener('pointerleave',()=>{if(!pinned&&!mobile.matches)timer=setTimeout(hidePreview,350);});
     rail.addEventListener('focusout',()=>{if(!pinned)timer=setTimeout(()=>{if(!rail.contains(document.activeElement)&&!previews.some(p=>p.contains(document.activeElement)))hidePreview();},280);});
   });
+
+  new ResizeObserver(positionPreview).observe(workspace);
 
   function syncZoom(){
     content.style.setProperty('--research-zoom',zoom);scroller.classList.toggle('is-zoomed',zoom>1);

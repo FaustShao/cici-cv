@@ -1,10 +1,55 @@
-.project-info-dialog{position:fixed;inset:0;margin:auto;width:min(720px,92vw);max-width:92vw;max-height:86dvh;overflow:auto;padding:clamp(25px,5vw,52px);border:1px solid #c4bbae;background:#f9f7f1;color:#292c2a;font:16px/1.85 Arial,"Huiwen",sans-serif;box-shadow:0 15px 55px #0004}
-.project-info-dialog::backdrop{background:#15241eb8;backdrop-filter:blur(3px)}
-.project-info-dialog h2{font-size:clamp(22px,3vw,32px);margin:0 4em 1em 0;line-height:1.3}
-.project-info-dialog h3{font-size:17px;margin:1.8em 0 .5em}
-.project-info-dialog p{margin:0 0 1em}
-.project-info-dialog .project-info-close{float:right;border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:4px}
-.project-info-dialog .project-info-close:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.project-info-dialog {
+  --info-gutter: clamp(20px, min(3.5vw, 5dvh), 62px);
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: clamp(720px, min(56vw, 100dvh), 1080px);
+  max-width: calc(100% - 28px);
+  height: fit-content;
+  max-height: min(90dvh, calc(100% - 24px));
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #c4bbae;
+  background: #f9f7f1;
+  color: #292c2a;
+  font: clamp(1rem, min(1.24vw, 2.25dvh), 1.375rem)/1.85 Arial, "Huiwen", sans-serif;
+  box-shadow: 0 15px 55px #0004;
+}
+.project-info-dialog[open] { display: flex; flex-direction: column; }
+.project-info-dialog::backdrop { background: #15241eb8; backdrop-filter: blur(3px); }
+.project-info-dialog .project-info-heading {
+  height: auto;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  padding: calc(var(--info-gutter) * .66) var(--info-gutter) .65em;
+  overflow: visible;
+}
+.project-info-dialog h2 { margin: 0; font-size: 1.65em; line-height: 1.3; }
+.project-info-dialog .project-info-body {
+  height: auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--info-gutter) var(--info-gutter);
+}
+.project-info-dialog h3 { font-size: 1.08em; margin: 1.5em 0 .5em; }
+.project-info-dialog p { margin: 0 0 1em; }
+.project-info-body > :last-child { margin-bottom: 0; }
+.project-info-dialog .project-info-close {
+  flex: none;
+  min-height: 44px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0 .25em;
+}
+.project-info-dialog .project-info-close:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 [data-open-info]{cursor:pointer}
 .mobile-info{display:none}
 .gazette-page .desk-sticky{z-index:5;border:0;text-align:left;cursor:pointer}

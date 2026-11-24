@@ -22,3 +22,8 @@
 @media(prefers-reduced-motion:reduce){.gazette-contents,.contents-panel{transition:none!important}}
 
 .gazette-contents:not(.is-open){clip-path:inset(-15px -5px calc(100% - 28px) -5px)}
+
+@media (min-width: 761px) {
+  .gazette-contents { width: min(86vw, 1360px); }
+  .chapter-en, .chapter-zh { font-size: clamp(13px, 1.02vw, 17px); }
+}

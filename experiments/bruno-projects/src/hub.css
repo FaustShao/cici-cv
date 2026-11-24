@@ -236,3 +236,18 @@ body:has(#reader[open]) #lab-navigation{visibility:hidden}
 #controls[hidden] { display:none; }
 body[data-place="portfolio"] { font-family:Nunito,Xiaolai,"Preview Chinese",cursive; }
 body[data-place="portfolio"] footer > span:last-child { display:none; }
+
+@media (min-width: 701px) {
+  #place-actions button, #place-actions a, #reader[data-project="sonicsense"] #close-reader {
+    font-size: var(--world-control-font);
+  }
+  #reader[data-project="icod"] #reader-title,
+  #reader[data-project="haha-world"] #reader-title { font-size: clamp(16px, 1.3vw, 24px); }
+  .details-sheet article { max-width: clamp(800px, 60vw, 1120px); }
+  .details-sheet p, .details-sheet li { font-size: clamp(16px, 1.2vw, 21px); }
+  .details-sheet h3 { font-size: clamp(18px, 1.5vw, 26px); }
+}
+@media (min-width: 701px) {
+  body[data-place="contact"] #place-actions :is(a, button) { font-size: clamp(18px, min(1.5vw, 2.8dvh), 30px); }
+  body[data-place="contact"] #place-actions small { font-size: clamp(14px, min(1.12vw, 2.1dvh), 20px); }
+}

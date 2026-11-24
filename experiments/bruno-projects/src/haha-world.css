@@ -67,3 +67,10 @@ body{font-family:'Paper Mono','Magazine UI',monospace;background:#f7f7f5}
 /* Reveal the actual bound book only after its first correctly posed, textured frame. */
 body:not([data-ready="true"]) #magazine-canvas{visibility:hidden;pointer-events:none}
 .specimen>span{font-size:12px}
+
+@media (min-width: 761px) {
+  .mag-header > a, .header-tools button, #chapter-links button,
+  .contents-heading button, #reading-hint { font-size: clamp(14px, min(1.1vw, 2dvh), 21px); }
+  #contents { width: clamp(570px, 48vw, 1040px); max-height: 72dvh; }
+  .contents-heading { position: sticky; top: -1px; z-index: 1; background: #f8f9f4; }
+}

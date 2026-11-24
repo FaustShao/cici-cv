@@ -19,3 +19,12 @@ body.ui-zoom-open{overflow:hidden}
 
 .project-ui-lightbox[data-project="safepaw"] img{height:calc(100dvh - 110px);width:auto}
 @media(max-width:600px){.project-ui-lightbox[data-project="safepaw"] img{height:calc(100dvh - 120px)}}
+
+@media (min-width: 701px) {
+  .project-ui-lightbox figcaption { font-size: clamp(14px, 1.12vw, 20px); }
+  .project-ui-lightbox .ui-zoom-close { width: clamp(44px, 3vw, 60px); height: auto; aspect-ratio: 1; }
+  .project-ui-lightbox .ui-zoom-previous, .project-ui-lightbox .ui-zoom-next {
+    width: clamp(44px, 3.4vw, 68px);
+    height: clamp(52px, 4.2vw, 82px);
+  }
+}

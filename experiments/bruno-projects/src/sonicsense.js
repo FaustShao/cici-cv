@@ -1,4 +1,5 @@
 import { versionedURL } from './world-base.js';
+import '../../../project-info.css';
 import './sonicsense.css';
 import { SpatialFilm } from './sonicsense-ribbon.js';
 const $=id=>document.getElementById(id);

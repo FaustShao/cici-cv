@@ -18,3 +18,11 @@
     .board:focus-within .piece{animation:none}
   }
 }
+
+@media (min-width: 741px) {
+  body { font-size: clamp(16px, min(1.23vw, 2.25dvh), 22px); }
+  .board { height: clamp(285px, min(36vw, 64dvh), 760px); }
+  .piece { width: clamp(75px, min(17%, 29dvh), 330px); }
+  .piece:last-child { width: clamp(61px, min(11%, 20dvh), 220px); }
+  .under img { width: clamp(55px, 7vw, 150px); }
+}
