@@ -529,14 +529,14 @@ try {
   fixtures.levelKiosk(kioskRoot,kioskRoot.getObjectByName("physicalFixed009"),kioskFace);
   fixtures.parcel(kioskRoot,42.89033170249464,33.57996186497684,2.022352518678825*.85,{plaza:true,radius:0,precise:true,supportName:"physicalFixed009",ignoreReservations:["benchPhysicalDynamic001"]});
   const welcome = fixtures.welcomeSign();
-  const pixelHand=fixtures.pixelPointer(mapBrightness);
+  const handPulse = uniform(1);
+  const pixelHand=fixtures.pixelPointer(mapBrightness.mul(handPulse));
   const mapHint=document.createElement("div");
   mapHint.id="map-hover-hint";mapHint.setAttribute("aria-hidden","true");
   mapHint.innerHTML='<span>MAP</span><i><b>↵</b></i>';
   document.body.append(mapHint);
-  let mapHovered=false;
-  function showMapHint(value){mapHovered=value;mapHint.classList.toggle("visible",value&&place==="home"&&!navigationMap.dialog.open);}
-  $("world").addEventListener("pointerleave",()=>showMapHint(false));
+  const hintCenter = new T.Vector3(), hintLeft = new T.Vector3(), hintRight = new T.Vector3();
+  const projectedCenter = new T.Vector3(), projectedLeft = new T.Vector3(), projectedRight = new T.Vector3();
 
   if(kioskFace){
     const g=kioskFace.geometry,p=g.attributes.position;
@@ -545,8 +545,14 @@ try {
     const n=new T.Vector3().fromBufferAttribute(g.attributes.normal,0).normalize();
     pixelHand.position.copy(p1).addScaledVector(u,.98).addScaledVector(v,.78).addScaledVector(n,.08);
     pixelHand.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(u.clone().normalize(),v.clone().normalize().negate(),n));
+    pixelHand.rotateZ(T.MathUtils.degToRad(14));
     kioskFace.add(pixelHand);kioskFace.updateWorldMatrix(true,true);
     kioskRoot.getObjectByName("physicalFixed009").attach(pixelHand);
+    // Pin the badge to the lower middle of the sign, including during camera drags.
+    hintLeft.copy(p1).addScaledVector(v, .86);
+    hintRight.copy(hintLeft).add(u);
+    hintCenter.copy(hintLeft).lerp(hintRight, .5);
+    for (const point of [hintCenter, hintLeft, hintRight]) kioskFace.localToWorld(point);
   }
   devices = fixtures.gameDevices(original, kind => {
     if(kind === "gamepad") identity.toggleLight();
@@ -736,6 +742,7 @@ try {
     hits.sort((a, b) => a.distance - b.distance);
     return hits[0]?.key;
   }
+  let mapTapPending = false;
   let start,
     last,
     pressed,
@@ -745,7 +752,7 @@ try {
   $("world").addEventListener("pointerdown", (e) => {
     if (e.button !== 0 && (e.button !== 1 || place === "portfolio")) return;
     e.preventDefault();
-    showMapHint(false);
+    mapTapPending = false;
     mouseButton=e.button;
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     e.target.setPointerCapture(e.pointerId);
@@ -792,7 +799,6 @@ try {
       const hit=pick(e.clientX,e.clientY);
       if(place === "portfolio")portfolio.hover(hit);
       $("world").dataset.hover=String(!!hit);
-      showMapHint(hit==="map");
     }
   });
   $("world").addEventListener("auxclick",e=>{if(e.button===1)e.preventDefault();});
@@ -806,7 +812,12 @@ try {
     if (!drag && !pinched && pressed) {
       clickSound.play();
       if(place === "portfolio"){pressed.onClick?.();portfolio.update();}
-      else if (pressed === "map") {showMapHint(false);navigationMap.open();}
+      else if (pressed === "map") {
+        // A tap also dispatches a click. Open after that click lands on the
+        // canvas so it cannot select a destination in the newly opened map.
+        if (e.pointerType === "touch") mapTapPending = true;
+        else navigationMap.open();
+      }
       else if(pressed === "contact-mail")location.href=social.userData.mailto;
       else if(pressed === "lab-previous")selectOther(otherIndex-1);
       else if(pressed === "lab-next")selectOther(otherIndex+1);
@@ -817,7 +828,13 @@ try {
     }
     start = last = pressed = null;
   });
+  $("world").addEventListener("click", () => {
+    if (!mapTapPending) return;
+    mapTapPending = false;
+    navigationMap.open();
+  });
   function cancelGesture() {
+    mapTapPending = false;
     pointers.clear();
     start = last = pressed = null;
   }
@@ -869,8 +886,10 @@ try {
   pitch = targetPitch;
   await renderer.compileAsync(scene, camera);
   const clock = new T.Timer();
-  function updateEffects(dt) {
+  function updateEffects(dt, timeMs = performance.now()) {
     effectTime+=dt;
+    const wave = Math.cos(2 * Math.PI * timeMs / 3000);
+    handPulse.value = reduced ? 1 + .12 * wave : 1.15 + .65 * wave;
     devices.update(effectTime,reduced);
     social.animateCue(effectTime,reduced);
     const age=effectTime-mapFlashAt;
@@ -888,7 +907,7 @@ try {
       game.ticker.delta = game.ticker.deltaScaled = reduced ? 0 : dt;
       game.ticker.elapsedScaled += game.ticker.deltaScaled;
       game.ticker.elapsedScaledUniform.value = game.ticker.elapsedScaled;
-      updateEffects(dt);
+      updateEffects(dt, time);
       currentLook.lerp(targetLook, blend);
       currentDistance = T.MathUtils.lerp(
         currentDistance,
@@ -907,11 +926,17 @@ try {
       camera.lookAt(currentLook);
       camera.updateMatrixWorld();
       updateLabControls();
-      if(mapHovered&&place==="home"){
-        const anchor=new T.Box3().setFromObject(kioskFace).getCenter(new T.Vector3()).project(camera);
-        mapHint.style.left=`${T.MathUtils.clamp((anchor.x+1)*innerWidth/2-35,90,innerWidth-100)}px`;
-        mapHint.style.top=`${T.MathUtils.clamp((1-anchor.y)*innerHeight/2+20,70,innerHeight-100)}px`;
-      }else mapHint.classList.remove("visible");
+      if (place === "home" && kioskFace) {
+        projectedCenter.copy(hintCenter).project(camera);
+        projectedLeft.copy(hintLeft).project(camera);
+        projectedRight.copy(hintRight).project(camera);
+        const width = Math.hypot((projectedRight.x - projectedLeft.x) * innerWidth / 2,
+          (projectedRight.y - projectedLeft.y) * innerHeight / 2);
+        mapHint.style.left = `${(projectedCenter.x + 1) * innerWidth / 2}px`;
+        mapHint.style.top = `${(1 - projectedCenter.y) * innerHeight / 2}px`;
+        mapHint.style.setProperty("--map-label-scale", T.MathUtils.clamp(width / 320, .38, 2));
+        mapHint.classList.toggle("visible", projectedCenter.z >= -1 && projectedCenter.z <= 1);
+      } else mapHint.classList.remove("visible");
       game.view.spherical.offset.copy(camera.position).sub(currentLook);
       game.view.spherical.radius.current = currentDistance;
       game.view.focusPoint.position.copy(currentLook);

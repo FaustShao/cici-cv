@@ -125,12 +125,11 @@ header > div {
   }
 }
 
-#map-hover-hint{position:fixed;z-index:12;display:flex;align-items:center;pointer-events:none;opacity:0;transform:translate(-50%,8px);transition:opacity .15s,transform .15s;color:#fff;filter:drop-shadow(0 4px 5px #26133155)}
-#map-hover-hint.visible{opacity:1;transform:translate(-50%,0)}
+#map-hover-hint{position:fixed;z-index:12;display:flex;align-items:center;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(var(--map-label-scale,1));color:#fff;filter:drop-shadow(0 4px 5px #26133155)}
+body[data-place="home"][data-ready="true"]:not([data-failed]):not(:has(dialog[open])) #map-hover-hint.visible{opacity:1}
 #map-hover-hint>span{background:#37223d;padding:0 25px 0 13px;font:700 38px/1.35 "Amatic SC",sans-serif;letter-spacing:1px}
 #map-hover-hint>i{width:48px;height:48px;margin-left:-10px;display:grid;place-items:center;background:#37223d;border:5px solid #fff;transform:rotate(45deg);font-style:normal;box-shadow:0 0 0 6px #37223d}
 #map-hover-hint b{transform:rotate(-45deg);font:700 37px/1 sans-serif}
-@media(prefers-reduced-motion:reduce){#map-hover-hint{transition:none}}
 
 /* A single warm paper strip, with all three contact actions on the same note. */
 body[data-place="contact"] #place-actions {

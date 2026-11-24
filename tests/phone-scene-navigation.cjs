@@ -66,7 +66,17 @@ const root = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8770/cici-cv/';
     await page.locator('#world-map[open]').waitFor();
     await page.evaluate(() => history.back());
     await page.locator('#world-map').waitFor({state:'hidden'});
-    console.log('PASS kiosk and phone Back');
+    const hand = await page.evaluate(() => {
+      const w = designWorld;
+      const p = w.pixelHand.localToWorld(w.pixelHand.position.clone().set(0, 0, .06)).project(w.world.camera);
+      return {x:(p.x + 1) * innerWidth / 2, y:(1 - p.y) * innerHeight / 2};
+    });
+    await page.touchscreen.tap(hand.x, hand.y);
+    await page.locator('#world-map[open]').waitFor();
+    assert.equal(await page.locator('body').getAttribute('data-place'), 'home');
+    await page.locator('#close-map').tap();
+    await page.waitForFunction(() => !history.state?.overlay);
+    console.log('PASS kiosk, hand tap and phone Back');
     await visit('resume');
     await tapModel('actual-resume-first-page');
     await file('resume.html');
