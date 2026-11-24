@@ -161,6 +161,16 @@ window.RESUME = {
       "url": "cecilia-world/sonicsense.html",
       "cover": "assets/sonicsense/01-preview.webp",
       "coverCrop": [0.04, 0.08, 0.89, 0.84]
+    },
+    {
+      "name": "BOOMIND",
+      "boardTags": ["交互设计", "思维画布", "产品界面"],
+      "category": "数字产品 · 工作台设计",
+      "description": "面向团队头脑风暴的工作台，提供构思模板、可编辑的思维画布和项目管理界面。",
+      "details": ["选择模板建立构思任务，在画布中整理观点和关联。", "通过文件库、设备列表和日程查看项目资料与协作进度。"],
+      "tags": ["交互设计", "产品 UI", "思维画布"],
+      "url": "boomind.html",
+      "cover": "assets/boomind/cover.webp"
     }
   ],
   "skills": [

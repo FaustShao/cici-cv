@@ -11,7 +11,7 @@ SITE_BASE_PATH=os.environ.get('SITE_BASE_PATH','/cici-cv/')
 if not re.fullmatch(r'/(?:[a-zA-Z0-9_-]+/)*',SITE_BASE_PATH):raise SystemExit('SITE_BASE_PATH must be / or a slash-delimited deployment prefix.')
 if OUT.exists():shutil.rmtree(OUT)
 OUT.mkdir()
-entries=['resume.html','tideline.html','safepaw.html','dream-sentinel.html','gazette.html','cardinal.html']
+entries=['resume.html','tideline.html','safepaw.html','dream-sentinel.html','gazette.html','cardinal.html','boomind.html']
 class Links(HTMLParser):
  def __init__(self):super().__init__();self.urls=[]
  def handle_starttag(self,tag,attrs):
@@ -28,7 +28,7 @@ for name in entries:
    assert (ROOT/path).is_file(),f'Missing runtime dependency: {path}'
    files.add(path)
 for name in sorted(files):shutil.copyfile(ROOT/name,OUT/name)
-asset_dirs=['cardinal','tideline','dream-sentinel','safepaw-family','gazette','gazette-research','gazette-desk','project-ui-details','haha-world','icod','resume','sonicsense','project-lossless','project-mobile']
+asset_dirs=['boomind','cardinal','tideline','dream-sentinel','safepaw-family','gazette','gazette-research','gazette-desk','project-ui-details','haha-world','icod','resume','sonicsense','project-lossless','project-mobile']
 for name in asset_dirs:shutil.copytree(ROOT/'assets'/name,OUT/'assets'/name)
 shutil.copytree(ROOT/'assets/vendor/page-flip',OUT/'assets/vendor/page-flip')
 for directory,patterns in [('portfolio-covers',['*-v3.webp']),('fonts',['huiwen*'])]:
