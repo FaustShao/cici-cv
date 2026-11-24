@@ -12,11 +12,11 @@
     const pending=[...section.querySelectorAll('image[data-src]')].map(image=>new Promise(resolve=>{
       image.addEventListener('load',()=>{image.dataset.ready='true';resolve(true);},{once:true});
       image.addEventListener('error',()=>{image.dataset.ready='error';resolve(false);},{once:true});
-      image.setAttribute('href',window.CeciliaAssetURL(image.dataset.src));delete image.dataset.src;
+      window.CeciliaSetArtwork(image,image.dataset.src);delete image.dataset.src;
     }));
     Promise.all(pending).then(results=>section.dataset.loaded=results.every(Boolean)?'true':'error');
   };
-  const observer='IntersectionObserver' in window?new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){loadBoard(entry.target);observer.unobserve(entry.target);}}),{rootMargin:'1000px 0px'}):null;
+  const observer='IntersectionObserver' in window?new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){loadBoard(entry.target);observer.unobserve(entry.target);}}),{rootMargin:matchMedia('(pointer: coarse)').matches?'100px 0px':'1000px 0px'}):null;
   let enlarged=false;
   const generic=/^(Group |Rectangle |Frame |Mask group|image |Ellipse |Arrow|Union|Vector|Guts\s*\/|Highlight|Misc_|Paper Tape|Underline|Polygon)/;
   const cardIds=new Set(['54:187','54:217','54:246','54:2512','54:957','54:1091','54:1241','54:1312','54:1468','54:1604','54:1717','54:1819','54:1935','54:2051','54:2137']);
@@ -79,7 +79,7 @@
     }
     document.body.classList.toggle('reading-mode',enlarged);readingButton.setAttribute('aria-pressed',String(enlarged));readingButton.textContent=enlarged?'适应宽度':'放大阅读';
   }
-  readingButton.addEventListener('click',()=>{enlarged=!enlarged;resize();});
+  readingButton.addEventListener('click',()=>{enlarged=!enlarged;resize();window.CeciliaZoomArtwork(enlarged);});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')resetCards();});
   new ResizeObserver(resize).observe(main);resize();
   window.SAFEPAW_READER={views,resize};

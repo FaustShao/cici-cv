@@ -35,6 +35,7 @@ const reader = $("reader"),
   pickables = [];
 let world,
   portfolio,
+  readerLoadTimer,
   readerPaused=false,
   place = "home",
   reading = false,
@@ -104,6 +105,7 @@ function closeReader() {
   returnFromOverlay("reader");
 }
 function clearReader() {
+  clearTimeout(readerLoadTimer);
   if (reader.open) reader.close();
   frames.forEach(f=>{
     try { f.contentDocument.querySelectorAll("video,audio").forEach(m=>m.pause());f.contentWindow.HAHA_READER?.dispose();f.contentWindow.SONIC_FILM?.dispose(); } catch {}
@@ -134,10 +136,30 @@ function openReader(title, file) {
       frame.title = title;
       frame.dataset.project = project;
       frame.allow = "fullscreen";
-      frame.addEventListener("load", () => {
+      let loadNotice, boundDocument;
+      if (phone.matches) {
+        readerLoadTimer = setTimeout(() => {
+          if (!frame.isConnected || frames.get(url) !== frame) return;
+          loadNotice = document.createElement("div");
+          loadNotice.className = "reader-load-notice";
+          loadNotice.setAttribute("role", "status");
+          loadNotice.append("项目加载较慢 ");
+          const retry = document.createElement("button");
+          retry.textContent = "重新加载";
+          retry.onclick = () => openReader(title, file);
+          loadNotice.append(retry);
+          $("frames").append(loadNotice);
+        }, 8000);
+      }
+      const bindReader = () => {
         try {
           if(!frame.isConnected||frames.get(url)!==frame)return;
           const doc = frame.contentDocument;
+          if (!doc?.head || doc === boundDocument || doc.URL === "about:blank") return;
+          if (document.querySelector('meta[name="cecilia-release"]') && !doc.querySelector('meta[name="cecilia-release"]')) return;
+          clearTimeout(readerLoadTimer);
+          loadNotice?.remove();
+          boundDocument = doc;
           clickSound.bind(doc);
           const style = doc.createElement("style");
           style.textContent =
@@ -179,7 +201,9 @@ function openReader(title, file) {
             }
           },true);
         } catch {}
-      });
+      };
+      frame.addEventListener("cecilia-project-ready", bindReader);
+      frame.addEventListener("load", bindReader);
       frames.set(url, frame);
       $("frames").append(frame);
     }
@@ -352,6 +376,11 @@ window.addEventListener("keydown", (e) => {
     selectOther(otherIndex + (e.key === "ArrowRight" ? 1 : -1));
   }
 });
+if (phone.matches) {
+  $("world").addEventListener("webglcontextlost", () => {
+    fail(new Error("手机已暂停 3D 渲染。你可以继续阅读作品，或重新加载场景。"));
+  }, {once: true});
+}
 try {
   await document.fonts.load(
     '900 24px "Scene Sans"',
@@ -362,7 +391,7 @@ try {
   await document.fonts.load('700 36px "Amatic SC"', "Welcome to Cecilia’s world.");
   world = await createWorld($("world"), (n, total) => {
     loadingScreen.setPercent(n / total * 90);
-  });
+  }, phone.matches);
   const {
     game,
     scene,
@@ -850,7 +879,7 @@ try {
   }
   let lastFrame = 0;
   renderer.setAnimationLoop((time) => {
-    if (reading || navigationMap.dialog.open || document.hidden || time - lastFrame < 33) return;
+    if (document.body.dataset.failed || reading || navigationMap.dialog.open || document.hidden || time - lastFrame < 33) return;
     try {
       lastFrame = time;
       clock.update();
@@ -957,9 +986,21 @@ try {
   fail(error);
 }
 function fail(error) {
+  if (document.body.dataset.failed) return;
   console.error(error);
+  world?.renderer.setAnimationLoop(null);
   loadingScreen.cancel();
   $("fallback").hidden = false;
   $("error-message").textContent = "场景暂时无法继续显示：" + error.message;
   document.body.dataset.failed = "true";
+  if (phone.matches) {
+    $("error-message").textContent = "你可以直接打开作品，或重新加载 3D 场景。";
+    const retry = document.createElement("button");
+    retry.textContent = "重新加载场景";
+    retry.onclick = () => {
+      if (portfolio) history.replaceState(stationEntry(), "");
+      location.reload();
+    };
+    $("fallback").append(retry);
+  }
 }

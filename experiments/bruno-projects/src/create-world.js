@@ -24,15 +24,16 @@ import { Flowers } from "./bruno/World/Flowers.js";
 import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 
 export { T };
-export async function createWorld(canvas, progress) {
+export async function createWorld(canvas, progress, phone = false) {
   const asset = (path) => versionedURL(path, worldBaseURL());
   const renderer = new T.WebGPURenderer({
     canvas,
-    antialias: true,
+    antialias: !phone,
     powerPreference: "high-performance",
-    forceWebGL: new URLSearchParams(location.search).has("webgl"),
+    forceWebGL: phone || new URLSearchParams(location.search).has("webgl"),
   });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  const pixelRatio = Math.min(devicePixelRatio, phone ? 1.25 : 1.5);
+  renderer.setPixelRatio(pixelRatio);
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
   await renderer.init();
@@ -270,6 +271,10 @@ export async function createWorld(canvas, progress) {
   game.wind.timeFrequency=.28;
   game.terrain = new Terrain();
   game.lighting = new Lighting();
+  if (phone) {
+    game.lighting.mapSize = 1024;
+    game.lighting.light.shadow.mapSize.set(1024, 1024);
+  }
   // Retain the warm daytime light; reduce ground fill so shaded forms keep depth.
   game.lighting.lightBounceMultiplier.value = 0.88;
   game.fog = new Fog();
@@ -450,7 +455,7 @@ export async function createWorld(canvas, progress) {
     pipeline = new T.RenderPipeline(renderer);
   pipeline.outputNode = dof.add(glow);
   function setQuality(low) {
-    renderer.setPixelRatio(low ? 1 : Math.min(devicePixelRatio, 1.5));
+    renderer.setPixelRatio(low ? 1 : pixelRatio);
     game.lighting.light.shadow.mapSize.set(low ? 512 : 2048, low ? 512 : 2048);
     pipeline.outputNode = low ? renderColor.add(glow) : dof.add(glow);
     pipeline.needsUpdate = true;

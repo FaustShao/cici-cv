@@ -20,7 +20,7 @@
   });
   const image = (folder, file, alt) => {
     const img = document.createElement('img');
-    img.src = window.CeciliaAssetURL(`assets/tideline/${folder}/${encodeURIComponent(file)}.png`);
+    window.CeciliaSetArtwork(img, `assets/tideline/${folder}/${encodeURIComponent(file)}.png`);
     img.alt = alt;
     img.decoding = 'async';
     return img;
@@ -176,7 +176,7 @@
           hint.append(name,action);
         }else hint.textContent='访问官网 / Visit website ↗';
         node.append(img,hint);
-      } else if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
+      } else if(zoom){node.type='button';node.className='image-button';node.setAttribute('aria-label',`Enlarge: ${alt}`);node.append(img);node.addEventListener('click',()=>{viewer.querySelector('img').src=img.dataset.fullSrc||img.src;viewer.querySelector('img').alt=alt;viewer.showModal();});}
       node.classList.add('layer');Object.assign(node.style,{left:`${x}px`,top:`${y}px`,width:`${w}px`,height:`${h}px`});canvas.append(node);return node;
     }
     const folder=current==='research'?'RESEARCH':current==='material'?'Material':current==='packaging'?'Packaging':current==='merch'?'Merch':current==='diary'?'Diary':current==='service'?'Service':'HOME';

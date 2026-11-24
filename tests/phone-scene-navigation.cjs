@@ -13,10 +13,15 @@ const root = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8770/cici-cv/';
     });
     page.setDefaultTimeout(30000);
     page.setDefaultNavigationTimeout(60000);
+    // A mobile browser can expose WebGPU and still fail when submitting a frame.
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'gpu', {value: {requestAdapter() { window.attemptedWebGPU = true; return Promise.resolve(null); }}});
+    });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto(new URL('index.html?webgl=1', root).href, { waitUntil: 'domcontentloaded' });
+    await page.goto(new URL('index.html', root).href, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => window.designWorld && document.body.dataset.ready, null, {timeout: 150000});
+    assert.ok(await page.evaluate(() => designWorld.world.renderer.backend.isWebGLBackend && !window.attemptedWebGPU));
     const canvas = page.locator('#world');
     const map = page.locator('#map-trigger');
     const reader = page.locator('#reader');

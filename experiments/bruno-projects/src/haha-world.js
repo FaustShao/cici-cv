@@ -132,7 +132,7 @@ let bgW = 0, bgH = 0, backgroundFrame = 0, dragCard = null;
 function resizeGrid() {
   if (innerWidth === bgW && innerHeight === bgH) return;
   bgW = innerWidth; bgH = innerHeight;
-  const dpr = Math.min(devicePixelRatio, 2);
+  const dpr = Math.min(devicePixelRatio, touch ? 1.5 : 2);
   background.width = Math.round(bgW * dpr); background.height = Math.round(bgH * dpr);
   bg.setTransform(dpr, 0, 0, dpr, 0, 0);
   grid.columns = Math.ceil((bgW - grid.margin * 2) / grid.width);
@@ -220,13 +220,14 @@ function getPagePoint(x, y) {
 let pageBlocks = [], spine, gutter, thickness = .052, readCount = 0;
 const bindingOpen = { value: 0 };
 function setupBook() {
-  renderer = new THREE.WebGLRenderer({ canvas: $('magazine-canvas'), alpha: true, antialias: true });
-  renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const touch = matchMedia('(pointer: coarse)').matches;
+  renderer = new THREE.WebGLRenderer({ canvas: $('magazine-canvas'), alpha: true, antialias: !touch });
+  renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.setPixelRatio(Math.min(devicePixelRatio, touch ? 1.5 : 2));
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.shadowMap.autoUpdate = false;
   scene = new THREE.Scene(); camera = new THREE.OrthographicCamera(-1, 1, 1, -1, .5, 12); camera.position.set(0, 0, 4); camera.lookAt(0, 0, 0);
   scene.add(new THREE.HemisphereLight('#ffffff', '#ffffff', 1.65));
   const sun = new THREE.DirectionalLight('#ffffff', 2); sun.position.set(-3.5, 1.3, 4.1); sun.castShadow = true;
-  const shadowSize = innerWidth >= 1200 ? 4096 : 2048; sun.shadow.mapSize.set(shadowSize, shadowSize); Object.assign(sun.shadow.camera, { left: -1.5, right: 1.5, top: 1, bottom: -1, near: .5, far: 10 }); sun.shadow.camera.updateProjectionMatrix(); sun.shadow.bias = -.001; sun.shadow.normalBias = .002;
+  const shadowSize = touch ? 1024 : innerWidth >= 1200 ? 4096 : 2048; sun.shadow.mapSize.set(shadowSize, shadowSize); Object.assign(sun.shadow.camera, { left: -1.5, right: 1.5, top: 1, bottom: -1, near: .5, far: 10 }); sun.shadow.camera.updateProjectionMatrix(); sun.shadow.bias = -.001; sun.shadow.normalBias = .002;
   scene.add(sun, sun.target); scene.add(bookGroup);
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), new THREE.ShadowMaterial({ opacity: .13 }));
   floor.name = 'bound-book-contact-shadow'; floor.position.z = -.008; floor.receiveShadow = true;
@@ -410,6 +411,6 @@ window.HAHA_READER = {
   manifest, sources, state, loaded, get magazine() { return magazine; }, get renderer() { return renderer; }, get scene() { return scene; }, get camera() { return camera; }, bookGroup,
   goTo, turn, openZoom, closeZoom, returnToCover, get backgroundFrame() { return backgroundFrame; },
   pause() { paused = true; }, resume() { paused = false; },
-  dispose() { paused = true; cancelAnimationFrame(frameID);pageSound.dispose();paperBump?.dispose(); magazine?.dispose(); renderer?.dispose(); },
+  dispose() { paused = true; cancelAnimationFrame(frameID);pageSound.dispose();paperBump?.dispose(); magazine?.dispose(); renderer?.dispose(); renderer?.forceContextLoss(); },
   snapshot() { return { ...state, originalPages: manifest.pages.length, ratio: 1 / aspect, bindingOpen: bindingOpen.value, bookFrames, gridCells: grid.activeCells, sheetGap: thickness / 16, backgroundFrame, loaded: [...loaded] }; }
 };

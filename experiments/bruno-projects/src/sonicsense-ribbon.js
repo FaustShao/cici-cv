@@ -12,8 +12,9 @@ export function filmPoint(u,y,progress,time,motion=0){
 export class SpatialFilm {
   constructor(stage,pages,images){
     this.stage=stage;this.pages=pages;this.images=images;this.progress=0;this.time=0;this.motion=0;this.pointer={x:0,y:0};this.loaded=new Map();
-    this.renderer=new T.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));this.renderer.setClearColor(0xe5effb,0);this.renderer.outputColorSpace=T.SRGBColorSpace;
+    const touch = matchMedia('(pointer: coarse)').matches;
+    this.renderer=new T.WebGLRenderer({alpha:true,antialias:!touch,powerPreference:'high-performance'});
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio,touch?1.5:2));this.renderer.setClearColor(0xe5effb,0);this.renderer.outputColorSpace=T.SRGBColorSpace;
     this.canvas=this.renderer.domElement;this.canvas.id='spatial-film';this.canvas.setAttribute('aria-hidden','true');stage.prepend(this.canvas);
     this.scene=new T.Scene();this.group=new T.Group();this.scene.add(this.group);
     this.camera=new T.PerspectiveCamera(38,1,.1,80);
@@ -86,5 +87,5 @@ export class SpatialFilm {
     const v=new T.Vector3(...p).applyMatrix4(this.group.matrixWorld).project(this.camera),r=this.canvas.getBoundingClientRect();
     return {x:r.left+(v.x+1)*r.width/2,y:r.top+(1-v.y)*r.height/2};
   }
-  dispose(){this.renderer.dispose();this.backing.geometry.dispose();this.backing.material.dispose();this.meshes.forEach(m=>{m.geometry.dispose();m.material.map.dispose();m.material.dispose()});this.canvas.remove()}
+  dispose(){this.renderer.dispose();this.renderer.forceContextLoss();this.backing.geometry.dispose();this.backing.material.dispose();this.meshes.forEach(m=>{m.geometry.dispose();m.material.map.dispose();m.material.dispose()});this.canvas.remove()}
 }

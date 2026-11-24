@@ -42,5 +42,12 @@ if image_manifest.exists():
    if actual!=expected:errors.append('Image checksum differs from verified conversion: '+record[key])
   if record['status']=='webp'and record['bytes']>=record['originalBytes']:
    errors.append('Image alternative is not smaller: '+record['target'])
+mobile_map=(root/'project-mobile-previews.js').read_text()
+for source,target in json.loads(mobile_map.split('Object.entries(',1)[1].split(').map',1)[0]).items():
+ path=root/target
+ if not (root/source).is_file() or not path.is_file():
+  errors.append('Missing mobile artwork or full image: '+target)
+ elif hashlib.sha256(path.read_bytes()).hexdigest()[:20]!=path.stem:
+  errors.append('Mobile artwork checksum mismatch: '+target)
 if errors:raise SystemExit('\n'.join(sorted(set(errors))))
 print(f'PASS production revision {revision}: current entry documents, versioned runtime references, no legacy UI, all static HTML/CSS dependencies present.')

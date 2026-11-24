@@ -9,8 +9,8 @@
     const wrapper=document.createElement('div');wrapper.className='design-layer';wrapper.dataset.node=layer.id;
     Object.assign(wrapper.style,{left:`${layer.x}px`,top:`${layer.y}px`,width:`${layer.w}px`,height:`${layer.h}px`});
     const img=document.createElement('img');
-    img.src=window.CeciliaAssetURL(`assets/dream-sentinel/3.4/${layer.file.split('/').map(encodeURIComponent).join('/')}`);
-    img.addEventListener('error',()=>{img.src=window.CeciliaAssetURL(`assets/dream-sentinel/3.4/${layer.sourceFile.split('/').map(encodeURIComponent).join('/')}`);},{once:true});
+    window.CeciliaSetArtwork(img, `assets/dream-sentinel/3.4/${layer.file.split('/').map(encodeURIComponent).join('/')}`, true);
+    img.addEventListener('error',()=>{window.CeciliaSetArtwork(img, `assets/dream-sentinel/3.4/${layer.sourceFile.split('/').map(encodeURIComponent).join('/')}`, true);},{once:true});
     img.alt=layer.alt;img.decoding='async';img.loading='lazy';img.draggable=false;wrapper.append(img);
     if(['34:758','34:759','34:760','34:761','34:768','34:769','34:774'].includes(layer.id))wrapper.classList.add('demo-layer');
     nodes.set(layer.id,wrapper);board.append(wrapper);
