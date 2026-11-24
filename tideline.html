@@ -10,11 +10,13 @@
   <link rel="stylesheet" href="tideline.css?v=navigation-2">
   <script src="project-image-formats.js" defer></script>
   <script src="tideline.js?v=navigation-2" defer></script>
+<link rel="stylesheet" href="project-info.css"><script defer src="project-info.js"></script>
 </head>
 <body>
-  <div class="portfolio-bar"><button id="project-back" type="button">← 返回上一页</button><span>TIDELINE SEAWEED TEA</span><a href="portfolio.html">返回作品集 ↗</a></div>
+  <div class="portfolio-bar"><button id="project-back" type="button">← 返回上一页</button><span>TIDELINE SEAWEED TEA</span><button type="button" data-open-info>项目说明</button><a href="portfolio.html">返回作品集 ↗</a></div>
   <main id="project" aria-label="Tideline project"></main>
   <button id="project-top" type="button" aria-label="回到顶部" title="回到顶部"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 10l6-6 6 6M12 4v16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   <dialog id="image-viewer" aria-label="Full size research image"><button type="button" autofocus>Close ×</button><div><img alt=""></div></dialog>
+<dialog class="project-info-dialog" id="project-info" aria-labelledby="project-info-title"><button class="project-info-close" type="button" data-close-info>关闭 ×</button><h2 id="project-info-title">Tideline Seaweed Tea</h2><p>Findhorn 海藻茶循环交互系统设计是格拉斯哥艺术学院与苏格兰 Findhorn 社区的合作项目。我作为团队负责人，围绕社区资源、生态保护与经济发展之间的关系，探索海藻在日常生活中的新用途。</p><h3>从社区调研到设计机会</h3><p>团队走访当地居民、餐饮经营者与厨师，结合桌面研究梳理海藻资源、消费习惯和社区需求，并以海藻茶为核心提出产品与服务概念。</p><h3>产品与循环服务</h3><p>方案串联产品认知、试饮购买、包装回收与资源再利用，结合服务流程、选址与空间动线，呈现一套线下体验。我们还进行了茶饮配方、海藻纸与可回收包装的实验，并据此调整设计。</p></dialog>
 </body>
 </html>

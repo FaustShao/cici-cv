@@ -129,7 +129,8 @@ function openOverview(){
   });overviewBuilt=true;}
   updateCaption();$('overview').showModal();
 }
-$('reel-overview').onclick=openOverview;$('close-overview').onclick=()=>$('overview').close();
+$('reel-end').onclick=()=>go(pages.length-1);
+$('open-overview').onclick=$('open-overview-inline').onclick=openOverview;$('close-overview').onclick=()=>$('overview').close();
 function setReaderOpen(open){
   try{if(parent!==window){const reader=parent.document.getElementById('reader');if(reader)reader.dataset.imageOpen=String(open)}}catch{}
 }

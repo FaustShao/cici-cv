@@ -1,5 +1,7 @@
 import { versionedURL } from "./world-base.js";
 import './icod.css';
+import '../../../project-info.css';
+import '../../../project-info.js';
 const $ = id => document.getElementById(id);
 const root = new URL('../assets/icod/', location.href);
 const manifest = await fetch(versionedURL('manifest.json', root)).then(response => {
@@ -15,7 +17,7 @@ const image = (src, label, lazy = false) => {
   const img = new Image(); img.src = asset(src); img.alt = label; img.draggable = false;
   img.decoding = 'async'; img.loading = lazy ? 'lazy' : 'eager'; return img;
 };
-let wheelDistance = 0, wheelTime = 0, lastWheel = 0, gesture = null, suppressedClick = false, gridBuilt = '', gridPage = 0;
+let wheelDistance = 0, wheelTime = 0, lastWheel = 0, gesture = null, suppressedClick = false;
 const indexes = new Map();
 for (const section of [...sections, { id: 'certificate', title: '参与证书', pages: [] }]) {
   const button = document.createElement('button'); button.type = 'button'; button.dataset.section = section.id;
@@ -29,23 +31,20 @@ function selectSection(id) {
   indexes.set(state.section, state.index); state.section = id; state.index = indexes.get(id) || 0;
   const certificate = id === 'certificate';
   $('space-view').hidden = certificate || state.view !== 'space';
-  $('grid-view').hidden = certificate || state.view !== 'grid';
   $('certificate-view').hidden = !certificate;
   $('section-description').textContent = current()?.subtitle || '参与记录 · TASA–ICoD 暑期国际设计教育工作坊';
   document.querySelectorAll('[data-section]').forEach(b => b.setAttribute('aria-current', String(b.dataset.section === id)));
-  document.querySelectorAll('[data-view]').forEach(b => b.disabled = certificate);
-  if (!certificate) { buildCards(); if (state.view === 'grid') { gridPage=Math.floor(state.index/gridSize());buildGrid(); } }
+
+  if (!certificate) buildCards();
   announce();
 }
-function selectView(view) {
-  if (state.section === 'certificate') return;
-  state.view = view; $('space-view').hidden = view !== 'space'; $('grid-view').hidden = view !== 'grid';
-  document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
-  if (view === 'grid') { gridPage=Math.floor(state.index/gridSize());buildGrid(); } else { updateCards(); $('timeline').querySelector('[aria-current=true]')?.scrollIntoView({block:'nearest',inline:'center'}); }
+function selectView() {
+  state.view = 'space';
+  $('space-view').hidden = state.section === 'certificate';
 }
 function selectIndex(index) {
   const next = Math.max(0, Math.min(pages().length - 1, index)); if (next === state.index) return;
-  state.index = next; indexes.set(state.section, next); updateCards(); if(state.view==='grid'){gridPage=Math.floor(state.index/gridSize());buildGrid();} announce();
+  state.index = next; indexes.set(state.section, next); updateCards(); announce();
   $('timeline').querySelector('[aria-current=true]')?.scrollIntoView({block:'nearest',inline:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
 }
 function buildCards() {
@@ -61,7 +60,7 @@ function buildCards() {
     const tick = document.createElement('button'); tick.type = 'button'; tick.textContent = String(page.number).padStart(2,'0'); tick.title = page.label;
     tick.setAttribute('aria-label', `${page.number} · ${page.label}`); tick.onclick = () => selectIndex(index); tick.dataset.index = index; $('timeline').append(tick);
   });
-  gridBuilt = ''; updateCards();
+  updateCards();
   requestAnimationFrame(() => requestAnimationFrame(() => $('stage').classList.remove('arranging')));
 }
 function updateCards(dragOffset = 0) {
@@ -85,34 +84,35 @@ function updateCards(dragOffset = 0) {
   $('previous').disabled = state.index === 0; $('next').disabled = state.index === pages().length-1;
   [...$('timeline').children].forEach((tick,index) => tick.setAttribute('aria-current',String(index === state.index)));
 }
-function gridShape(){
-  const width=$('grid-items').clientWidth;
-  const columns=width>=1050?3:width>=600?2:1;
-  const rows=$('grid-items').clientHeight>=420?2:1;
-  return {columns,rows};
+function buildOverview() {
+  const container = $('overview-pages');
+  if (container.children.length) return;
+  for (const section of sections) {
+    const heading = document.createElement('h3');
+    heading.textContent = section.title;
+    container.append(heading);
+    const grid = document.createElement('div');
+    grid.className = 'overview-grid';
+    section.pages.forEach((page, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.append(image(page.thumb || page.preview, page.label, true));
+      const caption = document.createElement('span');
+      caption.textContent = String(page.number).padStart(2, '0') + '  ' + page.label;
+      button.append(caption);
+      button.onclick = () => {
+        $('overview').close();
+        selectSection(section.id);
+        selectIndex(index);
+        openViewer();
+      };
+      grid.append(button);
+    });
+    container.append(grid);
+  }
 }
-function gridSize(){const {columns,rows}=gridShape();return columns*rows;}
-function buildGrid() {
-  if(state.section==='certificate'||state.view!=='grid')return;
-  const {columns,rows}=gridShape(),size=columns*rows,total=Math.ceil(pages().length/size);
-  gridPage=Math.max(0,Math.min(gridPage,total-1));
-  $('grid-items').style.setProperty('--grid-columns',columns);$('grid-items').style.setProperty('--grid-rows',rows);
-  const key=`${state.section}:${gridPage}:${size}`;if(gridBuilt===key)return;
-  $('grid-items').replaceChildren();
-  pages().slice(gridPage*size,(gridPage+1)*size).forEach((page,offset) => {
-    const index=gridPage*size+offset;
-    const card = document.createElement('button'); card.className = 'grid-card'; card.type = 'button';card.dataset.index=index;
-    card.append(image(page.preview, page.label));
-    const caption = document.createElement('span'), number = document.createElement('small'); number.textContent = String(page.number).padStart(2,'0');
-    caption.append(number,document.createTextNode(page.label)); card.append(caption);
-    card.onclick = () => { selectIndex(index); openViewer(); }; $('grid-items').append(card);
-  });
-  $('grid-position').textContent=`${gridPage+1} / ${total}`;
-  $('grid-previous').disabled=gridPage===0;$('grid-next').disabled=gridPage===total-1;
-  gridBuilt=key;
-}
-function turnGrid(step){gridPage+=step;buildGrid();}
-$('grid-previous').onclick=()=>turnGrid(-1);$('grid-next').onclick=()=>turnGrid(1);
+$('open-overview').onclick = () => { buildOverview(); $('overview').showModal(); };
+$('close-overview').onclick = () => $('overview').close();
 // Pointer capture starts only once a deliberate horizontal drag has crossed the tap threshold.
 $('stage').addEventListener('pointerdown',event => {
   if (event.button !== 0) return;
@@ -146,7 +146,7 @@ $('stage').addEventListener('wheel',event => {
   if (Math.abs(wheelDistance)>55 && time-wheelTime>480) { selectIndex(state.index+(wheelDistance>0?1:-1));wheelTime=time;wheelDistance=0; }
 },{passive:false});
 $('previous').onclick = () => selectIndex(state.index-1); $('next').onclick = () => selectIndex(state.index+1);
-document.querySelectorAll('[data-view]').forEach(button => button.onclick = () => selectView(button.dataset.view));
+
 function viewerSource() { return state.section === 'certificate' ? manifest.certificate : pages()[state.index]; }
 function updateViewer() {
   const page = viewerSource(); if (!page) return;
@@ -167,16 +167,16 @@ $('close-viewer').onclick = closeViewer; $('zoom-toggle').onclick = zoom; $('ful
 $('image-scroll').onclick = event => { if (event.target === $('image-scroll')) closeViewer(); };
 $('image-viewer').addEventListener('click', event => { if(event.target === $('image-viewer')) closeViewer(); });
 document.addEventListener('keydown',event => {
-  if (event.altKey || event.ctrlKey || event.metaKey || event.target.closest('input,textarea,select')) return;
+  if (event.altKey || event.ctrlKey || event.metaKey || event.target.closest('input,textarea,select') || $('overview').open || $('project-info').open) return;
   if (state.section === 'certificate') return;
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     event.preventDefault(); const step = event.key === 'ArrowRight' ? 1 : -1;
-    $('image-viewer').open ? turnViewer(step) : state.view==='grid' ? turnGrid(step) : selectIndex(state.index+step);
+    $('image-viewer').open ? turnViewer(step) : selectIndex(state.index+step);
   }
 });
-window.addEventListener('resize',() => { if(state.section!=='certificate') { if(state.view==='space')updateCards();else buildGrid(); } });
+window.addEventListener('resize',() => { if(state.section!=='certificate') updateCards(); });
 new ResizeObserver(()=>{if(state.section!=='certificate'&&state.view==='space')updateCards();}).observe($('stage'));
-new ResizeObserver(()=>{if(state.view==='grid'&&!$('grid-view').hidden)buildGrid();}).observe($('grid-items'));
+
 if (manifest.certificate) {
   $('archive-count').textContent='37 张 / 2 份档案 + 参与证书';
   const button = document.createElement('button'); button.type = 'button'; button.setAttribute('aria-label','放大参与证书');

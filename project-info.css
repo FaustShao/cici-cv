@@ -1,0 +1,15 @@
+.project-info-dialog{position:fixed;inset:0;margin:auto;width:min(720px,92vw);max-width:92vw;max-height:86dvh;overflow:auto;padding:clamp(25px,5vw,52px);border:1px solid #c4bbae;background:#f9f7f1;color:#292c2a;font:16px/1.85 Arial,"Huiwen",sans-serif;box-shadow:0 15px 55px #0004}
+.project-info-dialog::backdrop{background:#15241eb8;backdrop-filter:blur(3px)}
+.project-info-dialog h2{font-size:clamp(22px,3vw,32px);margin:0 4em 1em 0;line-height:1.3}
+.project-info-dialog h3{font-size:17px;margin:1.8em 0 .5em}
+.project-info-dialog p{margin:0 0 1em}
+.project-info-dialog .project-info-close{float:right;border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:4px}
+.project-info-dialog .project-info-close:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+[data-open-info]{cursor:pointer}
+.mobile-info{display:none}
+.gazette-page .desk-sticky{z-index:5;border:0;text-align:left;cursor:pointer}
+.gazette-page .desk-sticky:hover,.gazette-page .desk-sticky:focus-visible{filter:brightness(1.07);outline:2px solid #584d31;outline-offset:3px}
+@media(max-width:760px){.gazette-page .desk-sticky{display:none}.gazette-page .mobile-info{display:inline-block}}
+.portfolio-bar [data-open-info]{border:0;background:none;padding:0;color:inherit;font:inherit}
+.mast [data-open-info]{border:0;border-bottom:2px solid transparent;background:none;color:inherit;font:inherit;padding:.28em .1em}
+.mast [data-open-info]:hover{border-bottom-color:currentColor}

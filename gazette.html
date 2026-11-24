@@ -15,13 +15,14 @@
 <script src="gazette-research-layout.js?v=research-1" defer></script>
 <script src="gazette-research.js?v=cursor-scatter-8" defer></script>
 <script src="gazette-contents.js?v=cursor-scatter-8" defer></script>
+<link rel="stylesheet" href="project-info.css"><script defer src="project-info.js"></script>
 </head>
 <body class="portfolio-page gazette-page">
 <main id="gazette-reader">
-<header class="reader-toolbar"><a class="collection-return" href="portfolio.html">← 返回作品集</a><span>Future Gazette 2050</span><div><button id="fullscreen-book" type="button" aria-pressed="false">全屏阅读 ⛶</button></div></header>
+<header class="reader-toolbar"><a class="collection-return" href="portfolio.html">← 返回作品集</a><span>Future Gazette 2050</span><div><button class="mobile-info" type="button" data-open-info>项目说明</button><button id="fullscreen-book" type="button" aria-pressed="false">全屏阅读 ⛶</button></div></header>
 <div class="research-workspace" id="research-workspace">
-<div class="desk-props" aria-hidden="true"><div class="desk-folder"><span>FORRES / FIELD NOTES</span></div><div class="desk-sheet desk-sheet-back"></div><div class="desk-sheet desk-sheet-front"></div><i class="desk-binder"></i><i class="desk-paperclip"></i><i class="desk-tape"></i><div class="desk-sticky">地方的故事<br>藏在日常里。<span>Forres, Scotland</span></div><div class="desk-scraps"><img class="desk-scrap scrap-festival" src="assets/gazette-desk/forres-festival.webp" alt="" draggable="false"><img class="desk-scrap scrap-fieldwork" src="assets/gazette-desk/forres-fieldwork.webp" alt="" draggable="false"><img class="desk-scrap scrap-shops" src="assets/gazette-desk/forres-shops.webp" alt="" draggable="false"><img class="desk-scrap scrap-stamp" src="assets/gazette-research/b387e76dc8eb2061.webp" alt="" draggable="false"></div></div>
-<aside class="research-rail research-rail-left" aria-label="项目背景与调研" id="research-left"></aside>
+<div class="desk-props" aria-hidden="true"><div class="desk-folder"><span>FORRES / FIELD NOTES</span></div><div class="desk-sheet desk-sheet-back"></div><div class="desk-sheet desk-sheet-front"></div><i class="desk-binder"></i><i class="desk-paperclip"></i><i class="desk-tape"></i><div class="desk-scraps"><img class="desk-scrap scrap-festival" src="assets/gazette-desk/forres-festival.webp" alt="" draggable="false"><img class="desk-scrap scrap-fieldwork" src="assets/gazette-desk/forres-fieldwork.webp" alt="" draggable="false"><img class="desk-scrap scrap-shops" src="assets/gazette-desk/forres-shops.webp" alt="" draggable="false"><img class="desk-scrap scrap-stamp" src="assets/gazette-research/b387e76dc8eb2061.webp" alt="" draggable="false"></div></div>
+<button class="desk-sticky" type="button" data-open-info>项目说明<span>走进 Forres 的地方故事 ↗</span></button><aside class="research-rail research-rail-left" aria-label="项目背景与调研" id="research-left"></aside>
 <section id="reader" class="reader" aria-label="Future Gazette，点击左右书页、拖动书页或使用键盘方向键翻页" tabindex="0">
 <div class="book-pose"><div class="book-shell" data-cover="true"><div id="book" class="book"></div></div></div>
 </section>
@@ -36,5 +37,6 @@
 <p id="reader-message" class="sr-only" role="status" aria-live="polite"></p>
 <noscript><p>请启用 JavaScript 以阅读画册。</p></noscript>
 </main>
+<dialog class="project-info-dialog" id="project-info" aria-labelledby="project-info-title"><button class="project-info-close" type="button" data-close-info>关闭 ×</button><h2 id="project-info-title">Forres Future Gazette 2050</h2><p>Future Gazette 2050 是一项围绕苏格兰 Forres 小镇的地方文化与信息体验研究。项目与 Rural Lab 合作，关注初来者如何认识小镇，也思考地方记忆怎样被保存、阅读与持续补充。</p><h3>地方故事与信息来源</h3><p>我通过实地观察、社区访谈、地方档案和桌面调研收集材料，并比较通用 AI 与地方证据辅助 AI 对小镇的描述，观察信息遗漏、内容泛化与来源透明度。</p><h3>从研究到画册</h3><p>项目将建筑、景观、社区与日常经历组织成数字地方志和实体画册。活页与半透明纸让地图和故事叠合，也为未来增补内容留出空间；2050 年的使用情境进一步探索车站、校园和社区空间中的阅读与参与。</p></dialog>
 </body></html>
 

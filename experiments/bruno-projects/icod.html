@@ -11,9 +11,9 @@
     <div class="archive-context">
       <nav id="sections" aria-label="项目分区"></nav>
       <p id="section-description"></p>
-    <div class="layout-controls" role="group" aria-label="浏览方式">
+    <div class="layout-controls" role="group" aria-label="浏览方式"><button type="button" data-open-info>项目说明</button>
       <button type="button" data-view="space" aria-pressed="true">空间</button>
-      <button type="button" data-view="grid" aria-pressed="false">总览</button>
+      <button type="button" id="open-overview">总览</button>
     </div>
 
     </div>
@@ -26,10 +26,6 @@
         <button id="next" type="button" aria-label="下一张"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m13 8 8 8-8 8"/></svg></button>
       </div>
     </section>
-    <section id="grid-view" aria-label="图片总览" hidden>
-      <div id="grid-items"></div>
-      <nav class="grid-pagination" aria-label="总览分页"><button id="grid-previous" type="button">上一组</button><span id="grid-position" aria-live="polite"></span><button id="grid-next" type="button">下一组</button></nav>
-    </section>
     <section id="certificate-view" aria-labelledby="certificate-title" hidden>
       <div class="certificate-meta"><p>TASA–ICoD / 2024</p><h2 id="certificate-title">参与证书</h2><p>2024 TASA–ICoD 暑期国际设计教育工作坊</p><p>清华青岛艺术与科学创新研究院<br>国际设计联合会</p><p>2024.08.05 — 2024.09.06</p></div>
       <div id="certificate-art"></div>
@@ -37,11 +33,13 @@
   </main>
   <footer class="archive-footer"><span>王钰欣 / CECILIA</span><p>未来情境研究 · 概念设计 · 国际团队协作</p><span id="archive-count">37 张 / 2 份档案</span></footer>
   <div id="announcements" class="sr-only" role="status" aria-live="polite"></div>
+  <dialog id="overview" aria-labelledby="overview-title"><header><h2 id="overview-title">全部幻灯片</h2><button id="close-overview" type="button">关闭 ×</button></header><div id="overview-pages"></div></dialog>
   <dialog id="image-viewer" aria-label="原稿大图阅读">
     <header class="viewer-header"><div><span id="viewer-section"></span><span id="viewer-label"></span></div><div><button id="zoom-toggle" type="button">放大细节</button><button id="close-viewer" type="button">关闭</button></div></header>
     <div id="image-scroll"><img id="full-image" alt="" draggable="false"></div>
     <footer class="viewer-footer"><button id="viewer-prev" type="button">上一张</button><span id="viewer-position"></span><button id="viewer-next" type="button">下一张</button></footer>
   </dialog>
   <script type="module" src="./src/icod.js"></script>
+<dialog class="project-info-dialog" id="project-info" aria-labelledby="project-info-title"><button class="project-info-close" type="button" data-close-info>关闭 ×</button><h2 id="project-info-title">2050 / Prot-mask</h2><p>Prot-mask 是 2024 TASA–ICoD 暑期国际设计教育工作坊中的团队设计项目。工作坊由清华青岛艺术与科学创新研究院和国际设计联合会合作举办，我担任中韩国际团队组长。</p><h3>未来情境与设计方向</h3><p>团队围绕「黑色 2050」开展文献调研、趋势分析与情境推演，关注环境变化及空气污染对呼吸健康的影响，并以呼吸防护面罩作为设计方向。</p><h3>人体工学与原型</h3><p>项目研究头部与面部尺寸、结构和活动方式，通过三维建模与实体原型进行佩戴测试，调整面罩结构和适配性。我同时负责团队沟通、任务分配、进度协调与阶段汇报。</p></dialog>
 </body>
 </html>

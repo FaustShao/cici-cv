@@ -13,10 +13,10 @@
   <header class="sensor-header">
     <a id="back-other" href="./hub.html#other">返回其他项目</a>
     <div class="wordmark">SOUND SENSOR <span>IN 2036</span></div>
-    <button id="about-project" type="button">项目说明</button>
+    <div class="header-actions"><button id="open-overview" type="button">总览</button><button id="about-project" type="button">项目说明</button></div>
   </header>
   <main id="film-main">
-    <button id="about-project-inline" type="button">项目说明</button>
+    <div class="inline-actions"><button id="open-overview-inline" type="button">总览</button><button id="about-project-inline" type="button">项目说明</button></div>
     <section id="film-stage" aria-label="连续胶片：滚动或拖动浏览，点击画面阅读原稿" tabindex="0">
       <div id="film-track"></div>
       <p id="film-error" role="status" hidden>图片暂时未能载入，请重新打开项目。</p>
@@ -27,7 +27,7 @@
     <nav id="reel-directory" aria-label="胶卷章节目录">
       <button id="reel-start" class="reel-control" type="button" aria-label="回到胶片起点"><svg class="spinning-reel" aria-hidden="true"><use href="#spool"/></svg></button>
       <div class="chapter-film"><div id="chapter-progress" aria-hidden="true"></div><div id="chapters"></div><input id="film-scrub" type="range" min="1" max="31" step=".01" value="1" aria-label="拖动胶片进度" aria-valuetext="第 1 页，共 31 页"></div>
-      <button id="reel-overview" class="reel-control" type="button" aria-label="打开全部画面总览"><svg class="spinning-reel" aria-hidden="true"><use href="#spool"/></svg><span>总览</span></button>
+      <button id="reel-end" class="reel-control" type="button" aria-label="来到胶片最后一页"><svg class="spinning-reel" aria-hidden="true"><use href="#spool"/></svg></button>
     </nav>
   </footer>
   <dialog id="page-viewer" aria-label="高清原稿阅读">
