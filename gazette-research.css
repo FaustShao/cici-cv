@@ -129,3 +129,5 @@
  .gazette-page .reader[data-flip-state=user_fold] .book *,.gazette-page .research-detail-scroll.is-dragging{cursor:grabbing}
  .gazette-page .research-detail-scroll.is-zoomed:not(.is-dragging){cursor:grab}
 }
+
+.gazette-page .project-info-dialog{font-family:Huiwen,serif}
