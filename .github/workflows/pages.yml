@@ -9,20 +9,13 @@ concurrency:
   group: pages
   cancel-in-progress: false
 jobs:
-  deploy:
+  build:
     outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact_id }}
       pages-artifact: ${{ env.PAGES_ARTIFACT_NAME }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     env:
       PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
-    permissions:
-      contents: read
-      actions: read
-      pages: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -38,19 +31,32 @@ jobs:
         run: |
           python scripts/assemble-site.py
           python scripts/audit-site.py public
-      - uses: actions/configure-pages@v5
       - id: upload
         uses: actions/upload-pages-artifact@v3
         with:
           name: ${{ env.PAGES_ARTIFACT_NAME }}
           path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/configure-pages@v5
       - name: Deploy the audited artifact to Pages
         id: deployment
         uses: actions/github-script@v7
         timeout-minutes: 10
         env:
-          PAGES_ARTIFACT_ID: ${{ steps.upload.outputs.artifact_id }}
+          PAGES_ARTIFACT_ID: ${{ needs.build.outputs.artifact-id }}
         with:
+          retries: 3
           script: |
             const artifact = Number(process.env.PAGES_ARTIFACT_ID);
             if (!Number.isSafeInteger(artifact) || artifact <= 0) {
@@ -74,7 +80,7 @@ jobs:
             }
 
   desktop-browsers:
-    needs: deploy
+    needs: build
     strategy:
       fail-fast: false
       matrix:
@@ -95,7 +101,7 @@ jobs:
           persist-credentials: false
       - uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.deploy.outputs.pages-artifact }}
+          name: ${{ needs.build.outputs.pages-artifact }}
           path: site-artifact
       - uses: actions/setup-python@v5
         with:
