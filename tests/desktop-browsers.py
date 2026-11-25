@@ -2,22 +2,16 @@
 import json
 import os
 import sys
-import threading
 import traceback
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import urlencode
 
 from PIL import Image
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.safari.service import Service as SafariService
 from selenium.webdriver.support.ui import WebDriverWait
-
-
-class StaticFiles(SimpleHTTPRequestHandler):
-    def log_message(self, *_):
-        pass
 
 
 def capture(driver, path):
@@ -36,7 +30,7 @@ def capture(driver, path):
         """)
 
 
-def check(driver, url):
+def check(driver, url, revision):
     wait = WebDriverWait(driver, 120)
     js = driver.execute_script
 
@@ -59,7 +53,9 @@ def check(driver, url):
         chain.perform()
 
     driver.set_window_size(1366, 768)
-    driver.get(url)
+    driver.get(url + '?' + urlencode({'build': revision}))
+    wait.until(lambda _: js("return document.querySelector('meta[name=cecilia-release]')?.content") == revision,
+               message='Published HTML has the expected release')
     wait.until(lambda _: js("return window.designWorld?.world.renderCount >= 3 && document.body.dataset.ready && document.querySelector('#loading').hidden"))
     assert js("return designWorld.identity.getObjectByName('voxel-name-blocks').count") == 2752
     js("""
@@ -134,13 +130,16 @@ def run(browser):
     if browser != 'safari':
         options.add_argument('--use-angle=swiftshader')
     options.page_load_strategy = 'none'
-    # Start the local server before the browser. On hosted macOS a newly opened
-    # automation window can otherwise lose foreground input during server startup.
-    server = ThreadingHTTPServer(('127.0.0.1', 0), partial(StaticFiles, directory=os.path.abspath('public')))
-    threading.Thread(target=server.serve_forever, daemon=True).start()
-    driver = driver_type(options=options)
+    url = os.environ['SITE_URL']
+    revision = os.environ['SITE_REVISION']
+    # The Safari client only connects over loopback to the OS driver. The test
+    # opens the public site and never needs permission to serve a local network.
+    if browser == 'safari':
+        driver = driver_type(service=SafariService(port=4545), options=options)
+    else:
+        driver = driver_type(options=options)
     try:
-        check(driver, f'http://127.0.0.1:{server.server_port}/')
+        check(driver, url, revision)
     except Exception:
         try:
             state = driver.execute_script("""
@@ -158,7 +157,6 @@ def run(browser):
         raise
     finally:
         driver.quit()
-        server.shutdown()
 
 
 if __name__ == '__main__':

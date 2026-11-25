@@ -12,7 +12,7 @@ jobs:
   build:
     outputs:
       artifact-id: ${{ steps.upload.outputs.artifact_id }}
-      pages-artifact: ${{ env.PAGES_ARTIFACT_NAME }}
+      revision: ${{ steps.assemble.outputs.revision }}
     runs-on: ubuntu-latest
     env:
       PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
@@ -28,9 +28,11 @@ jobs:
           npm ci --prefix experiments/bruno-projects --no-audit --no-fund
           npm run build --prefix experiments/bruno-projects
       - name: Assemble and audit the production artifact
+        id: assemble
         run: |
           python scripts/assemble-site.py
           python scripts/audit-site.py public
+          python -c "import json; print('revision=' + json.load(open('public/release.json'))['revision'])" >> "$GITHUB_OUTPUT"
       - id: upload
         uses: actions/upload-pages-artifact@v3
         with:
@@ -38,6 +40,8 @@ jobs:
           path: public
 
   deploy:
+    outputs:
+      page-url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -80,7 +84,7 @@ jobs:
             }
 
   desktop-browsers:
-    needs: build
+    needs: [build, deploy]
     strategy:
       fail-fast: false
       matrix:
@@ -99,19 +103,17 @@ jobs:
           sparse-checkout: /tests/desktop-browsers.py
           sparse-checkout-cone-mode: false
           persist-credentials: false
-      - uses: actions/download-artifact@v4
-        with:
-          name: ${{ needs.build.outputs.pages-artifact }}
-          path: site-artifact
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Open the exact published artifact
-        run: python -c "import tarfile; tarfile.open('site-artifact/artifact.tar').extractall('public', filter='data')"
       - run: python -m pip install selenium==4.35.0 pillow==11.3.0
       - if: matrix.browser == 'safari'
         run: sudo safaridriver --enable
-      - run: python tests/desktop-browsers.py ${{ matrix.browser }}
+      - name: Exercise the published site
+        env:
+          SITE_URL: ${{ needs.deploy.outputs.page-url }}
+          SITE_REVISION: ${{ needs.build.outputs.revision }}
+        run: python tests/desktop-browsers.py ${{ matrix.browser }}
       - name: Save browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
