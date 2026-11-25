@@ -53,6 +53,6 @@ const base=process.env.PREVIEW_ROOT||'http://127.0.0.1:8770/cici-cv/';
  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
  const rn=await direct.evaluate(()=>designWorld.world.renderCount);await direct.waitForFunction(n=>designWorld.world.renderCount>n+1,rn);
  assert.ok(await direct.evaluate(()=>designWorld.viewState().distance<designWorld.portfolio.pose().distance),'Native two-finger pinch retains portfolio zoom');
- await direct.locator('#reset-view').tap();assert.ok(await direct.evaluate(()=>document===directDocument&&preview.renderer===directRenderer));assert.equal(new URL(direct.url()).hash,'#home');await direct.close();
+ await direct.locator('#back-home').tap();assert.ok(await direct.evaluate(()=>document===directDocument&&preview.renderer===directRenderer));assert.equal(new URL(direct.url()).hash,'#home');await direct.close();
  console.log('PASS direct portfolio alias enters the same app, returns home without a document navigation, and preserves the home hash for refresh.');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});
