@@ -102,7 +102,7 @@ export function createFixtures(world) {
     root.position.add(
       new T.Vector3(
         best.x - center.x,
-        best.height - bounds.min.y + 0.015,
+        best.height - bounds.min.y + (options.groundClearance ?? 0.015),
         best.z - center.z,
       ),
     );

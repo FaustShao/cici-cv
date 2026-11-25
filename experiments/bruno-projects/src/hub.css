@@ -339,3 +339,6 @@ body[data-phone-layout] #reader .reader-bar :is(button, a) { min-height: 44px; }
   border-radius: 8px;
 }
 .reader-load-notice button { min-height: 44px; font: inherit; color: inherit; }
+
+body:not([data-music="ready"]) #music-switch,
+body:not([data-place="home"]) #music-switch { display: none; }

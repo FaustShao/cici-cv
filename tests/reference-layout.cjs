@@ -36,11 +36,27 @@ const marks={
   const contacts=await page.evaluate(()=>{
    const w=designWorld,scene=w.world.scene,board=scene.getObjectByName('resume-preview-board'),resume=w.stations.get('resume'),contact=w.stations.get('contact'),bench=scene.getObjectByName('benchPhysicalDynamic001');
    const pairs=[['board/desk',board,resume.root],['board/label',board,resume.label],['bench/kiosk',bench,w.kioskRoot],['kiosk/welcome',w.kioskRoot,w.welcome]];
+   for (const neighbor of [bench, w.kioskRoot, w.crates, w.identity]) {
+    pairs.push(['speaker/' + neighbor.name, w.speaker, neighbor]);
+   }
    const sword=scene.getObjectByName('sword');if(sword)pairs.push(['contact-sign/sword',contact.label,sword]);
    for(const device of w.devices.roots)pairs.push(['bench/'+device.name,bench,device]);
    return pairs.map(([name,a,b])=>({name,contacts:w.geometryContacts(a,b)}));
   });
   console.log('Physical intersections:',JSON.stringify(contacts));assert.ok(contacts.every(p=>p.contacts.length===0));
+  const baseGaps = await page.evaluate(() => {
+   const {speaker, world} = designWorld, gaps = [];
+   speaker.traverse(mesh => {
+    if (!mesh.isMesh) return;
+    const positions = mesh.geometry.attributes.position;
+    for (let i = 0; i < positions.count; i++) {
+     const p = mesh.position.clone().fromBufferAttribute(positions, i).applyMatrix4(mesh.matrixWorld);
+     if (p.y <= speaker.userData.parcel.groundedY + .0001) gaps.push(p.y - world.surface.sample(p.x, p.z).height);
+    }
+   });
+   return gaps;
+  });
+  assert.ok(baseGaps.length >= 4 && baseGaps.every(gap => Math.abs(gap) < .001), 'Speaker base sits flush on the plaza');
   const layout=await page.evaluate(()=>{
    const w=designWorld,board=w.world.scene.getObjectByName('resume-preview-board'),sign=w.stations.get('resume').label;
    return{independent:board.parent===w.portfolio.hubPresentation && !w.stations.get('resume').root.getObjectById(board.id),board:board.userData.parcel,sign:sign.userData.parcel,insertion:board.userData.insertionDepth,contactSign:w.stations.get('contact').label.userData.parcel,contact:w.stations.get('contact').root.userData.parcel};

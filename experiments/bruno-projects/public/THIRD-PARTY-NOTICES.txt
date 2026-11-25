@@ -54,3 +54,15 @@ flat illustrations of the portfolio's book, display, lab and postal props.
 
 Tideline, Gazette and DREAM SENTINEL preview images are screenshots
 of the existing portfolio pages supplied for Cecilia Wang's website.
+
+Entrance speaker
+Speaker Small, Furniture Kit 2.0 by Kenney (https://kenney.nl/assets/furniture-kit).
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+Original mesh; scene materials and playback indicator added for this site.
+
+Entrance background music
+“Carefree” by Kevin MacLeod (incompetech.com).
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037
+Licensed under Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+Volume reduced and MP3 re-encoded for web playback.

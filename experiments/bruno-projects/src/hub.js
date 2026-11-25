@@ -5,6 +5,7 @@ import { prepareLabCovers } from "./lab-covers.js";
 import { getClickSound } from "./click-sound.js";
 import { T, createWorld } from "./create-world.js";
 import { texture, uniform } from "three/tsl";
+import { createEntranceSpeaker } from "./entrance-speaker.js";
 import { createFixtures } from "./scene-fixtures.js";
 import { createPortfolioStation } from "./portfolio-station.js";
 import gsap from "gsap";
@@ -309,11 +310,11 @@ function go(next, historyMode = "push") {
   }
   $("scene-hint").textContent =
     place === "home"
-      ? "左键旋转 · 中键平移 · 滚轮缩放 · 点击设备试试亮灯"
+      ? "左键旋转 · 中键平移 · 滚轮缩放 · 点音响播放或暂停音乐"
       : place === "portfolio" ? "拖动观察 · 滚轮缩放 · ← → 切换作品"
       : `${labels[place]} · 拖动观察 · 点击模型${place === "contact" ? "写邮件" : "完整阅读"} · Esc 返回首页`;
   if (phone.matches) {
-    $("scene-hint").textContent = place === "home" ? "轻点地图选择地点 · 双指缩放" :
+    $("scene-hint").textContent = place === "home" ? "轻点地图选择地点 · 点音响开关音乐" :
       place === "portfolio" || place === "other" ? "轻点封面阅读 · 箭头切换项目" :
       place === "resume" ? "轻点简历阅读" : "轻点邮箱写邮件";
   }
@@ -558,6 +559,11 @@ try {
     if(kind === "gamepad") identity.toggleLight();
     if(kind === "joystick") mapFlashAt=effectTime;
   });
+  const music = await createEntranceSpeaker(world, fixtures, reader, $("feedback")).catch(error => {
+    console.warn("Entrance speaker unavailable", error);
+    return null;
+  });
+  if (music) document.body.dataset.music = "ready";
   const social = fixtures.contactCorner(original);
   function station(key, root, title, distance) {
     const box = new T.Box3().setFromObject(root),
@@ -700,8 +706,11 @@ try {
     ...pickables.map(({ root, key }) => [root, key]),
     ...devices.roots.map(root => [root, root]),
     [resumePreview, "resume"], [kioskRoot, "map"],
+    ...(music ? [[music.root, "music"]] : []),
   ]);
   const phoneHomeRoots = [...phoneHomeTargets.keys()];
+  const speakerCenter = music ? new T.Box3().setFromObject(music.root, true).getCenter(new T.Vector3()) : null;
+  const speakerScreen = new T.Vector3();
   function pick(x, y) {
     if(place === "portfolio")return portfolio.pick(x, y, phone.matches ? 22 : 0);
     pointer.set((x / innerWidth) * 2 - 1, (-y / innerHeight) * 2 + 1);
@@ -722,11 +731,22 @@ try {
           node = node.parent;
         }
       }
+      // Give the small cabinet a thumb-sized target after all direct model hits.
+      if (speakerCenter) {
+        speakerScreen.copy(speakerCenter).project(camera);
+        const dx = (speakerScreen.x + 1) * innerWidth / 2 - x;
+        const dy = (1 - speakerScreen.y) * innerHeight / 2 - y;
+        if (Math.abs(speakerScreen.z) < 1 && Math.hypot(dx, dy) <= 22) return "music";
+      }
       return;
     }
     if(place === "resume" && resumePreview && ray.intersectObject(resumePreview,true).length)return "resume-preview";
     if (place === "home") {
       const hits = devices.roots.flatMap(root => ray.intersectObject(root, true).map(hit => ({ ...hit, root })));
+      if (music) {
+        const hit = ray.intersectObject(music.root, true)[0];
+        if (hit) hits.push({ distance: hit.distance, root: "music" });
+      }
       hits.sort((a, b) => a.distance - b.distance);
       devices.hover(hits[0]?.root);
       if (hits[0]) return hits[0].root;
@@ -810,7 +830,7 @@ try {
     }
     if (phone.matches && start && (Math.hypot(e.clientX-start.x,e.clientY-start.y)>10 || (!drag && pressed !== pick(e.clientX,e.clientY)))) pressed=null;
     if (!drag && !pinched && pressed) {
-      clickSound.play();
+      if (pressed !== "music") clickSound.play();
       if(place === "portfolio"){pressed.onClick?.();portfolio.update();}
       else if (pressed === "map") {
         // A tap also dispatches a click. Open after that click lands on the
@@ -818,6 +838,7 @@ try {
         if (e.pointerType === "touch") mapTapPending = true;
         else navigationMap.open();
       }
+      else if (pressed === "music") music.toggle();
       else if(pressed === "contact-mail")location.href=social.userData.mailto;
       else if(pressed === "lab-previous")selectOther(otherIndex-1);
       else if(pressed === "lab-next")selectOther(otherIndex+1);
@@ -972,6 +993,7 @@ try {
     kioskRoot,
     pixelHand,
     crates,
+    speaker: music?.root,
     welcome,
     mapBrightness,
     navigationMap,
