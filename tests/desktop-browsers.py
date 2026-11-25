@@ -66,11 +66,14 @@ def check(driver, url, revision):
         }, true);
     """)
     capture(driver, 'browser-home.png')
-    # WebKit can report rendered frames even when its composited viewport is blank.
+    # The HTML map and buttons can still paint over a missing WebGL scene.
+    # Sample the landscape, away from the controls and the map prompt.
     with Image.open('browser-home.png') as screenshot:
-        sample = screenshot.convert('RGB').resize((64, 40))
+        width, height = screenshot.size
+        landscape = screenshot.crop((width // 8, height // 4, width // 2, height * 3 // 4))
+        sample = landscape.convert('RGB').resize((64, 40))
         colors = sample.getcolors(64 * 40)
-        assert max(count for count, _ in colors) < 64 * 40 * .9, 'Home screenshot shows a flat color'
+        assert len(colors) > 32 and max(count for count, _ in colors) < 64 * 40 * .85, '3D landscape is missing'
     click('#map-trigger')
     click('[data-destination="portfolio"]')
     wait.until(lambda _: js("return WORLD_STATE.place === 'portfolio'"))

@@ -18,6 +18,8 @@ jobs:
     # Manual runs also require main, so another branch cannot replace production.
     if: github.ref == 'refs/heads/main' && (vars.COS_ENABLED == 'true' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
+    outputs:
+      revision: ${{ steps.assemble.outputs.revision }}
     timeout-minutes: 30
     env:
       COS_BUCKET: ${{ vars.COS_BUCKET }}
@@ -53,11 +55,41 @@ jobs:
           npm ci --prefix experiments/bruno-projects --no-audit --no-fund
           npm run build --prefix experiments/bruno-projects
       - name: Assemble and audit the production artifact
+        id: assemble
         run: |
           python scripts/assemble-site.py
           python scripts/audit-site.py public
+          python -c "import json; print('revision=' + json.load(open('public/release.json'))['revision'])" >> "$GITHUB_OUTPUT"
       - name: Upload audited website to COS
         env:
           COS_SECRET_ID: ${{ secrets.COS_SECRET_ID }}
           COS_SECRET_KEY: ${{ secrets.COS_SECRET_KEY }}
         run: python scripts/deploy-cos.py
+
+  safari-production:
+    needs: deploy
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: /tests/desktop-browsers.py
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install selenium==4.35.0 pillow==11.3.0
+      - run: sudo safaridriver --enable
+      - name: Check the published home scene and exhibit navigation on the custom domain
+        env:
+          SITE_URL: https://ciciworld.cc/
+          SITE_REVISION: ${{ needs.deploy.outputs.revision }}
+        run: python tests/desktop-browsers.py safari
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: safari-production
+          path: browser-*.png
+          if-no-files-found: ignore
+          retention-days: 7

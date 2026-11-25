@@ -213,6 +213,9 @@ body[data-place="contact"] #feedback { bottom: 215px; max-width: calc(100vw - 32
 
 /* Never expose the uninitialised canvas while assets and the final camera are being prepared. */
 body:not([data-ready="true"]) #world{visibility:hidden}
+/* The opaque loading curtain covers Safari's canvas during its first draw.
+   Keep that canvas attached to the compositor as the curtain opens. */
+body:not([data-ready="true"]):not([data-failed="true"]) #world[data-opaque-scene]{visibility:visible}
 
 #lab-navigation{position:fixed;inset:0;z-index:4;pointer-events:none}
 #lab-navigation button{position:absolute;transform:translate(-50%,-50%);padding:0;border:0;border-radius:7px;background:transparent;pointer-events:auto;cursor:pointer;touch-action:manipulation}

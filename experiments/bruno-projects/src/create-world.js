@@ -28,8 +28,18 @@ export async function createWorld(canvas, progress, phone, onDeviceLoss) {
   const asset = (path) => versionedURL(path, worldBaseURL());
   // Safari, iPadOS desktop mode and iOS browsers share the WebKit GPU stack.
   const webKit = /AppleWebKit/.test(navigator.userAgent) && !/(?:Chrome|Chromium|Edg)\//.test(navigator.userAgent);
+  // The scene fills the viewport. Give desktop WebKit an opaque backing surface
+  // and retain its last frame while the map or project reader pauses rendering.
+  let context;
+  if (webKit && !phone) {
+    canvas.dataset.opaqueScene = "true";
+    context = canvas.getContext("webgl2", {
+      alpha: false, antialias: false, depth: true, stencil: false, preserveDrawingBuffer: true,
+    }) ?? undefined;
+  }
   const renderer = new T.WebGPURenderer({
     canvas,
+    context,
     antialias: !phone && !webKit,
     powerPreference: "high-performance",
     forceWebGL: webKit || phone || new URLSearchParams(location.search).has("webgl"),
