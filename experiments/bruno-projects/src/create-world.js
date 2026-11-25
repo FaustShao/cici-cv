@@ -26,13 +26,16 @@ import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 export { T };
 export async function createWorld(canvas, progress, phone = false) {
   const asset = (path) => versionedURL(path, worldBaseURL());
+  // Safari, iPadOS desktop mode and iOS browsers share the WebKit GPU stack.
+  const webKit = /AppleWebKit/.test(navigator.userAgent) && !/(?:Chrome|Chromium|Edg)\//.test(navigator.userAgent);
   const renderer = new T.WebGPURenderer({
     canvas,
-    antialias: !phone,
+    antialias: !phone && !webKit,
     powerPreference: "high-performance",
-    forceWebGL: phone || new URLSearchParams(location.search).has("webgl"),
+    forceWebGL: webKit || phone || new URLSearchParams(location.search).has("webgl"),
   });
-  const pixelRatio = Math.min(devicePixelRatio, phone ? 1.25 : 1.5);
+  const pixelRatio = Math.min(devicePixelRatio, phone ? 1.25 : 1.5,
+    webKit ? Math.sqrt(2400000 / (innerWidth * innerHeight)) : Infinity);
   renderer.setPixelRatio(pixelRatio);
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
@@ -125,6 +128,7 @@ export async function createWorld(canvas, progress, phone = false) {
   const gltf = new GLTFLoader(),
     textures = new T.TextureLoader();
   const draco = new DRACOLoader().setDecoderPath(asset("draco/"));
+  if (webKit || phone) draco.setWorkerLimit(2);
   gltf.setDRACOLoader(draco);
   const models = {
     areasModel: "areas/areas.glb",
@@ -172,7 +176,7 @@ export async function createWorld(canvas, progress, phone = false) {
       game.resources[key] = tex;
       done();
     }),
-  ]);
+  ]).finally(() => draco.dispose());
   // Preserve immutable source transforms before placement and material adaptation.
   // Both exhibit views share downloads, geometry, renderer and shader infrastructure.
   const originalResources = Object.fromEntries(Object.entries(game.resources)
@@ -271,6 +275,7 @@ export async function createWorld(canvas, progress, phone = false) {
   game.wind.timeFrequency=.28;
   game.terrain = new Terrain();
   game.lighting = new Lighting();
+  if (webKit) game.lighting.light.shadow.mapSize.set(1024, 1024);
   if (phone) {
     game.lighting.mapSize = 1024;
     game.lighting.light.shadow.mapSize.set(1024, 1024);
@@ -452,11 +457,14 @@ export async function createWorld(canvas, progress, phone = false) {
   glow.strength.value = 0.25;
   glow.smoothWidth.value = 1;
   const dof = cheapDOF(renderOutput(renderPass)),
-    pipeline = new T.RenderPipeline(renderer);
-  pipeline.outputNode = dof.add(glow);
+    gl = renderer.backend.isWebGLBackend ? renderer.getContext() : null;
+  const supportsEffects = !gl || gl.getExtension("EXT_color_buffer_float") || gl.getExtension("EXT_color_buffer_half_float");
+  const pipeline = supportsEffects ? new T.RenderPipeline(renderer) : { render: () => renderer.render(scene, camera) };
+  if (supportsEffects) pipeline.outputNode = dof.add(glow);
   function setQuality(low) {
     renderer.setPixelRatio(low ? 1 : pixelRatio);
     game.lighting.light.shadow.mapSize.set(low ? 512 : 2048, low ? 512 : 2048);
+    if (!supportsEffects) return;
     pipeline.outputNode = low ? renderColor.add(glow) : dof.add(glow);
     pipeline.needsUpdate = true;
   }
@@ -466,6 +474,7 @@ export async function createWorld(canvas, progress, phone = false) {
     ttf.loadAsync(asset("fonts/scene-sans.ttf")),
   ]);
   return {
+    webKit,
     game,
     scene,
     camera,

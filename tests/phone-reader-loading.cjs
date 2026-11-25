@@ -70,9 +70,11 @@ const root = process.env.PREVIEW_ROOT || 'http://127.0.0.1:8770/cici-cv/';
     await page.locator('#close-reader').tap();
     const fallback = page.locator('#fallback');
     await fallback.waitFor();
-    await fallback.locator('a[href*="dream-sentinel"]').tap();
-    await page.waitForURL('**/dream-sentinel.html*');
-    await page.locator('html[data-page-boot="ready"]').waitFor({state: 'attached'});
+    const [direct] = await Promise.all([
+      page.waitForEvent('popup'), fallback.locator('a[href*="dream-sentinel"]').tap(),
+    ]);
+    await direct.waitForURL('**/dream-sentinel.html*');
+    await direct.locator('html[data-page-boot="ready"]').waitFor({state: 'attached'});
     console.log('PASS default phone renderer, failed document retry, progressive reveal, early return, zoom and context loss');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

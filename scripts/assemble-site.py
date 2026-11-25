@@ -89,7 +89,7 @@ def version(value,parent):
  if not u.path or u.scheme or u.netloc or value.startswith(('#','/')):return value
  target=(parent/unquote(u.path)).resolve()
  if not target.is_relative_to(OUT) or not target.is_file():return value
- if target.suffix.lower()not in {'.html','.js','.css','.woff2','.ttf','.otf','.png','.webp','.svg','.jpg'}:return value
+ if target.suffix.lower()not in {'.html','.js','.css','.woff2','.ttf','.otf','.png','.webp','.svg','.jpg','.mp3'}:return value
  query=dict(parse_qsl(u.query));query['build']=revision
  return u.path+'?'+urlencode(query)+(('#'+u.fragment)if u.fragment else '')
 # An inline pre-paint gate also covers cached HTML and browser back/forward restores.

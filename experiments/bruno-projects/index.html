@@ -66,13 +66,16 @@
       </div>
       <p class="map-caption">点一个地点，去看看吧。 <span>M 打开／收起 · Esc 关闭</span></p>
     </dialog>
-    <section id="fallback" hidden>
+    <button id="loading-links" type="button">直接查看作品 ↗</button>
+    <section id="fallback" tabindex="-1" hidden>
       <h2>暂时无法显示 3D 场景</h2>
       <p id="error-message"></p>
-      <a href="../resume.html?document=1">个人简历 ↗</a
-      ><a href="../tideline.html">Tideline ↗</a><a href="../safepaw.html">SafePaw Family ↗</a><a href="../dream-sentinel.html">DREAM SENTINEL ↗</a><a href="../gazette.html">Future Gazette ↗</a
-      ><a href="../other-projects.html">其他项目 ↗</a
+      <a target="_blank" rel="noopener" href="../resume.html?document=1">个人简历 ↗</a
+      ><a target="_blank" rel="noopener" href="../tideline.html">Tideline ↗</a><a target="_blank" rel="noopener" href="../safepaw.html">SafePaw Family ↗</a><a target="_blank" rel="noopener" href="../dream-sentinel.html">DREAM SENTINEL ↗</a><a target="_blank" rel="noopener" href="../gazette.html">Future Gazette ↗</a
+      ><a target="_blank" rel="noopener" href="../other-projects.html">其他项目 ↗</a
       ><a href="mailto:wangyuxinqd2025@163.com">发邮件 ↗</a>
+      <button id="retry-scene" type="button">重新加载场景</button>
+      <button id="fallback-music" type="button" aria-pressed="false">背景音乐</button>
     </section>
     <dialog id="reader" aria-labelledby="reader-title">
       <div class="reader-bar">
@@ -82,6 +85,8 @@
       </div>
       <div id="frames"></div>
     </dialog>
+    <audio id="background-music" src="/entrance/carefree.mp3" preload="none" loop></audio>
+    <script src="/scene-entry.js"></script>
     <script type="module" src="/src/hub.js"></script>
     <noscript
       ><style>

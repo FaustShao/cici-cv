@@ -48,7 +48,7 @@ function mountVolumeMarker(cabinet) {
   };
 }
 
-export async function createEntranceSpeaker(world, fixtures, reader) {
+export async function createEntranceSpeaker(world, fixtures, playback) {
   const { scene: root } = await new GLTFLoader().loadAsync(world.asset("entrance/speaker-small.glb"));
   root.name = "entrance-music-speaker";
   root.traverse(mesh => {
@@ -69,52 +69,9 @@ export async function createEntranceSpeaker(world, fixtures, reader) {
   });
   const showVolume = mountVolumeMarker(root);
 
-  const button = document.getElementById("music-switch");
-  const audio = new Audio();
-  audio.preload = "none";
-  audio.loop = true;
-  audio.volume = .45;
-  let enabled = false;
-  let sequence = 0;
-  function updateIndicator() {
-    const playing = enabled && !audio.paused;
+  playback.setIndicator(playing => {
     showVolume(playing);
     light.value.set(playing ? "#ffd772" : "#443d38");
-    button.setAttribute("aria-pressed", String(enabled));
-  }
-
-  function unavailable() {
-    enabled = false;
-    audio.removeAttribute("src");
-    audio.load();
-    updateIndicator();
-  }
-
-  function sync() {
-    const request = ++sequence;
-    if (!enabled || reader.open || document.hidden) {
-      audio.pause();
-      updateIndicator();
-      return;
-    }
-    if (!audio.hasAttribute("src")) audio.src = world.asset("entrance/carefree.mp3");
-    audio.play().catch(() => {
-      if (request === sequence && enabled) unavailable();
-    });
-  }
-
-  function toggle() {
-    enabled = !enabled;
-    sync();
-  }
-
-  button.onclick = toggle;
-  audio.addEventListener("playing", updateIndicator);
-  audio.addEventListener("pause", updateIndicator);
-  audio.addEventListener("error", () => { if (enabled && audio.error) unavailable(); });
-  new MutationObserver(sync).observe(reader, { attributes: true, attributeFilter: ["open"] });
-  document.addEventListener("visibilitychange", sync);
-  window.addEventListener("pagehide", () => { ++sequence; audio.pause(); });
-  window.addEventListener("pageshow", sync);
-  return { root, toggle };
+  });
+  return { root, toggle: playback.toggle };
 }

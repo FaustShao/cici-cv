@@ -1,16 +1,19 @@
 // Prevent a cached entry document from painting an obsolete UI before loading a newer release.
 (() => {
   const root=document.documentElement;
-  const expected=document.querySelector('meta[name="cecilia-release"]')?.content;
-  const directory=document.querySelector('meta[name="cecilia-release-root"]')?.content;
+  const meta=name=>{const tag=document.querySelector('meta[name="'+name+'"]');return tag && tag.content;};
+  const expected=meta('cecilia-release');
+  const directory=meta('cecilia-release-root');
   if(!expected||!directory){delete root.dataset.releaseState;return;}
   let pending;
   function check(){
     if(pending)return pending;
     root.dataset.releaseState='checking';
-    pending=(async()=>{
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),4000);
+    pending=Promise.resolve().then(async()=>{
       try{
-        const response=await fetch(new URL('release.json',new URL(directory,location.href)),{cache:'no-store',signal:AbortSignal.timeout(4000)});
+        const response=await fetch(new URL('release.json',new URL(directory,location.href)),{cache:'no-store',signal:controller.signal});
         if(response.ok){
           const {revision}=await response.json();
           const next=new URL(location.href);
@@ -20,8 +23,8 @@
         }
         delete root.dataset.releaseState;
       }catch{delete root.dataset.releaseState;}
-      finally{pending=null;}
-    })();return pending;
+      finally{clearTimeout(timer);pending=null;}
+    });return pending;
   }
   check();
   addEventListener('pagehide',()=>{root.dataset.releaseState='checking';});

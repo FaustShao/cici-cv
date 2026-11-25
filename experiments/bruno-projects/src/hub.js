@@ -162,6 +162,7 @@ function openReader(title, file) {
           loadNotice?.remove();
           boundDocument = doc;
           clickSound.bind(doc);
+          window.CeciliaMusic.bind(doc);
           const style = doc.createElement("style");
           style.textContent =
             place === "portfolio" ? "header.topbar,.collection-return{display:none!important}" : "header.topbar{position:sticky}.topbar nav>a,.topbar .wordmark{display:none!important}";
@@ -377,19 +378,17 @@ window.addEventListener("keydown", (e) => {
     selectOther(otherIndex + (e.key === "ArrowRight" ? 1 : -1));
   }
 });
-if (phone.matches) {
-  $("world").addEventListener("webglcontextlost", () => {
-    fail(new Error("手机已暂停 3D 渲染。你可以继续阅读作品，或重新加载场景。"));
-  }, {once: true});
-}
+$("world").addEventListener("webglcontextlost", () => {
+  fail(new Error("浏览器已暂停 3D 渲染，可以直接阅读作品，或重新加载场景。"));
+}, {once: true});
 try {
-  await document.fonts.load(
-    '900 24px "Scene Sans"',
-    "王钰欣个人简历其他项目联系方式",
-  );
-  await document.fonts.load('400 24px Xiaolai', "个人简历作品集其他项目联系方式信件地图");
-  await document.fonts.load('400 24px "World Xiaolai"', "王钰欣的个人网站邮箱想去哪里个人简历作品集其他项目联系方式地图Cecilia未来概念穿戴产品防护设计独立游戏界面设计手绘美术视觉识别品牌设计VI手册");
-  await document.fonts.load('700 36px "Amatic SC"', "Welcome to Cecilia’s world.");
+  // A single unavailable webfont should not prevent visiting the scene.
+  await Promise.allSettled([
+    document.fonts.load('900 24px "Scene Sans"', "王钰欣个人简历其他项目联系方式"),
+    document.fonts.load('400 24px Xiaolai', "个人简历作品集其他项目联系方式信件地图"),
+    document.fonts.load('400 24px "World Xiaolai"', "王钰欣的个人网站邮箱想去哪里个人简历作品集其他项目联系方式地图Cecilia未来概念穿戴产品防护设计独立游戏界面设计手绘美术视觉识别品牌设计VI手册"),
+    document.fonts.load('700 36px "Amatic SC"', "Welcome to Cecilia’s world."),
+  ]);
   world = await createWorld($("world"), (n, total) => {
     loadingScreen.setPercent(n / total * 90);
   }, phone.matches);
@@ -404,6 +403,7 @@ try {
     english,
     chinese,
   } = world;
+  loadingScreen.setPercent(92);
   const pt = (x, y, z) => center.clone().add(new T.Vector3(x, y, z));
   function fit(root, x, z, scale = 1) {
     clean(root);
@@ -559,11 +559,12 @@ try {
     if(kind === "gamepad") identity.toggleLight();
     if(kind === "joystick") mapFlashAt=effectTime;
   });
-  const music = await createEntranceSpeaker(world, fixtures, reader).catch(error => {
+  const music = await createEntranceSpeaker(world, fixtures, window.CeciliaMusic).catch(error => {
     console.warn("Entrance speaker unavailable", error);
     return null;
   });
-  if (music) document.body.dataset.music = "ready";
+  document.body.dataset.music = music ? "ready" : "unavailable";
+  loadingScreen.setPercent(95);
   const social = fixtures.contactCorner(original);
   function station(key, root, title, distance) {
     const box = new T.Box3().setFromObject(root),
@@ -671,6 +672,7 @@ try {
   $("next").onclick=()=>portfolio.select(portfolio.selected+1);
   $("open-work").onclick=openCurrent;
   await portfolio.warm();
+  loadingScreen.setPercent(98);
   const subjects = new Map([
     ["home", [identity, kioskRoot, ...devices.roots]],
     ["resume", [resumePreview, resumeCorner, stations.get("resume").label]],
@@ -905,7 +907,7 @@ try {
   currentDistance = targetDistance;
   yaw = targetYaw;
   pitch = targetPitch;
-  await renderer.compileAsync(scene, camera);
+  if (!world.webKit) await renderer.compileAsync(scene, camera);
   const clock = new T.Timer();
   function updateEffects(dt, timeMs = performance.now()) {
     effectTime+=dt;
@@ -968,7 +970,10 @@ try {
       portfolio.update();
       pipeline.render();
       world.renderCount=(world.renderCount||0)+1;
-      document.body.dataset.ready = "true";
+      if (!document.body.dataset.ready) {
+        $("fallback").hidden = true;
+        document.body.dataset.ready = "true";
+      }
       loadingScreen.finish();
       if(entryFlashPending){
         entryFlashPending=false;
@@ -1045,12 +1050,9 @@ function fail(error) {
   document.body.dataset.failed = "true";
   if (phone.matches) {
     $("error-message").textContent = "你可以直接打开作品，或重新加载 3D 场景。";
-    const retry = document.createElement("button");
-    retry.textContent = "重新加载场景";
-    retry.onclick = () => {
+    $("retry-scene").onclick = () => {
       if (portfolio) history.replaceState(stationEntry(), "");
       location.reload();
     };
-    $("fallback").append(retry);
   }
 }
