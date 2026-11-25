@@ -175,3 +175,7 @@ document.body.dataset.ready='true';paint();schedule();
 for(const d of document.querySelectorAll('dialog'))d.addEventListener('close',schedule);
 addEventListener('visibilitychange',()=>{if(!document.hidden)schedule()});
 window.SONIC_FILM={state,manifest,go,openViewer,closeViewer,openOverview,dispose,get ribbon(){return ribbon}};
+
+// Notify the host once this module has installed its reading controls.
+document.documentElement.dataset.readerReady = "true";
+try { window.frameElement?.dispatchEvent(new Event("cecilia-project-ready")); } catch {}

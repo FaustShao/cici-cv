@@ -60,7 +60,7 @@ function stationEntry() {
   return { place, otherIndex, portfolioIndex: portfolio?.selected ?? 0 };
 }
 function recordOverlay(overlay) {
-  if (!phone.matches || !portfolio || history.state?.overlay === overlay) return;
+  if (!portfolio || history.state?.overlay === overlay) return;
   const station = stationEntry();
   history.replaceState(station, "");
   history.pushState({ ...station, overlay, stationKey: window.navigation?.currentEntry?.key }, "");
@@ -138,25 +138,33 @@ function openReader(title, file) {
       frame.dataset.project = project;
       frame.allow = "fullscreen";
       let loadNotice, boundDocument;
-      if (phone.matches) {
-        readerLoadTimer = setTimeout(() => {
-          if (!frame.isConnected || frames.get(url) !== frame) return;
-          loadNotice = document.createElement("div");
-          loadNotice.className = "reader-load-notice";
-          loadNotice.setAttribute("role", "status");
-          loadNotice.append("项目加载较慢 ");
-          const retry = document.createElement("button");
-          retry.textContent = "重新加载";
-          retry.onclick = () => openReader(title, file);
-          loadNotice.append(retry);
-          $("frames").append(loadNotice);
-        }, 8000);
+      function showLoadNotice(failed = false) {
+        if (!frame.isConnected || frames.get(url) !== frame || boundDocument || loadNotice) return;
+        loadNotice = document.createElement("div");
+        loadNotice.className = "reader-load-notice";
+        loadNotice.setAttribute("role", "status");
+        loadNotice.append(failed ? "作品未能打开 " : "项目加载较慢 ");
+        const retry = document.createElement("button");
+        retry.textContent = "重新加载";
+        retry.onclick = () => openReader(title, file);
+        loadNotice.append(retry);
+        // Some embedded projects supply their own return button inside the iframe.
+        if (!$("close-reader").getClientRects().length) {
+          const back = document.createElement("button");
+          back.textContent = "返回展区";
+          back.onclick = closeReader;
+          loadNotice.append(back);
+        }
+        $("frames").append(loadNotice);
       }
+      readerLoadTimer = setTimeout(showLoadNotice, 8000);
+      frame.addEventListener("error", () => showLoadNotice(true));
       const bindReader = () => {
         try {
           if(!frame.isConnected||frames.get(url)!==frame)return;
           const doc = frame.contentDocument;
           if (!doc?.head || doc === boundDocument || doc.URL === "about:blank") return;
+          if (project && !doc.documentElement.dataset.readerReady) return;
           if (document.querySelector('meta[name="cecilia-release"]') && !doc.querySelector('meta[name="cecilia-release"]')) return;
           clearTimeout(readerLoadTimer);
           loadNotice?.remove();
@@ -205,7 +213,13 @@ function openReader(title, file) {
         } catch {}
       };
       frame.addEventListener("cecilia-project-ready", bindReader);
-      frame.addEventListener("load", bindReader);
+      frame.addEventListener("load", () => {
+        const doc = frame.contentDocument;
+        if (!doc || (document.querySelector('meta[name="cecilia-release"]') &&
+            doc.URL !== "about:blank" && !doc.querySelector('meta[name="cecilia-release"]'))) {
+          showLoadNotice(true);
+        } else bindReader();
+      });
       frames.set(url, frame);
       $("frames").append(frame);
     }
@@ -271,7 +285,7 @@ function go(next, historyMode = "push") {
       return;
     }
     historyMode = "replace";
-  } else if (phone.matches && historyMode === "push") {
+  } else if (historyMode === "push") {
     history.replaceState(stationEntry(), "");
   }
   navigationMap.close();
@@ -340,9 +354,9 @@ function go(next, historyMode = "push") {
   }
   if (historyMode !== "none")
     history[historyMode === "replace" ? "replaceState" : "pushState"](
-      phone.matches ? stationEntry() : { place },
+      stationEntry(),
       "",
-      place === "home" ? location.pathname + location.search + ((phone.matches ? initialPlace() !== "home" : initialPlace() === "portfolio") ? "#home" : "") : `#${place}`,
+      place === "home" ? location.pathname + location.search + (initialPlace() !== "home" ? "#home" : "") : `#${place}`,
     );
 }
 function restoreSelection(entry) {
@@ -360,13 +374,11 @@ $("back-home").onclick = () => go("home");
 window.addEventListener("popstate", event => {
   if (!world || !portfolio) return;
   const entry = event.state;
-  if (phone.matches || entry?.overlay) {
-    const next = entry?.place || location.hash.slice(1) || initialPlace();
-    if (next !== place) go(next, "none");
-    else { clearReader(); navigationMap.close(); }
-    restoreSelection(entry);
-    restoreOverlay(entry);
-  } else go(location.hash.slice(1) || "home", "none");
+  const next = entry?.place || location.hash.slice(1) || initialPlace();
+  if (next !== place) go(next, "none");
+  else { clearReader(); navigationMap.close(); }
+  restoreSelection(entry);
+  restoreOverlay(entry);
 });
 window.addEventListener("keydown", (e) => {
   if (reading || navigationMap.dialog.open) return;
@@ -392,7 +404,7 @@ async function startScene() {
   const fontBudget = Promise.race([signFonts, new Promise(resolve => setTimeout(resolve, 3000))]);
   world = await createWorld($("world"), (n, total) => {
     loadingScreen.setPercent(3 + n / total * 87);
-  }, phone.matches);
+  }, phone.matches, fail);
   await fontBudget;
   const {
     game,
@@ -879,6 +891,7 @@ async function startScene() {
     camera.aspect = innerWidth / innerHeight;
     camera.fov = place === "portfolio" ? portfolio.pose().fov : place === "home" ? (innerWidth < 700 ? 40 : 25) : (innerWidth < 700 ? 58 : stations.get(place)?.fov || 36);
     camera.updateProjectionMatrix();
+    if (renderer.getPixelRatio() !== world.pixelRatio()) renderer.setPixelRatio(world.pixelRatio());
     renderer.setSize(innerWidth, innerHeight);
     game.viewport.width = innerWidth;
     game.viewport.height = innerHeight;
@@ -901,7 +914,7 @@ async function startScene() {
   }
   window.addEventListener("resize", resize);
   resize();
-  const savedEntry = phone.matches ? history.state : null;
+  const savedEntry = history.state;
   const initial = location.hash.slice(1) || initialPlace();
   go(initial, savedEntry?.place === initial ? "none" : "replace");
   if (savedEntry?.place === initial) restoreSelection(savedEntry);
@@ -910,6 +923,7 @@ async function startScene() {
   yaw = targetYaw;
   pitch = targetPitch;
   if (!world.webKit) await renderer.compileAsync(scene, camera);
+  if (document.body.dataset.failed) return;
   const clock = new T.Timer();
   function updateEffects(dt, timeMs = performance.now()) {
     effectTime+=dt;
@@ -1041,7 +1055,7 @@ async function startScene() {
   };
 }
 startScene().catch(fail);
-function fail(error) {
+function fail(error, retryWithWebGL = false) {
   if (document.body.dataset.failed) return;
   console.error(error);
   world?.renderer.setAnimationLoop(null);
@@ -1050,11 +1064,10 @@ function fail(error) {
   $("fallback").querySelector("h2").textContent = "暂时无法显示 3D 场景";
   $("error-message").textContent = "场景暂时无法继续显示：" + error.message;
   document.body.dataset.failed = "true";
-  if (phone.matches) {
-    $("error-message").textContent = "你可以直接打开作品，或重新加载 3D 场景。";
-    $("retry-scene").onclick = () => {
-      if (portfolio) history.replaceState(stationEntry(), "");
-      location.reload();
-    };
-  }
+  $("retry-scene").onclick = () => {
+    const url = new URL(location.href);
+    if (retryWithWebGL) url.searchParams.set("webgl", "1");
+    history.replaceState(portfolio ? stationEntry() : history.state, "", url);
+    location.reload();
+  };
 }

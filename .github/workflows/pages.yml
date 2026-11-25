@@ -10,6 +10,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
+    outputs:
+      pages-artifact: ${{ env.PAGES_ARTIFACT_NAME }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -70,3 +72,37 @@ jobs:
               if (terminal.has(data.status)) throw new Error('Pages deployment: ' + data.status);
               await new Promise(resolve => setTimeout(resolve, 5000));
             }
+
+  desktop-browsers:
+    needs: deploy
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: windows-latest, browser: edge}
+          - {os: windows-latest, browser: chrome}
+          - {os: macos-latest, browser: safari}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: /tests/desktop-browsers.py
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.deploy.outputs.pages-artifact }}
+          path: site-artifact
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Open the exact published artifact
+        run: python -c "import tarfile; tarfile.open('site-artifact/artifact.tar').extractall('public', filter='data')"
+      - run: python -m pip install selenium==4.35.0
+      - if: matrix.browser == 'safari'
+        run: sudo safaridriver --enable
+      - run: python tests/desktop-browsers.py ${{ matrix.browser }}

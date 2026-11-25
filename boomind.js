@@ -172,7 +172,9 @@
     }
     return nav;
   }
+  let pressedBackdrop = false;
   function openDialog(title, children, type = '') {
+    pressedBackdrop = false;
     if (!popup.open) focusReturn = document.activeElement;
     dialogType = type;
     popup.lang = type === 'about' ? 'zh-CN' : 'en';
@@ -195,10 +197,16 @@
     markSelection();
     if (focusReturn?.isConnected) focusReturn.focus({ preventScroll: true });
   });
-  popup.addEventListener('click', (e) => {
-    if (e.target !== popup) return;
+  function outsidePopup(e) {
+    if (e.target !== popup) return false;
     const r = popup.getBoundingClientRect();
-    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeDialog();
+    return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+  }
+  popup.addEventListener('pointerdown', e => { pressedBackdrop = outsidePopup(e); });
+  popup.addEventListener('pointercancel', () => { pressedBackdrop = false; });
+  popup.addEventListener('click', e => {
+    if (pressedBackdrop && outsidePopup(e)) closeDialog();
+    pressedBackdrop = false;
   });
   function controls(items) {
     const div = el('div', 'overlay-actions');

@@ -24,7 +24,7 @@ import { Flowers } from "./bruno/World/Flowers.js";
 import { cheapDOF } from "./bruno/Passes/cheapDOF.js";
 
 export { T };
-export async function createWorld(canvas, progress, phone = false) {
+export async function createWorld(canvas, progress, phone, onDeviceLoss) {
   const asset = (path) => versionedURL(path, worldBaseURL());
   // Safari, iPadOS desktop mode and iOS browsers share the WebKit GPU stack.
   const webKit = /AppleWebKit/.test(navigator.userAgent) && !/(?:Chrome|Chromium|Edg)\//.test(navigator.userAgent);
@@ -34,9 +34,14 @@ export async function createWorld(canvas, progress, phone = false) {
     powerPreference: "high-performance",
     forceWebGL: webKit || phone || new URLSearchParams(location.search).has("webgl"),
   });
-  const pixelRatio = Math.min(devicePixelRatio, phone ? 1.25 : 1.5,
+  const defaultDeviceLost = renderer.onDeviceLost.bind(renderer);
+  renderer.onDeviceLost = info => {
+    defaultDeviceLost(info);
+    onDeviceLoss(new Error("图形设备连接已中断。"), info.api === "WebGPU");
+  };
+  const pixelRatio = () => Math.min(devicePixelRatio, phone ? 1.25 : 1.5,
     webKit ? Math.sqrt(2400000 / (innerWidth * innerHeight)) : Infinity);
-  renderer.setPixelRatio(pixelRatio);
+  renderer.setPixelRatio(pixelRatio());
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
   await renderer.init();
@@ -463,7 +468,7 @@ export async function createWorld(canvas, progress, phone = false) {
   const pipeline = supportsEffects ? new T.RenderPipeline(renderer) : { render: () => renderer.render(scene, camera) };
   if (supportsEffects) pipeline.outputNode = dof.add(glow);
   function setQuality(low) {
-    renderer.setPixelRatio(low ? 1 : pixelRatio);
+    renderer.setPixelRatio(low ? Math.min(1, pixelRatio()) : pixelRatio());
     game.lighting.light.shadow.mapSize.set(low ? 512 : 2048, low ? 512 : 2048);
     if (!supportsEffects) return;
     pipeline.outputNode = low ? renderColor.add(glow) : dof.add(glow);
@@ -476,6 +481,7 @@ export async function createWorld(canvas, progress, phone = false) {
   ]);
   return {
     webKit,
+    pixelRatio,
     game,
     scene,
     camera,

@@ -414,3 +414,7 @@ window.HAHA_READER = {
   dispose() { paused = true; cancelAnimationFrame(frameID);pageSound.dispose();paperBump?.dispose(); magazine?.dispose(); renderer?.dispose(); renderer?.forceContextLoss(); },
   snapshot() { return { ...state, originalPages: manifest.pages.length, ratio: 1 / aspect, bindingOpen: bindingOpen.value, bookFrames, gridCells: grid.activeCells, sheetGap: thickness / 16, backgroundFrame, loaded: [...loaded] }; }
 };
+
+// Notify the host once this module has installed its reading controls.
+document.documentElement.dataset.readerReady = "true";
+try { window.frameElement?.dispatchEvent(new Event("cecilia-project-ready")); } catch {}

@@ -195,3 +195,7 @@ window.addEventListener('pageshow', event => {
 });
 state.section='';selectSection('final');
 window.ICOD_ARCHIVE={state,manifest,selectSection,selectIndex,selectView,openViewer,closeViewer};
+
+// Notify the host once this module has installed its reading controls.
+document.documentElement.dataset.readerReady = "true";
+try { window.frameElement?.dispatchEvent(new Event("cecilia-project-ready")); } catch {}

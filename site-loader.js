@@ -70,7 +70,9 @@
     const element=document.createElement('div');element.id='document-loading';document.body.append(element);const loader=create(element);
     const start=()=>requestAnimationFrame(()=>{
       const images=[...document.querySelectorAll('img,svg image')].filter(image=>!image.closest('.cecilia-loader')&&(image.getAttribute('href')||image.currentSrc||image.getAttribute('src'))&&(!(image instanceof HTMLImageElement)||image.loading!=='lazy'||(()=>{const r=image.getBoundingClientRect();return r.width>0&&r.height>0&&r.bottom>=0&&r.top<innerHeight+100;})()));
-      watchImages(element,images);
+      // A stalled illustration or font must not cover the document controls indefinitely.
+      const deadline = setTimeout(loader.finish, 1200);
+      watchImages(element,images).ready.finally(() => clearTimeout(deadline));
     });
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
     return loader;

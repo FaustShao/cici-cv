@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict'),{chromium}=require('playwright');
 const base=process.env.PREVIEW_ROOT||'http://127.0.0.1:8770/cici-cv/';
 (async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});try{
- const context=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'}),p=await context.newPage(),errors=[],bad=[],documents=[];
+ const context=await browser.newContext({viewport:{width:1600,height:850},reducedMotion:'reduce'}),p=await context.newPage(),errors=[],bad=[],documents=[];
  p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.status()>=400)bad.push(r.url())});p.on('request',r=>{if(r.isNavigationRequest()&&r.frame()===p.mainFrame())documents.push(r.url())});
  await p.goto(new URL('index.html?webgl=1',base).href,{waitUntil:'domcontentloaded'});
  await p.waitForFunction(()=>window.designWorld&&document.body.dataset.ready&&!document.documentElement.dataset.releaseState,null,{timeout:180000});
@@ -32,7 +32,7 @@ const base=process.env.PREVIEW_ROOT||'http://127.0.0.1:8770/cici-cv/';
  assert.equal(await p.locator('body').getAttribute('data-place'),'other');await p.locator('#lab-next').click();assert.equal(await p.evaluate(()=>WORLD_STATE.otherIndex),1);
  for(const place of['portfolio','resume','portfolio','contact','home','portfolio']){await p.evaluate(place=>designWorld.go(place),place);await frames();await same();}
  assert.equal(await p.evaluate(()=>designWorld.world.scene.children.length),await p.evaluate(()=>original.children));
- await p.setViewportSize({width:390,height:844});await frames();assert.equal(await p.evaluate(()=>preview.game.view.camera.fov),56);assert.ok(await p.locator('#map-trigger').isVisible());
+ await p.setViewportSize({width:390,height:844});await frames();assert.ok(await p.evaluate(()=>preview.game.view.camera.fov>56),'Narrow mouse windows keep both full-size signs inside the frame');assert.ok(await p.locator('#map-trigger').isVisible());
  const map=await p.locator('#map-trigger').boundingBox(),controls=await p.locator('#controls').boundingBox();assert.ok(map.y+map.height<controls.y);
  await p.screenshot({path:'/workspace/portfolio-unified-final-mobile.png',timeout:60000});
  await p.locator('#reset-view').click();await frames();await same();assert.equal(await p.locator('body').getAttribute('data-place'),'home');assert.equal(await p.evaluate(()=>designWorld.world.camera.far),250);assert.equal(await p.evaluate(()=>designWorld.world.game.view.optimalArea.radius),45);

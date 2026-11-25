@@ -28,6 +28,18 @@ const { chromium } = require('playwright');
     const modules = await page.evaluate(() => performance.getEntriesByType('resource')
       .map(entry => new URL(entry.name)).filter(url => url.pathname.includes('/three.module-')));
     assert.equal(modules.length, 1, 'The HTML and the scene must load the same Three module URL.');
+    await page.evaluate(() => {
+      designWorld.go('portfolio');
+      preview.select(2);
+      designWorld.world.renderer.onDeviceLost({api:'WebGPU', reason:'unknown', message:'Simulated device loss'});
+    });
+    await page.locator('#fallback').waitFor();
+    await page.locator('#retry-scene').click();
+    await page.waitForFunction(() => document.body.dataset.ready && window.preview, null, {timeout:120000});
+    assert.ok(new URL(page.url()).searchParams.has('webgl'));
+    assert.equal(await page.evaluate(() => preview.area.navigation.index), 2);
+    assert.ok(await page.evaluate(() => designWorld.world.renderer.backend.isWebGLBackend));
+    console.log('PASS device-loss recovery via WebGL with the selected exhibit restored.');
     console.log('PASS slow entry exposes project links, recovers in place and builds the complete wordmark.');
   } finally {
     await browser.close();

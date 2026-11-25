@@ -1,3 +1,4 @@
+import { subjectCorners } from "./phone-framing.js";
 import { letteringBaseline } from "./canvas-lettering.js";
 import * as T from "three/webgpu";
 import gsap from "gsap";
@@ -297,7 +298,29 @@ export async function createPortfolioStation(world,readWork) {
   const screenCenter=new T.Box3().setFromObject(screen).getCenter(new T.Vector3());
   const offset=area.cinematic.position.clone().sub(area.cinematic.target);
   const spherical=new T.Spherical().setFromVector3(offset);
-  function pose(){return{focus:(innerWidth<700?screenCenter:area.cinematic.target).clone(),distance:spherical.radius,yaw:spherical.theta,pitch:spherical.phi,fov:innerWidth<700?56:25};}
+  // Measure the full-size signs before their entrance animations shrink them.
+  const attributePanels = Object.values(area.attributes.items).flatMap(item => item.group.children);
+  const displayCorners = subjectCorners([
+    screen, area.adjacents.previous.inner, area.adjacents.next.inner,
+    ...modelButtons.map(button => button.mesh), ...attributePanels,
+  ]);
+  const viewCamera = new T.PerspectiveCamera();
+  viewCamera.position.copy(area.cinematic.position);
+  viewCamera.lookAt(area.cinematic.target);
+  viewCamera.updateMatrixWorld();
+  let horizontalSlope = 0;
+  for (const point of displayCorners) {
+    viewCamera.worldToLocal(point);
+    horizontalSlope = Math.max(horizontalSlope, Math.abs(point.x) / -point.z);
+  }
+  function pose() {
+    const compact = innerWidth < 700 && matchMedia("(pointer: coarse)").matches;
+    const slope = horizontalSlope * innerHeight / innerWidth;
+    const desktopFov = slope <= Math.tan(T.MathUtils.degToRad(25 / 2))
+      ? 25 : T.MathUtils.radToDeg(2 * Math.atan(slope / .98));
+    return {focus:(compact ? screenCenter : area.cinematic.target).clone(), distance:spherical.radius,
+      yaw:spherical.theta, pitch:spherical.phi, fov:compact ? 56 : desktopFov};
+  }
   const ray=new T.Raycaster(),pointer=new T.Vector2(),screenTarget={onClick:readWork};
   function pick(x,y, touchRadius = 0) {
     pointer.set(

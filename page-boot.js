@@ -48,25 +48,9 @@
   };
   const release=()=>{root.dataset.pageBoot='ready';};
   addEventListener('error',event=>{if(event.target===window)release();});
-  document.addEventListener('DOMContentLoaded',async()=>{
+  document.addEventListener('DOMContentLoaded',()=>{
+    release();
     try { window.frameElement?.dispatchEvent(new Event('cecilia-project-ready')); } catch {}
-    // On touch screens the boards span several small pages in one viewport.
-    // Reveal the current document as its images arrive, without decoding extra SVG copies.
-    if (phone.matches) { release(); return; }
-    try{
-      await document.fonts.ready;
-      // Allow the current layout and its lazy SVG artwork to be positioned before choosing the first viewport.
-      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-      const images=[...document.querySelectorAll('img,svg image')].filter(img=>{
-        if(img.loading==='lazy')return false;
-        const source=img.getAttribute('src')||img.getAttribute('href');
-        const r=img.getBoundingClientRect();return source&&r.width>0&&r.height>0&&r.bottom>0&&r.top<innerHeight;
-      });
-      await Promise.allSettled(images.map(img=>{
-        if(img instanceof HTMLImageElement)return img.decode();
-        const copy=new Image();copy.src=img.getAttribute('href');return copy.decode();
-      }));
-    }finally{requestAnimationFrame(release);}
   },{once:true});
   addEventListener('pageshow',event=>{if(event.persisted)release();});
 })();
