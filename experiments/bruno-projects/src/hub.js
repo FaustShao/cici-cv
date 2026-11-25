@@ -434,7 +434,7 @@ async function startScene() {
     return root;
   }
   const original = game.resources.areasModel.scene;
-  const fixtures = createFixtures(world);
+  const fixtures = await createFixtures(world);
   function referencePose(key){
     const view=referenceViews[key],direction=new T.Vector3().setFromSpherical(new T.Spherical(1,view.pitch,view.yaw));
     return {...view,focus:new T.Vector3(...view.position).addScaledVector(direction,-view.distance)};

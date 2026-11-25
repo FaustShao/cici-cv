@@ -6,8 +6,21 @@ import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
 // Palette-matched physical fixtures. Text is printed on surfaces, not extruded
 // above a station. Only the owner's single-line name is a sculptural wordmark.
-export function createFixtures(world) {
+export async function createFixtures(world) {
   const { scene, clean, game, surface } = world;
+  const signTextures = new Map();
+  if (world.presentScene) {
+    // Original signs rendered with the site's World Xiaolai font. WebKit's
+    // unreadable canvas can also leave CanvasTexture lettering transparent.
+    const signs = { welcome: "王钰欣 / Cecilia", website: "的个人网站", mail: "邮箱",
+      resume: "个人简历", portfolio: "作品集", other: "其他项目", contact: "联系方式" };
+    await Promise.all(Object.entries(signs).map(async ([file, text]) => {
+      try {
+        const image = await world.textures.loadAsync(world.asset(`entrance/signs/${file}.png`));
+        signTextures.set(text, image);
+      } catch (error) { console.warn("Sign texture unavailable:", file, error); }
+    }));
+  }
   const colors = {
     wood: "#a75d48",
     edge: "#62384d",
@@ -125,12 +138,7 @@ export function createFixtures(world) {
     if (options.reserve !== false) reserved.push({ ...best,name:root.name, oriented:options.oriented,hull:hull?.map(p=>[p[0]+best.x,p[1]+best.z]) });
     return root;
   }
-  function print(
-    text,
-    width,
-    height,
-    { bg = "#a75d48", ink = "#ffead0", size = 85, font = "World Xiaolai", fit = false } = {},
-  ) {
+  function signCanvas(text, width, height, bg, ink, size, font, fit) {
     const canvas = document.createElement("canvas");
     canvas.width = 1024;
     canvas.height = Math.round((1024 * height) / width);
@@ -151,7 +159,13 @@ export function createFixtures(world) {
       ctx.translate(512,canvas.height/2);ctx.scale(scale,scale);
       ctx.fillText(text,0,(m.actualBoundingBoxAscent-m.actualBoundingBoxDescent)/2);
     } else ctx.fillText(text, 512, letteringBaseline(ctx, text, canvas.height / 2), 880);
-    const tex = new T.CanvasTexture(canvas);
+    return canvas;
+  }
+  function print(
+    text, width, height,
+    { bg = "#a75d48", ink = "#ffead0", size = 85, font = "World Xiaolai", fit = false } = {},
+  ) {
+    const tex = signTextures.get(text) ?? new T.CanvasTexture(signCanvas(text, width, height, bg, ink, size, font, fit));
     tex.colorSpace = T.SRGBColorSpace;
     return new T.Mesh(
       new T.PlaneGeometry(width, height),
