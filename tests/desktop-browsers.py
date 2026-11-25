@@ -8,7 +8,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -23,7 +23,22 @@ def check(driver, url):
     js = driver.execute_script
 
     def click(selector):
-        driver.find_element(By.CSS_SELECTOR, selector).click()
+        # Modal entrance and hover transforms can put the DOM click coordinates a frame behind.
+        # Wait until the position accepts an actual pointer, then click that viewport point.
+        script = """
+            const el = document.querySelector(arguments[0]);
+            if (!el) return false;
+            const modal = el.closest('dialog');
+            if (modal && (!modal.open || modal.getAnimations().some(a => a.playState === 'running'))) return false;
+            const r = el.getBoundingClientRect();
+            const x = Math.floor(r.left + r.width / 2), y = Math.floor(r.top + r.height / 2);
+            return r.width && r.height && el.contains(document.elementFromPoint(x,y)) ? [x,y] : false;
+        """
+        point = wait.until(lambda _: js(script, selector), message=f'Pointer target {selector}')
+        chain = ActionChains(driver)
+        chain.w3c_actions.pointer_action.move_to_location(*point)
+        chain.w3c_actions.pointer_action.click()
+        chain.perform()
 
     driver.set_window_size(1366, 768)
     driver.get(url)
@@ -43,7 +58,8 @@ def check(driver, url):
     try:
         driver.back()
     except TimeoutException:
-        pass  # The station, selection and closed reader are checked below.
+        if js("return document.querySelector('#reader').open"):
+            raise
     wait.until(lambda _: js("return !document.querySelector('#reader').open && WORLD_STATE.place === 'portfolio' && preview.area.navigation.index === 1"))
     # Resume at the same station, including after resizing the browser window.
     for width, height in [(1024, 680), (1920, 1080)]:
@@ -82,6 +98,8 @@ def run(browser):
         options.add_argument('--enable-unsafe-swiftshader')
         options.add_argument('--force-device-scale-factor=' + ('1.25' if browser == 'edge' else '1.5'))
         driver_type = webdriver.Edge if browser == 'edge' else webdriver.Chrome
+    if browser != 'safari':
+        options.add_argument('--use-angle=swiftshader')
     options.page_load_strategy = 'none'
     driver = driver_type(options=options)
     server = ThreadingHTTPServer(('127.0.0.1', 0), partial(StaticFiles, directory=os.path.abspath('public')))
