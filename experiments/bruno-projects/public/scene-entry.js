@@ -8,13 +8,16 @@
   try { enabled = sessionStorage.getItem('cecilia-music-muted') !== 'true'; } catch {}
   audio.volume = .45;
   let indicator;
+  const source = audio.src;
+  let recovering = false;
+  let bufferedTrack;
   function update() {
     const playing = enabled && !audio.paused && !audio.error;
     for (const control of [button, fallbackButton]) control.setAttribute('aria-pressed', String(playing));
     if (indicator) indicator(playing);
   }
   function start() {
-    if (!enabled || !audio.paused) return;
+    if (!enabled || recovering || (!audio.paused && !audio.error)) return;
     if (audio.error) audio.load();
     // A rejected autoplay request keeps the track armed for the next user gesture.
     audio.play().catch(update);
@@ -33,6 +36,23 @@
     doc.addEventListener('click', unlock);
     doc.addEventListener('keydown', unlock);
   }
+  // Some media servers or caches reject the byte-range request made by WebKit.
+  // Retry the small soundtrack as one ordinary file; keep the same audio element.
+  audio.addEventListener('error', async () => {
+    if (!enabled || recovering || bufferedTrack) return;
+    recovering = true;
+    try {
+      const response = await fetch(source);
+      if (!response.ok) return;
+      bufferedTrack = URL.createObjectURL(await response.blob());
+      audio.src = bufferedTrack;
+    } catch {
+      return;
+    } finally {
+      recovering = false;
+    }
+    if (enabled) audio.play().catch(update);
+  });
   button.onclick = fallbackButton.onclick = toggle;
   for (const event of ['playing', 'pause', 'error']) audio.addEventListener(event, update);
   window.CeciliaMusic = { toggle, bind, setIndicator(fn) { indicator = fn; update(); } };

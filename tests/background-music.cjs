@@ -17,7 +17,12 @@ async function check(blocked) {
     const page = await browser.newPage({ viewport: {width: 900, height: 650}, reducedMotion: 'reduce' });
     // Exercise the pre-module recovery path and the older Safari release guard.
     await page.addInitScript(() => { delete AbortSignal.timeout; });
-    if (blocked) await page.route('**/assets/hub-*.js*', route => route.abort());
+    if (blocked) {
+      await page.route('**/assets/hub-*.js*', route => route.abort());
+      await page.route('**/entrance/carefree.mp3*', route => route.request().resourceType() === 'media'
+        ? route.fulfill({contentType:'audio/mpeg', body:'truncated media'})
+        : route.continue());
+    }
     await page.goto(root, {waitUntil: 'domcontentloaded'});
     const audio = page.locator('#background-music');
     const paused = () => audio.evaluate(track => track.paused);
@@ -26,6 +31,7 @@ async function check(blocked) {
       assert.ok(await paused());
       await page.locator('#fallback h2').click();
       await page.waitForFunction(isPlaying);
+      assert.ok(await audio.evaluate(track => track.currentSrc.startsWith('blob:')));
       const switcher = page.locator('#fallback-music');
       await switcher.click();
       assert.ok(await paused());
