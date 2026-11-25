@@ -559,7 +559,7 @@ try {
     if(kind === "gamepad") identity.toggleLight();
     if(kind === "joystick") mapFlashAt=effectTime;
   });
-  const music = await createEntranceSpeaker(world, fixtures, reader, $("feedback")).catch(error => {
+  const music = await createEntranceSpeaker(world, fixtures, reader).catch(error => {
     console.warn("Entrance speaker unavailable", error);
     return null;
   });

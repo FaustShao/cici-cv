@@ -3,7 +3,52 @@ import { color, uniform } from "three/tsl";
 import { T } from "./create-world.js";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
-export async function createEntranceSpeaker(world, fixtures, reader, feedback) {
+// A small enamel volume marker mounted on the right side of the cabinet.
+function mountVolumeMarker(cabinet) {
+  const marker = new T.Group();
+  marker.name = "speaker-volume-marker";
+  marker.position.set(.228, .225, -.037);
+  cabinet.add(marker);
+  const enamel = new MeshDefaultMaterial({ colorNode: color("#54394b"), hasWater: false });
+  const ivory = new T.MeshBasicNodeMaterial({ colorNode: color("#fff1ce") });
+  const honey = new T.MeshBasicNodeMaterial({ colorNode: color("#ffcd69") });
+
+  const bracket = new T.Mesh(new T.BoxGeometry(.09, .022, .021), enamel);
+  bracket.position.set(-.055, 0, -.005);
+  const plate = new T.Mesh(new T.CylinderGeometry(.073, .073, .021, 12), enamel);
+  plate.rotation.x = Math.PI / 2;
+  marker.add(bracket, plate);
+
+  const shape = new T.Shape();
+  shape.moveTo(-.050, -.013);
+  shape.lineTo(-.034, -.013);
+  shape.lineTo(-.009, -.035);
+  shape.lineTo(-.009, .035);
+  shape.lineTo(-.034, .013);
+  shape.lineTo(-.050, .013);
+  shape.closePath();
+  const horn = new T.Mesh(new T.ExtrudeGeometry(shape, { depth: .005, bevelEnabled: false }), ivory);
+  horn.position.z = .011;
+  const wave = new T.Mesh(new T.TorusGeometry(.036, .006, 6, 12, Math.PI * .64), honey);
+  wave.rotation.z = -Math.PI * .32;
+  wave.position.set(-.008, 0, .017);
+  const mute = new T.Group();
+  for (const angle of [-Math.PI / 4, Math.PI / 4]) {
+    const stroke = new T.Mesh(new T.BoxGeometry(.049, .010, .006), ivory);
+    stroke.position.set(.023, 0, .016);
+    stroke.rotation.z = angle;
+    mute.add(stroke);
+  }
+  wave.visible = false;
+  marker.add(horn, wave, mute);
+  marker.updateWorldMatrix(true, true);
+  return playing => {
+    wave.visible = playing;
+    mute.visible = !playing;
+  };
+}
+
+export async function createEntranceSpeaker(world, fixtures, reader) {
   const { scene: root } = await new GLTFLoader().loadAsync(world.asset("entrance/speaker-small.glb"));
   root.name = "entrance-music-speaker";
   root.traverse(mesh => {
@@ -16,7 +61,13 @@ export async function createEntranceSpeaker(world, fixtures, reader, feedback) {
   pilot.position.set(.121, .272, .001);
   root.add(pilot);
   root.rotation.y = .52;
-  fixtures.parcel(root, 42.70, 37.56, 4.35, { plaza: true, precise: true, hull: true, radius: 0, groundClearance: 0 });
+  // The kiosk reserves a rectangular area around its pitched roof. The cabinet
+  // stands clear of its actual supports, in line with the right end of the bench.
+  fixtures.parcel(root, 42.68, 35.62, 4.35, {
+    plaza: true, precise: true, hull: true, radius: 0, groundClearance: 0,
+    ignoreReservations: ["enlarged-native-map-kiosk"],
+  });
+  const showVolume = mountVolumeMarker(root);
 
   const button = document.getElementById("music-switch");
   const audio = new Audio();
@@ -25,18 +76,10 @@ export async function createEntranceSpeaker(world, fixtures, reader, feedback) {
   audio.volume = .45;
   let enabled = false;
   let sequence = 0;
-  let hideMessage;
-
-  function report(text) {
-    clearTimeout(hideMessage);
-    feedback.textContent = text;
-    hideMessage = setTimeout(() => {
-      if (feedback.textContent === text) feedback.textContent = "";
-    }, 3200);
-  }
-
-  function updateLight() {
-    light.value.set(enabled && !audio.paused ? "#ffd772" : "#443d38");
+  function updateIndicator() {
+    const playing = enabled && !audio.paused;
+    showVolume(playing);
+    light.value.set(playing ? "#ffd772" : "#443d38");
     button.setAttribute("aria-pressed", String(enabled));
   }
 
@@ -44,15 +87,14 @@ export async function createEntranceSpeaker(world, fixtures, reader, feedback) {
     enabled = false;
     audio.removeAttribute("src");
     audio.load();
-    updateLight();
-    report("音乐暂时无法播放，可再点音响重试");
+    updateIndicator();
   }
 
   function sync() {
     const request = ++sequence;
     if (!enabled || reader.open || document.hidden) {
       audio.pause();
-      updateLight();
+      updateIndicator();
       return;
     }
     if (!audio.hasAttribute("src")) audio.src = world.asset("entrance/carefree.mp3");
@@ -63,13 +105,12 @@ export async function createEntranceSpeaker(world, fixtures, reader, feedback) {
 
   function toggle() {
     enabled = !enabled;
-    report(enabled ? "♪ Carefree · Kevin MacLeod" : "背景音乐已暂停");
     sync();
   }
 
   button.onclick = toggle;
-  audio.addEventListener("playing", updateLight);
-  audio.addEventListener("pause", updateLight);
+  audio.addEventListener("playing", updateIndicator);
+  audio.addEventListener("pause", updateIndicator);
   audio.addEventListener("error", () => { if (enabled && audio.error) unavailable(); });
   new MutationObserver(sync).observe(reader, { attributes: true, attributeFilter: ["open"] });
   document.addEventListener("visibilitychange", sync);
