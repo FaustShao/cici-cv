@@ -1057,3 +1057,33 @@ dd {
 .bubble .idea-hit * { pointer-events: fill; cursor: grab; }
 .bubble.dragging .idea-hit * { cursor: grabbing; }
 .bubble.selected { outline: none; filter: drop-shadow(0 0 3px #6c49c3); }
+
+#stage:not([data-welcome-dismissed]) .collapsed-welcome,
+#stage[data-welcome-dismissed] [data-component='1:1133'] { display: none; }
+.collapsed-welcome { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; align-content: center; gap: .7em; }
+.collapsed-welcome [data-action='restore-welcome'] { color: #181522; background: var(--violet); }
+
+#asset-library {
+  width: min(980px, calc(100% - 24px));
+  max-height: min(88dvh, 900px);
+  padding: clamp(15px, 3vw, 30px);
+  overflow: hidden;
+}
+#asset-library[open] { display: flex; flex-direction: column; }
+#asset-library > header { align-items: start; margin-bottom: 14px; }
+#asset-library h2 { font-size: clamp(20px, 2.4vw, 30px); }
+#library-help { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+#library-index, #library-detail { overflow: auto; overscroll-behavior: contain; min-height: 0; }
+#library-filters { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 15px; }
+#library-filters button { border-radius: 20px; font-size: .85rem; }
+#library-filters [aria-pressed=true] { background: var(--violet); color: #151320; border-color: transparent; }
+#library-items { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(145px, 45%), 1fr)); }
+#library-items button { min-width: 0; padding: 0; text-align: left; overflow: hidden; }
+#library-items img { width: 100%; height: 102px; padding: 8px; background: #24252e; }
+#library-items span { display: block; padding: 7px 9px; font-size: .85rem; }
+#library-items button:focus-visible { outline-offset: -3px; }
+#library-detail figure { margin: 12px 0 0; text-align: center; }
+#library-image { width: 100%; height: min(53dvh, 520px); padding: 12px; background: #24252e; border-radius: 9px; }
+#library-caption { margin-top: 8px; }
+
+#asset-library img.light-preview { background: #eeeaf4; }

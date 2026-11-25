@@ -175,6 +175,8 @@
   function openDialog(title, children, type = '') {
     if (!popup.open) focusReturn = document.activeElement;
     dialogType = type;
+    popup.lang = type === 'about' ? 'zh-CN' : 'en';
+    popup.querySelector('[data-action=close]').setAttribute('aria-label', type === 'about' ? '关闭项目说明' : 'Close');
     popup.dataset.kind = type;
     popup.classList.toggle('nav-dialog', type === 'navigate');
     byId('popup-title').textContent = title;
@@ -440,9 +442,12 @@
         slice.append(n);
       }
     }
-    if (page === 'home' && dismissed) {
+    if (page === 'home') {
       const n = note(slice, box, [266, 162, 521, 288], '');
-      if (n) n.append(button('Create a brainstorming task', 'create'));
+      if (n) {
+        n.classList.add('collapsed-welcome');
+        n.append(button('Show welcome card', 'restore-welcome'), button('Create a brainstorming task', 'create'));
+      }
     }
     if (page === 'login') {
       if (login.email) note(slice, box, [83, 451, 420, 37], 'guest@boomind.demo');
@@ -468,6 +473,7 @@
   let draft = '';
   function render() {
     const split = mobile.matches && !zoomed && frames[page].mobile.length > 0;
+    stage.toggleAttribute('data-welcome-dismissed', dismissed);
     stage.dataset.screen = page;
     stage.dataset.figma = frames[page].figma;
     stage.classList.toggle('reflow', !!split);
@@ -641,10 +647,10 @@
         );
         break;
       case 'about':
-        details(
-          'About BOOMIND',
-          'BOOMIND is a workspace for team brainstorming. Choose a template, explore ideas on the canvas and plan design sessions with the shared project timeline. Changes in this prototype last for this visit.',
-        );
+        openDialog('项目说明', [
+          el('p', '', 'BOOMIND 为团队头脑风暴设计了一套共享工作台。成员可以选择模板建立讨论任务，把各自的想法放到同一张画布上，再用连线梳理观点之间的关系。'),
+          el('p', '', '工作台把讨论用到的文件、设备和日程放在同一套导航下。你可以在这里试用英文界面，也可以在素材库单独查看画布节点、导航图标和界面控件。'),
+        ], 'about');
         break;
       case 'search':
         search();
@@ -656,9 +662,13 @@
         go('canvas');
         break;
       case 'dismiss':
-        dismissed = true;
-        render();
+      case 'restore-welcome': {
+        dismissed = id === 'dismiss';
+        stage.toggleAttribute('data-welcome-dismissed', dismissed);
+        const nextAction = dismissed ? 'restore-welcome' : 'dismiss';
+        stage.querySelector('[data-action="' + nextAction + '"]')?.focus({ preventScroll: true });
         break;
+      }
       case 'create':
         createTask(arg);
         break;
@@ -940,6 +950,7 @@
       }
     });
   document.addEventListener('keydown', (e) => {
+    if (byId('asset-library').open) return;
     const control = e.target.closest('svg [role="button"][data-action]');
     if (control && (e.key === ' ' || e.key === 'Enter')) {
       e.preventDefault();

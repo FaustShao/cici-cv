@@ -1,0 +1,49 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="39.8" height="46.43" viewBox="0 0 39.8 46.43" data-component="1:2463" overflow="visible">
+    <defs>
+      <filter id="uid-inbox-1-2463-fx0" x="-22.54" y="-22.54" width="76.59" height="76.59" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="fx0_shape1"/>
+        <feGaussianBlur in="fx0_shape1" stdDeviation="11.27" result="fx0_layerBlur2"/>
+      </filter>
+    </defs>
+    <g data-layer="1:2463" data-name="circle button/shadow copy" aria-label="Message options" data-center="1121.00 184.90" data-action="mail-options" role="button" tabindex="0">
+      <g>
+        <g data-layer="0:3845" data-name="circle button bg/with shadow">
+          <g>
+            <g data-layer="0:3846" data-name="shadow">
+              <g transform="translate(4.15, 14.93)" style="mix-blend-mode: multiply" filter="url(#uid-inbox-1-2463-fx0)">
+                <path d="M31.51 15.75C31.51 24.45 24.45 31.51 15.75 31.51C7.05 31.51 0 24.45 0 15.75C0 7.05 7.05 0 15.75 0C24.45 0 31.51 7.05 31.51 15.75Z" fill="#242731" fill-opacity="0.7"/>
+              </g>
+            </g>
+            <g data-layer="0:3847" data-name="Oval">
+              <path d="M39.8 19.9C39.8 30.89 30.89 39.8 19.9 39.8C8.91 39.8 0 30.89 0 19.9C0 8.91 8.91 0 19.9 0C30.89 0 39.8 8.91 39.8 19.9Z" fill="#242731"/>
+            </g>
+          </g>
+        </g>
+        <g data-layer="0:3848" data-name="ui icon/more">
+          <g transform="translate(10.05, 9.73)">
+            <g data-layer="0:3850" data-name="menu-5">
+              <g transform="translate(0.88, 8.34)">
+                <g data-layer="0:3851" data-name="Oval">
+                  <g transform="translate(7.46, 0)">
+                    <ellipse cx="1.66" cy="1.66" rx="1.66" ry="1.66" fill="none" stroke="#FFFFFF" stroke-width="1.66" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                </g>
+                <g data-layer="0:3852" data-name="Oval">
+                  <g transform="translate(0, 0)">
+                    <ellipse cx="1.66" cy="1.66" rx="1.66" ry="1.66" fill="none" stroke="#FFFFFF" stroke-width="1.66" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                </g>
+                <g data-layer="0:3853" data-name="Oval">
+                  <g transform="translate(14.92, 0)">
+                    <ellipse cx="1.66" cy="1.66" rx="1.66" ry="1.66" fill="none" stroke="#FFFFFF" stroke-width="1.66" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>

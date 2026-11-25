@@ -1,0 +1,641 @@
+[
+ {
+  "name": "紫色立体标志",
+  "group": "品牌与动效",
+  "src": "library/2907d0824.webp",
+  "thumb": "library/2907d0824-thumb.webp"
+ },
+ {
+  "name": "玫红标志",
+  "group": "品牌与动效",
+  "src": "library/91323fa3b.webp",
+  "thumb": "library/91323fa3b-thumb.webp"
+ },
+ {
+  "name": "标志变形动画",
+  "group": "品牌与动效",
+  "src": "library/b6708c49f.webp",
+  "thumb": "library/b6708c49f-thumb.webp"
+ },
+ {
+  "name": "进入工作台动画",
+  "group": "品牌与动效",
+  "src": "welcome-animation.webp",
+  "thumb": "library/0ebcfe6ee-thumb.webp"
+ },
+ {
+  "name": "紫白圆环",
+  "group": "立体图形与设备",
+  "src": "library/34928879c.webp",
+  "thumb": "library/34928879c-thumb.webp"
+ },
+ {
+  "name": "叠层方块",
+  "group": "立体图形与设备",
+  "src": "library/3fdc4c934.webp",
+  "thumb": "library/3fdc4c934-thumb.webp"
+ },
+ {
+  "name": "青紫条纹球",
+  "group": "立体图形与设备",
+  "src": "library/5c3bf1ae4.webp",
+  "thumb": "library/5c3bf1ae4-thumb.webp"
+ },
+ {
+  "name": "方形软环",
+  "group": "立体图形与设备",
+  "src": "library/7b1a40070.webp",
+  "thumb": "library/7b1a40070-thumb.webp"
+ },
+ {
+  "name": "黄色棱锥",
+  "group": "立体图形与设备",
+  "src": "library/5c457d224.webp",
+  "thumb": "library/5c457d224-thumb.webp"
+ },
+ {
+  "name": "紫色孔洞球",
+  "group": "立体图形与设备",
+  "src": "library/6c22927c1.webp",
+  "thumb": "library/6c22927c1-thumb.webp"
+ },
+ {
+  "name": "孔洞球卡片",
+  "group": "立体图形与设备",
+  "src": "library/8cf6b95d9.webp",
+  "thumb": "library/8cf6b95d9-thumb.webp"
+ },
+ {
+  "name": "悬浮方块组合",
+  "group": "立体图形与设备",
+  "src": "library/594291df7.webp",
+  "thumb": "library/594291df7-thumb.webp"
+ },
+ {
+  "name": "黄色十字结",
+  "group": "立体图形与设备",
+  "src": "library/afe57bdf4.webp",
+  "thumb": "library/afe57bdf4-thumb.webp"
+ },
+ {
+  "name": "双色晶体",
+  "group": "立体图形与设备",
+  "src": "library/8436b6bb7.webp",
+  "thumb": "library/8436b6bb7-thumb.webp"
+ },
+ {
+  "name": "紫橙条纹球",
+  "group": "立体图形与设备",
+  "src": "library/949a6fd7c.webp",
+  "thumb": "library/949a6fd7c-thumb.webp"
+ },
+ {
+  "name": "环纹球近景",
+  "group": "立体图形与设备",
+  "src": "library/99bf49186.webp",
+  "thumb": "library/99bf49186-thumb.webp"
+ },
+ {
+  "name": "蓝色螺旋",
+  "group": "立体图形与设备",
+  "src": "library/99e3f804b.webp",
+  "thumb": "library/99e3f804b-thumb.webp"
+ },
+ {
+  "name": "无线耳机",
+  "group": "立体图形与设备",
+  "src": "library/9a9533b74.webp",
+  "thumb": "library/9a9533b74-thumb.webp"
+ },
+ {
+  "name": "蓝色棱锥",
+  "group": "立体图形与设备",
+  "src": "library/1d5f9bbfc.webp",
+  "thumb": "library/1d5f9bbfc-thumb.webp"
+ },
+ {
+  "name": "橙色纹理球",
+  "group": "立体图形与设备",
+  "src": "library/ac3814bd2.webp",
+  "thumb": "library/ac3814bd2-thumb.webp"
+ },
+ {
+  "name": "立方体框架",
+  "group": "立体图形与设备",
+  "src": "library/d345e3004.webp",
+  "thumb": "library/d345e3004-thumb.webp"
+ },
+ {
+  "name": "三角软环",
+  "group": "立体图形与设备",
+  "src": "library/e180e8272.webp",
+  "thumb": "library/e180e8272-thumb.webp"
+ },
+ {
+  "name": "粉色螺旋",
+  "group": "立体图形与设备",
+  "src": "library/e2ed0b4ea.webp",
+  "thumb": "library/e2ed0b4ea-thumb.webp"
+ },
+ {
+  "name": "运动发带人物",
+  "group": "人物与图像",
+  "src": "library/111f5da54.webp",
+  "thumb": "library/111f5da54-thumb.webp"
+ },
+ {
+  "name": "眼镜与胡须头像",
+  "group": "人物与图像",
+  "src": "library/23673d4f7.webp",
+  "thumb": "library/23673d4f7-thumb.webp"
+ },
+ {
+  "name": "双马尾头像",
+  "group": "人物与图像",
+  "src": "library/60d58a200.webp",
+  "thumb": "library/60d58a200-thumb.webp"
+ },
+ {
+  "name": "站立人物",
+  "group": "人物与图像",
+  "src": "library/f26b9b2c3.webp",
+  "thumb": "library/f26b9b2c3-thumb.webp"
+ },
+ {
+  "name": "银发眼镜头像",
+  "group": "人物与图像",
+  "src": "library/c1f9866d5.webp",
+  "thumb": "library/c1f9866d5-thumb.webp"
+ },
+ {
+  "name": "粉衣人物",
+  "group": "人物与图像",
+  "src": "library/7848371b0.webp",
+  "thumb": "library/7848371b0-thumb.webp"
+ },
+ {
+  "name": "棕衣人物",
+  "group": "人物与图像",
+  "src": "library/7a87799ac.webp",
+  "thumb": "library/7a87799ac-thumb.webp"
+ },
+ {
+  "name": "红衣人物",
+  "group": "人物与图像",
+  "src": "library/80c5d3d24.webp",
+  "thumb": "library/80c5d3d24-thumb.webp"
+ },
+ {
+  "name": "橙发眼镜人物",
+  "group": "人物与图像",
+  "src": "library/a668e4173.webp",
+  "thumb": "library/a668e4173-thumb.webp"
+ },
+ {
+  "name": "黄衣人物",
+  "group": "人物与图像",
+  "src": "library/b0c7053ab.webp",
+  "thumb": "library/b0c7053ab-thumb.webp"
+ },
+ {
+  "name": "绿衣人物",
+  "group": "人物与图像",
+  "src": "library/ecc0c82cb.webp",
+  "thumb": "library/ecc0c82cb-thumb.webp"
+ },
+ {
+  "name": "丸子头人物",
+  "group": "人物与图像",
+  "src": "library/fd1bb0a72.webp",
+  "thumb": "library/fd1bb0a72-thumb.webp"
+ },
+ {
+  "name": "海岸照片",
+  "group": "人物与图像",
+  "src": "library/d20fcef3d.webp",
+  "thumb": "library/d20fcef3d-thumb.webp"
+ },
+ {
+  "name": "山地照片",
+  "group": "人物与图像",
+  "src": "library/dd0497447.webp",
+  "thumb": "library/dd0497447-thumb.webp"
+ },
+ {
+  "name": "消息头像",
+  "group": "人物与图像",
+  "src": "library/5ce584109.webp",
+  "thumb": "library/5ce584109-thumb.webp"
+ },
+ {
+  "name": "思维导图示例",
+  "group": "画布部件",
+  "src": "library/315d2ee7c.webp",
+  "thumb": "library/315d2ee7c-thumb.webp"
+ },
+ {
+  "name": "关联节点图标",
+  "group": "画布部件",
+  "src": "library/40c586af8.webp",
+  "thumb": "library/40c586af8-thumb.webp",
+  "light": true
+ },
+ {
+  "name": "大纲图标",
+  "group": "画布部件",
+  "src": "library/6181f074e.webp",
+  "thumb": "library/6181f074e-thumb.webp",
+  "light": true
+ },
+ {
+  "name": "想法气泡轮廓",
+  "group": "画布部件",
+  "src": "library/a6f47a285.webp",
+  "thumb": "library/a6f47a285-thumb.webp",
+  "light": true
+ },
+ {
+  "name": "渐变想法气泡",
+  "group": "画布部件",
+  "src": "library/6663a31f6.webp",
+  "thumb": "library/6663a31f6-thumb.webp"
+ },
+ {
+  "name": "相连的气泡",
+  "group": "画布部件",
+  "src": "library/ad28dddba.webp",
+  "thumb": "library/ad28dddba-thumb.webp"
+ },
+ {
+  "name": "成员消息卡",
+  "group": "画布部件",
+  "src": "library/05d0858a8.webp",
+  "thumb": "library/05d0858a8-thumb.webp"
+ },
+ {
+  "name": "侧栏标志",
+  "group": "导航与控件",
+  "src": "library/nav-brand.svg",
+  "thumb": "library/nav-brand-thumb.webp"
+ },
+ {
+  "name": "总览",
+  "group": "导航与控件",
+  "src": "components/nav-overview.svg",
+  "thumb": "library/nav-overview-thumb.webp"
+ },
+ {
+  "name": "产品",
+  "group": "导航与控件",
+  "src": "components/nav-products.svg",
+  "thumb": "library/nav-products-thumb.webp"
+ },
+ {
+  "name": "文件库",
+  "group": "导航与控件",
+  "src": "components/nav-files.svg",
+  "thumb": "library/nav-files-thumb.webp"
+ },
+ {
+  "name": "日程",
+  "group": "导航与控件",
+  "src": "components/nav-calendar.svg",
+  "thumb": "library/nav-calendar-thumb.webp"
+ },
+ {
+  "name": "素材市场",
+  "group": "导航与控件",
+  "src": "components/nav-market.svg",
+  "thumb": "library/nav-market-thumb.webp"
+ },
+ {
+  "name": "报表",
+  "group": "导航与控件",
+  "src": "components/nav-statement.svg",
+  "thumb": "library/nav-statement-thumb.webp"
+ },
+ {
+  "name": "设置",
+  "group": "导航与控件",
+  "src": "components/nav-profile.svg",
+  "thumb": "library/nav-profile-thumb.webp"
+ },
+ {
+  "name": "收件箱",
+  "group": "导航与控件",
+  "src": "components/nav-inbox.svg",
+  "thumb": "library/nav-inbox-thumb.webp"
+ },
+ {
+  "name": "通知",
+  "group": "导航与控件",
+  "src": "components/nav-notifications.svg",
+  "thumb": "library/nav-notifications-thumb.webp"
+ },
+ {
+  "name": "评论",
+  "group": "导航与控件",
+  "src": "components/nav-comments.svg",
+  "thumb": "library/nav-comments-thumb.webp"
+ },
+ {
+  "name": "用户栏",
+  "group": "导航与控件",
+  "src": "library/nav-user.svg",
+  "thumb": "library/nav-user-thumb.webp"
+ },
+ {
+  "name": "画布工具盘",
+  "group": "导航与控件",
+  "src": "components/tools.svg",
+  "thumb": "library/tools-thumb.webp"
+ },
+ {
+  "name": "设备连接状态",
+  "group": "导航与控件",
+  "src": "library/voice.svg",
+  "thumb": "library/voice-thumb.webp"
+ },
+ {
+  "name": "协作成员标签",
+  "group": "导航与控件",
+  "src": "library/member.svg",
+  "thumb": "library/member-thumb.webp"
+ },
+ {
+  "name": "通知下拉面板",
+  "group": "导航与控件",
+  "src": "library/notifications.svg",
+  "thumb": "library/notifications-thumb.webp"
+ },
+ {
+  "name": "蓝色想法节点",
+  "group": "画布部件",
+  "src": "library/idea-blue.svg",
+  "thumb": "library/idea-blue-thumb.webp"
+ },
+ {
+  "name": "带成员的蓝色节点",
+  "group": "画布部件",
+  "src": "library/idea-blue-member.svg",
+  "thumb": "library/idea-blue-member-thumb.webp"
+ },
+ {
+  "name": "淡紫想法节点",
+  "group": "画布部件",
+  "src": "library/idea-lilac.svg",
+  "thumb": "library/idea-lilac-thumb.webp"
+ },
+ {
+  "name": "粉色想法节点",
+  "group": "画布部件",
+  "src": "library/idea-pink.svg",
+  "thumb": "library/idea-pink-thumb.webp"
+ },
+ {
+  "name": "紫色想法节点",
+  "group": "画布部件",
+  "src": "library/idea-violet.svg",
+  "thumb": "library/idea-violet-thumb.webp"
+ },
+ {
+  "name": "黄色想法节点",
+  "group": "画布部件",
+  "src": "library/idea-yellow.svg",
+  "thumb": "library/idea-yellow-thumb.webp"
+ },
+ {
+  "name": "创建任务卡",
+  "group": "界面组件",
+  "src": "library/home-1133.svg",
+  "thumb": "library/home-1133-thumb.webp"
+ },
+ {
+  "name": "任务模板列表",
+  "group": "界面组件",
+  "src": "library/home-1148.svg",
+  "thumb": "library/home-1148-thumb.webp"
+ },
+ {
+  "name": "最近打开的画板",
+  "group": "界面组件",
+  "src": "library/home-1171.svg",
+  "thumb": "library/home-1171-thumb.webp"
+ },
+ {
+  "name": "搜索框",
+  "group": "界面组件",
+  "src": "library/home-1193.svg",
+  "thumb": "library/home-1193-thumb.webp"
+ },
+ {
+  "name": "通知计数",
+  "group": "界面组件",
+  "src": "library/home-1194.svg",
+  "thumb": "library/home-1194-thumb.webp"
+ },
+ {
+  "name": "每周工作时长",
+  "group": "界面组件",
+  "src": "library/home-1231.svg",
+  "thumb": "library/home-1231-thumb.webp"
+ },
+ {
+  "name": "项目列表",
+  "group": "界面组件",
+  "src": "library/home-1242.svg",
+  "thumb": "library/home-1242-thumb.webp"
+ },
+ {
+  "name": "项目进度标题",
+  "group": "界面组件",
+  "src": "library/home-1283.svg",
+  "thumb": "library/home-1283-thumb.webp"
+ },
+ {
+  "name": "日程规划面板",
+  "group": "界面组件",
+  "src": "library/calendar-1725.svg",
+  "thumb": "library/calendar-1725-thumb.webp"
+ },
+ {
+  "name": "项目目标折线图",
+  "group": "界面组件",
+  "src": "library/calendar-1792.svg",
+  "thumb": "library/calendar-1792-thumb.webp"
+ },
+ {
+  "name": "成员贡献卡",
+  "group": "界面组件",
+  "src": "library/files-928.svg",
+  "thumb": "library/files-928-thumb.webp"
+ },
+ {
+  "name": "分页圆点",
+  "group": "界面组件",
+  "src": "library/files-943.svg",
+  "thumb": "library/files-943-thumb.webp"
+ },
+ {
+  "name": "项目概况卡",
+  "group": "界面组件",
+  "src": "library/files-950.svg",
+  "thumb": "library/files-950-thumb.webp"
+ },
+ {
+  "name": "头脑风暴项目卡",
+  "group": "界面组件",
+  "src": "library/files-997.svg",
+  "thumb": "library/files-997-thumb.webp"
+ },
+ {
+  "name": "关联导图卡",
+  "group": "界面组件",
+  "src": "library/files-1032.svg",
+  "thumb": "library/files-1032-thumb.webp"
+ },
+ {
+  "name": "设备筛选栏",
+  "group": "界面组件",
+  "src": "library/products-1384.svg",
+  "thumb": "library/products-1384-thumb.webp"
+ },
+ {
+  "name": "设备列表",
+  "group": "界面组件",
+  "src": "library/products-1393.svg",
+  "thumb": "library/products-1393-thumb.webp"
+ },
+ {
+  "name": "消息搜索",
+  "group": "界面组件",
+  "src": "library/inbox-2426.svg",
+  "thumb": "library/inbox-2426-thumb.webp"
+ },
+ {
+  "name": "收件箱标签栏",
+  "group": "界面组件",
+  "src": "library/inbox-2427.svg",
+  "thumb": "library/inbox-2427-thumb.webp"
+ },
+ {
+  "name": "消息详情",
+  "group": "界面组件",
+  "src": "library/inbox-2431.svg",
+  "thumb": "library/inbox-2431-thumb.webp"
+ },
+ {
+  "name": "消息操作按钮",
+  "group": "界面组件",
+  "src": "library/inbox-2463.svg",
+  "thumb": "library/inbox-2463-thumb.webp"
+ },
+ {
+  "name": "回复框",
+  "group": "界面组件",
+  "src": "library/inbox-2464.svg",
+  "thumb": "library/inbox-2464-thumb.webp"
+ },
+ {
+  "name": "评论动态",
+  "group": "界面组件",
+  "src": "library/comments-2648.svg",
+  "thumb": "library/comments-2648-thumb.webp"
+ },
+ {
+  "name": "素材信息卡",
+  "group": "界面组件",
+  "src": "library/market-2842.svg",
+  "thumb": "library/market-2842-thumb.webp"
+ },
+ {
+  "name": "相似素材",
+  "group": "界面组件",
+  "src": "library/market-2857.svg",
+  "thumb": "library/market-2857-thumb.webp"
+ },
+ {
+  "name": "热门素材列表",
+  "group": "界面组件",
+  "src": "library/market-2883.svg",
+  "thumb": "library/market-2883-thumb.webp"
+ },
+ {
+  "name": "个人资料表单",
+  "group": "界面组件",
+  "src": "library/profile-1931.svg",
+  "thumb": "library/profile-1931-thumb.webp"
+ },
+ {
+  "name": "展开画布按钮",
+  "group": "界面组件",
+  "src": "library/board-1971.svg",
+  "thumb": "library/board-1971-thumb.webp"
+ },
+ {
+  "name": "画布顶栏",
+  "group": "界面组件",
+  "src": "library/board-1986.svg",
+  "thumb": "library/board-1986-thumb.webp"
+ },
+ {
+  "name": "画布侧栏",
+  "group": "界面组件",
+  "src": "library/board-2011.svg",
+  "thumb": "library/board-2011-thumb.webp"
+ },
+ {
+  "name": "想法标签组",
+  "group": "界面组件",
+  "src": "library/layers-2312.svg",
+  "thumb": "library/layers-2312-thumb.webp"
+ },
+ {
+  "name": "总览页装饰气泡",
+  "group": "品牌与动效",
+  "src": "components/bitmaps/layer-1225.webp",
+  "thumb": "library/layer-1225-thumb.webp"
+ },
+ {
+  "name": "设备横幅图形",
+  "group": "品牌与动效",
+  "src": "components/bitmaps/layer-1490.webp",
+  "thumb": "library/layer-1490-thumb.webp"
+ },
+ {
+  "name": "画板构图",
+  "group": "画布部件",
+  "src": "components/bitmaps/layer-1975.webp",
+  "thumb": "library/layer-1975-thumb.webp"
+ },
+ {
+  "name": "聚焦画板图形",
+  "group": "画布部件",
+  "src": "components/bitmaps/layer-2109.webp",
+  "thumb": "library/layer-2109-thumb.webp"
+ },
+ {
+  "name": "成员视图图形",
+  "group": "画布部件",
+  "src": "components/bitmaps/layer-2178.webp",
+  "thumb": "library/layer-2178-thumb.webp"
+ },
+ {
+  "name": "成员视图局部",
+  "group": "画布部件",
+  "src": "components/bitmaps/layer-2195.webp",
+  "thumb": "library/layer-2195-thumb.webp"
+ },
+ {
+  "name": "图层视图色块",
+  "group": "画布部件",
+  "src": "components/bitmaps/layer-2296.webp",
+  "thumb": "library/layer-2296-thumb.webp"
+ },
+ {
+  "name": "品牌横幅图形",
+  "group": "品牌与动效",
+  "src": "components/bitmaps/layer-2643.webp",
+  "thumb": "library/layer-2643-thumb.webp"
+ }
+]

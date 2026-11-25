@@ -1,0 +1,45 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="56.38" height="6.63" viewBox="0 0 56.38 6.63" data-component="1:943" overflow="visible">
+    <defs>
+      <filter id="uid-files-1-943-fx0" x="-3.32" y="-1.66" width="9.95" height="9.95" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feOffset in="hardAlpha" dx="0" dy="1.66" result="fx0_offset1"/>
+        <feGaussianBlur in="fx0_offset1" stdDeviation="1.66" result="fx0_blur2"/>
+        <feFlood flood-color="#000000" flood-opacity="0.24" result="fx0_color4"/>
+        <feComposite in="fx0_color4" in2="fx0_blur2" operator="in" result="fx0_dropShadow3"/>
+        <feBlend mode="normal" in="fx0_dropShadow3" in2="BackgroundImageFix" result="fx0_dropShadowBlend5"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="fx0_dropShadowBlend5" result="fx0_shape6"/>
+      </filter>
+    </defs>
+    <g data-layer="1:943" data-name="pagination/classic dot">
+      <g>
+        <g data-layer="1:944" data-name="active dot">
+          <g transform="translate(16.58, 0)">
+            <g data-layer="1:945" data-name="Oval">
+              <path d="M6.63 3.32C6.63 5.15 5.15 6.63 3.32 6.63C1.48 6.63 0 5.15 0 3.32C0 1.48 1.48 0 3.32 0C5.15 0 6.63 1.48 6.63 3.32Z" fill="#A0D7E7"/>
+            </g>
+            <g data-layer="1:946" data-name="Oval Copy 2">
+              <g transform="translate(1.66, 1.66)" filter="url(#uid-files-1-943-fx0)">
+                <path d="M3.32 1.66C3.32 2.57 2.57 3.32 1.66 3.32C0.74 3.32 0 2.57 0 1.66C0 0.74 0.74 0 1.66 0C2.57 0 3.32 0.74 3.32 1.66Z" fill="#FFFFFF"/>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g data-layer="1:947" data-name="normal dot 1">
+          <g transform="translate(0, 1.66)" opacity="0.3">
+            <path d="M3.32 1.66C3.32 2.57 2.57 3.32 1.66 3.32C0.74 3.32 0 2.57 0 1.66C0 0.74 0.74 0 1.66 0C2.57 0 3.32 0.74 3.32 1.66Z" fill="#FFFFFF"/>
+          </g>
+        </g>
+        <g data-layer="1:948" data-name="normal dot 2">
+          <g transform="translate(36.48, 1.66)" opacity="0.3">
+            <path d="M3.32 1.66C3.32 2.57 2.57 3.32 1.66 3.32C0.74 3.32 0 2.57 0 1.66C0 0.74 0.74 0 1.66 0C2.57 0 3.32 0.74 3.32 1.66Z" fill="#FFFFFF"/>
+          </g>
+        </g>
+        <g data-layer="1:949" data-name="normal dot 3">
+          <g transform="translate(53.07, 1.66)" opacity="0.3">
+            <path d="M3.32 1.66C3.32 2.57 2.57 3.32 1.66 3.32C0.74 3.32 0 2.57 0 1.66C0 0.74 0.74 0 1.66 0C2.57 0 3.32 0.74 3.32 1.66Z" fill="#FFFFFF"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>

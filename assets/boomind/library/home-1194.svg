@@ -1,0 +1,66 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="49.75" height="46.43" viewBox="0 0 49.75 46.43" data-component="1:1194" overflow="visible">
+    <defs>
+      <filter id="uid-home-1-1194-fx0" x="-22.54" y="-22.54" width="76.59" height="76.59" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="fx0_shape1"/>
+        <feGaussianBlur in="fx0_shape1" stdDeviation="11.27" result="fx0_layerBlur2"/>
+      </filter>
+      <path id="uid-home-1-1194-letter0" d="M0.06463 0L0.06463 0.09517L0.31712 0.34268Q0.35334 0.37926 0.37749 0.40767Q0.40163 0.43608 0.41371 0.46271Q0.42578 0.48935 0.42578 0.51953Q0.42578 0.55398 0.41016 0.57848Q0.39453 0.60334 0.36719 0.61683Q0.33984 0.63033 0.30504 0.63033Q0.26918 0.63033 0.24219 0.61541Q0.2152 0.60085 0.20028 0.57386Q0.18572 0.54688 0.18572 0.50959L0.06037 0.50959Q0.06037 0.57884 0.09197 0.62997Q0.12358 0.68111 0.17898 0.70916Q0.23473 0.73722 0.30682 0.73722Q0.37997 0.73722 0.43537 0.70987Q0.49077 0.68253 0.52131 0.63494Q0.5522 0.58736 0.5522 0.52628Q0.5522 0.48544 0.53658 0.44602Q0.52095 0.40661 0.48153 0.35866Q0.44247 0.31072 0.3718 0.24254L0.24645 0.11506L0.24645 0.11009L0.56321 0.11009L0.56321 0L0.06463 0Z"/>
+    </defs>
+    <g data-layer="1:1194" data-name="notification/number" aria-label="Notifications" data-center="1119.40 63.00" data-action="notifications" role="button" tabindex="0">
+      <g data-layer="0:1273" data-name="notification">
+        <g transform="translate(0.25, 0)">
+          <g data-layer="0:1274" data-name="icon">
+            <g transform="translate(0, 0)">
+              <g data-layer="0:1275" data-name="circle button bg/with shadow">
+                <g>
+                  <g data-layer="0:1276" data-name="shadow">
+                    <g transform="translate(4.15, 14.92)" style="mix-blend-mode: multiply" filter="url(#uid-home-1-1194-fx0)">
+                      <path d="M31.51 15.75C31.51 24.45 24.45 31.51 15.75 31.51C7.05 31.51 0 24.45 0 15.75C0 7.05 7.05 0 15.75 0C24.45 0 31.51 7.05 31.51 15.75Z" fill="#242731" fill-opacity="0.7"/>
+                    </g>
+                  </g>
+                  <g data-layer="0:1277" data-name="Oval">
+                    <path d="M39.8 19.9C39.8 30.89 30.89 39.8 19.9 39.8C8.91 39.8 0 30.89 0 19.9C0 8.91 8.91 0 19.9 0C30.89 0 39.8 8.91 39.8 19.9Z" fill="#242731"/>
+                  </g>
+                </g>
+              </g>
+              <g data-layer="0:1278" data-name="ui icon/bell">
+                <g transform="translate(10.05, 9.73)">
+                  <g data-layer="0:1280" data-name="bell">
+                    <g transform="translate(1.66, 0.83)">
+                      <g data-layer="0:1281" data-name="Path">
+                        <g transform="translate(0, 0)">
+                          <path d="M14.1 8.29L14.1 5.8C14.1 2.6 11.5 0 8.29 0C5.09 0 2.49 2.6 2.49 5.8L2.49 8.29C2.49 11.03 0 11.69 0 13.27C0 14.68 3.23 15.75 8.29 15.75C13.35 15.75 16.58 14.68 16.58 13.27C16.58 11.69 14.1 11.03 14.1 8.29Z" fill="none" stroke="#FFFFFF" stroke-width="1.66" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M14.1 5.8L14.92 5.8L14.92 5.8L14.1 5.8ZM2.49 5.8L1.66 5.8L1.66 5.8L2.49 5.8ZM14.1 8.29L14.92 8.29L14.92 5.8L14.1 5.8L13.27 5.8L13.27 8.29L14.1 8.29ZM14.1 5.8L14.92 5.8C14.92 2.14 11.96 -0.83 8.29 -0.83L8.29 0L8.29 0.83C11.04 0.83 13.27 3.06 13.27 5.8L14.1 5.8ZM8.29 0L8.29 -0.83C4.63 -0.83 1.66 2.14 1.66 5.8L2.49 5.8L3.32 5.8C3.32 3.06 5.54 0.83 8.29 0.83L8.29 0ZM2.49 5.8L1.66 5.8L1.66 8.29L2.49 8.29L3.32 8.29L3.32 5.8L2.49 5.8ZM2.49 8.29L1.66 8.29C1.66 9.36 1.2 10.01 0.62 10.67C0.35 10.97 -0.02 11.35 -0.29 11.73C-0.57 12.13 -0.83 12.64 -0.83 13.27L0 13.27L0.83 13.27C0.83 13.11 0.88 12.94 1.06 12.69C1.26 12.41 1.51 12.16 1.87 11.76C2.53 11 3.32 9.96 3.32 8.29L2.49 8.29ZM0 13.27L-0.83 13.27C-0.83 13.97 -0.42 14.52 0.07 14.9C0.57 15.29 1.23 15.59 2 15.83C3.55 16.31 5.72 16.58 8.29 16.58L8.29 15.75L8.29 14.92C5.81 14.92 3.83 14.66 2.49 14.25C1.82 14.04 1.37 13.81 1.1 13.6C0.82 13.38 0.83 13.27 0.83 13.27L0 13.27ZM8.29 15.75L8.29 16.58C10.87 16.58 13.03 16.31 14.58 15.83C15.35 15.59 16.02 15.29 16.51 14.9C17 14.52 17.41 13.97 17.41 13.27L16.58 13.27L15.75 13.27C15.75 13.27 15.76 13.38 15.49 13.6C15.22 13.81 14.76 14.04 14.09 14.25C12.76 14.66 10.77 14.92 8.29 14.92L8.29 15.75ZM16.58 13.27L17.41 13.27C17.41 12.64 17.16 12.13 16.87 11.73C16.6 11.35 16.23 10.97 15.96 10.67C15.39 10.01 14.92 9.36 14.92 8.29L14.1 8.29L13.27 8.29C13.27 9.96 14.05 11 14.72 11.76C15.07 12.16 15.32 12.41 15.52 12.69C15.7 12.94 15.75 13.11 15.75 13.27L16.58 13.27Z" fill="#FFFFFF" stroke="none"/>
+                        </g>
+                      </g>
+                      <g data-layer="0:1282" data-name="Path">
+                        <g transform="translate(5.92, 17.33)">
+                          <path d="M2.37 0.08C1.53 0.08 0.74 0.05 0 0C0.32 1.03 1.28 1.74 2.37 1.74C3.45 1.74 4.41 1.03 4.73 0C3.99 0.05 3.21 0.08 2.37 0.08Z" fill="#1B1D21"/>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+          <g data-layer="0:1283" data-name="notification">
+            <g transform="translate(29.85, 0)">
+              <g data-layer="0:1285" data-name="Oval">
+                <path d="M19.9 9.95C19.9 15.45 15.45 19.9 9.95 19.9C4.45 19.9 0 15.45 0 9.95C0 4.45 4.45 0 9.95 0C15.45 0 19.9 4.45 19.9 9.95Z" fill="#FF754C"/>
+              </g>
+              <g data-layer="0:1286" data-name="20" aria-label="2">
+                <g transform="translate(6.63, 3.37)">
+                  <g fill="#FFFFFF">
+                    <use href="#uid-home-1-1194-letter0" transform="translate(0.4101 10.2515) scale(9.95 -9.95)"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>

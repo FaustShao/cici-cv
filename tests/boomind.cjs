@@ -118,6 +118,30 @@ async function check(browser, width) {
   });
   await page.goto(new URL('boomind.html', root).href);
   await current(page, 'home');
+  // The welcome card can be restored without leaving Overview or creating a task.
+  await action(page, 'dismiss').click();
+  await action(page, 'restore-welcome').click();
+  assert.ok(await action(page, 'dismiss').isVisible());
+
+  await page.locator('#open-library').click();
+  const library = page.locator('#asset-library');
+  await library.getByRole('button', { name: '导航与控件', exact: true }).click();
+  const card = library.locator('[data-item]').last();
+  const name = await card.innerText();
+  await card.scrollIntoViewIfNeeded();
+  const scroll = await page.locator('#library-index').evaluate(node => node.scrollTop);
+  if (mobile) await card.tap();
+  else await card.click({ button: 'right' });
+  assert.equal(await page.locator('#library-caption').innerText(), name);
+  await page.locator('#library-image').evaluate(img => img.decode());
+  if (mobile) await page.locator('#library-close').click();
+  else await page.keyboard.press('Escape');
+  assert.equal(await page.locator('#library-index').evaluate(node => node.scrollTop), scroll);
+  assert.ok(await card.evaluate(node => document.activeElement === node));
+  await page.locator('#library-close').click();
+  assert.equal(await library.evaluate(node => node.open), false);
+  await page.locator('.hero-links .primary').click();
+  await current(page, 'home');
   if (width !== 320) await matrix(page, mobile);
   async function navigate(id) {
     const n = await nav(page, mobile);

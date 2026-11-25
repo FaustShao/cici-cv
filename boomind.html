@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0c0c10" />
-    <title>BOOMIND · Team brainstorming workspace</title>
+    <title>BOOMIND · 团队头脑风暴工作台</title>
     <link rel="stylesheet" href="boomind.css" />
     <script defer src="boomind-frames.js"></script>
     <script defer src="boomind.js"></script>
@@ -12,10 +12,10 @@
   <body>
     <header class="site-head">
       <div class="head-inner">
-        <a href="works.html#other" class="return">← Other projects</a>
+        <a href="works.html#other" class="return">← 其他项目</a>
         <a href="#top" class="brand"><img src="assets/boomind/mark.webp" alt="" />BOOMIND</a>
-        <nav aria-label="Project navigation">
-          <a href="#workspace">Workspace</a><button data-action="about">About</button>
+        <nav aria-label="项目导航">
+          <a href="#workspace">工作台</a><button data-action="about">项目说明</button>
         </nav>
       </div>
     </header>
@@ -23,11 +23,11 @@
       <section class="hero shell" aria-labelledby="hero-title">
         <div class="hero-copy">
           <h1 id="hero-title">BOOMIND</h1>
-          <h2>Team brainstorming workspace</h2>
-          <p>Collect ideas on a shared canvas, connect them and plan your team’s next session.</p>
+          <h2>团队头脑风暴工作台</h2>
+          <p>在共享画布上记录想法、连接相关观点，在日程中安排下一次团队讨论。</p>
           <div class="hero-links">
-            <a class="primary" href="#workspace">Open workspace <span>↘</span></a
-            ><button data-action="canvas">Explore the canvas <span>↗</span></button>
+            <a class="primary" href="#workspace" data-action="home">探索工作台 <span>↘</span></a
+            ><button id="open-library" aria-haspopup="dialog">浏览素材与控件 <span>↗</span></button>
           </div>
         </div>
         <div class="sculpture" aria-hidden="true">
@@ -38,7 +38,7 @@
           /><img class="hero-loop" src="assets/boomind/loop.webp" alt="" />
         </div>
       </section>
-      <section id="workspace" class="shell" aria-label="Interactive BOOMIND workspace">
+      <section id="workspace" class="shell" aria-label="BOOMIND 交互工作台" lang="en">
         <div class="window">
           <header class="window-head">
             <div>
@@ -57,16 +57,16 @@
         </div>
       </section>
       <section class="feature shell" aria-labelledby="features-title">
-        <h2 id="features-title">Inside the workspace</h2>
+        <h2 id="features-title">工作台功能</h2>
         <div class="features">
           <button class="feature-piece canvas-feature" data-action="canvas">
-            <span class="overline">Work board</span><strong>Team canvas</strong
-            ><span>Move ideas and connect related thoughts. ↗</span
+            <strong>协作画布</strong
+            ><span>拖动想法节点，为相关的观点添加连线。 ↗</span
             ><span class="tiny-map" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           </button>
           <button class="feature-piece devices-feature" data-action="products">
-            <span class="overline">Products</span><strong>Connected products</strong
-            ><span>Explore devices, owners and project connections. ↗</span
+            <strong>已连接的设备</strong
+            ><span>查看设备、负责人及关联项目。 ↗</span
             ><img src="assets/boomind/prism.webp" alt="" loading="lazy" /><img
               src="assets/boomind/ring.webp"
               alt=""
@@ -77,15 +77,30 @@
       </section>
     </main>
     <footer class="shell">
-      <span class="brand">BOOMIND</span><a href="works.html#other">Other projects ↗</a>
+      <span class="brand">BOOMIND</span><a href="works.html#other">返回其他项目 ↗</a>
     </footer>
-    <dialog id="popup" aria-labelledby="popup-title">
+    <dialog lang="en" id="popup" aria-labelledby="popup-title">
       <header>
         <h2 id="popup-title"></h2>
         <button data-action="close" aria-label="Close">×</button>
       </header>
       <div id="popup-content"></div>
     </dialog>
+    <dialog id="asset-library" aria-labelledby="library-title">
+      <header>
+        <div><h2 id="library-title">素材与控件</h2><p id="library-help">右键或点按素材可放大查看。</p></div>
+        <button type="button" id="library-close" aria-label="关闭素材库">×</button>
+      </header>
+      <div id="library-index">
+        <div id="library-filters" role="group" aria-label="素材分类"></div>
+        <div id="library-items"></div>
+      </div>
+      <div id="library-detail" hidden>
+        <button id="library-back" type="button">← 返回素材列表</button>
+        <figure><img id="library-image" alt="" /><figcaption id="library-caption"></figcaption></figure>
+      </div>
+    </dialog>
+    <script defer src="boomind-library.js"></script>
     <div id="notice" role="status"></div>
   </body>
 </html>
