@@ -1,8 +1,9 @@
 """Check the assembled site with an installed desktop browser and its native driver."""
+import json
 import os
-import traceback
 import sys
 import threading
+import traceback
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
@@ -42,8 +43,9 @@ def check(driver, url):
 
     driver.set_window_size(1366, 768)
     driver.get(url)
-    wait.until(lambda _: js("return !!window.designWorld && document.body.dataset.ready && document.querySelector('#loading').hidden"))
+    wait.until(lambda _: js("return window.designWorld?.world.renderCount >= 3 && document.body.dataset.ready && document.querySelector('#loading').hidden"))
     assert js("return designWorld.identity.getObjectByName('voxel-name-blocks').count") == 2752
+    driver.save_screenshot('browser-home.png')
     click('#map-trigger')
     click('[data-destination="portfolio"]')
     wait.until(lambda _: js("return WORLD_STATE.place === 'portfolio'"))
@@ -79,6 +81,8 @@ def check(driver, url):
               return true;
             });
         """))
+        if width == 1024:
+            driver.save_screenshot('browser-portfolio.png')
     click('#map-trigger')
     click('[data-destination="other"]')
     js("designWorld.selectOther(4); designWorld.openCurrent()")
@@ -106,6 +110,16 @@ def run(browser):
     threading.Thread(target=server.serve_forever, daemon=True).start()
     try:
         check(driver, f'http://127.0.0.1:{server.server_port}/')
+    except Exception:
+        driver.save_screenshot('browser-failure.png')
+        state = driver.execute_script("""
+            const q = s => document.querySelector(s);
+            return {url: location.href, state: history.state, ready: document.body.dataset.ready,
+                failed: document.body.dataset.failed, map: q('#world-map')?.open, reader: q('#reader')?.open,
+                frames: window.designWorld?.world.renderCount, focused: document.activeElement?.id};
+        """)
+        print('Browser state:', json.dumps(state), flush=True)
+        raise
     finally:
         driver.quit()
         server.shutdown()
