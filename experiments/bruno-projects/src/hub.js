@@ -944,8 +944,9 @@ async function startScene() {
     try {
       lastFrame = time;
       clock.update();
-      const dt = Math.min(clock.getDelta(), 0.05),
-        blend = reduced ? 1 : 1 - Math.exp(-dt * (place === "portfolio" ? 12 : 9));
+      const elapsed = clock.getDelta();
+      const dt = Math.min(elapsed, 0.05);
+      const blend = reduced ? 1 : 1 - Math.exp(-elapsed * (place === "portfolio" ? 12 : 9));
       game.ticker.delta = game.ticker.deltaScaled = reduced ? 0 : dt;
       game.ticker.elapsedScaled += game.ticker.deltaScaled;
       game.ticker.elapsedScaledUniform.value = game.ticker.elapsedScaled;

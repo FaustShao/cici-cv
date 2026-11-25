@@ -39,12 +39,20 @@ export async function createWorld(canvas, progress, phone, onDeviceLoss) {
     defaultDeviceLost(info);
     onDeviceLoss(new Error("图形设备连接已中断。"), info.api === "WebGPU");
   };
-  const pixelRatio = () => Math.min(devicePixelRatio, phone ? 1.25 : 1.5,
-    webKit ? Math.sqrt(2400000 / (innerWidth * innerHeight)) : Infinity);
-  renderer.setPixelRatio(pixelRatio());
-  renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
   await renderer.init();
+  const gl = renderer.backend.isWebGLBackend ? renderer.getContext() : null;
+  const rendererInfo = gl?.getExtension("WEBGL_debug_renderer_info");
+  const adapter = renderer.backend.device?.adapterInfo;
+  const gpuName = rendererInfo ? gl.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL) : adapter?.description ?? "";
+  const software = adapter?.isFallbackAdapter === true || /swiftshader|llvmpipe|softpipe|software rasterizer|microsoft basic render|\bwarp\b/i.test(gpuName);
+  // CPU rasterizers share resources with input and layout. Keep the scene, shadows
+  // and warm bloom while bounding the number of pixels shaded per frame.
+  const pixelBudget = software ? 640000 : webKit ? 2400000 : Infinity;
+  const pixelRatio = () => Math.min(devicePixelRatio, phone ? 1.25 : 1.5,
+    Math.sqrt(pixelBudget / (innerWidth * innerHeight)));
+  renderer.setPixelRatio(pixelRatio());
+  renderer.setSize(innerWidth, innerHeight);
   progress(0, 1);
   const scene = new T.Scene(),
     camera = new T.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 250);
@@ -281,7 +289,7 @@ export async function createWorld(canvas, progress, phone, onDeviceLoss) {
   game.wind.timeFrequency=.28;
   game.terrain = new Terrain();
   game.lighting = new Lighting();
-  if (webKit) game.lighting.light.shadow.mapSize.set(1024, 1024);
+  if (webKit || software) game.lighting.light.shadow.mapSize.set(1024, 1024);
   if (phone) {
     game.lighting.mapSize = 1024;
     game.lighting.light.shadow.mapSize.set(1024, 1024);
@@ -462,16 +470,16 @@ export async function createWorld(canvas, progress, phone, onDeviceLoss) {
   glow.threshold.value = 1;
   glow.strength.value = 0.25;
   glow.smoothWidth.value = 1;
-  const dof = cheapDOF(renderOutput(renderPass)),
-    gl = renderer.backend.isWebGLBackend ? renderer.getContext() : null;
+  const sceneOutput = renderOutput(renderPass);
+  const sceneColor = software ? sceneOutput : cheapDOF(sceneOutput);
   const supportsEffects = !gl || gl.getExtension("EXT_color_buffer_float") || gl.getExtension("EXT_color_buffer_half_float");
   const pipeline = supportsEffects ? new T.RenderPipeline(renderer) : { render: () => renderer.render(scene, camera) };
-  if (supportsEffects) pipeline.outputNode = dof.add(glow);
+  if (supportsEffects) pipeline.outputNode = sceneColor.add(glow);
   function setQuality(low) {
     renderer.setPixelRatio(low ? Math.min(1, pixelRatio()) : pixelRatio());
     game.lighting.light.shadow.mapSize.set(low ? 512 : 2048, low ? 512 : 2048);
     if (!supportsEffects) return;
-    pipeline.outputNode = low ? renderColor.add(glow) : dof.add(glow);
+    pipeline.outputNode = low ? renderColor.add(glow) : sceneColor.add(glow);
     pipeline.needsUpdate = true;
   }
   const ttf = new TTFLoader();
