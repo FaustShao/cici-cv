@@ -5,31 +5,43 @@
   const expected=meta('cecilia-release');
   const directory=meta('cecilia-release-root');
   if(!expected||!directory){delete root.dataset.releaseState;return;}
-  let pending;
-  function check(){
-    if(pending)return pending;
-    root.dataset.releaseState='checking';
+  let active;
+  async function check(){
     const controller=new AbortController();
+    active?.abort();
+    active=controller;
+    root.dataset.releaseState='checking';
+    let replacing=false;
     const timer=setTimeout(()=>{
+      if(active!==controller)return;
       delete root.dataset.releaseState;
       controller.abort();
     },4000);
-    pending=Promise.resolve().then(async()=>{
-      try{
-        const response=await fetch(new URL('release.json',new URL(directory,location.href)),{cache:'no-store',signal:controller.signal});
-        if(response.ok){
-          const {revision}=await response.json();
-          const next=new URL(location.href);
-          if(revision&&revision!==expected&&next.searchParams.get('build')!==revision){
-            next.searchParams.set('build',revision);location.replace(next.href);return;
-          }
-        }
-        delete root.dataset.releaseState;
-      }catch{delete root.dataset.releaseState;}
-      finally{clearTimeout(timer);pending=null;}
-    });return pending;
+    try{
+      const response=await fetch(new URL('release.json',new URL(directory,location.href)),{cache:'no-store',signal:controller.signal});
+      if(!response.ok)return;
+      const {revision}=await response.json();
+      if(active!==controller||controller.signal.aborted)return;
+      const next=new URL(location.href);
+      if(revision&&revision!==expected&&next.searchParams.get('build')!==revision){
+        next.searchParams.set('build',revision);
+        location.replace(next.href);
+        replacing=true;
+      }
+    }catch{}finally{
+      clearTimeout(timer);
+      if(active===controller){
+        active=null;
+        if(!replacing)delete root.dataset.releaseState;
+      }
+    }
   }
   check();
-  addEventListener('pagehide',event=>{if(event.persisted)root.dataset.releaseState='checking';});
+  addEventListener('pagehide',event=>{
+    if(!event.persisted)return;
+    active?.abort();
+    active=null;
+    root.dataset.releaseState='checking';
+  });
   addEventListener('pageshow',event=>{if(event.persisted)check();});
 })();

@@ -8,6 +8,7 @@ import traceback
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
+from PIL import Image
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
@@ -70,6 +71,11 @@ def check(driver, url):
         }, true);
     """)
     capture(driver, 'browser-home.png')
+    # WebKit can report rendered frames even when its composited viewport is blank.
+    with Image.open('browser-home.png') as screenshot:
+        sample = screenshot.convert('RGB').resize((64, 40))
+        colors = sample.getcolors(64 * 40)
+        assert max(count for count, _ in colors) < 64 * 40 * .9, 'Home screenshot shows a flat color'
     click('#map-trigger')
     click('[data-destination="portfolio"]')
     wait.until(lambda _: js("return WORLD_STATE.place === 'portfolio'"))

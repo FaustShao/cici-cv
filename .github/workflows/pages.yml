@@ -108,7 +108,7 @@ jobs:
           python-version: '3.12'
       - name: Open the exact published artifact
         run: python -c "import tarfile; tarfile.open('site-artifact/artifact.tar').extractall('public', filter='data')"
-      - run: python -m pip install selenium==4.35.0
+      - run: python -m pip install selenium==4.35.0 pillow==11.3.0
       - if: matrix.browser == 'safari'
         run: sudo safaridriver --enable
       - run: python tests/desktop-browsers.py ${{ matrix.browser }}
