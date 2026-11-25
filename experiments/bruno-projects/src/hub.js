@@ -1063,7 +1063,7 @@ function fail(error, retryWithWebGL = false) {
   loadingScreen.cancel();
   $("fallback").hidden = false;
   $("fallback").querySelector("h2").textContent = "暂时无法显示 3D 场景";
-  $("error-message").textContent = "场景暂时无法继续显示：" + error.message;
+  $("error-message").textContent = "你可以重新加载 3D 场景，或直接打开下面的作品。";
   document.body.dataset.failed = "true";
   $("retry-scene").onclick = () => {
     const url = new URL(location.href);

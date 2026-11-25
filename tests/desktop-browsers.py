@@ -52,7 +52,7 @@ def check(driver, url):
     # The desktop project button is a keyboard control that appears on focus.
     js("document.querySelector('#open-work').focus()")
     driver.switch_to.active_element.send_keys(Keys.ENTER)
-    wait.until(lambda _: js("return document.querySelector('#frames iframe')?.contentDocument?.documentElement.dataset.pageBoot === 'ready'"))
+    wait.until(lambda _: js("return document.querySelector('#frames iframe')?.contentDocument?.documentElement?.dataset.pageBoot === 'ready'"))
     # Some WebKit drivers wait for a new document load after a same-document Back.
     driver.set_page_load_timeout(10)
     try:
