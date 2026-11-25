@@ -1,3 +1,4 @@
+import { letteringBaseline } from "./canvas-lettering.js";
 import { T } from './create-world.js';
 
 // Printed chalk lettering sits on the native easel's existing front face.
@@ -15,9 +16,9 @@ export function createLabChalkboard(lab) {
   function update(project){
     const tags=(project.boardTags||[]).slice(0,3);
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.font='400 164px "World Xiaolai"';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff0cf';
+    ctx.font='400 164px "World Xiaolai"';ctx.textAlign='center';ctx.fillStyle='#fff0cf';
     const step=250,start=canvas.height/2-(tags.length-1)*step/2;
-    tags.forEach((tag,index)=>ctx.fillText(tag,canvas.width/2,start+index*step));
+    tags.forEach((tag,index)=>ctx.fillText(tag,canvas.width/2,letteringBaseline(ctx,tag,start+index*step)));
     map.needsUpdate=true;lettering.userData.tags=[...tags];lettering.userData.project=project.name;
   }
   return {update,lettering,canvas};

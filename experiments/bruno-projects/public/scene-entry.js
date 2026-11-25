@@ -1,9 +1,44 @@
 // Runs independently of the 3D module, including while the scene is loading.
 (() => {
+  const loading = document.getElementById('loading');
+  const fallback = document.getElementById('fallback');
+  const heading = fallback.querySelector('h2');
+  const message = document.getElementById('error-message');
+  let stallTimer;
+  function showLinks(failed) {
+    if (document.body.dataset.ready || document.body.dataset.failed) return;
+    loading.hidden = true;
+    fallback.hidden = false;
+    heading.textContent = failed ? '暂时无法显示 3D 场景' : '3D 场景正在加载';
+    message.textContent = failed ? '可以直接阅读作品，或重新加载场景。' : '可以先阅读作品。场景准备好后会自动显示。';
+    if (failed) document.body.dataset.failed = 'true';
+  }
+  function watchProgress() {
+    clearTimeout(stallTimer);
+    if (document.body.dataset.ready || document.body.dataset.failed) {
+      progressObserver.disconnect();
+      return;
+    }
+    const percent = Number(loading.getAttribute('aria-valuenow'));
+    stallTimer = setTimeout(() => showLinks(false), percent < 4 ? 12000 : 25000);
+  }
+  const progressObserver = new MutationObserver(watchProgress);
+  progressObserver.observe(loading, { attributes: true, attributeFilter: ['aria-valuenow'] });
+  progressObserver.observe(document.body, { attributes: true, attributeFilter: ['data-ready', 'data-failed'] });
+  watchProgress();
+  window.addEventListener('error', event => {
+    if (event.target?.type === 'module' || /\/hub-[\w-]+\.js(?:[?#]|$)/.test(event.filename || '')) showLinks(true);
+  }, true);
+  document.getElementById('retry-scene').onclick = () => location.reload();
+  document.getElementById('loading-links').onclick = event => {
+    event.preventDefault();
+    showLinks(false);
+    fallback.focus();
+  };
+
   const audio = document.getElementById('background-music');
   const button = document.getElementById('music-switch');
   const fallbackButton = document.getElementById('fallback-music');
-  const fallback = document.getElementById('fallback');
   let enabled = true;
   try { enabled = sessionStorage.getItem('cecilia-music-muted') !== 'true'; } catch {}
   audio.volume = .45;
@@ -60,22 +95,4 @@
   start();
   window.addEventListener('pageshow', event => { if (event.persisted) start(); });
 
-  // A broken or unsupported module cannot reach the scene's own catch block.
-  function showFallback() {
-    if (document.body.dataset.ready || document.body.dataset.failed) return;
-    document.getElementById('loading').hidden = true;
-    fallback.hidden = false;
-    document.getElementById('error-message').textContent = '场景未能启动，可以直接阅读作品，或重新加载。';
-    document.body.dataset.failed = 'true';
-  }
-  window.addEventListener('error', event => {
-    if (event.target && event.target.type === 'module') showFallback();
-  }, true);
-  document.getElementById('retry-scene').onclick = () => location.reload();
-  document.getElementById('loading-links').onclick = () => {
-    document.getElementById('loading').hidden = true;
-    fallback.hidden = false;
-    document.getElementById('error-message').textContent = '你可以直接阅读作品，场景会继续加载。';
-    fallback.focus();
-  };
 })();

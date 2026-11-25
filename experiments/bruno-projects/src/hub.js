@@ -381,17 +381,19 @@ window.addEventListener("keydown", (e) => {
 $("world").addEventListener("webglcontextlost", () => {
   fail(new Error("浏览器已暂停 3D 渲染，可以直接阅读作品，或重新加载场景。"));
 }, {once: true});
-try {
-  // A single unavailable webfont should not prevent visiting the scene.
-  await Promise.allSettled([
-    document.fonts.load('900 24px "Scene Sans"', "王钰欣个人简历其他项目联系方式"),
+async function startScene() {
+  loadingScreen.setPercent(1);
+  const signFonts = Promise.allSettled([
     document.fonts.load('400 24px Xiaolai', "个人简历作品集其他项目联系方式信件地图"),
     document.fonts.load('400 24px "World Xiaolai"', "王钰欣的个人网站邮箱想去哪里个人简历作品集其他项目联系方式地图Cecilia未来概念穿戴产品防护设计独立游戏界面设计手绘美术视觉识别品牌设计VI手册"),
     document.fonts.load('700 36px "Amatic SC"', "Welcome to Cecilia’s world."),
   ]);
+  // Give sign lettering a chance to load while the scene downloads.
+  const fontBudget = Promise.race([signFonts, new Promise(resolve => setTimeout(resolve, 3000))]);
   world = await createWorld($("world"), (n, total) => {
-    loadingScreen.setPercent(n / total * 90);
+    loadingScreen.setPercent(3 + n / total * 87);
   }, phone.matches);
+  await fontBudget;
   const {
     game,
     scene,
@@ -671,7 +673,7 @@ try {
   $("previous").onclick=()=>portfolio.select(portfolio.selected-1);
   $("next").onclick=()=>portfolio.select(portfolio.selected+1);
   $("open-work").onclick=openCurrent;
-  await portfolio.warm();
+  if (!world.webKit) await portfolio.warm();
   loadingScreen.setPercent(98);
   const subjects = new Map([
     ["home", [identity, kioskRoot, ...devices.roots]],
@@ -1037,15 +1039,15 @@ try {
       return contacts;
     },
   };
-} catch (error) {
-  fail(error);
 }
+startScene().catch(fail);
 function fail(error) {
   if (document.body.dataset.failed) return;
   console.error(error);
   world?.renderer.setAnimationLoop(null);
   loadingScreen.cancel();
   $("fallback").hidden = false;
+  $("fallback").querySelector("h2").textContent = "暂时无法显示 3D 场景";
   $("error-message").textContent = "场景暂时无法继续显示：" + error.message;
   document.body.dataset.failed = "true";
   if (phone.matches) {

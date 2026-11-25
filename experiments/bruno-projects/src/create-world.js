@@ -40,6 +40,7 @@ export async function createWorld(canvas, progress, phone = false) {
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
   await renderer.init();
+  progress(0, 1);
   const scene = new T.Scene(),
     camera = new T.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 250);
   const center = new T.Vector3(34.24, 0, 9.65),

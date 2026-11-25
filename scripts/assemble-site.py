@@ -89,6 +89,9 @@ def version(value,parent):
  if not u.path or u.scheme or u.netloc or value.startswith(('#','/')):return value
  target=(parent/unquote(u.path)).resolve()
  if not target.is_relative_to(OUT) or not target.is_file():return value
+ # ES modules are keyed by their full URL. Match Vite's relative imports exactly
+ # so the browser downloads and evaluates each content-hashed chunk only once.
+ if target.parent==OUT/'cecilia-world/assets' and re.fullmatch(r'.+-[\w-]{8}\.js',target.name):return value
  if target.suffix.lower()not in {'.html','.js','.css','.woff2','.ttf','.otf','.png','.webp','.svg','.jpg','.mp3'}:return value
  query=dict(parse_qsl(u.query));query['build']=revision
  return u.path+'?'+urlencode(query)+(('#'+u.fragment)if u.fragment else '')

@@ -1,3 +1,4 @@
+import { letteringBaseline } from "../canvas-lettering.js";
 import * as THREE from 'three/webgpu'
 
 let top = 0
@@ -90,7 +91,6 @@ export class TextCanvas
         this.context.fillRect(0, 0, this.width, this.height)
 
         this.context.textAlign = this.horizontalAlign
-        this.context.textBaseline = 'middle'
         this.context.fillStyle = '#ffffff'
 
         let i = 0
@@ -108,7 +108,7 @@ export class TextCanvas
             else if(this.horizontalAlign === 'right')
                 x = this.width
 
-            this.context.fillText(line, x, y)
+            this.context.fillText(line, x, letteringBaseline(this.context, line, y))
 
             i++
         }

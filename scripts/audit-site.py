@@ -17,6 +17,8 @@ class Check(HTMLParser):
    if not u.path or u.scheme or u.netloc or value.startswith(('#','/')):continue
    target=(self.file.parent/unquote(u.path)).resolve()
    if not target.is_relative_to(root)or not target.exists():errors.append(f'Missing reference: {self.file.relative_to(root)} -> {value}')
+   elif target.parent==root/'cecilia-world/assets' and re.fullmatch(r'.+-[\w-]{8}\.js',target.name):
+    if u.query:errors.append(f'Hashed module URL differs from its imports: {value}')
    elif target.suffix in {'.html','.js','.css'}and parse_qs(u.query).get('build')!=[revision]:errors.append(f'Unversioned runtime: {value}')
 for p in root.rglob('*.html'):
  text=p.read_text();Check(p).feed(text)

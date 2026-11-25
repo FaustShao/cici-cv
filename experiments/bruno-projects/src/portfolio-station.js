@@ -1,3 +1,4 @@
+import { letteringBaseline } from "./canvas-lettering.js";
 import * as T from "three/webgpu";
 import gsap from "gsap";
 import { References } from "./bruno/References.js";
@@ -154,7 +155,6 @@ export async function createPortfolioStation(world,readWork) {
     labelsContext.fillRect(0, 0, 2048, 512);
     labelsContext.fillStyle = "#fff";
     labelsContext.textAlign = "center";
-    labelsContext.textBaseline = "middle";
     for (const [label, x, y, size] of [
       ["设计档案", 1024, 128, 150],
       ["项目性质", 393, 384, 140],
@@ -162,7 +162,7 @@ export async function createPortfolioStation(world,readWork) {
       [atLabel, 1791, 384, atLabel.length > 2 ? 105 : 185],
     ]) {
       labelsContext.font = `400 ${size}px Xiaolai`;
-      labelsContext.fillText(label, x, y);
+      labelsContext.fillText(label, x, letteringBaseline(labelsContext, label, y));
     }
     labelsTexture.needsUpdate = true;
     labelsCanvas.dataset.atLabel = atLabel;

@@ -1,4 +1,6 @@
+import { letteringBaseline } from "./canvas-lettering.js";
 import { T } from "./create-world.js";
+import { ownerNameRows } from "./owner-name-mask.js";
 import { color, texture, uniform } from "three/tsl";
 import { MeshDefaultMaterial } from "./bruno/Materials/MeshDefaultMaterial.js";
 
@@ -142,14 +144,13 @@ export function createFixtures(world) {
     }
     ctx.fillStyle = ink;
     ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
     ctx.font = `400 ${size}px "${font}", sans-serif`;
     if(fit){
       ctx.textBaseline="alphabetic";
       const m=ctx.measureText(text),scale=Math.min(880/m.width,(canvas.height-14)/(m.actualBoundingBoxAscent+m.actualBoundingBoxDescent));
       ctx.translate(512,canvas.height/2);ctx.scale(scale,scale);
       ctx.fillText(text,0,(m.actualBoundingBoxAscent-m.actualBoundingBoxDescent)/2);
-    } else ctx.fillText(text, 512, canvas.height / 2, 880);
+    } else ctx.fillText(text, 512, letteringBaseline(ctx, text, canvas.height / 2), 880);
     const tex = new T.CanvasTexture(canvas);
     tex.colorSpace = T.SRGBColorSpace;
     return new T.Mesh(
@@ -340,31 +341,11 @@ export function createFixtures(world) {
     const root = new T.Group();
     root.name = "single-line-owner-name";
     const pixels = [], cell = 0.066;
-    const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = 56;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    let offset = 0;
-    for (const char of "王钰欣") {
-      ctx.clearRect(0, 0, 56, 56);
-      ctx.fillStyle = "white";
-      ctx.font = '700 48px "Scene Sans"';
-      ctx.textBaseline = "top";
-      ctx.fillText(char, 2, 0);
-      if(char==="欣"){
-        // Keep the existing glyph's top and radicals; replace only its three
-        // descending strokes with straight, constant-direction pixel cuts.
-        ctx.clearRect(0,22,13,25);
-        ctx.clearRect(23,23,29,24);
-        const stroke=points=>{ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fill();};
-        stroke([[6,22],[12,22],[7,45],[2,43]]);
-        stroke([[33,23],[39,23],[29,45],[23,43]]);
-        stroke([[34,28],[39,25],[50,42],[45,46]]);
+    ownerNameRows.forEach((row, y) => {
+      for (let x = 0; x < row.length; x++) {
+        if (row[x] === "#") pixels.push([x, ownerNameRows.length - 1 - y]);
       }
-      const data = ctx.getImageData(0, 0, 56, 56).data;
-      for (let y = 0; y < 52; y++) for (let x = 0; x < 52; x++)
-        if (data[(y * 56 + x) * 4 + 3] > 150) pixels.push([offset + x, 51 - y]);
-      offset += char==="王"?47:49;
-    }
+    });
     const alphabet = {
       C: ["01111","11000","11000","11000","11000","11000","01111"],
       E: ["11111","11000","11000","11110","11000","11000","11111"],
@@ -396,8 +377,10 @@ export function createFixtures(world) {
     const captionStart=chineseRight+.24*1.15*overallScale,captionRight=captionStart+(Math.max(...caption.map(p=>p[0]))+.5)*captionCell;
     const centerX=(minX+captionRight)/2,minY=Math.min(...pixels.map(p=>p[1]));
     function blocks(points,size,name,xOffset=0,yOffset=0,yStretch=1){
-      const mesh=new T.InstancedMesh(new T.BoxGeometry(size*.88,size*.88*yStretch,(name==='voxel-name-caption'?.15*1.1*1.3*1.05:.27)*1.15*overallScale),sides,points.length),matrix=new T.Matrix4();
-      mesh.name=name;mesh.castShadow=mesh.receiveShadow=true;
+      // Narrow the gaps on the single-sample WebGL path so distant faces stay connected.
+      const faceWidth = size * (world.webKit ? .98 : .88);
+      const mesh=new T.InstancedMesh(new T.BoxGeometry(faceWidth,faceWidth*yStretch,(name==='voxel-name-caption'?.15*1.1*1.3*1.05:.27)*1.15*overallScale),sides,points.length),matrix=new T.Matrix4();
+      mesh.name=name;mesh.castShadow=true;mesh.receiveShadow=!world.webKit;
       points.forEach(([x,y],i)=>mesh.setMatrixAt(i,matrix.makeTranslation(x*size+xOffset-centerX,(y+yOffset+.5)*size*yStretch,0)));
       mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();root.add(mesh);return mesh;
     }
