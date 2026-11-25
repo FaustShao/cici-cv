@@ -1,7 +1,6 @@
 """Check the assembled site with an installed desktop browser and its native driver."""
 import json
 import os
-import subprocess
 import sys
 import threading
 import traceback
@@ -135,12 +134,11 @@ def run(browser):
     if browser != 'safari':
         options.add_argument('--use-angle=swiftshader')
     options.page_load_strategy = 'none'
-    driver = driver_type(options=options)
-    if browser == 'safari':
-        subprocess.run(['osascript', '-e', 'tell application "Safari" to activate'], check=True, timeout=20)
-        driver.switch_to.window(driver.current_window_handle)
+    # Start the local server before the browser. On hosted macOS a newly opened
+    # automation window can otherwise lose foreground input during server startup.
     server = ThreadingHTTPServer(('127.0.0.1', 0), partial(StaticFiles, directory=os.path.abspath('public')))
     threading.Thread(target=server.serve_forever, daemon=True).start()
+    driver = driver_type(options=options)
     try:
         check(driver, f'http://127.0.0.1:{server.server_port}/')
     except Exception:
