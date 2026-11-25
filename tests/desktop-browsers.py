@@ -1,11 +1,13 @@
 """Check the assembled site with an installed desktop browser and its native driver."""
 import os
+import traceback
 import sys
 import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -36,7 +38,12 @@ def check(driver, url):
     js("document.querySelector('#open-work').focus()")
     driver.switch_to.active_element.send_keys(Keys.ENTER)
     wait.until(lambda _: js("return document.querySelector('#frames iframe')?.contentDocument?.documentElement.dataset.pageBoot === 'ready'"))
-    driver.back()
+    # Some WebKit drivers wait for a new document load after a same-document Back.
+    driver.set_page_load_timeout(10)
+    try:
+        driver.back()
+    except TimeoutException:
+        pass  # The station, selection and closed reader are checked below.
     wait.until(lambda _: js("return !document.querySelector('#reader').open && WORLD_STATE.place === 'portfolio' && preview.area.navigation.index === 1"))
     # Resume at the same station, including after resizing the browser window.
     for width, height in [(1024, 680), (1920, 1080)]:
@@ -62,19 +69,21 @@ def check(driver, url):
     wait.until(lambda _: js("return !!document.querySelector('#frames iframe')?.contentDocument?.querySelector('#stage [data-action]')"))
     click('#close-reader')
     wait.until(lambda _: js("return WORLD_STATE.place === 'other' && WORLD_STATE.otherIndex === 4 && !document.querySelector('#frames iframe')"))
-    print(driver.capabilities['browserName'], driver.capabilities['browserVersion'], driver.capabilities['platformName'], 'PASS', flush=True)
+    print(f"::notice::{driver.name} {driver.capabilities['browserVersion']} on {driver.capabilities['platformName']}: passed", flush=True)
 
 
-if __name__ == '__main__':
-    browser = sys.argv[1]
+def run(browser):
     if browser == 'safari':
-        driver = webdriver.Safari()
+        options = webdriver.SafariOptions()
+        driver_type = webdriver.Safari
     else:
         options = webdriver.EdgeOptions() if browser == 'edge' else webdriver.ChromeOptions()
         options.add_argument('--headless=new')
         options.add_argument('--enable-unsafe-swiftshader')
         options.add_argument('--force-device-scale-factor=' + ('1.25' if browser == 'edge' else '1.5'))
-        driver = (webdriver.Edge if browser == 'edge' else webdriver.Chrome)(options=options)
+        driver_type = webdriver.Edge if browser == 'edge' else webdriver.Chrome
+    options.page_load_strategy = 'none'
+    driver = driver_type(options=options)
     server = ThreadingHTTPServer(('127.0.0.1', 0), partial(StaticFiles, directory=os.path.abspath('public')))
     threading.Thread(target=server.serve_forever, daemon=True).start()
     try:
@@ -82,3 +91,14 @@ if __name__ == '__main__':
     finally:
         driver.quit()
         server.shutdown()
+
+
+if __name__ == '__main__':
+    try:
+        run(sys.argv[1])
+    except Exception as error:
+        frame = next((f for f in reversed(traceback.extract_tb(error.__traceback__)) if f.filename == __file__), None)
+        step = frame.line if frame else ''
+        message = f'{sys.argv[1]}: {type(error).__name__} at {step}. {str(error)[:500]}'
+        print('::error::' + message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A'), flush=True)
+        raise
