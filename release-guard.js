@@ -10,7 +10,10 @@
     if(pending)return pending;
     root.dataset.releaseState='checking';
     const controller=new AbortController();
-    const timer=setTimeout(()=>controller.abort(),4000);
+    const timer=setTimeout(()=>{
+      delete root.dataset.releaseState;
+      controller.abort();
+    },4000);
     pending=Promise.resolve().then(async()=>{
       try{
         const response=await fetch(new URL('release.json',new URL(directory,location.href)),{cache:'no-store',signal:controller.signal});
@@ -27,6 +30,6 @@
     });return pending;
   }
   check();
-  addEventListener('pagehide',()=>{root.dataset.releaseState='checking';});
+  addEventListener('pagehide',event=>{if(event.persisted)root.dataset.releaseState='checking';});
   addEventListener('pageshow',event=>{if(event.persisted)check();});
 })();

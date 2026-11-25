@@ -101,7 +101,7 @@ for p in OUT.rglob('*.html'):
  guard=posixpath.relpath('release-guard.js',str(p.relative_to(OUT).parent))
  boot=(f'<meta name="cecilia-release" content="{revision}">'
        f'<meta name="cecilia-release-root" content="{directory}">'
-       '<style>html[data-release-state="checking"] body{visibility:hidden;opacity:0!important;pointer-events:none}</style>'
+       '<style>html[data-release-state="checking"] body *{visibility:hidden!important;pointer-events:none!important}</style>'
        '<script>document.documentElement.dataset.releaseState="checking";</script>'
        f'<script src="{guard}" onerror="delete document.documentElement.dataset.releaseState"></script>')
  body=p.read_text()

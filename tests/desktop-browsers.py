@@ -1,6 +1,7 @@
 """Check the assembled site with an installed desktop browser and its native driver."""
 import json
 import os
+import subprocess
 import sys
 import threading
 import traceback
@@ -17,6 +18,22 @@ from selenium.webdriver.support.ui import WebDriverWait
 class StaticFiles(SimpleHTTPRequestHandler):
     def log_message(self, *_):
         pass
+
+
+def capture(driver, path):
+    # Capture the already-painted frame. Continuous software rendering competes
+    # with ChromeDriver's compositor readback on Windows virtual displays.
+    driver.execute_script("""
+        const r = window.designWorld?.world.renderer;
+        if (r) { window.resumeSceneCapture = r.getAnimationLoop(); r.setAnimationLoop(null); }
+    """)
+    try:
+        driver.save_screenshot(path)
+    finally:
+        driver.execute_script("""
+            if (window.resumeSceneCapture) designWorld.world.renderer.setAnimationLoop(window.resumeSceneCapture);
+            delete window.resumeSceneCapture;
+        """)
 
 
 def check(driver, url):
@@ -45,7 +62,14 @@ def check(driver, url):
     driver.get(url)
     wait.until(lambda _: js("return window.designWorld?.world.renderCount >= 3 && document.body.dataset.ready && document.querySelector('#loading').hidden"))
     assert js("return designWorld.identity.getObjectByName('voxel-name-blocks').count") == 2752
-    driver.save_screenshot('browser-home.png')
+    js("""
+        window.testPointerEvents = [];
+        for (const type of ['pointerdown','pointerup','click']) document.addEventListener(type, e => {
+            testPointerEvents.push([type, e.target.id || e.target.tagName, e.clientX, e.clientY]);
+            if(testPointerEvents.length > 12) testPointerEvents.shift();
+        }, true);
+    """)
+    capture(driver, 'browser-home.png')
     click('#map-trigger')
     click('[data-destination="portfolio"]')
     wait.until(lambda _: js("return WORLD_STATE.place === 'portfolio'"))
@@ -82,7 +106,7 @@ def check(driver, url):
             });
         """))
         if width == 1024:
-            driver.save_screenshot('browser-portfolio.png')
+            capture(driver, 'browser-portfolio.png')
     click('#map-trigger')
     click('[data-destination="other"]')
     js("designWorld.selectOther(4); designWorld.openCurrent()")
@@ -106,19 +130,27 @@ def run(browser):
         options.add_argument('--use-angle=swiftshader')
     options.page_load_strategy = 'none'
     driver = driver_type(options=options)
+    if browser == 'safari':
+        subprocess.run(['osascript', '-e', 'tell application "Safari" to activate'], check=True, timeout=20)
+        driver.switch_to.window(driver.current_window_handle)
     server = ThreadingHTTPServer(('127.0.0.1', 0), partial(StaticFiles, directory=os.path.abspath('public')))
     threading.Thread(target=server.serve_forever, daemon=True).start()
     try:
         check(driver, f'http://127.0.0.1:{server.server_port}/')
     except Exception:
-        driver.save_screenshot('browser-failure.png')
-        state = driver.execute_script("""
-            const q = s => document.querySelector(s);
-            return {url: location.href, state: history.state, ready: document.body.dataset.ready,
-                failed: document.body.dataset.failed, map: q('#world-map')?.open, reader: q('#reader')?.open,
-                frames: window.designWorld?.world.renderCount, focused: document.activeElement?.id};
-        """)
-        print('Browser state:', json.dumps(state), flush=True)
+        try:
+            state = driver.execute_script("""
+                const q = s => document.querySelector(s);
+                return {url: location.href, state: history.state, ready: document.body.dataset.ready,
+                    failed: document.body.dataset.failed, release: document.documentElement.dataset.releaseState,
+                    visibility: document.visibilityState, focus: document.hasFocus(),
+                    map: q('#world-map')?.open, reader: q('#reader')?.open, frames: window.designWorld?.world.renderCount,
+                    events: window.testPointerEvents, bodyOpacity: getComputedStyle(document.body).opacity, focused: document.activeElement?.id};
+            """)
+            print('Browser state:', json.dumps(state), flush=True)
+            capture(driver, 'browser-failure.png')
+        except Exception as diagnostic_error:
+            print('Could not capture failure:', diagnostic_error, flush=True)
         raise
     finally:
         driver.quit()
