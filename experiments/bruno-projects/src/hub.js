@@ -986,6 +986,7 @@ async function startScene() {
       game.ticker.events.trigger("tick");
       portfolio.update();
       pipeline.render();
+      world.presentScene?.(time);
       world.renderCount=(world.renderCount||0)+1;
       if (!document.body.dataset.ready) {
         $("fallback").hidden = true;

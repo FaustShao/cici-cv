@@ -58,6 +58,7 @@ def check(driver, url, revision):
                message='Published HTML has the expected release')
     wait.until(lambda _: js("return window.designWorld?.world.renderCount >= 3 && document.body.dataset.ready && document.querySelector('#loading').hidden"))
     assert js("return designWorld.identity.getObjectByName('voxel-name-blocks').count") == 2752
+    wait.until(lambda _: js("return document.querySelector('#world').dataset.presentation !== 'image' || !!document.querySelector('.scene-image')?.naturalWidth"))
     js("""
         window.testPointerEvents = [];
         for (const type of ['pointerdown','pointerup','click']) document.addEventListener(type, e => {
@@ -73,7 +74,7 @@ def check(driver, url, revision):
         landscape = screenshot.crop((width // 8, height // 4, width // 2, height * 3 // 4))
         sample = landscape.convert('RGB').resize((64, 40))
         colors = sample.getcolors(64 * 40)
-        assert len(colors) > 32 and max(count for count, _ in colors) < 64 * 40 * .85, '3D landscape is missing'
+        assert len(colors) > 512 and max(count for count, _ in colors) < 64 * 40 * .85, '3D landscape is missing'
     click('#map-trigger')
     click('[data-destination="portfolio"]')
     wait.until(lambda _: js("return WORLD_STATE.place === 'portfolio'"))

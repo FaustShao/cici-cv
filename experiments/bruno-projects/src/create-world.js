@@ -1,5 +1,6 @@
 import { worldBaseURL, versionedURL } from "./world-base.js";
 import { addWorldAtmosphere } from "./world-atmosphere.js";
+import { lacksCanvasBitmap, createSceneImage } from "./webkit-scene-image.js";
 // Shared upstream visual modules, without vehicle, physics, or sound bootstraps.
 import * as T from "three/webgpu";
 import { color, float, uniform, pass, renderOutput } from "three/tsl";
@@ -52,13 +53,15 @@ export async function createWorld(canvas, progress, phone, onDeviceLoss) {
   renderer.shadowMap.enabled = true;
   await renderer.init();
   const gl = renderer.backend.isWebGLBackend ? renderer.getContext() : null;
+  const presentScene = webKit && !phone && gl && lacksCanvasBitmap() ? createSceneImage(gl, canvas) : null;
+  if (presentScene) canvas.dataset.presentation = "image";
   const rendererInfo = gl?.getExtension("WEBGL_debug_renderer_info");
   const adapter = renderer.backend.device?.adapterInfo;
   const gpuName = rendererInfo ? gl.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL) : adapter?.description ?? "";
   const software = adapter?.isFallbackAdapter === true || /swiftshader|llvmpipe|softpipe|software rasterizer|microsoft basic render|\bwarp\b/i.test(gpuName);
   // CPU rasterizers share resources with input and layout. Keep the scene, shadows
   // and warm bloom while bounding the number of pixels shaded per frame.
-  const pixelBudget = software ? 640000 : webKit ? 2400000 : Infinity;
+  const pixelBudget = software ? 640000 : presentScene ? 960000 : webKit ? 2400000 : Infinity;
   const pixelRatio = () => Math.min(devicePixelRatio, phone ? 1.25 : 1.5,
     Math.sqrt(pixelBudget / (innerWidth * innerHeight)));
   renderer.setPixelRatio(pixelRatio());
@@ -499,6 +502,7 @@ export async function createWorld(canvas, progress, phone, onDeviceLoss) {
   ]);
   return {
     webKit,
+    presentScene,
     pixelRatio,
     game,
     scene,
