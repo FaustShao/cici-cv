@@ -8,7 +8,7 @@ const isPlaying = () => {
 };
 
 async function check(blocked) {
-  const policy = blocked ? 'user-gesture-required' : 'no-user-gesture-required';
+  const policy = blocked ? 'document-user-activation-required' : 'no-user-gesture-required';
   const browser = await chromium.launch({
     executablePath: '/usr/bin/chromium',
     args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--autoplay-policy=' + policy],
@@ -16,7 +16,21 @@ async function check(blocked) {
   try {
     const page = await browser.newPage({ viewport: {width: 900, height: 650}, reducedMotion: 'reduce' });
     // Exercise the pre-module recovery path and the older Safari release guard.
-    await page.addInitScript(() => { delete AbortSignal.timeout; });
+    await page.addInitScript(blocked => {
+      delete AbortSignal.timeout;
+      // Record native media state before the test driver can grant activation.
+      document.addEventListener(blocked ? 'loadedmetadata' : 'playing', ({target}) => {
+        if (target.id === 'background-music' && (!blocked || target.currentSrc.startsWith('blob:'))) {
+          console.log('music-before-gesture', target.paused, navigator.userActivation.hasBeenActive);
+        }
+      }, true);
+      if (blocked) addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#fallback h2')?.addEventListener('click', e => e.stopPropagation(), { once: true });
+      });
+    }, blocked);
+    const beforeGesture = page.waitForEvent('console', {
+      predicate: message => message.text().startsWith('music-before-gesture'), timeout: 20000
+    });
     if (blocked) {
       await page.route('**/assets/hub-*.js*', route => route.abort());
       await page.route('**/entrance/carefree.mp3*', route => route.request().resourceType() === 'media'
@@ -26,16 +40,25 @@ async function check(blocked) {
     await page.goto(root, {waitUntil: 'domcontentloaded'});
     const audio = page.locator('#background-music');
     const paused = () => audio.evaluate(track => track.paused);
+    assert.equal((await beforeGesture).text(), 'music-before-gesture ' + blocked + ' false');
     if (blocked) {
-      await page.locator('#fallback').waitFor();
-      assert.ok(await paused());
-      await page.locator('#fallback h2').click();
-      await page.waitForFunction(isPlaying);
+      const heading = page.locator('#fallback h2');
+      // Project controls may consume their click before it bubbles to the document.
+      await heading.click();
+      await page.waitForFunction(isPlaying, null, { timeout: 4500 });
       assert.ok(await audio.evaluate(track => track.currentSrc.startsWith('blob:')));
       const switcher = page.locator('#fallback-music');
       await switcher.click();
       assert.ok(await paused());
-      await page.locator('#fallback h2').click();
+      await heading.click();
+      await page.reload({waitUntil:'domcontentloaded'});
+      await switcher.waitFor();
+      assert.equal(await audio.evaluate(t => t.autoplay), false, 'Saved mute is applied before native autoplay');
+      await page.evaluate(() => {
+        document.dispatchEvent(new Event('visibilitychange'));
+        dispatchEvent(new Event('online'));
+      });
+      await heading.click();
       assert.ok(await paused());
       await switcher.click();
       await page.waitForFunction(isPlaying);
@@ -47,6 +70,10 @@ async function check(blocked) {
       return;
     }
 
+    await page.waitForFunction(isPlaying);
+    // Simulate a system interruption without changing the listener's preference.
+    await audio.evaluate(track => track.pause());
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
     await page.waitForFunction(isPlaying);
     await page.waitForFunction(() => document.body.dataset.ready, null, {timeout:150000});
     await page.locator('#map-trigger').click();

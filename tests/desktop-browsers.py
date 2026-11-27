@@ -122,6 +122,11 @@ def check(driver, url, revision):
     delays = js("return window.testClickDelays")
     assert len(delays) == 1 and delays[0] is not None, 'The map press must schedule exactly one click before release'
     print(f"First map press to Web Audio scheduling: {delays[0]:.1f} ms", flush=True)
+    wait.until(lambda _: js("""
+        const track=document.querySelector('#background-music');
+        return track && !track.paused && !track.muted && track.volume>0 && track.currentTime>.1;
+    """), message='The background track plays by the first map gesture')
+    print('Background music is playing after the first map gesture', flush=True)
     # The HTML map and buttons can still paint over a missing WebGL scene.
     # Sample the landscape, away from the controls and the map prompt.
     with Image.open('browser-home.png') as screenshot:

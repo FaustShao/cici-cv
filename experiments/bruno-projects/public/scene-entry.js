@@ -42,6 +42,8 @@
   let enabled = true;
   try { enabled = sessionStorage.getItem('cecilia-music-muted') !== 'true'; } catch {}
   audio.volume = .45;
+  // Set this only after reading the speaker preference, before attempting play.
+  audio.autoplay = enabled;
   let indicator;
   const source = audio.src;
   let recovering = false;
@@ -52,7 +54,9 @@
     if (indicator) indicator(playing);
   }
   function start() {
-    if (!enabled || recovering || (!audio.paused && !audio.error)) return;
+    if (!enabled || (!audio.paused && !audio.error)) return;
+    // A gesture during the fallback download still needs to reach this element
+    // while WebKit's user activation is live.
     if (audio.error) audio.load();
     // A rejected autoplay request keeps the track armed for the next user gesture.
     audio.play().catch(update);
@@ -60,26 +64,33 @@
   function toggle() {
     enabled = audio.paused || Boolean(audio.error);
     try { sessionStorage.setItem('cecilia-music-muted', String(!enabled)); } catch {}
+    audio.autoplay = enabled;
     if (enabled) start();
     else audio.pause();
     update();
   }
   function bind(doc) {
     function unlock(event) {
-      if (event.isTrusted && event.target !== button && event.target !== fallbackButton) start();
+      if (event.isTrusted && !event.composedPath().some(el => el === button || el === fallbackButton)) start();
     }
-    doc.addEventListener('click', unlock);
-    doc.addEventListener('keydown', unlock);
+    // Run within the gesture, even when an embedded control consumes its click.
+    for (const type of ['click', 'keydown', 'touchend']) {
+      doc.addEventListener(type, unlock, { capture: true, passive: true });
+    }
+    // The 3D speaker handles pointerup on the canvas. Let its toggle run first.
+    doc.addEventListener('pointerup', unlock, { passive: true });
   }
   // Some media servers or caches reject the byte-range request made by WebKit.
   // Retry the small soundtrack as one ordinary file; keep the same audio element.
-  audio.addEventListener('error', async () => {
+  async function recoverTrack() {
     if (!enabled || recovering || bufferedTrack) return;
     recovering = true;
     try {
-      const response = await fetch(source);
+      const response = await fetch(source, { cache: 'reload' });
       if (!response.ok) return;
-      bufferedTrack = URL.createObjectURL(await response.blob());
+      const blob = await response.blob();
+      if (!audio.error && audio.readyState >= audio.HAVE_FUTURE_DATA) return;
+      bufferedTrack = URL.createObjectURL(blob);
       audio.src = bufferedTrack;
     } catch {
       return;
@@ -87,12 +98,21 @@
       recovering = false;
     }
     if (enabled) audio.play().catch(update);
+  }
+  audio.addEventListener('error', recoverTrack);
+  audio.addEventListener('stalled', () => {
+    if (!audio.paused && audio.readyState === audio.HAVE_NOTHING) recoverTrack();
   });
   button.onclick = fallbackButton.onclick = toggle;
   for (const event of ['playing', 'pause', 'error']) audio.addEventListener(event, update);
   window.CeciliaMusic = { toggle, bind, setIndicator(fn) { indicator = fn; update(); } };
   bind(document);
-  start();
-  window.addEventListener('pageshow', event => { if (event.persisted) start(); });
+  function resumeIfVisible() {
+    if (!document.hidden) start();
+  }
+  resumeIfVisible();
+  document.addEventListener('visibilitychange', resumeIfVisible);
+  window.addEventListener('pageshow', resumeIfVisible);
+  window.addEventListener('online', resumeIfVisible);
 
 })();
