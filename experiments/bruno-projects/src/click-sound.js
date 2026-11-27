@@ -11,7 +11,7 @@ export function getClickSound() {
 
   const documents = new WeakSet();
   let context, buffer, volume, fallback;
-  let latest = 0;
+  let waitingVoice;
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     context = new AudioContext({ latencyHint: 'interactive' });
@@ -32,29 +32,35 @@ export function getClickSound() {
     if (context && context.state !== 'running') context.resume().catch(() => {});
   }
 
-  function start() {
-    const voice = context.createBufferSource();
-    voice.buffer = buffer;
-    voice.connect(volume);
-    voice.onended = () => voice.disconnect();
-    voice.start();
-  }
-
   function play() {
     if (document.hidden) return;
-    const request = ++latest;
     if (!context) {
       fallback.currentTime = 0;
       fallback.play().catch(() => {});
-    } else if (context.state === 'running') {
-      start();
-    } else {
-      // After an OS interruption, do not replay an old press or a backlog of clicks.
-      const deadline = performance.now() + 150;
-      context.resume().then(() => {
-        if (request === latest && context.state === 'running' && !document.hidden && performance.now() <= deadline) start();
-      }).catch(() => {});
+      return;
     }
+    const voice = context.createBufferSource();
+    voice.buffer = buffer;
+    voice.connect(volume);
+    voice.onended = () => {
+      if (waitingVoice === voice) waitingVoice = null;
+      voice.disconnect();
+    };
+    if (context.state !== 'running') {
+      // Submit inside the press, even while the native audio device is waking.
+      // Keep at most one pending voice if the browser blocks audio altogether.
+      waitingVoice?.stop();
+      waitingVoice = voice;
+      const cancelIfBlocked = () => {
+        if (waitingVoice === voice && context.state !== 'running') {
+          voice.stop();
+          waitingVoice = null;
+        }
+      };
+      context.resume().catch(cancelIfBlocked);
+      setTimeout(cancelIfBlocked, 150);
+    }
+    voice.start();
   }
 
   function enabledControl(event) {

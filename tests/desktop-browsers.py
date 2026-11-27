@@ -80,6 +80,10 @@ def check(driver, url, revision):
         }, true);
     """)
     capture(driver, 'browser-home.png')
+    click('#map-trigger', hold=True)
+    delays = js("return window.testClickDelays")
+    assert len(delays) == 1 and delays[0] is not None, 'The map press must schedule exactly one click before release'
+    print(f"First map press to Web Audio scheduling: {delays[0]:.1f} ms", flush=True)
     # The HTML map and buttons can still paint over a missing WebGL scene.
     # Sample the landscape, away from the controls and the map prompt.
     with Image.open('browser-home.png') as screenshot:
@@ -88,10 +92,6 @@ def check(driver, url, revision):
         sample = landscape.convert('RGB').resize((64, 40))
         colors = sample.getcolors(64 * 40)
         assert len(colors) > 512 and max(count for count, _ in colors) < 64 * 40 * .85, '3D landscape is missing'
-    click('#map-trigger', hold=True)
-    delays = js("return window.testClickDelays")
-    assert len(delays) == 1 and delays[0] is not None, 'The map press must schedule exactly one click before release'
-    print(f"First map press to Web Audio scheduling: {delays[0]:.1f} ms", flush=True)
     click('[data-destination="portfolio"]')
     wait.until(lambda _: js("return WORLD_STATE.place === 'portfolio'"))
     # Test the browser Back button after opening a project via its actual controls.
