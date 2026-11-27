@@ -14,6 +14,7 @@
   let zoom=1,timer;
   function setZoom(value){
     zoom=Math.max(.75,Math.min(2.5,value));root.style.setProperty('--zoom',zoom);
+    root.toggleAttribute('data-zoomed',zoom>1);
     document.getElementById('zoom-reset').textContent=Math.round(zoom*100)+'%';
     document.getElementById('zoom-out').disabled=zoom<=.75;document.getElementById('zoom-in').disabled=zoom>=2.5;
   }

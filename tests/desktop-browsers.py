@@ -1,4 +1,5 @@
 """Check the assembled site with an installed desktop browser and its native driver."""
+import io
 import json
 import os
 import sys
@@ -70,17 +71,29 @@ def check(driver, url, revision):
         return document.elementFromPoint(bounds.x + bounds.width/2, bounds.y + bounds.height/2) === link
             && document.querySelector('.resume-pages').textContent.includes('游戏经历');
     """), 'Website link receives pointer over the original artwork'
-    assert js("""
-        const name = document.querySelector('img[data-source="6-name.svg"]');
-        const canvas = document.createElement('canvas');
-        canvas.width=name.naturalWidth; canvas.height=name.naturalHeight;
-        const ctx=canvas.getContext('2d'); ctx.drawImage(name,0,0);
-        const rgba=ctx.getImageData(0,0,canvas.width,canvas.height).data;
-        let ink=0;
-        for(let i=3;i<rgba.length;i+=4) if(rgba[i]>127) ink++;
-        return ink>200;
-    """), 'Outlined name glyphs render in the installed browser'
-    capture(driver, 'browser-resume.png')
+    # Sample the pixels the reader sees. Safari can display an external SVG
+    # while drawImage(svg) into an offscreen canvas raises InvalidStateError.
+    def visible_ink(selector, path):
+        rect = js("""
+            const el=document.querySelector(arguments[0]);
+            el.scrollIntoView({block:'center'});
+            const r=el.getBoundingClientRect();
+            return [r.left,r.top,r.right,r.bottom,innerWidth,innerHeight];
+        """, selector)
+        data = driver.get_screenshot_as_png()
+        with Image.open(io.BytesIO(data)) as image:
+            sx, sy = image.width/rect[4], image.height/rect[5]
+            region = image.crop(tuple(round(v*scale) for v,scale in zip(rect[:4],(sx,sy,sx,sy))))
+            hist = region.convert('L').histogram()
+            if sum(hist[:120]) < .05*sum(hist) or sum(hist[240:]) < .2*sum(hist):
+                return False
+        with open(path,'wb') as file:
+            file.write(data)
+        return True
+
+    for selector, path in [('6-name.svg','browser-resume.png'),('117-highlights.svg','browser-resume-page-2.png')]:
+        WebDriverWait(driver, 20).until(lambda _: visible_ink(f'img[data-source="{selector}"]', path),
+                                        message=f'Visible résumé text in {selector}')
     print('Published résumé artwork and website link passed', flush=True)
     driver.get(url + '?' + urlencode({'build': revision}))
     wait.until(lambda _: js("return document.querySelector('meta[name=cecilia-release]')?.content") == revision,
