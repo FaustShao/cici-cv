@@ -34,7 +34,7 @@ def check(driver, url, revision):
     wait = WebDriverWait(driver, 120)
     js = driver.execute_script
 
-    def click(selector):
+    def click(selector, hold=False):
         # Modal entrance and hover transforms can put the DOM click coordinates a frame behind.
         # Wait until the position accepts an actual pointer, then click that viewport point.
         script = """
@@ -49,7 +49,11 @@ def check(driver, url, revision):
         point = wait.until(lambda _: js(script, selector), message=f'Pointer target {selector}')
         chain = ActionChains(driver)
         chain.w3c_actions.pointer_action.move_to_location(*point)
-        chain.w3c_actions.pointer_action.click()
+        pointer = chain.w3c_actions.pointer_action
+        if hold:
+            pointer.pointer_down().pause(.25).pointer_up()
+        else:
+            pointer.click()
         chain.perform()
 
     driver.set_window_size(1366, 768)
@@ -61,6 +65,15 @@ def check(driver, url, revision):
     wait.until(lambda _: js("return document.querySelector('#world').dataset.presentation !== 'image' || !!document.querySelector('.scene-image')?.naturalWidth"))
     js("""
         window.testPointerEvents = [];
+        window.testClickDelays = [];
+        let pressedAt;
+        window.addEventListener('pointerdown', () => { pressedAt = performance.now(); }, true);
+        window.addEventListener('pointerup', () => { pressedAt = undefined; }, true);
+        const start = AudioBufferSourceNode.prototype.start;
+        AudioBufferSourceNode.prototype.start = function (...args) {
+            if (this.buffer?.duration < .02) testClickDelays.push(pressedAt === undefined ? null : performance.now() - pressedAt);
+            return start.apply(this, args);
+        };
         for (const type of ['pointerdown','pointerup','click']) document.addEventListener(type, e => {
             testPointerEvents.push([type, e.target.id || e.target.tagName, e.clientX, e.clientY]);
             if(testPointerEvents.length > 12) testPointerEvents.shift();
@@ -75,7 +88,10 @@ def check(driver, url, revision):
         sample = landscape.convert('RGB').resize((64, 40))
         colors = sample.getcolors(64 * 40)
         assert len(colors) > 512 and max(count for count, _ in colors) < 64 * 40 * .85, '3D landscape is missing'
-    click('#map-trigger')
+    click('#map-trigger', hold=True)
+    delays = js("return window.testClickDelays")
+    assert len(delays) == 1 and delays[0] is not None, 'The map press must schedule exactly one click before release'
+    print(f"First map press to Web Audio scheduling: {delays[0]:.1f} ms", flush=True)
     click('[data-destination="portfolio"]')
     wait.until(lambda _: js("return WORLD_STATE.place === 'portfolio'"))
     # Test the browser Back button after opening a project via its actual controls.

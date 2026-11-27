@@ -6,7 +6,7 @@ const root=process.env.PREVIEW_ROOT||'http://127.0.0.1:8770/cici-cv/';
   await context.addInitScript(()=>{
    window.__paperSounds=[];window.__paperGains=[];
    const A=window.AudioContext||window.webkitAudioContext,start=A.prototype.createBufferSource,createGain=A.prototype.createGain;
-   A.prototype.createBufferSource=function(){const s=start.call(this),play=s.start;s.start=function(...args){__paperSounds.push({duration:s.buffer?.duration,state:s.context.state});return play.apply(this,args)};return s};
+   A.prototype.createBufferSource=function(){const s=start.call(this),play=s.start;s.start=function(...args){if(s.buffer?.duration>.3)__paperSounds.push({duration:s.buffer.duration,state:s.context.state});return play.apply(this,args)};return s};
    A.prototype.createGain=function(){const g=createGain.call(this);__paperGains.push(g.gain);return g};
   });
   const p=await context.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));
