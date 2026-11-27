@@ -348,14 +348,14 @@ body[data-phone-layout] #reader .reader-bar :is(button, a) { min-height: 44px; }
 body:not([data-music="ready"]) #music-switch,
 body:not([data-place="home"]) #music-switch { display: none; }
 
-/* This exit remains usable even if the browser cannot execute the 3D bundle. */
-#loading-links {
+#retry-loading {
   position: fixed; z-index: 11000; bottom: 8vh; left: 50%; transform: translateX(-50%);
-  visibility: hidden; animation: show-loading-links 0s 12s forwards;
 }
-@keyframes show-loading-links { to { visibility: visible; } }
-body[data-ready] #loading-links, body[data-failed] #loading-links,
-#loading[hidden] ~ #loading-links { display: none; }
+#retry-loading[hidden], #loading[hidden] ~ #retry-loading { display: none; }
+/* The percentage also needs to be visible before the scene module arrives. */
+@media (prefers-reduced-motion: reduce) {
+  #loading:not([hidden]) { visibility: visible; pointer-events: auto; }
+}
 #fallback { overflow-y: auto; }
 #fallback-music[aria-pressed="true"] { background: #654865; }
 

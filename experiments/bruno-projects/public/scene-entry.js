@@ -4,37 +4,34 @@
   const fallback = document.getElementById('fallback');
   const heading = fallback.querySelector('h2');
   const message = document.getElementById('error-message');
+  const retryLoading = document.getElementById('retry-loading');
   let stallTimer;
-  function showLinks(failed) {
+  function showLoadError() {
     if (document.body.dataset.ready || document.body.dataset.failed) return;
     loading.hidden = true;
     fallback.hidden = false;
-    heading.textContent = failed ? '暂时无法显示 3D 场景' : '3D 场景正在加载';
-    message.textContent = failed ? '可以直接阅读作品，或重新加载场景。' : '可以先阅读作品。场景准备好后会自动显示。';
-    if (failed) document.body.dataset.failed = 'true';
+    heading.textContent = '暂时无法显示 3D 场景';
+    message.textContent = '可以重新加载场景，或直接阅读作品。';
+    document.body.dataset.failed = 'true';
   }
   function watchProgress() {
     clearTimeout(stallTimer);
+    retryLoading.hidden = true;
     if (document.body.dataset.ready || document.body.dataset.failed) {
       progressObserver.disconnect();
       return;
     }
-    const percent = Number(loading.getAttribute('aria-valuenow'));
-    stallTimer = setTimeout(() => showLinks(false), percent < 4 ? 12000 : 25000);
+    // Compilation and decoding can take time without reporting a new percentage.
+    stallTimer = setTimeout(() => { retryLoading.hidden = false; }, 30000);
   }
   const progressObserver = new MutationObserver(watchProgress);
   progressObserver.observe(loading, { attributes: true, attributeFilter: ['aria-valuenow'] });
   progressObserver.observe(document.body, { attributes: true, attributeFilter: ['data-ready', 'data-failed'] });
   watchProgress();
   window.addEventListener('error', event => {
-    if (event.target?.type === 'module' || /\/hub-[\w-]+\.js(?:[?#]|$)/.test(event.filename || '')) showLinks(true);
+    if (event.target?.type === 'module' || /\/hub-[\w-]+\.js(?:[?#]|$)/.test(event.filename || '')) showLoadError();
   }, true);
-  document.getElementById('retry-scene').onclick = () => location.reload();
-  document.getElementById('loading-links').onclick = event => {
-    event.preventDefault();
-    showLinks(false);
-    fallback.focus();
-  };
+  retryLoading.onclick = document.getElementById('retry-scene').onclick = () => location.reload();
 
   const audio = document.getElementById('background-music');
   const button = document.getElementById('music-switch');

@@ -434,7 +434,13 @@ async function startScene() {
     return root;
   }
   const original = game.resources.areasModel.scene;
-  const fixtures = await createFixtures(world);
+  const [fixtures, resumeTexture, kioskTexture, labCovers] = await Promise.all([
+    createFixtures(world),
+    world.textures.loadAsync(world.asset("ui/resume-preview.webp?v=cv-fig-1")),
+    world.textures.loadAsync(world.asset("ui/cecilia-map.png?v=contact-clearing")),
+    prepareLabCovers(notes, contentRoot),
+  ]);
+  loadingScreen.setPercent(94);
   function referencePose(key){
     const view=referenceViews[key],direction=new T.Vector3().setFromSpherical(new T.Spherical(1,view.pitch,view.yaw));
     return {...view,focus:new T.Vector3(...view.position).addScaledVector(direction,-view.distance)};
@@ -452,7 +458,6 @@ async function startScene() {
   });
   clean(career);
   scene.add(career);
-  const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp?v=cv-fig-1"));
   resumeTexture.colorSpace=T.SRGBColorSpace;
   const resumeCorner = fixtures.resumeCorner(original,resumeTexture);
   const resumePreview=scene.getObjectByName("resume-preview-board");
@@ -512,7 +517,6 @@ async function startScene() {
     )
       child.removeFromParent();
   const kioskFace = landing.getObjectByName("physicalFixed003");
-  const kioskTexture = await world.textures.loadAsync(world.asset("ui/cecilia-map.png?v=contact-clearing"));
   kioskTexture.flipY = false;
   kioskTexture.colorSpace = T.SRGBColorSpace;
   if (kioskFace) {
@@ -669,7 +673,6 @@ async function startScene() {
       colorNode: texture(cardTexture).rgb,
       hasWater: false,
     });
-  const labCovers = await prepareLabCovers(notes, contentRoot);
   const chalkboard = createLabChalkboard(lab);
   world.updateLab = (project) => {
     const prepared = labCovers.get(project);
