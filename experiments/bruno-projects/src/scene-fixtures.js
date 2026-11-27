@@ -281,7 +281,7 @@ export async function createFixtures(world) {
         const tape=new T.Mesh(new T.PlaneGeometry(.32,.105),new T.MeshBasicNodeMaterial({color:0xe4cfa1,transparent:true,opacity:.62,depthWrite:false,toneMapped:false}));
         tape.name=`resume-paper-tape-${label}`;tape.position.set(x,2.966,.079);tape.rotation.z=angle;tape.material.userData.prevent=true;stand.add(tape);
       }
-      stand.userData.document="resume.html?document=1&v=cv-slices-2&photo=1";stand.userData.preview="ui/resume-preview.webp?v=cv-slices-2";
+      stand.userData.document="resume.html?document=1&v=cv-fig-1&photo=1";stand.userData.preview="ui/resume-preview.webp?v=cv-fig-1";
       parcel(stand,21.5,22.1,1.6,{precise:true,radius:0,hull:true});
       stand.position.y-=.075;
       stand.userData.support="planted-ground";

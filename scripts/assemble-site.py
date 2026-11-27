@@ -28,8 +28,11 @@ for name in entries:
    assert (ROOT/path).is_file(),f'Missing runtime dependency: {path}'
    files.add(path)
 for name in sorted(files):shutil.copyfile(ROOT/name,OUT/name)
-asset_dirs=['boomind','cardinal','tideline','dream-sentinel','safepaw-family','gazette','gazette-research','gazette-desk','project-ui-details','haha-world','icod','resume','sonicsense','project-lossless','project-mobile']
+asset_dirs=['boomind','cardinal','tideline','dream-sentinel','safepaw-family','gazette','gazette-research','gazette-desk','project-ui-details','haha-world','icod','sonicsense','project-lossless','project-mobile']
 for name in asset_dirs:shutil.copytree(ROOT/'assets'/name,OUT/'assets'/name)
+shutil.copytree(ROOT/'assets/resume/layers',OUT/'assets/resume/layers')
+for name in ('cv-portrait.webp','wang-yuxin-resume.pdf'):
+ shutil.copyfile(ROOT/'assets/resume'/name,OUT/'assets/resume'/name)
 shutil.copytree(ROOT/'assets/vendor/page-flip',OUT/'assets/vendor/page-flip')
 for directory,patterns in [('portfolio-covers',['*-v3.webp']),('fonts',['huiwen*'])]:
  dest=OUT/'assets'/directory;dest.mkdir(parents=True,exist_ok=True)
@@ -92,7 +95,7 @@ def version(value,parent):
  # ES modules are keyed by their full URL. Match Vite's relative imports exactly
  # so the browser downloads and evaluates each content-hashed chunk only once.
  if target.parent==OUT/'cecilia-world/assets' and re.fullmatch(r'.+-[\w-]{8}\.js',target.name):return value
- if target.suffix.lower()not in {'.html','.js','.css','.woff2','.ttf','.otf','.png','.webp','.svg','.jpg','.mp3'}:return value
+ if target.suffix.lower()not in {'.html','.js','.css','.woff2','.ttf','.otf','.png','.webp','.svg','.jpg','.mp3','.pdf'}:return value
  query=dict(parse_qsl(u.query));query['build']=revision
  return u.path+'?'+urlencode(query)+(('#'+u.fragment)if u.fragment else '')
 # An inline pre-paint gate also covers cached HTML and browser back/forward restores.

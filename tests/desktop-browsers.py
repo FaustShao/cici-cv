@@ -3,7 +3,7 @@ import json
 import os
 import sys
 import traceback
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urljoin
 
 from PIL import Image
 from selenium import webdriver
@@ -57,6 +57,31 @@ def check(driver, url, revision):
         chain.perform()
 
     driver.set_window_size(1366, 768)
+    driver.get(urljoin(url, 'resume.html') + '?' + urlencode({'build': revision}))
+    wait.until(lambda _: js("""
+        return document.querySelector('meta[name=cecilia-release]')?.content === arguments[0]
+            && document.querySelector('#document-loading')?.hidden
+            && document.querySelectorAll('.resume-art').length === 59
+            && Array.from(document.images).every(i => i.complete && i.naturalWidth > 0);
+    """, revision), message='Both pages of the current layered résumé load')
+    assert js("""
+        const link = document.querySelector('a[href="https://ciciworld.cc/"]');
+        const bounds = link.getBoundingClientRect();
+        return document.elementFromPoint(bounds.x + bounds.width/2, bounds.y + bounds.height/2) === link
+            && document.querySelector('.resume-pages').textContent.includes('游戏经历');
+    """), 'Website link receives pointer over the original artwork'
+    assert js("""
+        const name = document.querySelector('img[data-source="6-name.svg"]');
+        const canvas = document.createElement('canvas');
+        canvas.width=name.naturalWidth; canvas.height=name.naturalHeight;
+        const ctx=canvas.getContext('2d'); ctx.drawImage(name,0,0);
+        const rgba=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+        let ink=0;
+        for(let i=3;i<rgba.length;i+=4) if(rgba[i]>127) ink++;
+        return ink>200;
+    """), 'Outlined name glyphs render in the installed browser'
+    capture(driver, 'browser-resume.png')
+    print('Published résumé artwork and website link passed', flush=True)
     driver.get(url + '?' + urlencode({'build': revision}))
     wait.until(lambda _: js("return document.querySelector('meta[name=cecilia-release]')?.content") == revision,
                message='Published HTML has the expected release')

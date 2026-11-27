@@ -127,9 +127,9 @@ python -m http.server 8000 --bind 0.0.0.0 --directory public
 
 ### 个人简历原稿
 
-当前简历使用 `cv拆分.zip` 的高清素材； `assets/resume/slices/cv拆分/` 保存全部57张原始PNG，无重采样或字体替换；`resume-layers.js` 保存两页中逐块测量的位置、尺寸及匹配置信度，网页原位组合56块图层与1张独立照片，不再加载模糊的整页图。原PDF仅用于排版参照及“下载原版PDF”。`scripts/map-resume-slices.py` 是开发用位置匹配工具，不进入线上依赖。
+当前简历取自 `cv导出.fig` 的两页 A4 画框。`assets/resume/layers/` 保存 59 个独立 SVG，包含原字形、图标和分区标题。`resume-layers.js` 记录它们在画框中的位置。证件照按原裁切单独显示。下载版 PDF 使用相同的矢量内容，保留可检索文字及网址、电话、邮箱链接。
 
-`node tests/resume-pdf.cjs` 检查57张素材全部使用且各使用一次、原分辨率及页面边界、与原PDF的低频排版对照（高清字边缘和新照片不要求等同旧JPEG像素），另测照片/内容悬停、联系方式、缩放、减少动态效果、原文件下载和两页打印。`node tests/resume-world.cjs` 检查三维入口打开新简历并返回原场景。
+`node tests/resume-pdf.cjs` 核对图层、下载与打印排版、联系入口、缩放及悬停。`node tests/resume-photo.cjs` 核对照片和动效。`node tests/resume-world.cjs` 检查场景内的简历入口和返回。可通过 `PREVIEW_ROOT` 指定发布预览地址。
 
 ### 姓名角标与项目阅读调整
 
@@ -139,7 +139,7 @@ Gazette 将返回导航和全屏按钮收进紧凑工具栏，按可用窗口等
 
 `tests/project-polish.cjs` 覆盖画册尺寸/全屏/翻页/入场/手机和海藻茶路由；`tests/world-polish.cjs` 覆盖姓名比例/中心、固定日间和镜头、嵌入项目返回及全屏。
 
-当前证件照为 `assets/resume/resume-photo.png`，原位显示并保留轻微悬停动效；旧首页头像不进入发布包。减少动态效果设置与打印均保持静态。
+当前证件照为 `assets/resume/cv-portrait.webp`，原位显示并保留轻微悬停动效；旧首页头像不进入发布包。减少动态效果设置与打印均保持静态。
 
 ## 作品集翻页书
 

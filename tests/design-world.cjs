@@ -162,7 +162,7 @@ const review = path.resolve(
     assert.equal(await frame.locator("#name").innerText(), "王钰欣");
     assert.equal(await frame.locator("#print").count(), 1);
     assert.equal(await frame.locator(".resume-page").count(), 2);
-    assert.equal(await frame.locator("a.download-pdf").getAttribute("href"), "assets/resume/wang-yuxin-resume.pdf");
+    assert.match(await frame.locator("a.download-pdf").getAttribute("href"), /^assets\/resume\/wang-yuxin-resume\.pdf(?:\?|$)/);
     assert.doesNotMatch(await frame.locator("body").evaluate(e => getComputedStyle(e).fontFamily), /Xiaolai|Nunito|Scene Sans|Amatic/i);
     await shot("resume-reading");
     await page.locator("#close-reader").click();

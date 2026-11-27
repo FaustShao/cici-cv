@@ -261,7 +261,7 @@ reader.addEventListener("cancel", (e) => {
 });
 function openCurrent() {
   if(place === "portfolio")openReader(portfolio.current.title,portfolio.current.url);
-  if (place === "resume") openReader("个人简历", "resume.html?document=1&v=cv-slices-2&photo=1");
+  if (place === "resume") openReader("个人简历", "resume.html?document=1&v=cv-fig-1&photo=1");
   if (place === "other") openReader(notes[otherIndex].name, notes[otherIndex].url || undefined);
   if (place === "contact") location.href = "mailto:wangyuxinqd2025@163.com";
 }
@@ -452,7 +452,7 @@ async function startScene() {
   });
   clean(career);
   scene.add(career);
-  const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp?v=cv-slices-2"));
+  const resumeTexture = await world.textures.loadAsync(world.asset("ui/resume-preview.webp?v=cv-fig-1"));
   resumeTexture.colorSpace=T.SRGBColorSpace;
   const resumeCorner = fixtures.resumeCorner(original,resumeTexture);
   const resumePreview=scene.getObjectByName("resume-preview-board");
